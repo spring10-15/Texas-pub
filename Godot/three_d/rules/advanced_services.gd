@@ -23,10 +23,9 @@ static func reason(run: RefCounted, kind: String, item: String, target: String) 
 	if kind == "reserve":
 		if not run.fixed_known():
 			return "先完成货运桌或使用手机获取接应线索"
-		var offer: Dictionary = run.route_offer()
 		if not run.reservation.is_empty() and run.search_index <= run.reservation.expiresAfterSearch:
 			return "已有有效预约"
-		if run.cash < maxi(10, int(offer.reserveCost) - 10):
+		if run.cash < run.reserve_fee():
 			return "预约现金不足"
 	elif kind == "phone-table" and not run.content.tables.has(target):
 		return "请选择有效牌桌"
@@ -39,16 +38,16 @@ static func reason(run: RefCounted, kind: String, item: String, target: String) 
 static func apply(run: RefCounted, kind: String, item: String, target: String) -> void:
 	if kind == "reserve":
 		run.reservation = run.route_offer().duplicate(true)
-		var fee := maxi(10, int(run.reservation.reserveCost) - 10)
+		var fee: int = run.reserve_fee()
 		run.cash -= fee
 		run.reservation.reserveCost = fee
-		run.reservation.expiresAfterSearch = run.search_index + 2
+		run.reservation.expiresAfterSearch = run.search_index + maxi(1, int(run.scene_definition().fixedRouteGraceSearches))
 		run.service_message = "已预约接应，预付 %d；到达时另付 %d" % [fee, run.reservation.finalCost]
 	elif kind == "pass":
 		run.route_flags[run.content.items[item].unlockRoute] = true
-		run.service_message = "已揭示 " + run.Routes.NAMES[run.content.items[item].unlockRoute]
+		run.service_message = "已揭示 " + run.route_name(run.content.items[item].unlockRoute)
 	elif kind == "phone-route":
-		run.offer_index = (run.offer_index + 1) % run.content.routes["smoky-den"].fixedRoutes.size()
+		run.offer_index = (run.offer_index + 1) % run.content.routes[run.scene_id].fixedRoutes.size()
 		run.route_flags.fixed = true
 		run.service_message = "手机已更新接应路线"
 	elif kind == "phone-table":

@@ -1,7 +1,7 @@
 extends RefCounted
 const Run = preload("res://three_d/rules/run.gd")
 const TableCheckpoint = preload("res://three_d/rules/table_checkpoint.gd")
-const FIELDS := ["vault", "active", "cash", "bankroll", "heat", "public_exit", "completed", "last_result", "revision", "inventory", "known_rules", "used_tools", "preview", "preview_hand", "action_points", "search_index", "heat_reduced", "service_message", "last_reward", "route_flags", "reservation", "offer_index", "full_intel", "opponent_notes", "collateral", "last_table_result"]
+const FIELDS := ["vault", "active", "cash", "bankroll", "heat", "public_exit", "completed", "last_result", "revision", "inventory", "known_rules", "used_tools", "preview", "preview_hand", "action_points", "search_index", "heat_reduced", "service_message", "last_reward", "route_flags", "reservation", "offer_index", "full_intel", "opponent_notes", "collateral", "last_table_result", "scene_id"]
 
 static func capture(run: RefCounted) -> Dictionary:
 	var values := {}
@@ -14,13 +14,15 @@ static func capture(run: RefCounted) -> Dictionary:
 static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 	var run := Run.new(content)
 	values = values.duplicate(true)
-	for field in ["route_flags", "reservation", "offer_index", "full_intel", "opponent_notes", "collateral", "last_table_result"]:
+	for field in ["route_flags", "reservation", "offer_index", "full_intel", "opponent_notes", "collateral", "last_table_result", "scene_id"]:
 		if not values.has(field):
 			values[field] = run.get(field)
 	for field in FIELDS:
 		if not values.has(field) or typeof(values[field]) != typeof(run.get(field)):
 			return null
 	if values.vault < 0 or values.cash < 0 or values.heat < 0 or values.heat > 6 or not values.get("table") is Dictionary:
+		return null
+	if not content.scenes.has(values.scene_id):
 		return null
 	for id in values.inventory:
 		if not content.items.has(id):

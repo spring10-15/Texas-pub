@@ -57,6 +57,7 @@ var saving_enabled := false
 var save_clock := 0.0
 var last_saved: PackedByteArray
 var save_notice: Label
+var scene_choice: OptionButton
 var selected_route := "general"
 var props: RefCounted
 var bar_display: RefCounted
@@ -337,6 +338,13 @@ func build_ui() -> void:
 	run_confirm = column.get_child(1)
 	run_body = label(column, "", 19)
 	column.move_child(run_body, 1)
+	scene_choice = OptionButton.new()
+	for id in RunRules.SCENE_NAMES:
+		scene_choice.add_item(RunRules.SCENE_NAMES[id])
+		scene_choice.set_item_metadata(scene_choice.item_count - 1, id)
+	column.add_child(scene_choice)
+	column.move_child(scene_choice, 2)
+	scene_choice.item_selected.connect(func(_index): show_run_panel("enter"))
 	var cancel := Button.new()
 	cancel.text = "返回探索"
 	cancel.custom_minimum_size.y = 40
@@ -476,13 +484,14 @@ func request_action(anchor: Area3D) -> bool:
 
 func travel(destination: String) -> void:
 	bar_display.refresh()
+	refresh_route_labels()
 	current_room = destination
 	select_table_room(ROOMS.get(destination, ROOMS.tavern).node)
 	player.velocity = Vector3.ZERO
 	player.position = Vector3(ROOMS.get(destination, ROOMS.tavern).x - 2.0, 0.05, 1.7) if destination != "stash" else Vector3(1.95, 0.05, 1.7)
 	player.rotation = Vector3(0, -0.65 if destination != "stash" else 0.55, 0)
 	player.camera.rotation = Vector3(-0.10, 0, 0)
-	title_label.text = {"tavern": "烟雾酒馆", "ledger": "账房地窖", "mirror":"镜厅", "embers":"余烬牌室", "stash": "藏匿点"}[destination]
+	title_label.text = {"tavern": RunRules.SCENE_NAMES[run_game.scene_id], "ledger": "账房地窖", "mirror":"镜厅", "embers":"余烬牌室", "stash": "藏匿点"}[destination]
 	player.update_focus()
 	refresh_economy()
 
@@ -663,11 +672,15 @@ func show_run_panel(action: String, preview_only := false) -> void:
 	run_action = "extract" if action.begins_with("route:") else action
 	run_revision = run_game.revision
 	run_confirm.disabled = false
+	scene_choice.visible = action == "enter"
 	forfeit_button.hide()
 	if action == "enter":
-		run_heading.text = "前往烟雾酒馆"
+		var destination: String = scene_choice.get_item_metadata(scene_choice.selected)
+		var scene: Dictionary = table_content.scenes[destination]
+		run_heading.text = "前往" + RunRules.SCENE_NAMES[destination]
 		var amount := mini(int(table_content.standardBankroll), int(run_game.vault))
 		run_body.text = "金库 %d → %d，随身带出 %d。\n货运桌买入 60；撤离需要找到门旁的出口告示。\n自动存档，可关闭后继续。" % [run_game.vault, run_game.vault - amount, amount]
+		run_body.text += "\n普通出口：%d + 现金的 %d%%；降风声 %d。\n每桌额外风声 +%d；预约有效期 %d 轮。" % [scene.generalExtractionFlatFee, roundi(float(scene.generalExtractionRate) * 100), scene.heatReductionCost, scene.entryHeatBonus, scene.fixedRouteGraceSearches]
 		run_confirm.text = "带钱出发"
 		if run_game.vault < 120:
 			run_action = "reset"
@@ -679,7 +692,7 @@ func show_run_panel(action: String, preview_only := false) -> void:
 		run_confirm.text = "确认放弃并损失随身财物"
 	else:
 		var quote: Dictionary = run_game.extraction_quote(selected_route)
-		run_heading.text = run_game.Routes.NAMES[selected_route] + " · 撤离结算"
+		run_heading.text = run_game.route_name(selected_route) + " · 撤离结算"
 		run_body.text = "现金 %d · 费用 %d\n舍弃现金 %d · 舍弃贵重物价值 %d\n带回贵重物 %d · 最终到账 %d\n本局净变化 %+d" % [run_game.cash, quote.fee, quote.lostCash, quote.lostGoods, quote.valuables, quote.net, quote.net - run_game.bankroll]
 		run_confirm.text = "支付费用并返回藏匿点"
 		if not quote.reason.is_empty():
@@ -689,7 +702,7 @@ func show_run_panel(action: String, preview_only := false) -> void:
 	if preview_only:
 		run_confirm.disabled = true
 		run_confirm.text = "到实际入口按 E 撤离"
-		run_body.text += "\n" + {"general":"大厅入口门旁。", "fixed":"后勤通道直走到库房，右侧货梯。", "service-stairs":"后勤通道左转，经后厨楼梯上楼。", "river-launch":"后勤通道右转，沿装卸坡道下到河边。", "dropbag-cash":"后勤走廊最左端的检修口。", "dropbag-valuables":"后勤走廊最左端的检修口。"}.get(selected_route, "")
+		run_body.text += "\n" + {"general":"大厅入口门旁。", "fixed":"后勤通道直走，进入中央房间，右侧入口。", "service-stairs":"后勤通道左转，沿楼梯上到平台。", "river-launch":"后勤通道右转，沿坡道下到下层平台。", "dropbag-cash":"后勤走廊最左端的检修口。", "dropbag-valuables":"后勤走廊最左端的检修口。"}.get(selected_route, "")
 	player.controls_enabled = false
 	player.velocity = Vector3.ZERO
 	crosshair.hide()
@@ -708,7 +721,7 @@ func confirm_run_action() -> void:
 	if not run_panel.visible or paused or run_confirm.disabled:
 		return
 	if run_action == "enter":
-		if not run_game.start(run_revision):
+		if not run_game.start(run_revision, str(scene_choice.get_item_metadata(scene_choice.selected))):
 			return
 		exit_notice.title = "查看出口告示"
 		close_run_panel()
@@ -785,6 +798,7 @@ func service_action(kind: String, item_id: String, revision: int, target_id := "
 			refresh_table()
 		services_panel.refresh(run_game.service_view(service_mode, product_id))
 		bar_display.refresh()
+		refresh_route_labels()
 		if kind == "buy":
 			close_services()
 			var focus: Vector3 = Vector3(ROOMS.get(current_room, ROOMS.tavern).x + 1.57, 1.34, 0.4) - player.camera.global_position
@@ -890,3 +904,16 @@ func install_prop(parent: Node3D, id: String) -> void:
 		if child is Node3D and not child is Area3D:
 			child.hide()
 	parent.add_child(make_detailed_prop(id))
+
+func refresh_route_labels() -> void:
+	for node in get_node("Tavern").get_children():
+		if node is Area3D and str(node.action_id).begins_with("route:"):
+			node.title = run_game.route_name(str(node.action_id).trim_prefix("route:")) + " · 查看撤离条件"
+	for label_node in get_node("Tavern").get_children():
+		if label_node is Label3D and label_node.has_meta("route_kind"):
+			label_node.text = ("← " + run_game.route_name("service-stairs") + "    接应 ↑    " + run_game.route_name("river-launch") + " →") if label_node.get_meta("route_kind") == "directions" else run_game.route_name(label_node.get_meta("route_kind"))
+
+	for setup in ROOMS.values():
+		for node in get_node(setup.node).get_children():
+			if node is Area3D and str(node.action_id) == "back_tavern":
+				node.title = "返回" + RunRules.SCENE_NAMES[run_game.scene_id]

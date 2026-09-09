@@ -5,6 +5,8 @@ const Routes = preload("res://three_d/rules/routes.gd")
 const Advanced = preload("res://three_d/rules/advanced_services.gd")
 const SUPPORTED_ITEMS := ["marked-lens", "steadying-drink", "sleeve-clip", "signal-lighter", "player-notes", "disposable-phone", "kitchen-pass", "dock-passkey", "false-bottom-wallet"]
 const ITEM_NAMES := {"marked-lens": "标记镜片", "steadying-drink": "镇定酒", "sleeve-clip": "袖口夹", "signal-lighter":"信号打火机", "player-notes":"玩家笔记", "disposable-phone":"一次性手机", "kitchen-pass":"后厨通行证", "dock-passkey":"码头密钥", "false-bottom-wallet":"夹层钱包"}
+const SCENE_NAMES := {"smoky-den":"烟雾酒馆", "high-rise-suite":"高层套房", "rooftop-club":"屋顶会所", "neon-poker-club":"霓虹扑克俱乐部"}
+var scene_id := "smoky-den"
 var collateral := ""
 var last_table_result: Dictionary = {}
 var inventory: Array[String] = []
@@ -38,9 +40,10 @@ func _init(definitions: Dictionary) -> void:
 	content = definitions
 	vault = int(content.startingVault)
 
-func start(expected_revision: int) -> bool:
-	if expected_revision != revision or active or vault < 120:
+func start(expected_revision: int, destination := "smoky-den") -> bool:
+	if expected_revision != revision or active or vault < 120 or not content.scenes.has(destination):
 		return false
+	scene_id = destination
 	bankroll = mini(int(content.standardBankroll), vault)
 	vault -= bankroll
 	cash = bankroll
@@ -94,7 +97,7 @@ func enter_table(seed_value: int, expected_revision: int, table_id := "cargo-tab
 		inventory.erase(pledged_item)
 	collateral = pledged_item
 	cash -= int(definition.buyIn)
-	heat = mini(6, heat + int(definition.heatGain) + int(content.scenes["smoky-den"].entryHeatBonus))
+	heat = mini(6, heat + int(definition.heatGain) + int(scene_definition().entryHeatBonus))
 	used_tools.clear()
 	preview = {}
 	table = TableRules.new()
@@ -216,7 +219,7 @@ func service_reason(kind: String, item_id: String, target_id := "") -> String:
 			return "本轮已降过风声或无需降风声"
 		if kind == "drink" and "steadying-drink" not in inventory:
 			return "背包中没有镇定酒"
-		if kind == "cool" and cash < int(content.scenes["smoky-den"].heatReductionCost):
+		if kind == "cool" and cash < int(scene_definition().heatReductionCost):
 			return "随身现金不足"
 	elif kind == "intel":
 		if not content.tables.has(item_id) or item_id in known_rules:
@@ -226,7 +229,7 @@ func service_reason(kind: String, item_id: String, target_id := "") -> String:
 	return ""
 
 func shop_stock() -> Array:
-	var shops: Dictionary = content.shops["smoky-den"]
+	var shops: Dictionary = content.shops[scene_id]
 	var stock: Array = shops.get(str(search_index), shops["3"]).duplicate()
 	# The two-table slice must offer the phone before its final table.
 	if search_index == 2 and "disposable-phone" not in stock:
@@ -252,7 +255,7 @@ func service_action(kind: String, item_id: String, expected_revision: int, targe
 		if kind == "drink":
 			inventory.erase("steadying-drink")
 		else:
-			cash -= int(content.scenes["smoky-den"].heatReductionCost)
+			cash -= int(scene_definition().heatReductionCost)
 		heat -= 1
 		heat_reduced = true
 		service_message = "风声降低 1"
@@ -286,7 +289,7 @@ func service_view(mode := "bag", product := "") -> Dictionary:
 		for item_id in shop_stock():
 			if item_id in SUPPORTED_ITEMS:
 				actions.append({"kind": "buy", "id": item_id, "label": "买 %s · %d" % [item_name(item_id), content.items[item_id].buy]})
-		actions.append({"kind": "cool", "id": "", "label": "找酒保降风声 · %d" % content.scenes["smoky-den"].heatReductionCost})
+		actions.append({"kind": "cool", "id": "", "label": "找酒保降风声 · %d" % scene_definition().heatReductionCost})
 		for table_id in content.tables:
 			actions.append({"kind": "intel", "id": table_id, "label": "调查%s规则 · 1 行动力" % table_name(table_id)})
 	for item_id in inventory.duplicate():
@@ -303,9 +306,9 @@ func service_view(mode := "bag", product := "") -> Dictionary:
 		for pass_id in ["kitchen-pass", "dock-passkey"]:
 			if pass_id in inventory:
 				actions.append({"kind":"pass", "id":pass_id, "label":"使用 " + item_name(pass_id)})
-		actions.append({"kind":"reserve", "id":"", "label":"预约%s · 预付 %d / 尾款 %d" % [offer_name(route_offer().id), maxi(10, int(route_offer().reserveCost) - 10), route_offer().finalCost]})
+		actions.append({"kind":"reserve", "id":"", "label":"预约%s · 预付 %d / 尾款 %d" % [offer_name(route_offer().id), reserve_fee(), route_offer().finalCost]})
 		for route in Routes.NAMES:
-			actions.append({"kind":"route", "id":route, "label":"查看路线 · " + Routes.NAMES[route]})
+			actions.append({"kind":"route", "id":route, "label":"查看路线 · " + route_name(route)})
 	else:
 		for item_id in ["signal-lighter", "player-notes"]:
 			if item_id in inventory:
@@ -376,7 +379,7 @@ func abandon(expected_revision: int) -> bool:
 	return true
 
 func route_offer() -> Dictionary:
-	return content.routes["smoky-den"].fixedRoutes[offer_index]
+	return content.routes[scene_id].fixedRoutes[offer_index]
 
 func fixed_known() -> bool:
 	return "cargo-table" in completed or route_flags.get("fixed", false)
@@ -411,7 +414,7 @@ func enforce_pressure() -> bool:
 	return true
 
 func offer_name(id: String) -> String:
-	return {"kitchen-backlift":"后厨货梯接应", "linen-cart":"布草车接应"}.get(id, id)
+	return {"kitchen-backlift":"后厨货梯接应", "linen-cart":"布草车接应", "vip-elevator":"贵宾电梯", "laundry-trolley":"洗衣推车", "staff-door":"员工通道", "valet-loop":"代客泊车接应", "data-node-gate":"数据节点闸门", "hack-door":"伪装员工门禁"}.get(id, id)
 
 func route_known(kind: String) -> bool:
 	if not active:
@@ -424,7 +427,23 @@ func route_known(kind: String) -> bool:
 	return false
 
 func item_description(id: String) -> String:
+	if id in ["kitchen-pass", "dock-passkey"]:
+		return "离桌后使用，揭示" + route_name(content.items[id].unlockRoute) + "。"
 	return {"marked-lens":"牌局中提前看下一张公共牌；本桌限一次，增加风声。", "steadying-drink":"离桌后使用，降低 1 风声；每轮只能降一次。", "sleeve-clip":"翻牌前第一次行动前更换第二张手牌，增加风声。", "signal-lighter":"牌局中选择对手，判断其牌力强弱；不揭示底牌，增加风声。", "player-notes":"牌局中记录一位对手的风格，增加风声。", "disposable-phone":"离桌后查明一桌情报，或更新接应方案；二选一。", "kitchen-pass":"离桌后使用，揭示后厨楼梯出口。", "dock-passkey":"离桌后使用，揭示河边接驳出口。", "false-bottom-wallet":"随身携带，失败时自动保留至多 80 现金。"}.get(id, "")
 
 func rule_text(id: String) -> String:
 	return {"cargo-table":"每手首次加注少付 10", "ledger-cellar":"每次桌面道具额外增加 1 风声", "mirror-hall":"可押一件贵重物；最后一手获胜归还，且盈利时获得纪念币", "embers-table":"可押一件贵重物；最后一手获胜归还，整桌盈利降低 1 风声"}.get(id, "")
+
+func scene_definition() -> Dictionary:
+	return content.scenes[scene_id]
+
+func reserve_fee() -> int:
+	return maxi(10, int(route_offer().reserveCost) - int(scene_definition().fixedRouteReserveDiscount))
+
+func route_name(kind: String) -> String:
+	if kind == "fixed":
+		return offer_name(reservation.id if not reservation.is_empty() else route_offer().id)
+	if kind in ["service-stairs", "river-launch"]:
+		var id: String = content.routes[scene_id].specialRoutes[kind].id
+		return {"service-stairs":"后厨楼梯", "river-launch":"河边接驳", "service-elevator":"维修电梯", "basement-garage":"地下车库", "emergency-exit":"消防楼梯", "helipad-drop":"停机坪接应", "neural-jammer":"传感器盲区走廊", "quantum-portal":"后台传送门"}[id]
+	return Routes.NAMES.get(kind, kind)

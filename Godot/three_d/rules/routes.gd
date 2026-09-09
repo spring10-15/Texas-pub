@@ -6,7 +6,7 @@ static func quote(run: RefCounted, kind: String) -> Dictionary:
 	var lost_cash := 0
 	var goods: int = run.valuable_total()
 	var lost_goods := 0
-	var scene: Dictionary = run.content.scenes["smoky-den"]
+	var scene: Dictionary = run.scene_definition()
 	if kind == "general":
 		fee = int(scene.generalExtractionFlatFee) + int(floor(run.cash * float(scene.generalExtractionRate))) + (int(scene.lockdownSurcharge) if run.heat == 5 else 0)
 		if not run.public_exit:
@@ -23,8 +23,8 @@ static func quote(run: RefCounted, kind: String) -> Dictionary:
 			elif run.heat > run.reservation.maxHeat:
 				reason = "风声超过预约路线限制"
 	elif kind in ["service-stairs", "river-launch"]:
-		var route: Dictionary = run.content.routes["smoky-den"].specialRoutes[kind]
-		fee = int(route.finalCost)
+		var route: Dictionary = run.content.routes[run.scene_id].specialRoutes[kind]
+		fee = maxi(10, int(route.finalCost) - int(scene.hiddenRouteRevealDiscount))
 		if not run.route_flags.get(kind, false):
 			reason = "需要先使用对应通行证揭示入口"
 		elif run.heat > route.maxHeat:
