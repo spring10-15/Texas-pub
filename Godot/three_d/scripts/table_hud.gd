@@ -3,8 +3,8 @@ signal start_requested
 signal action_requested(kind: String, revision: int, raise_target: int)
 signal continue_requested(revision: int)
 signal leave_requested
-const NAMES := {"player": "你", "dock-braggart": "码头吹牛客", "ledger-clerk": "账房先生", "river-shark": "河道老鲨", "velvet-rook": "绒衣新客"}
-const TABLE_NAMES := {"cargo-table": "货运桌", "ledger-cellar": "账房地窖"}
+const NAMES := {"player": "你", "dock-braggart": "码头吹牛客", "ledger-clerk": "账房先生", "river-shark": "河道老鲨", "velvet-rook": "绒衣新客", "calm-widow":"沉静寡妇", "smiling-knife":"笑面刀", "house-viper":"庄家毒蛇", "ash-smuggler":"灰烬走私客"}
+const TABLE_NAMES := {"cargo-table": "货运桌", "ledger-cellar": "账房地窖", "mirror-hall":"镜厅", "embers-table":"余烬桌"}
 const STREETS := {"preflop": "翻牌前", "flop": "翻牌", "turn": "转牌", "river": "河牌"}
 const ACTIONS := {"fold": "弃牌", "check": "过牌", "call": "跟注", "raise": "加注", "all-in": "全押"}
 var header: Label
@@ -20,6 +20,7 @@ var raise_amount: SpinBox
 var action_buttons := {}
 var displayed_revision := -1
 var result_banner: Label
+var collateral_choice: OptionButton
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -58,6 +59,9 @@ func _ready() -> void:
 	panel.add_child(rows)
 	status = text(rows, "", 19)
 	hand = text(rows, "", 26)
+	collateral_choice = OptionButton.new()
+	rows.add_child(collateral_choice)
+	collateral_choice.hide()
 	var buttons := HBoxContainer.new()
 	buttons.add_theme_constant_override("separation", 9)
 	rows.add_child(buttons)
@@ -117,13 +121,24 @@ static func cards_text(cards: Array) -> String:
 		parts.append(card_text(card))
 	return "  ".join(parts)
 
-func pregame(cash := 0, definition: Dictionary = {}) -> void:
+func pregame(cash := 0, definition: Dictionary = {}, inventory: Array = [], run: RefCounted = null) -> void:
 	if definition.is_empty():
 		return
 	result_banner.hide()
 	header.text = "%s · 本桌 %d 手" % [TABLE_NAMES[definition.id], definition.hands]
 	status.text = "每席 %d 筹码 · 小盲 %d / 大盲 %d" % [definition.buyIn, definition.smallBlind, definition.openBet]
-	status.text += " · 每手首次加注少付 10" if definition.id == "cargo-table" else " · 每次桌面道具额外增加 1 风声"
+	if run != null:
+		status.text += " · " + run.rule_text(definition.id)
+	collateral_choice.clear()
+	collateral_choice.add_item("不抵押贵重物")
+	collateral_choice.set_item_metadata(0, "")
+	collateral_choice.visible = definition.get("allowCollateral", false)
+	if collateral_choice.visible and run != null:
+		for id in inventory:
+			if run.content.items[id].kind == "valuable":
+				collateral_choice.add_item("抵押 " + run.item_name(id) + " · 最后一手未获胜则失去")
+				collateral_choice.set_item_metadata(collateral_choice.item_count - 1, id)
+	collateral_choice.select(0)
 	hand.text = "随身现金 %d · 开始时扣除买入 %d，离桌返还剩余筹码" % [cash, definition.buyIn]
 	history.text = ""
 	opponent_left.text = NAMES[definition.opponentIds[0]]
@@ -136,6 +151,7 @@ func pregame(cash := 0, definition: Dictionary = {}) -> void:
 	leave_button.show()
 
 func refresh(view: Dictionary, locked := false) -> void:
+	collateral_choice.hide()
 	displayed_revision = view.revision
 	var playing: bool = view.status == "playing"
 	result_banner.visible = not playing
@@ -184,3 +200,6 @@ func refresh(view: Dictionary, locked := false) -> void:
 		if entry.kind in ACTIONS:
 			lines.append("%s %s%s" % [NAMES.get(entry.actor, entry.actor), ACTIONS[entry.kind], " %d" % entry.amount if entry.amount > 0 else ""])
 	history.text = "\n".join(lines)
+
+func selected_collateral() -> String:
+	return str(collateral_choice.get_item_metadata(collateral_choice.selected)) if collateral_choice.visible and collateral_choice.selected >= 0 else ""

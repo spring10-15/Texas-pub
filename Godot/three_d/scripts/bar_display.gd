@@ -36,7 +36,7 @@ func refresh() -> void:
 			prop.add_child(label)
 			world.target(display, "ShelfItem", pos + Vector3(-0.12, 0, 0), Vector3(0.18, 0.3, 0.3), "shop:" + id, "%s · 查看 / 购买" % world.run_game.item_name(id))
 func deliver(id: String) -> void:
-	var room_id := "LedgerCellar" if world.current_room == "ledger" else "Tavern"
+	var room_id: String = world.ROOMS.get(world.current_room, world.ROOMS.tavern).node
 	var room: Node3D = displays[room_id].get_parent()
 	var prop := make_item(room, id, Vector3(2.2, 0.85, 0.4))
 	var hand: Node3D = hands[room_id]

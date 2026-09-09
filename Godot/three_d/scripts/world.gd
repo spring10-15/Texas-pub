@@ -48,6 +48,7 @@ var seat_camera: Camera3D
 var readiness := false
 var materials := {}
 var table_rooms := {}
+const ROOMS := {"tavern":{"node":"Tavern", "table":"cargo-table", "x":10.0}, "ledger":{"node":"LedgerCellar", "table":"ledger-cellar", "x":20.0}, "mirror":{"node":"MirrorHall", "table":"mirror-hall", "x":30.0}, "embers":{"node":"EmbersRoom", "table":"embers-table", "x":40.0}}
 var active_table_id := "cargo-table"
 var ledger_door: Area3D
 var services_panel: Control
@@ -73,6 +74,8 @@ func _ready() -> void:
 	build_stash()
 	build_tavern()
 	build_tavern("LedgerCellar", 20.0)
+	build_tavern("MirrorHall", 30.0)
+	build_tavern("EmbersRoom", 40.0)
 	select_table_room("Tavern")
 	player = PlayerController.new()
 	player.name = "Player"
@@ -234,6 +237,9 @@ func build_tavern(room_name := "Tavern", offset := 10.0) -> void:
 		ledger_door = make_door(room, Vector3(2.83, 1.1, 1.65), "前往账房地窖 · 需完成货运桌", "enter_ledger")
 	else:
 		make_door(room, Vector3(-2.83, 1.1, 1.65), "返回烟雾酒馆", "back_tavern")
+	if room_name in ["LedgerCellar", "MirrorHall"]:
+		var next_room := "mirror" if room_name == "LedgerCellar" else "embers"
+		make_door(room, Vector3(2.83, 1.1, 1.65), "前往" + run_game.table_name(ROOMS[next_room].table), "room:" + next_room)
 	install_detail(room, TAVERN_DETAIL)
 	props.build_tavern(room, room_name)
 	bar_display.build(room)
@@ -411,6 +417,14 @@ func request_action(anchor: Area3D) -> bool:
 	if str(anchor.action_id).begins_with("route:"):
 		show_run_panel(anchor.action_id)
 		return true
+	if str(anchor.action_id).begins_with("room:"):
+		var destination: String = str(anchor.action_id).trim_prefix("room:")
+		var required: String = table_content.tables[ROOMS[destination].table].unlocksAfter
+		if required not in run_game.completed:
+			hint_label.text = "先完成" + run_game.table_name(required) + "并离座"
+			return false
+		travel(destination)
+		return true
 	match anchor.action_id:
 		"toggle_case":
 			if not is_instance_valid(lid):
@@ -451,7 +465,7 @@ func request_action(anchor: Area3D) -> bool:
 			player.controls_enabled = false
 			player.velocity = Vector3.ZERO
 			seat_camera.current = true
-			seat_panel.pregame(run_game.cash, table_content.tables[active_table_id])
+			seat_panel.pregame(run_game.cash, table_content.tables[active_table_id], run_game.inventory, run_game)
 			seat_panel.show()
 			explore_instructions.hide()
 			crosshair.hide()
@@ -463,12 +477,12 @@ func request_action(anchor: Area3D) -> bool:
 func travel(destination: String) -> void:
 	bar_display.refresh()
 	current_room = destination
-	select_table_room("LedgerCellar" if destination == "ledger" else "Tavern")
+	select_table_room(ROOMS.get(destination, ROOMS.tavern).node)
 	player.velocity = Vector3.ZERO
-	player.position = Vector3(18.0 if destination == "ledger" else 8.0, 0.05, 1.7) if destination != "stash" else Vector3(1.95, 0.05, 1.7)
+	player.position = Vector3(ROOMS.get(destination, ROOMS.tavern).x - 2.0, 0.05, 1.7) if destination != "stash" else Vector3(1.95, 0.05, 1.7)
 	player.rotation = Vector3(0, -0.65 if destination != "stash" else 0.55, 0)
 	player.camera.rotation = Vector3(-0.10, 0, 0)
-	title_label.text = {"tavern": "烟雾酒馆", "ledger": "账房地窖", "stash": "藏匿点"}[destination]
+	title_label.text = {"tavern": "烟雾酒馆", "ledger": "账房地窖", "mirror":"镜厅", "embers":"余烬牌室", "stash": "藏匿点"}[destination]
 	player.update_focus()
 	refresh_economy()
 
@@ -541,7 +555,7 @@ func _notification(what: int) -> void:
 func start_table(seed_value: int = -1) -> void:
 	if not seated or table_game != null or paused:
 		return
-	table_game = run_game.enter_table(int(Time.get_ticks_usec() % 2147483647) if seed_value < 0 else seed_value, run_game.revision, active_table_id)
+	table_game = run_game.enter_table(int(Time.get_ticks_usec() % 2147483647) if seed_value < 0 else seed_value, run_game.revision, active_table_id, seat_panel.selected_collateral())
 	if table_game == null:
 		return
 	refresh_economy()
@@ -634,6 +648,8 @@ func draw_card(card: Dictionary, pos: Vector3) -> void:
 func refresh_economy() -> void:
 	if run_game.active:
 		economy_label.text = "金库 %d  ·  随身 %d  ·  风声 %d / 6  ·  出口%s" % [run_game.vault, run_game.cash, run_game.heat, "已知" if run_game.public_exit else "未知：查看门旁告示"]
+		if run_game.table == null and not run_game.last_table_result.is_empty():
+			economy_label.text += "\n%s结算 %+d · %s" % [run_game.table_name(run_game.last_table_result.table), run_game.last_table_result.net, run_game.last_reward.replace("\n", " · ")]
 	elif not run_game.last_result.is_empty():
 		var result: Dictionary = run_game.last_result
 		economy_label.text = "金库 %d  ·  上局到账 %d / 费用 %d / 净变化 %+d" % [run_game.vault, result.net, result.fee, result.profit]
@@ -717,7 +733,9 @@ func select_table_room(room_name: String) -> void:
 	cards_root = setup.cards
 	seat_camera = setup.camera
 	table_target = setup.target
-	active_table_id = "ledger-cellar" if room_name == "LedgerCellar" else "cargo-table"
+	for room in ROOMS.values():
+		if room.node == room_name:
+			active_table_id = room.table
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("inventory"):
@@ -769,7 +787,7 @@ func service_action(kind: String, item_id: String, revision: int, target_id := "
 		bar_display.refresh()
 		if kind == "buy":
 			close_services()
-			var focus: Vector3 = Vector3(21.57 if current_room == "ledger" else 11.57, 1.34, 0.4) - player.camera.global_position
+			var focus: Vector3 = Vector3(ROOMS.get(current_room, ROOMS.tavern).x + 1.57, 1.34, 0.4) - player.camera.global_position
 			player.rotation.y = atan2(-focus.x, -focus.z)
 			player.camera.rotation = Vector3(atan2(focus.y, Vector2(focus.x, focus.z).length()), 0, 0)
 			bar_display.deliver(item_id)
@@ -811,14 +829,14 @@ func load_checkpoint() -> void:
 	save_notice.text = "已恢复进度，点击继续"
 
 func restore_checkpoint(state: Dictionary) -> bool:
-	if state.get("room") not in ["stash", "tavern", "ledger"] or not state.get("player") is Transform3D or not state.get("look") is Vector3 or not state.get("return") is Transform3D or not state.get("seated") is bool or not state.get("run") is Dictionary or not state.get("caseOpen") is bool:
+	if state.get("room") not in ["stash", "tavern", "ledger", "mirror", "embers"] or not state.get("player") is Transform3D or not state.get("look") is Vector3 or not state.get("return") is Transform3D or not state.get("seated") is bool or not state.get("run") is Dictionary or not state.get("caseOpen") is bool:
 		return false
 	var restored := RunCheckpoint.restore(state.run, table_content)
 	if restored == null:
 		return false
 	if (state.room == "stash") == restored.active or (restored.table != null and not state.seated):
 		return false
-	if restored.table != null and restored.table.state.tableDef.id != ("ledger-cellar" if state.room == "ledger" else "cargo-table"):
+	if restored.table != null and restored.table.state.tableDef.id != ROOMS.get(state.room, ROOMS.tavern).table:
 		return false
 	run_game = restored
 	props.restore(state.get("props", {}))
@@ -839,7 +857,7 @@ func restore_checkpoint(state: Dictionary) -> bool:
 		if table_game != null:
 			refresh_table()
 		else:
-			seat_panel.pregame(run_game.cash, table_content.tables[active_table_id])
+			seat_panel.pregame(run_game.cash, table_content.tables[active_table_id], run_game.inventory, run_game)
 	refresh_economy()
 	return true
 

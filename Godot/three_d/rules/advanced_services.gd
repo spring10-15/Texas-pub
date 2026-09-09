@@ -28,7 +28,7 @@ static func reason(run: RefCounted, kind: String, item: String, target: String) 
 			return "已有有效预约"
 		if run.cash < maxi(10, int(offer.reserveCost) - 10):
 			return "预约现金不足"
-	elif kind == "phone-table" and target not in ["cargo-table", "ledger-cellar"]:
+	elif kind == "phone-table" and not run.content.tables.has(target):
 		return "请选择有效牌桌"
 	elif kind == "pass":
 		if item not in ["kitchen-pass", "dock-passkey"]:

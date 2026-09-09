@@ -1,4 +1,4 @@
-# 3D 原型 · 双桌与撤离闭环
+# 3D 游戏开发版 · 四桌与撤离闭环
 
 ## 运行
 
@@ -114,3 +114,11 @@ node Godot/three_d/tests/generate_table_fixtures.mjs
 Blender 细节包已替换牌桌、吧台、椅凳、吊灯、地板和护墙板的部分粗模；玩法入口和碰撞保留。新增源文件 assets/blender/tavern-detail/tavern-detail.blend 可继续编辑。并非最终写实美术验收版，具体完成范围见 docs/3d-production/art-pass-01.md。
 
 art_integration_test.gd 在 Metal 模式加 -- --test --capture 可检查细节包并截图，实机路径 96 项检查。
+
+## 四桌与抵押（2026-09-09）
+
+完成账房地窖后，可通过右侧门进入镜厅；完成镜厅后，经右侧门进入余烬牌室。两处房间的左侧门返回主厅。新增房间目前复用美术包，独特场景仍待制作。
+
+镜厅买入 120 / 三手，余烬买入 160 / 三手。开桌前可从拥有的贵重物中选择一件抵押；最后一手主池获胜或并列获胜归还，输掉则失去。镜厅盈利且归还抵押时奖励古董纪念币；余烬整桌盈利降低 1 风声，然后再判断封锁撤离。抵押状态与四张桌的中途进度均可恢复。
+
+运行 `res://three_d/tests/four_tables_test.gd -- --test` 验证完整四桌门/入座/合法行动/返还/撤离，以及抵押与存档边界。110 项通过。加 `--capture` 并使用 Metal 可截图。全部计划对照与剩余缺口见 docs/3d-production/full-game-audit.md；四桌接通不代表四种酒馆和最终美术已完成。

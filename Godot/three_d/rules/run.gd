@@ -5,6 +5,8 @@ const Routes = preload("res://three_d/rules/routes.gd")
 const Advanced = preload("res://three_d/rules/advanced_services.gd")
 const SUPPORTED_ITEMS := ["marked-lens", "steadying-drink", "sleeve-clip", "signal-lighter", "player-notes", "disposable-phone", "kitchen-pass", "dock-passkey", "false-bottom-wallet"]
 const ITEM_NAMES := {"marked-lens": "标记镜片", "steadying-drink": "镇定酒", "sleeve-clip": "袖口夹", "signal-lighter":"信号打火机", "player-notes":"玩家笔记", "disposable-phone":"一次性手机", "kitchen-pass":"后厨通行证", "dock-passkey":"码头密钥", "false-bottom-wallet":"夹层钱包"}
+var collateral := ""
+var last_table_result: Dictionary = {}
 var inventory: Array[String] = []
 var known_rules: Array[String] = []
 var used_tools: Array[String] = []
@@ -45,6 +47,8 @@ func start(expected_revision: int) -> bool:
 	heat = 0
 	public_exit = false
 	completed.clear()
+	collateral = ""
+	last_table_result = {}
 	inventory.clear()
 	known_rules.clear()
 	action_points = int(content.searchActions)
@@ -65,7 +69,7 @@ func start(expected_revision: int) -> bool:
 	return true
 
 func table_blocked_reason(table_id := "cargo-table") -> String:
-	if table_id not in ["cargo-table", "ledger-cellar"]:
+	if not content.tables.has(table_id):
 		return "该牌桌尚未开放"
 	if not active:
 		return "先从藏匿点进入酒馆"
@@ -75,15 +79,20 @@ func table_blocked_reason(table_id := "cargo-table") -> String:
 		return "本局已完成此桌，可继续探索或撤离"
 	var definition: Dictionary = content.tables[table_id]
 	if definition.unlocksAfter != null and definition.unlocksAfter not in completed:
-		return "先完成货运桌并离座，再进入账房地窖"
+		return "先完成" + table_name(definition.unlocksAfter) + "并离座"
 	if cash < int(definition.buyIn):
 		return "随身现金不足 %d，无法买入" % int(definition.buyIn)
 	return ""
 
-func enter_table(seed_value: int, expected_revision: int, table_id := "cargo-table") -> RefCounted:
+func enter_table(seed_value: int, expected_revision: int, table_id := "cargo-table", pledged_item := "") -> RefCounted:
 	if expected_revision != revision or not table_blocked_reason(table_id).is_empty():
 		return null
 	var definition: Dictionary = content.tables[table_id]
+	if not pledged_item.is_empty():
+		if not definition.get("allowCollateral", false) or pledged_item not in inventory or content.items[pledged_item].kind != "valuable":
+			return null
+		inventory.erase(pledged_item)
+	collateral = pledged_item
 	cash -= int(definition.buyIn)
 	heat = mini(6, heat + int(definition.heatGain) + int(content.scenes["smoky-den"].entryHeatBonus))
 	used_tools.clear()
@@ -99,17 +108,31 @@ func settle_table(expected_revision: int) -> bool:
 	var stack: int = table.state.players[0].stack
 	cash += stack
 	last_reward = ""
-	if stack > int(table.state.tableDef.buyIn):
-		var reward := "ivory-chip"
-		if table.state.tableDef.id == "ledger-cellar":
-			reward = "pearl-necklace" if stack >= 130 else "emerald-brooch"
-		elif "ivory-chip" in inventory:
-			reward = "ruby-cufflink" if stack >= 90 else "old-silver-lighter"
+	var definition: Dictionary = table.state.tableDef
+	var summary: Dictionary = table.state.summary
+	var won_final: bool = "player" in summary.pots[0].winnerIds if not summary.get("pots", []).is_empty() else int(summary.get("awards", {}).get("player", 0)) > 0
+	var returned := not collateral.is_empty() and won_final
+	if returned:
+		inventory.append(collateral)
+	var reward := ""
+	var reward_added := false
+	if stack > int(definition.buyIn):
+		match definition.id:
+			"cargo-table": reward = "ivory-chip" if "ivory-chip" not in inventory else ("ruby-cufflink" if stack >= 90 else "old-silver-lighter")
+			"ledger-cellar": reward = "pearl-necklace" if stack >= 130 else "emerald-brooch"
+			"mirror-hall": reward = "antique-coin" if returned else ("sealed-bond" if stack >= 170 else "gold-cased-watch")
+			"embers-table": reward = "vault-promissory" if stack >= 220 else "obsidian-idol"
 		if slots_used() + int(content.items[reward].slots) <= int(content.inventorySlots):
 			inventory.append(reward)
+			reward_added = true
 			last_reward = "获得 " + item_name(reward)
 		else:
 			last_reward = "背包已满，未能带走 " + item_name(reward)
+		heat = maxi(0, heat - int(definition.get("winHeatRelief", 0)))
+	last_table_result = {"table":definition.id, "net":stack - int(definition.buyIn), "collateral":collateral, "returned":returned, "reward":reward, "reward_added":reward_added}
+	if not collateral.is_empty():
+		last_reward += "\n抵押物" + ("已归还：" if returned else "已失去：") + item_name(collateral)
+	collateral = ""
 	completed.append(table.state.tableDef.id)
 	table = null
 	search_index += 1
@@ -196,7 +219,7 @@ func service_reason(kind: String, item_id: String, target_id := "") -> String:
 		if kind == "cool" and cash < int(content.scenes["smoky-den"].heatReductionCost):
 			return "随身现金不足"
 	elif kind == "intel":
-		if item_id not in ["cargo-table", "ledger-cellar"] or item_id in known_rules:
+		if not content.tables.has(item_id) or item_id in known_rules:
 			return "该牌桌规则已知或尚未开放"
 	else:
 		return "未知操作"
@@ -264,8 +287,8 @@ func service_view(mode := "bag", product := "") -> Dictionary:
 			if item_id in SUPPORTED_ITEMS:
 				actions.append({"kind": "buy", "id": item_id, "label": "买 %s · %d" % [item_name(item_id), content.items[item_id].buy]})
 		actions.append({"kind": "cool", "id": "", "label": "找酒保降风声 · %d" % content.scenes["smoky-den"].heatReductionCost})
-		for table_id in ["cargo-table", "ledger-cellar"]:
-			actions.append({"kind": "intel", "id": table_id, "label": "调查%s规则 · 1 行动力" % ("货运桌" if table_id == "cargo-table" else "账房地窖")})
+		for table_id in content.tables:
+			actions.append({"kind": "intel", "id": table_id, "label": "调查%s规则 · 1 行动力" % table_name(table_id)})
 	for item_id in inventory.duplicate():
 		if item_id in ["steadying-drink", "marked-lens", "sleeve-clip"]:
 			var kind: String = {"steadying-drink": "drink", "marked-lens": "lens", "sleeve-clip": "sleeve"}[item_id]
@@ -275,8 +298,8 @@ func service_view(mode := "bag", product := "") -> Dictionary:
 	if table == null:
 		if "disposable-phone" in inventory:
 			actions.append({"kind":"phone-route", "id":"disposable-phone", "label":"使用手机 · 更新接应路线"})
-			for table_id in ["cargo-table", "ledger-cellar"]:
-				actions.append({"kind":"phone-table", "id":"disposable-phone", "target":table_id, "label":"使用手机 · 查明" + ("货运桌" if table_id == "cargo-table" else "账房地窖") + "全部情报"})
+			for table_id in content.tables:
+				actions.append({"kind":"phone-table", "id":"disposable-phone", "target":table_id, "label":"使用手机 · 查明" + table_name(table_id) + "全部情报"})
 		for pass_id in ["kitchen-pass", "dock-passkey"]:
 			if pass_id in inventory:
 				actions.append({"kind":"pass", "id":pass_id, "label":"使用 " + item_name(pass_id)})
@@ -318,7 +341,7 @@ func service_view(mode := "bag", product := "") -> Dictionary:
 	for actor in opponent_notes:
 		text += "\n%s 风格：%s" % [actor_name(actor), archetype_name(opponent_notes[actor])]
 	for table_id in known_rules:
-		text += "\n" + ("货运桌：每手首次加注少付 10" if table_id == "cargo-table" else "账房地窖：每次桌面道具额外增加 1 风声")
+		text += "\n" + table_name(table_id) + "：" + rule_text(table_id)
 	if not preview.is_empty():
 		text += "\n镜片记录（第 %d 手）：%s%s" % [preview_hand, str({11:"J", 12:"Q", 13:"K", 14:"A"}.get(int(preview.rank), str(preview.rank))), {"S":"♠", "H":"♥", "D":"♦", "C":"♣"}[preview.suit]]
 	var bag: PackedStringArray = []
@@ -327,7 +350,7 @@ func service_view(mode := "bag", product := "") -> Dictionary:
 	return {"mode": mode, "product": product, "productName": item_name(product), "description": item_description(product), "revision": revision, "cash": cash, "heat": heat, "points": action_points, "slots": slots_used(), "capacity": content.inventorySlots, "bag": "、".join(bag), "text": text, "actions": actions}
 
 func item_name(id: String) -> String:
-	return {"ivory-chip": "象牙筹码", "ruby-cufflink": "红宝石袖扣", "old-silver-lighter": "旧银打火机", "pearl-necklace": "珍珠项链", "emerald-brooch": "翡翠胸针"}.get(id, ITEM_NAMES.get(id, id))
+	return {"ivory-chip": "象牙筹码", "ruby-cufflink": "红宝石袖扣", "old-silver-lighter": "旧银打火机", "pearl-necklace": "珍珠项链", "emerald-brooch": "翡翠胸针", "antique-coin":"古董纪念币", "sealed-bond":"密封债券", "gold-cased-watch":"金壳怀表", "vault-promissory":"金库本票", "obsidian-idol":"黑曜石雕像"}.get(id, ITEM_NAMES.get(id, id))
 
 func sale_value(id: String) -> int:
 	var item: Dictionary = content.items[id]
@@ -362,10 +385,10 @@ func emergency_known() -> bool:
 	return heat >= 4 or not completed.is_empty() or valuable_total() > 0
 
 func actor_name(id: String) -> String:
-	return {"player":"你", "dock-braggart":"码头吹牛客", "ledger-clerk":"账房先生", "river-shark":"河道老鲨", "velvet-rook":"绒衣新客"}.get(id, id)
+	return {"player":"你", "dock-braggart":"码头吹牛客", "ledger-clerk":"账房先生", "river-shark":"河道老鲨", "velvet-rook":"绒衣新客", "calm-widow":"沉静寡妇", "smiling-knife":"笑面刀", "house-viper":"庄家毒蛇", "ash-smuggler":"灰烬走私客"}.get(id, id)
 
 func table_name(id: String) -> String:
-	return {"cargo-table":"货运桌", "ledger-cellar":"账房地窖"}.get(id, id)
+	return {"cargo-table":"货运桌", "ledger-cellar":"账房地窖", "mirror-hall":"镜厅", "embers-table":"余烬桌"}.get(id, id)
 
 func archetype_name(value: String) -> String:
 	return {"Maniac":"激进型", "Nit":"紧手型", "Fish":"松散型", "Shark":"老练型", "Calling Station":"跟注型"}.get(value, value)
@@ -402,3 +425,6 @@ func route_known(kind: String) -> bool:
 
 func item_description(id: String) -> String:
 	return {"marked-lens":"牌局中提前看下一张公共牌；本桌限一次，增加风声。", "steadying-drink":"离桌后使用，降低 1 风声；每轮只能降一次。", "sleeve-clip":"翻牌前第一次行动前更换第二张手牌，增加风声。", "signal-lighter":"牌局中选择对手，判断其牌力强弱；不揭示底牌，增加风声。", "player-notes":"牌局中记录一位对手的风格，增加风声。", "disposable-phone":"离桌后查明一桌情报，或更新接应方案；二选一。", "kitchen-pass":"离桌后使用，揭示后厨楼梯出口。", "dock-passkey":"离桌后使用，揭示河边接驳出口。", "false-bottom-wallet":"随身携带，失败时自动保留至多 80 现金。"}.get(id, "")
+
+func rule_text(id: String) -> String:
+	return {"cargo-table":"每手首次加注少付 10", "ledger-cellar":"每次桌面道具额外增加 1 风声", "mirror-hall":"可押一件贵重物；最后一手获胜归还，且盈利时获得纪念币", "embers-table":"可押一件贵重物；最后一手获胜归还，整桌盈利降低 1 风声"}.get(id, "")
