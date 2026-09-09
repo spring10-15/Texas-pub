@@ -19,6 +19,7 @@ var leave_button: Button
 var raise_amount: SpinBox
 var action_buttons := {}
 var displayed_revision := -1
+var result_banner: Label
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -74,6 +75,16 @@ func _ready() -> void:
 	next_button.pressed.connect(func(): continue_requested.emit(displayed_revision))
 	leave_button = make_button(buttons, "离开牌桌")
 	leave_button.pressed.connect(func(): leave_requested.emit())
+	result_banner = text(self, "", 36)
+	result_banner.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	result_banner.offset_left = -460
+	result_banner.offset_right = 460
+	result_banner.offset_top = -50
+	result_banner.offset_bottom = 70
+	result_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	result_banner.add_theme_color_override("font_shadow_color", Color.BLACK)
+	result_banner.add_theme_constant_override("shadow_outline_size", 12)
+	result_banner.hide()
 	pregame()
 
 func text(parent: Node, value: String, font_size: int) -> Label:
@@ -109,6 +120,7 @@ static func cards_text(cards: Array) -> String:
 func pregame(cash := 0, definition: Dictionary = {}) -> void:
 	if definition.is_empty():
 		return
+	result_banner.hide()
 	header.text = "%s · 本桌 %d 手" % [TABLE_NAMES[definition.id], definition.hands]
 	status.text = "每席 %d 筹码 · 小盲 %d / 大盲 %d" % [definition.buyIn, definition.smallBlind, definition.openBet]
 	status.text += " · 每手首次加注少付 10" if definition.id == "cargo-table" else " · 每次桌面道具额外增加 1 风声"
@@ -126,6 +138,7 @@ func pregame(cash := 0, definition: Dictionary = {}) -> void:
 func refresh(view: Dictionary, locked := false) -> void:
 	displayed_revision = view.revision
 	var playing: bool = view.status == "playing"
+	result_banner.visible = not playing
 	var your_turn: bool = playing and view.currentActorId == "player" and not locked
 	var you: Dictionary = view.players[0]
 	var owed := maxi(0, view.currentBet - you.currentBet)
@@ -143,6 +156,12 @@ func refresh(view: Dictionary, locked := false) -> void:
 		for id in view.summary.get("awards", {}):
 			if view.summary.awards[id] > 0:
 				winners.append("%s收回 %d" % [NAMES.get(id, id), view.summary.awards[id]])
+		var net := int(view.summary.get("awards", {}).get("player", 0)) - int(you.handContribution)
+		var outcome := "赢了！" if net > 0 else ("输了这一手" if net < 0 else "本手持平")
+		result_banner.text = "%s  %s%d 筹码" % [outcome, "+" if net > 0 else "", net]
+		result_banner.add_theme_color_override("font_color", Color("8ee1b0") if net > 0 else (Color("ffa399") if net < 0 else Color("f0dfb4")))
+		if view.status == "finished":
+			result_banner.text += "\n本桌结束 · 合计 %+d 筹码" % (you.stack - int(view.tableDef.buyIn))
 		status.text = "本手结束 · " + "，".join(winners)
 		if view.status == "finished":
 			hand.text += "    本桌净变化 %+d" % (you.stack - int(view.tableDef.buyIn))

@@ -54,6 +54,10 @@ var save_clock := 0.0
 var last_saved: PackedByteArray
 var save_notice: Label
 var selected_route := "general"
+var props: RefCounted
+var bar_display: RefCounted
+var service_mode := "bag"
+var product_id := ""
 
 func _ready() -> void:
 	table_content = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
@@ -61,6 +65,8 @@ func _ready() -> void:
 	configure_input()
 	make_materials()
 	build_lighting()
+	props = preload("res://three_d/scripts/scene_props.gd").new(self)
+	bar_display = preload("res://three_d/scripts/bar_display.gd").new(self)
 	build_stash()
 	build_tavern()
 	build_tavern("LedgerCellar", 20.0)
@@ -130,10 +136,21 @@ func room_shell(offset: Vector3, label: String) -> Node3D:
 	add_child(room)
 	box(room, "Floor", Vector3(0, -0.12, 0), Vector3(6, 0.24, 7), "floor")
 	box(room, "Ceiling", Vector3(0, 3.1, 0), Vector3(6, 0.2, 7), "dark")
-	box(room, "BackWall", Vector3(0, 1.5, -3.5), Vector3(6, 3, 0.18), "wall")
+	if label == "Tavern":
+		for x in [-1.95, 1.95]:
+			box(room, "BackWall", Vector3(x, 1.5, -3.5), Vector3(2.1, 3, 0.18), "wall")
+		box(room, "DoorLintel", Vector3(0, 2.8, -3.5), Vector3(1.8, 0.4, 0.18), "wood")
+	else:
+		box(room, "BackWall", Vector3(0, 1.5, -3.5), Vector3(6, 3, 0.18), "wall")
 	box(room, "FrontWall", Vector3(0, 1.5, 3.5), Vector3(6, 3, 0.18), "wall")
 	for x in [-3.0, 3.0]:
-		box(room, "SideWall", Vector3(x, 1.5, 0), Vector3(0.18, 3, 7), "wall")
+		if label == "Stash" and x > 0:
+			box(room, "WindowSill", Vector3(x, 0.5, -1.4), Vector3(0.18, 1, 2), "wall")
+			box(room, "WindowLintel", Vector3(x, 2.95, -1.4), Vector3(0.18, 0.3, 2), "wall")
+			box(room, "SideWall", Vector3(x, 1.5, -2.95), Vector3(0.18, 3, 1.1), "wall")
+			box(room, "SideWall", Vector3(x, 1.5, 1.55), Vector3(0.18, 3, 3.9), "wall")
+		else:
+			box(room, "SideWall", Vector3(x, 1.5, 0), Vector3(0.18, 3, 7), "wall")
 		box(room, "Skirting", Vector3(x * 0.965, 0.16, 0), Vector3(0.06, 0.3, 6.9), "wood", false)
 	for z in [-2.0, 0.0, 2.0]:
 		box(room, "CeilingBeam", Vector3(0, 2.94, z), Vector3(5.9, 0.18, 0.15), "wood", false)
@@ -161,21 +178,14 @@ func build_stash() -> void:
 	case_target = target(room, "CaseTarget", Vector3(-0.39, 1.04, -0.72), Vector3(1.0, 0.7, 0.85), "toggle_case", "合上皮箱")
 	door_target = make_door(room, Vector3(2.83, 1.1, 1.65), "进入酒馆", "enter_tavern")
 	box(room, "Cabinet", Vector3(-2.48, 0.8, -2.45), Vector3(0.75, 1.6, 1.0), "wood")
-	for y in [0.42, 0.82, 1.22]:
-		box(room, "Drawer", Vector3(-2.47, y, -1.93), Vector3(0.64, 0.32, 0.025), "dark", false)
-		box(room, "Pull", Vector3(-2.47, y, -1.88), Vector3(0.18, 0.03, 0.045), "brass", false)
-	box(room, "Window", Vector3(2.87, 1.9, -1.4), Vector3(0.03, 1.65, 1.8), "dark", false)
-	for y in [1.05, 1.9, 2.75]:
-		box(room, "WindowFrame", Vector3(2.83, y, -1.4), Vector3(0.08, 0.065, 1.92), "wood", false)
-	for z in [-2.33, -1.4, -0.47]:
-		box(room, "WindowMullion", Vector3(2.83, 1.9, z), Vector3(0.08, 1.75, 0.065), "wood", false)
-	point_light(room, Vector3(0.53, 1.39, -1.25), Color("ffc580"), 1.7, 4)
+	var lamp := point_light(room, Vector3(0.53, 1.39, -1.25), Color("ffc580"), 1.7, 4)
+	props.build_stash(room, lamp)
 	point_light(room, Vector3(2.45, 2.1, -1.4), Color("83a6ce"), 0.55, 4)
 
 func build_tavern(room_name := "Tavern", offset := 10.0) -> void:
 	var room := room_shell(Vector3(offset, 0, 0), room_name)
 	box(room, "BarCounter", Vector3(2.0, 0.57, -1.25), Vector3(0.65, 1.14, 2.8), "wood")
-	target(room, "BarService", Vector3(1.54, 1.20, 0.10), Vector3(0.3, 0.6, 0.6), "services", "酒保服务 / 背包（B）")
+	target(room, "BarService", Vector3(1.54, 1.20, 0.10), Vector3(0.3, 0.6, 0.6), "services", "与酒保交谈 · 服务 / 接应")
 	box(room, "BarTop", Vector3(2.0, 1.16, -1.25), Vector3(0.86, 0.10, 3.0), "brass")
 	for z in [-2.2, -1.2, -0.2]:
 		box(room, "BarStool", Vector3(1.20, 0.37, z), Vector3(0.4, 0.74, 0.4), "wood")
@@ -206,20 +216,12 @@ func build_tavern(room_name := "Tavern", offset := 10.0) -> void:
 		notice_text.rotation.y = PI / 2
 		room.add_child(notice_text)
 		exit_notice = target(room, "ExitNoticeTarget", Vector3(-2.73, 1.6, 2.55), Vector3(0.16, 0.52, 0.59), "discover_exit", "查看出口告示")
-		for i in range(3):
-			var route_id: String = ["fixed", "service-stairs", "river-launch"][i]
-			var pos := Vector3(-1.8 + i * 1.8, 1.3, -3.32)
-			box(room, "RouteEntrance", pos, Vector3(1.05, 2.3, 0.08), "wood", false)
-			target(room, "RouteTarget", pos + Vector3(0, 0, 0.12), Vector3(1.0, 2.1, 0.16), "route:" + route_id, run_game.Routes.NAMES[route_id] + " · 查看条件")
-			var sign := Label3D.new()
-			sign.text = run_game.Routes.NAMES[route_id]
-			sign.font_size = 40
-			sign.pixel_size = 0.003
-			sign.position = pos + Vector3(0, 0.7, 0.08)
-			room.add_child(sign)
+		preload("res://three_d/scripts/tavern_layout.gd").build(self, room)
 		ledger_door = make_door(room, Vector3(2.83, 1.1, 1.65), "前往账房地窖 · 需完成货运桌", "enter_ledger")
 	else:
 		make_door(room, Vector3(-2.83, 1.1, 1.65), "返回烟雾酒馆", "back_tavern")
+	props.build_tavern(room, room_name)
+	bar_display.build(room)
 	seat_camera = Camera3D.new()
 	seat_camera.name = "SeatCamera"
 	room.add_child(seat_camera)
@@ -264,7 +266,7 @@ func build_lighting() -> void:
 	world.environment = environment
 	add_child(world)
 
-func point_light(parent: Node3D, pos: Vector3, color: Color, energy: float, radius: float) -> void:
+func point_light(parent: Node3D, pos: Vector3, color: Color, energy: float, radius: float) -> OmniLight3D:
 	var light := OmniLight3D.new()
 	light.position = pos
 	light.light_color = color
@@ -272,6 +274,7 @@ func point_light(parent: Node3D, pos: Vector3, color: Color, energy: float, radi
 	light.omni_range = radius
 	light.shadow_enabled = true
 	parent.add_child(light)
+	return light
 
 func build_ui() -> void:
 	var layer := CanvasLayer.new()
@@ -282,7 +285,7 @@ func build_ui() -> void:
 	layer.add_child(ui)
 	title_label = label(ui, "藏匿点", 30)
 	title_label.position = Vector2(32, 25)
-	explore_instructions = label(ui, "WASD 行走   ·   鼠标观察   ·   E 交互   ·   B 背包/服务   ·   Esc 暂停", 18)
+	explore_instructions = label(ui, "WASD 行走   ·   鼠标观察   ·   E 交互   ·   B 背包   ·   Esc 暂停", 18)
 	explore_instructions.position = Vector2(32, 67)
 	economy_label = label(ui, "", 17)
 	economy_label.position = Vector2(32, 100)
@@ -319,7 +322,7 @@ func build_ui() -> void:
 	cancel.pressed.connect(close_run_panel)
 	column.add_child(cancel)
 	var routes_button := Button.new()
-	routes_button.text = "查看全部路线 / 酒保服务（B）"
+	routes_button.text = "查看背包与已知路线（B）"
 	routes_button.custom_minimum_size.y = 36
 	routes_button.pressed.connect(func(): close_run_panel(); open_services())
 	column.add_child(routes_button)
@@ -384,6 +387,12 @@ func show_focus(focus: Area3D) -> void:
 func request_action(anchor: Area3D) -> bool:
 	if paused or run_panel.visible or services_panel.visible or seated or action_busy or not player.can_interact(anchor):
 		return false
+	if str(anchor.action_id).begins_with("prop:"):
+		props.interact(str(anchor.action_id).trim_prefix("prop:"))
+		return true
+	if str(anchor.action_id).begins_with("shop:"):
+		open_services("product", str(anchor.action_id).trim_prefix("shop:"))
+		return true
 	if str(anchor.action_id).begins_with("route:"):
 		show_run_panel(anchor.action_id)
 		return true
@@ -400,7 +409,7 @@ func request_action(anchor: Area3D) -> bool:
 			anchor.title = "合上皮箱" if case_open else "打开皮箱"
 			show_focus(anchor)
 		"services":
-			open_services()
+			open_services("bar")
 		"enter_tavern":
 			show_run_panel("enter")
 		"enter_stash":
@@ -437,6 +446,7 @@ func request_action(anchor: Area3D) -> bool:
 	return true
 
 func travel(destination: String) -> void:
+	bar_display.refresh()
 	current_room = destination
 	select_table_room("LedgerCellar" if destination == "ledger" else "Tavern")
 	player.velocity = Vector3.ZERO
@@ -617,7 +627,7 @@ func refresh_economy() -> void:
 	else:
 		economy_label.text = "金库 %d  ·  每次最多带出 300  ·  自动存档，可关闭后继续" % run_game.vault
 
-func show_run_panel(action: String) -> void:
+func show_run_panel(action: String, preview_only := false) -> void:
 	selected_route = action.trim_prefix("route:") if action.begins_with("route:") else "general"
 	run_action = "extract" if action.begins_with("route:") else action
 	run_revision = run_game.revision
@@ -645,6 +655,10 @@ func show_run_panel(action: String) -> void:
 			run_body.text += "\n" + quote.reason
 			run_confirm.disabled = true
 			forfeit_button.visible = run_game.active and run_game.table == null
+	if preview_only:
+		run_confirm.disabled = true
+		run_confirm.text = "到实际入口按 E 撤离"
+		run_body.text += "\n" + {"general":"大厅入口门旁。", "fixed":"后勤通道直走到库房，右侧货梯。", "service-stairs":"后勤通道左转，经后厨楼梯上楼。", "river-launch":"后勤通道右转，沿装卸坡道下到河边。", "dropbag-cash":"后勤走廊最左端的检修口。", "dropbag-valuables":"后勤走廊最左端的检修口。"}.get(selected_route, "")
 	player.controls_enabled = false
 	player.velocity = Vector3.ZERO
 	crosshair.hide()
@@ -698,11 +712,14 @@ func _unhandled_input(event: InputEvent) -> void:
 			open_services()
 		get_viewport().set_input_as_handled()
 
-func open_services() -> void:
-	if paused or run_panel.visible or not run_game.active:
+func open_services(mode := "bag", item := "") -> void:
+	if paused or run_panel.visible:
 		return
-	services_panel.refresh(run_game.service_view())
+	service_mode = mode
+	product_id = item
+	services_panel.refresh(run_game.service_view(service_mode, product_id))
 	services_panel.show()
+	hint_label.text = ""
 	player.controls_enabled = false
 	player.velocity = Vector3.ZERO
 	seat_panel.hide()
@@ -719,19 +736,38 @@ func close_services() -> void:
 func service_action(kind: String, item_id: String, revision: int, target_id := "") -> void:
 	if not services_panel.visible or paused:
 		return
+	var offered := false
+	for action in run_game.service_view(service_mode, product_id).actions:
+		if action.kind == kind and action.id == item_id and action.get("target", "") == target_id:
+			offered = true
+	if not offered:
+		return
 	if kind == "route":
 		close_services()
-		show_run_panel("route:" + item_id)
+		show_run_panel("route:" + item_id, true)
 		return
 	if run_game.service_action(kind, item_id, revision, target_id):
 		refresh_economy()
 		if table_game != null:
 			refresh_table()
-		services_panel.refresh(run_game.service_view())
+		services_panel.refresh(run_game.service_view(service_mode, product_id))
+		bar_display.refresh()
+		if kind == "buy":
+			close_services()
+			var focus: Vector3 = Vector3(21.57 if current_room == "ledger" else 11.57, 1.34, 0.4) - player.camera.global_position
+			player.rotation.y = atan2(-focus.x, -focus.z)
+			player.camera.rotation = Vector3(atan2(focus.y, Vector2(focus.x, focus.z).length()), 0, 0)
+			bar_display.deliver(item_id)
+			hint_label.text = "酒保递给你：" + run_game.item_name(item_id) + " · 已放入背包（B）"
+			var feedback := create_tween()
+			feedback.tween_interval(2.0)
+			feedback.tween_callback(func():
+				if not services_panel.visible and not run_panel.visible:
+					show_focus(player.focused))
 		check_pressure()
 
 func checkpoint_state() -> Dictionary:
-	return {"run": RunCheckpoint.capture(run_game), "room": current_room, "player": player.global_transform, "look": player.camera.rotation, "seated": seated, "return": return_transform, "caseOpen": case_open}
+	return {"run": RunCheckpoint.capture(run_game), "room": current_room, "player": player.global_transform, "look": player.camera.rotation, "seated": seated, "return": return_transform, "caseOpen": case_open, "props": props.states.duplicate()}
 
 func save_checkpoint() -> bool:
 	var state := checkpoint_state()
@@ -770,6 +806,7 @@ func restore_checkpoint(state: Dictionary) -> bool:
 	if restored.table != null and restored.table.state.tableDef.id != ("ledger-cellar" if state.room == "ledger" else "cargo-table"):
 		return false
 	run_game = restored
+	props.restore(state.get("props", {}))
 	case_open = state.caseOpen
 	lid.rotation = lid_open_rotation if case_open else lid_open_rotation + Vector3(deg_to_rad(102), 0, 0)
 	case_target.title = "合上皮箱" if case_open else "打开皮箱"

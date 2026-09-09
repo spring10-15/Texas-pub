@@ -257,7 +257,7 @@ func service_action(kind: String, item_id: String, expected_revision: int, targe
 	revision += 1
 	return true
 
-func service_view() -> Dictionary:
+func service_view(mode := "bag", product := "") -> Dictionary:
 	var actions: Array = []
 	if table == null:
 		for item_id in shop_stock():
@@ -288,9 +288,29 @@ func service_view() -> Dictionary:
 			if item_id in inventory:
 				for actor in table.state.players.slice(1):
 					actions.append({"kind":"signal" if item_id == "signal-lighter" else "notes", "id":item_id, "target":actor.id, "label":"%s → %s" % [item_name(item_id), actor_name(actor.id)]})
+	var visible: Array = []
+	for action in actions:
+		if mode == "product":
+			if action.kind == "buy" and action.id == product:
+				visible.append(action)
+		elif mode == "bar":
+			if action.kind in ["cool", "intel"] or (action.kind == "reserve" and fixed_known()):
+				visible.append(action)
+		else:
+			if action.kind == "route":
+				if route_known(action.id):
+					visible.append(action)
+			elif action.kind not in ["buy", "sell", "cool", "intel", "reserve"]:
+				visible.append(action)
+	# Selling belongs to the bartender, and only lists held objects.
+	if mode == "bar":
+		for action in actions:
+			if action.kind == "sell":
+				visible.append(action)
+	actions = visible
 	for action in actions:
 		action.reason = "" if action.kind == "route" else service_reason(action.kind, action.id, action.get("target", ""))
-	var text := last_reward + "\n" + service_message
+	var text := "" if mode == "bag" else last_reward + "\n" + service_message
 	if not reservation.is_empty():
 		text += "\n%s：当前第 %d 轮，第 %d 轮结束前有效，尾款 %d" % [offer_name(reservation.id), search_index, reservation.expiresAfterSearch, reservation.finalCost]
 	for table_id in full_intel:
@@ -304,7 +324,7 @@ func service_view() -> Dictionary:
 	var bag: PackedStringArray = []
 	for item_id in inventory:
 		bag.append(item_name(item_id))
-	return {"revision": revision, "cash": cash, "heat": heat, "points": action_points, "slots": slots_used(), "capacity": content.inventorySlots, "bag": "、".join(bag), "text": text, "actions": actions}
+	return {"mode": mode, "product": product, "productName": item_name(product), "description": item_description(product), "revision": revision, "cash": cash, "heat": heat, "points": action_points, "slots": slots_used(), "capacity": content.inventorySlots, "bag": "、".join(bag), "text": text, "actions": actions}
 
 func item_name(id: String) -> String:
 	return {"ivory-chip": "象牙筹码", "ruby-cufflink": "红宝石袖扣", "old-silver-lighter": "旧银打火机", "pearl-necklace": "珍珠项链", "emerald-brooch": "翡翠胸针"}.get(id, ITEM_NAMES.get(id, id))
@@ -369,3 +389,16 @@ func enforce_pressure() -> bool:
 
 func offer_name(id: String) -> String:
 	return {"kitchen-backlift":"后厨货梯接应", "linen-cart":"布草车接应"}.get(id, id)
+
+func route_known(kind: String) -> bool:
+	if not active:
+		return false
+	match kind:
+		"general": return public_exit
+		"fixed": return fixed_known()
+		"service-stairs", "river-launch": return route_flags.get(kind, false)
+		"dropbag-cash", "dropbag-valuables": return emergency_known()
+	return false
+
+func item_description(id: String) -> String:
+	return {"marked-lens":"牌局中提前看下一张公共牌；本桌限一次，增加风声。", "steadying-drink":"离桌后使用，降低 1 风声；每轮只能降一次。", "sleeve-clip":"翻牌前第一次行动前更换第二张手牌，增加风声。", "signal-lighter":"牌局中选择对手，判断其牌力强弱；不揭示底牌，增加风声。", "player-notes":"牌局中记录一位对手的风格，增加风声。", "disposable-phone":"离桌后查明一桌情报，或更新接应方案；二选一。", "kitchen-pass":"离桌后使用，揭示后厨楼梯出口。", "dock-passkey":"离桌后使用，揭示河边接驳出口。", "false-bottom-wallet":"随身携带，失败时自动保留至多 80 现金。"}.get(id, "")

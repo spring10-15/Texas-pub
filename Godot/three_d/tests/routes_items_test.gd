@@ -124,7 +124,7 @@ func run_tests() -> void:
 	for node in world.get_node("Tavern").get_children():
 		if node is Area3D and node.action_id == "route:service-stairs":
 			anchor = node
-	world.player.position = Vector3(10, 0.02, -2.55)
+	world.player.position = Vector3(7.25, 1.22, -11.6)
 	world.player.camera.look_at(anchor.global_position)
 	for i in range(5):
 		await physics_frame
