@@ -241,6 +241,10 @@ func build_tavern(room_name := "Tavern", offset := 10.0) -> void:
 	if room_name in ["LedgerCellar", "MirrorHall"]:
 		var next_room := "mirror" if room_name == "LedgerCellar" else "embers"
 		make_door(room, Vector3(2.83, 1.1, 1.65), "前往" + run_game.table_name(ROOMS[next_room].table), "room:" + next_room)
+	var site: String = {"Tavern":"cargo-table", "LedgerCellar":"ledger-cellar", "MirrorHall":"mirror-hall", "EmbersRoom":"embers-table"}[room_name]
+	box(room, "SearchCabinet", Vector3(-2.45, 0.55, -2.65), Vector3(0.7, 1.1, 0.7), "wood")
+	box(room, "SearchLetter", Vector3(-2.45, 1.11, -2.65), Vector3(0.24, 0.01, 0.32), "ivory", false)
+	target(room, "SearchSite", Vector3(-2.45, 1.3, -2.65), Vector3(0.65, 0.6, 0.65), "search:" + site, RunRules.SearchEvents.EVENTS[site].title + " · 查看")
 	install_detail(room, TAVERN_DETAIL)
 	props.build_tavern(room, room_name)
 	bar_display.build(room)
@@ -418,6 +422,9 @@ func request_action(anchor: Area3D) -> bool:
 		return false
 	if str(anchor.action_id).begins_with("prop:"):
 		props.interact(str(anchor.action_id).trim_prefix("prop:"))
+		return true
+	if str(anchor.action_id).begins_with("search:"):
+		open_services("search", str(anchor.action_id).trim_prefix("search:"))
 		return true
 	if str(anchor.action_id).begins_with("shop:"):
 		open_services("product", str(anchor.action_id).trim_prefix("shop:"))

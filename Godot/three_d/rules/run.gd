@@ -2,10 +2,12 @@ extends RefCounted
 ## Run economy and services. Owns the table reference so callers cannot settle arbitrary stacks.
 const TableRules = preload("res://three_d/rules/table.gd")
 const Routes = preload("res://three_d/rules/routes.gd")
+const SearchEvents = preload("res://three_d/rules/search_events.gd")
 const Advanced = preload("res://three_d/rules/advanced_services.gd")
 const SUPPORTED_ITEMS := ["marked-lens", "steadying-drink", "sleeve-clip", "signal-lighter", "player-notes", "disposable-phone", "kitchen-pass", "dock-passkey", "false-bottom-wallet"]
 const ITEM_NAMES := {"marked-lens": "标记镜片", "steadying-drink": "镇定酒", "sleeve-clip": "袖口夹", "signal-lighter":"信号打火机", "player-notes":"玩家笔记", "disposable-phone":"一次性手机", "kitchen-pass":"后厨通行证", "dock-passkey":"码头密钥", "false-bottom-wallet":"夹层钱包"}
 const SCENE_NAMES := {"smoky-den":"烟雾酒馆", "high-rise-suite":"高层套房", "rooftop-club":"屋顶会所", "neon-poker-club":"霓虹扑克俱乐部"}
+var search_results: Dictionary = {}
 var scene_id := "smoky-den"
 var collateral := ""
 var last_table_result: Dictionary = {}
@@ -44,6 +46,7 @@ func start(expected_revision: int, destination := "smoky-den") -> bool:
 	if expected_revision != revision or active or vault < 120 or not content.scenes.has(destination):
 		return false
 	scene_id = destination
+	search_results.clear()
 	bankroll = mini(int(content.standardBankroll), vault)
 	vault -= bankroll
 	cash = bankroll
@@ -182,6 +185,8 @@ func slots_used() -> int:
 	return slots
 
 func service_reason(kind: String, item_id: String, target_id := "") -> String:
+	if kind == "search":
+		return SearchEvents.reason(self, item_id, target_id)
 	if kind in Advanced.KINDS:
 		return Advanced.reason(self, kind, item_id, target_id)
 	if not active:
@@ -239,6 +244,10 @@ func shop_stock() -> Array:
 func service_action(kind: String, item_id: String, expected_revision: int, target_id := "") -> bool:
 	if expected_revision != revision or not service_reason(kind, item_id, target_id).is_empty():
 		return false
+	if kind == "search":
+		SearchEvents.apply(self, item_id, target_id)
+		revision += 1
+		return true
 	if kind in Advanced.KINDS:
 		Advanced.apply(self, kind, item_id, target_id)
 		revision += 1
@@ -285,6 +294,11 @@ func service_action(kind: String, item_id: String, expected_revision: int, targe
 
 func service_view(mode := "bag", product := "") -> Dictionary:
 	var actions: Array = []
+	if mode == "search" and SearchEvents.EVENTS.has(product):
+		var event: Dictionary = SearchEvents.EVENTS[product]
+		for option in event.choices:
+			actions.append({"kind":"search", "id":product, "target":option.id, "label":option.label, "reason":service_reason("search", product, option.id)})
+		return {"mode":"search", "productName":event.title, "description":event.text, "cash":cash, "heat":heat, "points":action_points, "text":search_results.get(product, {}).get("message", ""), "revision":revision, "actions":actions}
 	if table == null:
 		for item_id in shop_stock():
 			if item_id in SUPPORTED_ITEMS:

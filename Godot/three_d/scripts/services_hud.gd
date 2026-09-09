@@ -37,6 +37,8 @@ func refresh(view: Dictionary) -> void:
 	var heading := Label.new()
 	if view.mode == "product":
 		heading.text = "%s\n\n%s\n\n现金 %d · 行动力 %d\n购买消耗 1 行动力，酒保会将物品递到吧台。" % [view.productName, view.description, view.cash, view.points]
+	elif view.mode == "search":
+		heading.text = "%s\n%s\n\n现金 %d · 风声 %d · 行动力 %d\n%s" % [view.productName, view.description, view.cash, view.heat, view.points, view.text]
 	elif view.mode == "bar":
 		heading.text = "与酒保交谈\n现金 %d · 风声 %d · 行动力 %d\n商品在背后货架上，对准实物按 E 查看。\n%s" % [view.cash, view.heat, view.points, view.text]
 	else:
