@@ -5,6 +5,6 @@
   "mesh_objects": 8,
   "triangles": 185908,
   "moving_pivot": "CaseLidPivot",
-  "material_status": "Image textures preserved; procedural colors use PBR constants pending baking/art pass",
-  "bytes": 11705068
+  "material_status": "Image textures preserved; walnut, leather and plaster use baked 1024 PBR tiles",
+  "bytes": 16400664
 }

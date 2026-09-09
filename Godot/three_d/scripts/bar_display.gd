@@ -24,7 +24,8 @@ func refresh() -> void:
 		var stock: Array = world.run_game.shop_stock()
 		for i in range(stock.size()):
 			var id: String = stock[i]
-			var pos := Vector3(2.55, 1.88, -2.3 + i * 0.38)
+			var bottom: float = {"marked-lens":-0.129, "steadying-drink":-0.10, "player-notes":-0.095, "disposable-phone":-0.103, "kitchen-pass":-0.08, "dock-passkey":-0.08, "signal-lighter":-0.075, "sleeve-clip":-0.066, "false-bottom-wallet":-0.056}[id]
+			var pos := Vector3(2.55, 1.70 - bottom, -2.3 + i * 0.38)
 			var prop := make_item(display, id, pos)
 			var label := Label3D.new()
 			label.text = "%s\n%d" % [world.run_game.item_name(id), world.table_content.items[id].buy]
@@ -49,24 +50,7 @@ func deliver(id: String) -> void:
 	tween.chain().tween_callback(prop.queue_free)
 
 func make_item(parent: Node3D, id: String, pos: Vector3) -> Node3D:
-	var item := Node3D.new()
+	var item: Node3D = world.make_detailed_prop(id)
 	item.position = pos
 	parent.add_child(item)
-	if id == "steadying-drink":
-		var bottle := MeshInstance3D.new()
-		var shape := CylinderMesh.new()
-		shape.top_radius = 0.045
-		shape.bottom_radius = 0.075
-		shape.height = 0.23
-		bottle.mesh = shape
-		bottle.material_override = world.materials.green
-		item.add_child(bottle)
-		world.box(item, "BottleNeck", Vector3(0, 0.15, 0), Vector3(0.045, 0.1, 0.045), "brass", false)
-	elif id in ["disposable-phone", "player-notes", "false-bottom-wallet", "kitchen-pass", "dock-passkey"]:
-		world.box(item, "Body", Vector3.ZERO, Vector3(0.055, 0.2, 0.14), "dark" if id in ["disposable-phone", "false-bottom-wallet"] else "cloth", false)
-		world.box(item, "Face", Vector3(-0.03, 0.025, 0), Vector3(0.008, 0.11, 0.10), "green" if id == "disposable-phone" else "ivory", false)
-		world.box(item, "Binding", Vector3(-0.035, -0.07, 0), Vector3(0.009, 0.013, 0.11), "brass", false)
-	else:
-		world.box(item, "Tool", Vector3.ZERO, Vector3(0.06, 0.15, 0.09), "brass", false)
-		world.box(item, "ToolInset", Vector3(-0.035, 0.035, 0), Vector3(0.008, 0.06, 0.07), "dark", false)
 	return item

@@ -34,6 +34,7 @@ func build_stash(room: Node3D, lamp: OmniLight3D) -> void:
 		var id := "drawer" + str(i)
 		anchor = world.target(drawer, "DrawerTarget", Vector3(0, 0, 0.08), Vector3(0.63, 0.32, 0.10), "prop:" + id, "抽屉 · 拉开 / 推回")
 		register(id, drawer, anchor, "position", drawer.position, drawer.position + Vector3(0, 0, 0.4))
+		world.install_prop(drawer, "drawer")
 	# A hinged sash sits inside a real wall opening; the sill prevents walking outside.
 	var window := Node3D.new()
 	window.position = Vector3(2.84, 1.9, -2.3)
@@ -72,7 +73,7 @@ func build_stash(room: Node3D, lamp: OmniLight3D) -> void:
 	rain.material_override = world.materials.ivory
 	room.add_child(rain)
 	var card := Node3D.new()
-	card.position = Vector3(0.55, 0.97, -0.18)
+	card.position = Vector3(0.55, 0.83, -0.18)
 	room.add_child(card)
 	world.box(card, "CardFace", Vector3.ZERO, Vector3(0.12, 0.006, 0.18), "ivory", false)
 	world.box(card, "CardBack", Vector3(0, -0.004, 0), Vector3(0.118, 0.003, 0.178), "green", false)
@@ -86,8 +87,9 @@ func build_stash(room: Node3D, lamp: OmniLight3D) -> void:
 	card.add_child(face)
 	anchor = world.target(room, "LooseCard", card.position + Vector3(0, 0.04, 0), Vector3(0.16, 0.10, 0.22), "prop:card", "桌上扑克牌 · 翻面")
 	register("card", card, anchor, "rotation:z", 0.0, PI)
+	world.install_prop(card, "loose-card")
 	var chip := Node3D.new()
-	chip.position = Vector3(0.88, 0.985, -0.35)
+	chip.position = Vector3(0.88, 0.845, -0.35)
 	room.add_child(chip)
 	var mesh := MeshInstance3D.new()
 	var cylinder := CylinderMesh.new()
@@ -100,6 +102,7 @@ func build_stash(room: Node3D, lamp: OmniLight3D) -> void:
 	world.box(chip, "ChipStripe", Vector3(0, 0.012, 0), Vector3(0.1, 0.004, 0.02), "dark", false)
 	anchor = world.target(room, "LooseChip", chip.position, Vector3(0.17, 0.12, 0.17), "prop:chip", "桌上筹码 · 转动")
 	register("chip", chip, anchor, "rotation:y", 0.0, PI * 1.5)
+	world.install_prop(chip, "loose-chip")
 func build_tavern(room: Node3D, prefix: String) -> void:
 	var sconce: OmniLight3D = world.point_light(room, Vector3(-2.7, 2.1, -1.3), Color("ffca85"), 0.8, 3)
 	var anchor: Area3D = world.target(room, "SconceSwitch", Vector3(-2.78, 1.4, -1.3), Vector3(0.18, 0.22, 0.18), "prop:" + prefix + "light", "壁灯 · 开关")

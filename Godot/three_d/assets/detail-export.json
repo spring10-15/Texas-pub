@@ -1,0 +1,12 @@
+{
+  "TavernDetail": {
+    "meshes": 8,
+    "triangles": 72716,
+    "bytes": 11972100
+  },
+  "StashDetail": {
+    "meshes": 1,
+    "triangles": 54896,
+    "bytes": 5214960
+  }
+}

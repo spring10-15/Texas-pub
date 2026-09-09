@@ -1,5 +1,5 @@
 """Export the editable still-life into a grouped, metre-scale GLB for the first playable.
-Does not overwrite the source blend. Procedural shader baking is a later art pass.
+Does not overwrite the source blend. Uses baked detail tiles when available.
 """
 import bpy, json
 from pathlib import Path
@@ -27,6 +27,18 @@ for m in bpy.data.materials:
         if link.from_node.type!='TEX_IMAGE':
             m.node_tree.links.remove(link);p.inputs['Base Color'].default_value=m.diffuse_color
     for link in list(p.inputs['Normal'].links):m.node_tree.links.remove(link)
+# Detail pass: use baked PBR tiles, leaving the editable still-life untouched.
+tiles=DEST/'materials'
+for m in bpy.data.materials:
+    family=next((v for k,v in {'Walnut':'walnut','Oxblood':'leather','Blue charcoal':'plaster'}.items() if m.name.startswith(k)),None)
+    if not family or not (tiles/(family+'-color.png')).exists():continue
+    p=m.node_tree.nodes.get('Principled BSDF')
+    for channel in ['color','roughness','normal']:
+        t=m.node_tree.nodes.new('ShaderNodeTexImage');t.image=bpy.data.images.load(str(tiles/(family+'-'+channel+'.png')))
+        if channel!='color':t.image.colorspace_settings.name='Non-Color'
+        if channel=='normal':
+            normal=m.node_tree.nodes.new('ShaderNodeNormalMap');normal.inputs['Strength'].default_value=.4;m.node_tree.links.new(t.outputs['Color'],normal.inputs['Color']);m.node_tree.links.new(normal.outputs[0],p.inputs['Normal'])
+        else:m.node_tree.links.new(t.outputs['Color'],p.inputs['Base Color' if channel=='color' else 'Roughness'])
 # Curves, embossed text and bevels become ordinary exportable meshes.
 bpy.ops.object.select_all(action='DESELECT')
 geometry=[o for o in keep if o.type in {'MESH','CURVE','FONT'}]
@@ -64,6 +76,6 @@ for o in scene.objects:
     if o.type=='MESH':
         o.data.calc_loop_triangles();triangles+=len(o.data.loop_triangles)
 bpy.ops.export_scene.gltf(filepath=str(DEST/'stash.glb'),export_format='GLB',export_cameras=False,export_lights=False,export_animations=False)
-report={'source':'stash-noir.blend','scale':.26,'tabletop_height_m':.82,'mesh_objects':sum(o.type=='MESH' for o in scene.objects),'triangles':triangles,'moving_pivot':'CaseLidPivot','material_status':'Image textures preserved; procedural colors use PBR constants pending baking/art pass','bytes':(DEST/'stash.glb').stat().st_size}
+report={'source':'stash-noir.blend','scale':.26,'tabletop_height_m':.82,'mesh_objects':sum(o.type=='MESH' for o in scene.objects),'triangles':triangles,'moving_pivot':'CaseLidPivot','material_status':'Image textures preserved; walnut, leather and plaster use baked 1024 PBR tiles','bytes':(DEST/'stash.glb').stat().st_size}
 (DEST/'stash-export.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
 print('EXPORT_OK',report,flush=True)

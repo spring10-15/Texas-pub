@@ -55,3 +55,5 @@
 Metal 实际窗口截图检查：output/3d/special-route-runtime.png、route-services-runtime.png。覆盖实体入口射线、费用确认与返回藏匿点，修正弹窗越界。未将这些自动检查等同于 30 分钟稳定性或完整四场景验收。
 
 2026-09-09：已完成用户五项交互调整，最新空间结构、背包与货架分工、环境物件和验证见 interaction-pass.md。
+
+2026-09-09：用户初步试玩通过，已推进第一轮 Blender 场景细化与烘焙，详见 art-pass-01.md。后续新增 AI 参考图须先征得用户确认。

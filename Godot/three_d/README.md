@@ -24,7 +24,7 @@
 - 独立的牌型比较、浏览器兼容随机数／洗牌、边池计算模块及对照测试。
 - 盲注、行动队列、两手推进、本地 AI 对手、全押与摊牌分账、三维动态牌面。
 
-**已接通带钱出发、首桌买入、离桌返还、寻找出口和付费撤离；已自动保存资金、库存、牌局和位置，关闭后可继续。** 酒馆还是灰盒；Blender 的三张图像贴图已保留，程序化材质暂用 PBR 基础色，烘焙、人物、音效、完整搜索事件、其它酒馆和正式美术仍待制作。此版不是最终画质样板。
+**已接通带钱出发、首桌买入、离桌返还、寻找出口和付费撤离；已自动保存资金、库存、牌局和位置，关闭后可继续。** 酒馆还是灰盒；Blender 原图像贴图已保留，木材和皮革已换用烘焙 PBR 贴图，烘焙、人物、音效、完整搜索事件、其它酒馆和正式美术仍待制作。此版不是最终画质样板。
 
 ## 技术入口
 
@@ -32,7 +32,7 @@
 - `scripts/player.gd`：第一人称移动和射线目标检查。
 - `scripts/interactable.gd`：物件的交互 ID、标题和状态。
 - `rules/poker.gd`：不依赖画面和场景节点的纯规则。
-- `assets/stash.glb`：8 个网格、185,908 个三角形，约 11.7 MB；网格数量不等于绘制调用数量。
+- `assets/stash.glb`：8 个网格、185,908 个三角形，约 16.4 MB；网格数量不等于绘制调用数量。
 - `assets/stash-export.json`：导出检查数据。
 
 Blender 源文件在项目根目录的 `assets/blender/stash-noir/`。`export_game_asset.py` 只生成运行资产，不覆盖源 `.blend`。
@@ -108,3 +108,9 @@ node Godot/three_d/tests/generate_table_fixtures.mjs
 台灯、抽屉、窗户、桌面扑克牌/筹码以及酒馆壁灯/餐具柜均可对准按 E 操作。窗外目前为动态雨街。每手输赢与净筹码在中央显著显示。
 
 新增 spatial_interaction_test.gd（40 项）。具体范围、试玩步骤和截图索引见 docs/3d-production/interaction-pass.md。
+
+## 第一轮场景细化
+
+Blender 细节包已替换牌桌、吧台、椅凳、吊灯、地板和护墙板的部分粗模；玩法入口和碰撞保留。新增源文件 assets/blender/tavern-detail/tavern-detail.blend 可继续编辑。并非最终写实美术验收版，具体完成范围见 docs/3d-production/art-pass-01.md。
+
+art_integration_test.gd 在 Metal 模式加 -- --test --capture 可检查细节包并截图，实机路径 96 项检查。

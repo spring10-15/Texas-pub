@@ -8,6 +8,9 @@ const TableHUD = preload("res://three_d/scripts/table_hud.gd")
 const SaveStore = preload("res://three_d/rules/save_store.gd")
 const RunCheckpoint = preload("res://three_d/rules/run_checkpoint.gd")
 const ServicesHUD = preload("res://three_d/scripts/services_hud.gd")
+const PROPS_ASSET = preload("res://three_d/assets/interactive-props.glb")
+const TAVERN_DETAIL = preload("res://three_d/assets/tavern-detail.glb")
+const STASH_DETAIL = preload("res://three_d/assets/stash-room-detail.glb")
 const STASH_ASSET = preload("res://three_d/assets/stash.glb")
 var player: CharacterBody3D
 var title_label: Label
@@ -106,11 +109,21 @@ func make_materials() -> void:
 		if key == "brass":
 			material.metallic = 0.7
 			material.roughness = 0.35
+		var tile: String = {"wood":"walnut", "floor":"walnut", "wall":"plaster", "cloth":"leather"}.get(key, "")
+		if not tile.is_empty():
+			material.albedo_color = Color.WHITE
+			material.albedo_texture = load("res://three_d/assets/materials/" + tile + "-color.png")
+			material.roughness_texture = load("res://three_d/assets/materials/" + tile + "-roughness.png")
+			material.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
+			material.normal_enabled = true
+			material.normal_texture = load("res://three_d/assets/materials/" + tile + "-normal.png")
+			material.normal_scale = 0.45
 		materials[key] = material
 
 func box(parent: Node3D, node_name: String, pos: Vector3, size: Vector3, material: String, solid := true) -> Node3D:
 	var body: Node3D = StaticBody3D.new() if solid else Node3D.new()
 	body.name = node_name
+	body.set_meta("visual_role", node_name)
 	body.position = pos
 	parent.add_child(body)
 	var mesh := MeshInstance3D.new()
@@ -168,11 +181,11 @@ func build_stash() -> void:
 	# A single invisible collider, separate from export meshes, keeps the GLB reimportable.
 	var collider := StaticBody3D.new()
 	collider.name = "DeskPhysics"
-	collider.position = Vector3(0, 0.46, -0.85)
+	collider.position = Vector3(0, 0.405, -0.85)
 	room.add_child(collider)
 	var shape := CollisionShape3D.new()
 	var bounds := BoxShape3D.new()
-	bounds.size = Vector3(2.15, 0.92, 1.43)
+	bounds.size = Vector3(2.15, 0.81, 1.43)
 	shape.shape = bounds
 	collider.add_child(shape)
 	case_target = target(room, "CaseTarget", Vector3(-0.39, 1.04, -0.72), Vector3(1.0, 0.7, 0.85), "toggle_case", "合上皮箱")
@@ -180,6 +193,7 @@ func build_stash() -> void:
 	box(room, "Cabinet", Vector3(-2.48, 0.8, -2.45), Vector3(0.75, 1.6, 1.0), "wood")
 	var lamp := point_light(room, Vector3(0.53, 1.39, -1.25), Color("ffc580"), 1.7, 4)
 	props.build_stash(room, lamp)
+	install_detail(room, STASH_DETAIL)
 	point_light(room, Vector3(2.45, 2.1, -1.4), Color("83a6ce"), 0.55, 4)
 
 func build_tavern(room_name := "Tavern", offset := 10.0) -> void:
@@ -220,6 +234,7 @@ func build_tavern(room_name := "Tavern", offset := 10.0) -> void:
 		ledger_door = make_door(room, Vector3(2.83, 1.1, 1.65), "前往账房地窖 · 需完成货运桌", "enter_ledger")
 	else:
 		make_door(room, Vector3(-2.83, 1.1, 1.65), "返回烟雾酒馆", "back_tavern")
+	install_detail(room, TAVERN_DETAIL)
 	props.build_tavern(room, room_name)
 	bar_display.build(room)
 	seat_camera = Camera3D.new()
@@ -833,3 +848,27 @@ func check_pressure() -> void:
 		if services_panel.visible:
 			close_services()
 		travel("stash")
+
+func install_detail(room: Node3D, asset: PackedScene) -> void:
+	# Keep all collision bodies and interaction anchors; replace only their visible meshes.
+	for node in room.get_children():
+		if str(node.get_meta("visual_role", "")).begins_with("Floor") or (room.name != "Stash" and ["PokerTable", "Felt", "TableLeg", "OpponentChair", "BarCounter", "BarTop", "BarStool", "BottleShelf", "Bottle"].any(func(prefix): return str(node.get_meta("visual_role", "")).begins_with(prefix))):
+			for child in node.get_children():
+				if child is MeshInstance3D:
+					child.hide()
+	var detail := asset.instantiate()
+	detail.name = "BlenderDetail"
+	room.add_child(detail)
+
+func make_detailed_prop(id: String) -> Node3D:
+	var kit := PROPS_ASSET.instantiate()
+	var item: Node3D = kit.get_node(id)
+	kit.remove_child(item)
+	kit.free()
+	return item
+
+func install_prop(parent: Node3D, id: String) -> void:
+	for child in parent.get_children():
+		if child is Node3D and not child is Area3D:
+			child.hide()
+	parent.add_child(make_detailed_prop(id))
