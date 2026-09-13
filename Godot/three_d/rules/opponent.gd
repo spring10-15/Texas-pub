@@ -12,6 +12,7 @@ static func estimate_odds(hole: Array, board: Array, opponents: int, seed_value:
 			community.append(deck.pop_back())
 		var player_hand := Poker.evaluate_best_hand(hole + community)
 		var result := 1.0
+		var tied := 1
 		for i in range(opponents):
 			var opponent_hand := Poker.evaluate_best_hand([deck.pop_back(), deck.pop_back()] + community)
 			var comparison := Poker.compare_hands(player_hand, opponent_hand)
@@ -19,11 +20,17 @@ static func estimate_odds(hole: Array, board: Array, opponents: int, seed_value:
 				result = 0.0
 				break
 			if comparison == 0:
-				result = minf(result, 0.5)
-		score += result
+				tied += 1
+		score += result / tied
 	return score / trials
 
 static func choose(table: Dictionary, actor: Dictionary, legal: Dictionary, definition: Dictionary, random_value: float) -> String:
+	# Opponent private/folded cards are never supplied to the estimator.
+	var others: int = table.players.filter(func(p): return p.id != actor.id and not p.folded).size()
+	var odds := estimate_odds(actor.holeCards, table.community, others, table.seed + table.handNumber * 137 + table.turnCounter * 19 + actor.seatIndex * 11)
+	return choose_with_odds(table, actor, legal, definition, random_value, odds)
+
+static func choose_with_odds(table: Dictionary, actor: Dictionary, legal: Dictionary, definition: Dictionary, random_value: float, odds: float) -> String:
 	var profile: Dictionary = definition.profile.duplicate(true)
 	var trailing: bool = actor.stack < table.tableDef.buyIn * 0.5
 	match definition.archetype:
@@ -53,9 +60,6 @@ static func choose(table: Dictionary, actor: Dictionary, legal: Dictionary, defi
 			profile.caution = maxf(0.02, profile.caution - 0.2)
 			profile.bluff = minf(0.48, profile.bluff + 0.14)
 	var biases: Array = {"preflop": [0.06,0.09,0.01], "flop": [0.04,0.05,0.02], "turn": [0.02,0.02,0.04], "river": [0.0,-0.04,0.08]}[table.street]
-	# Opponent private/folded cards are never supplied to the estimator.
-	var others: int = table.players.filter(func(p): return p.id != actor.id and not p.folded).size()
-	var odds := estimate_odds(actor.holeCards, table.community, others, table.seed + table.handNumber * 137 + table.turnCounter * 19 + actor.seatIndex * 11)
 	var hand_factor: float = profile.finalHandSpike if table.handNumber == table.totalHands else 0.0
 	var pressure: float = float(table.currentBet) / maxf(1.0, actor.stack + table.currentBet) if table.currentBet > 0 else 0.0
 	var raise_chance: float = profile.aggression * 0.3 + hand_factor * 0.55 + biases[0] + minf(0.18, table.playerPattern.raiseCount * profile.patternPunish * 0.06) - pressure * 0.18

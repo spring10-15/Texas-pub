@@ -72,3 +72,9 @@ search_events_test.gd 90 项通过，Metal 截图 output/3d/search-choice.png �
 当前回到 Phase 1。已有九个人物基础资产作为占位保留，不继续高保真、19 件实体化或声音。Phase 1 必须交付状态机与资金/物品/风声/位置/RNG 验证、难度曲线、八对手策略分布、有限池组合的 roguelike 最小版及 10–20 步 walkthrough。状态转移覆盖率必须有分母与实际命中证据，不能用断言数量代替。新手/老手差异、组合多样性阈值 X、五人外部试玩与中端 Mac/Windows 持续 60 fps 保留独立门槛，未实测不记通过。Phase 5 的本地 demo 或商业发行形态已询问用户，等待确认；不阻断 Phase 1。
 
 人物基础最近验证：characters_test 99、four_tables 110、spatial_interaction 40 项通过，实际截图 characters-table.png。四桌测试的独立抵押情境改为在镜厅运行，避免在藏匿点用镜厅角色刷新；此前该情境曾输出脚本错误，修正后重新通过。
+
+## Phase 1 策略与节奏基线（2026-09-13）
+
+补充 phase-1/opponent-profiles.md、difficulty-curve.md 与 first-run-walkthrough.md，分别记录八位对手条件动作分布、四桌/四酒馆难度参数和 16 步首局路径。修复 AI 三人平分估值误计为 1/2 的问题，现为 1/3；两人仍为 1/2。真实决策入口验证其它玩家暗牌不影响选择、弃牌者不计入竞争人数。
+
+opponent_profiles_test：4,800 次条件动作采样与 7 个断言通过；table_integration：58 项通过，无脚本错误。以上不代表状态转移覆盖率或真人可识别性；随机有限池、覆盖分母与真人节奏验收仍未完成。未新增生成图片或精模。
