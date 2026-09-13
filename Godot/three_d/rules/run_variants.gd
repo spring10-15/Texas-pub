@@ -1,6 +1,7 @@
 extends RefCounted
 ## A committed run plan. Shelf variation removes one optional tool, never basic information/cooling.
 const Poker = preload("res://three_d/rules/poker.gd")
+const SearchEvents = preload("res://three_d/rules/search_events.gd")
 const TABLES := ["cargo-table", "ledger-cellar", "mirror-hall", "embers-table"]
 const ESSENTIALS := ["steadying-drink", "player-notes", "disposable-phone"]
 static func generate(content: Dictionary, scene: String, seed_value: int) -> Dictionary:
@@ -17,10 +18,16 @@ static func generate(content: Dictionary, scene: String, seed_value: int) -> Dic
 	var table_seeds := {}
 	for id in TABLES:
 		table_seeds[id] = int(rng.next() * 2147483647)
-	return {"version":1,"shelves":shelves,"table_seeds":table_seeds,"initial_offer":int(rng.next() * content.routes[scene].fixedRoutes.size()) if seed_value != 0 else 0}
+	var offer := int(rng.next() * content.routes[scene].fixedRoutes.size()) if seed_value != 0 else 0
+	var events := {}
+	for pair in SearchEvents.PAIRS:
+		var swap := seed_value != 0 and rng.next() < 0.5
+		events[pair[0]] = pair[1] if swap else pair[0]
+		events[pair[1]] = pair[0] if swap else pair[1]
+	return {"version":2,"shelves":shelves,"table_seeds":table_seeds,"initial_offer":offer,"events":events}
 
 static func valid(plan: Dictionary, content: Dictionary, scene: String) -> bool:
-	if plan.get("version") != 1 or not plan.get("shelves") is Dictionary or not plan.get("table_seeds") is Dictionary:
+	if plan.get("version") not in [1, 2] or not plan.get("shelves") is Dictionary or not plan.get("table_seeds") is Dictionary:
 		return false
 	if not plan.get("initial_offer") is int or plan.initial_offer < 0 or plan.initial_offer >= content.routes[scene].fixedRoutes.size():
 		return false
@@ -38,4 +45,10 @@ static func valid(plan: Dictionary, content: Dictionary, scene: String) -> bool:
 	for id in TABLES:
 		var value: Variant = plan.table_seeds.get(id)
 		if not value is int or value < 0 or value >= 2147483647: return false
+	if plan.version == 2:
+		if not plan.get("events") is Dictionary or plan.events.size() != TABLES.size(): return false
+		for pair in SearchEvents.PAIRS:
+			if plan.events.get(pair[0]) not in pair or plan.events.get(pair[1]) not in pair or plan.events[pair[0]] == plan.events[pair[1]]: return false
+	elif plan.has("events"):
+		return false
 	return true

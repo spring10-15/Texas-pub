@@ -302,7 +302,7 @@ func service_action(kind: String, item_id: String, expected_revision: int, targe
 func service_view(mode := "bag", product := "") -> Dictionary:
 	var actions: Array = []
 	if mode == "search" and SearchEvents.EVENTS.has(product):
-		var event: Dictionary = SearchEvents.EVENTS[product]
+		var event: Dictionary = SearchEvents.event_for(self, product)
 		for option in event.choices:
 			actions.append({"kind":"search", "id":product, "target":option.id, "label":option.label, "reason":service_reason("search", product, option.id)})
 		return {"mode":"search", "productName":event.title, "description":event.text, "cash":cash, "heat":heat, "points":action_points, "text":search_results.get(product, {}).get("message", ""), "revision":revision, "actions":actions}

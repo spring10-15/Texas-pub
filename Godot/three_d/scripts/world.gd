@@ -929,5 +929,7 @@ func refresh_route_labels() -> void:
 
 	for setup in ROOMS.values():
 		for node in get_node(setup.node).get_children():
+			if node is Area3D and str(node.action_id).begins_with("search:"):
+				node.title = RunRules.SearchEvents.event_for(run_game, setup.table).title + " · 查看"
 			if node is Area3D and str(node.action_id) == "back_tavern":
 				node.title = "返回" + RunRules.SCENE_NAMES[run_game.scene_id]

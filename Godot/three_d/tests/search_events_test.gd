@@ -61,7 +61,8 @@ func run() -> void:
 		world.player.camera.look_at(target.global_position)
 		for i in range(5): await physics_frame
 		verify(world.request_action(target) and world.service_mode == "search", "Actual ray opens search " + room)
-		verify(world.services_panel.rows.get_child(0).text.contains(Run.SearchEvents.EVENTS[world.ROOMS[room].table].title), "Correct event shown")
+		verify(target.title == Run.SearchEvents.event_for(world.run_game, world.ROOMS[room].table).title + " · 查看", "Physical event title matches plan")
+		verify(world.services_panel.rows.get_child(0).text.contains(Run.SearchEvents.event_for(world.run_game, world.ROOMS[room].table).title), "Correct event shown")
 		if room == "ledger" and OS.get_cmdline_user_args().has("--capture"):
 			for i in range(12): await process_frame
 			await RenderingServer.frame_post_draw
