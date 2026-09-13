@@ -32,9 +32,13 @@ func _ready() -> void:
 	header.offset_top = 26
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	opponent_left = text(self, "", 19)
-	opponent_left.position = Vector2(300, 135)
+	opponent_left.position = Vector2(250, 135)
+	opponent_left.size.x = 220
+	opponent_left.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	opponent_right = text(self, "", 19)
-	opponent_right.position = Vector2(880, 135)
+	opponent_right.position = Vector2(990, 135)
+	opponent_right.size.x = 350
+	opponent_right.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	history = text(self, "", 17)
 	history.position = Vector2(32, 150)
 	var panel := PanelContainer.new()

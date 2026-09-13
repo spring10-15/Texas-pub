@@ -104,6 +104,7 @@ func run() -> void:
 	verify(r.enter_table(1, rev, "cargo-table", "ivory-chip") == null, "Non-collateral table rejects pledge")
 	verify(r.enter_table(1, rev, "mirror-hall", "antique-coin") == null, "Unowned pledge rejected atomically")
 	verify(r.inventory == ["ivory-chip"] and r.revision == rev and r.cash == 300, "Rejected pledge changes no economy")
+	world.travel("mirror")
 	world.table_game = r.enter_table(1, rev, "mirror-hall", "ivory-chip")
 	await play(false)
 	verify(r.settle_table(r.revision), "Losing table settles")

@@ -60,6 +60,7 @@ var save_notice: Label
 var scene_choice: OptionButton
 var selected_route := "general"
 var props: RefCounted
+var characters: RefCounted
 var bar_display: RefCounted
 var service_mode := "bag"
 var product_id := ""
@@ -72,6 +73,7 @@ func _ready() -> void:
 	build_lighting()
 	props = preload("res://three_d/scripts/scene_props.gd").new(self)
 	bar_display = preload("res://three_d/scripts/bar_display.gd").new(self)
+	characters = preload("res://three_d/scripts/characters.gd").new(self)
 	build_stash()
 	build_tavern()
 	build_tavern("LedgerCellar", 20.0)
@@ -248,6 +250,7 @@ func build_tavern(room_name := "Tavern", offset := 10.0) -> void:
 	install_detail(room, TAVERN_DETAIL)
 	props.build_tavern(room, room_name)
 	bar_display.build(room)
+	characters.build(room, table_content.tables[site])
 	seat_camera = Camera3D.new()
 	seat_camera.name = "SeatCamera"
 	room.add_child(seat_camera)
@@ -627,6 +630,7 @@ func advance_table_beat() -> void:
 func refresh_table() -> void:
 	var view: Dictionary = table_game.public_state()
 	seat_panel.refresh(view, table_delay > 0)
+	characters.refresh(view)
 	clear_cards()
 	for i in range(view.community.size()):
 		draw_card(view.community[i], Vector3(-0.89 + i * 0.22, 0.866, -0.80))
@@ -812,6 +816,7 @@ func service_action(kind: String, item_id: String, revision: int, target_id := "
 			player.rotation.y = atan2(-focus.x, -focus.z)
 			player.camera.rotation = Vector3(atan2(focus.y, Vector2(focus.x, focus.z).length()), 0, 0)
 			bar_display.deliver(item_id)
+			characters.deliver()
 			hint_label.text = "酒保递给你：" + run_game.item_name(item_id) + " · 已放入背包（B）"
 			var feedback := create_tween()
 			feedback.tween_interval(2.0)

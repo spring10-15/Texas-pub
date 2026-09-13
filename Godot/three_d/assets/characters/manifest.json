@@ -1,0 +1,101 @@
+{
+  "dock-braggart": {
+    "bones": 14,
+    "vertices": 40282,
+    "faces": 40373,
+    "clips": [
+      "idle",
+      "bet",
+      "win",
+      "fold"
+    ]
+  },
+  "ledger-clerk": {
+    "bones": 14,
+    "vertices": 39558,
+    "faces": 39605,
+    "clips": [
+      "idle",
+      "bet",
+      "win",
+      "fold"
+    ]
+  },
+  "river-shark": {
+    "bones": 14,
+    "vertices": 40282,
+    "faces": 40373,
+    "clips": [
+      "idle",
+      "bet",
+      "win",
+      "fold"
+    ]
+  },
+  "velvet-rook": {
+    "bones": 14,
+    "vertices": 39558,
+    "faces": 39605,
+    "clips": [
+      "idle",
+      "bet",
+      "win",
+      "fold"
+    ]
+  },
+  "calm-widow": {
+    "bones": 14,
+    "vertices": 38588,
+    "faces": 38657,
+    "clips": [
+      "idle",
+      "bet",
+      "win",
+      "fold"
+    ]
+  },
+  "smiling-knife": {
+    "bones": 14,
+    "vertices": 40282,
+    "faces": 40373,
+    "clips": [
+      "idle",
+      "bet",
+      "win",
+      "fold"
+    ]
+  },
+  "house-viper": {
+    "bones": 14,
+    "vertices": 39558,
+    "faces": 39605,
+    "clips": [
+      "idle",
+      "bet",
+      "win",
+      "fold"
+    ]
+  },
+  "ash-smuggler": {
+    "bones": 14,
+    "vertices": 40282,
+    "faces": 40373,
+    "clips": [
+      "idle",
+      "bet",
+      "win",
+      "fold"
+    ]
+  },
+  "bartender": {
+    "bones": 14,
+    "vertices": 39558,
+    "faces": 39605,
+    "clips": [
+      "idle",
+      "bet",
+      "win",
+      "fold"
+    ]
+  }
+}
