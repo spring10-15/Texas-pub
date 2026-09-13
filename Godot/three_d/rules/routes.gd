@@ -34,7 +34,7 @@ static func quote(run: RefCounted, kind: String) -> Dictionary:
 		if not run.emergency_known():
 			reason = "尚未发现紧急出口线索"
 		if kind == "dropbag-cash":
-			lost_cash = int(floor(run.cash * 0.4))
+			lost_cash = mini(int(floor(run.cash * 0.4)), maxi(0, run.cash - fee))
 		else:
 			lost_goods = goods
 			goods = 0
