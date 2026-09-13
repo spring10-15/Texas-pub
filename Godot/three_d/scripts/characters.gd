@@ -29,6 +29,18 @@ func build(room: Node3D, definition: Dictionary) -> void:
 		if str(node.get_meta("visual_role", "")).begins_with("Bartender"):
 			node.hide()
 	rooms[room.name] = people
+func sync(room: Node3D, definition: Dictionary) -> void:
+	var people: Dictionary = rooms[room.name]
+	var current: Array = people.keys().filter(func(id): return id != "bartender")
+	if current == definition.opponentIds: return
+	for id in current:
+		room.remove_child(people[id].model)
+		people[id].model.queue_free()
+		people.erase(id)
+	for i in range(2):
+		var id: String = definition.opponentIds[i]
+		people[id] = actor(id, room, Vector3(-1.1 if i == 0 else 0.25, 0, -1.9))
+
 func refresh(view: Dictionary) -> void:
 	var people: Dictionary = rooms[world.ROOMS[world.current_room].node]
 	for person in view.players.slice(1):

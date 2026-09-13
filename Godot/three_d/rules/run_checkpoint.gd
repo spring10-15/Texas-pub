@@ -42,4 +42,7 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		run.table = TableCheckpoint.restore(values.table)
 		if run.table == null or not run.active:
 			return null
+		if run.variant_plan.has("opponents"):
+			var id: String = run.table.state.tableDef.id
+			if run.table.state.tableDef.opponentIds != run.variant_plan.opponents.get(id): return null
 	return run

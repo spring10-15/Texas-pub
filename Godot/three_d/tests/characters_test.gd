@@ -40,7 +40,7 @@ func run() -> void:
 	world.start_table(301)
 	world.table_game.state.players[1].lastAction = "fold"
 	world.refresh_table()
-	var actor: Dictionary = world.characters.rooms.Tavern["dock-braggart"]
+	var actor: Dictionary = world.characters.rooms.Tavern[world.table_game.state.players[1].id]
 	verify(actor.player.current_animation == actor.clips.fold, "Public fold action triggers character reaction")
 	world.characters.deliver()
 	verify(world.characters.rooms.Tavern.bartender.player.current_animation == world.characters.rooms.Tavern.bartender.clips.bet, "Handoff triggers bartender animation")

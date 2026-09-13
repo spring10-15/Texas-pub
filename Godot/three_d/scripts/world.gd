@@ -483,7 +483,7 @@ func request_action(anchor: Area3D) -> bool:
 			player.controls_enabled = false
 			player.velocity = Vector3.ZERO
 			seat_camera.current = true
-			seat_panel.pregame(run_game.cash, table_content.tables[active_table_id], run_game.inventory, run_game)
+			seat_panel.pregame(run_game.cash, run_game.table_definition(active_table_id), run_game.inventory, run_game)
 			seat_panel.show()
 			explore_instructions.hide()
 			crosshair.hide()
@@ -493,6 +493,8 @@ func request_action(anchor: Area3D) -> bool:
 	return true
 
 func travel(destination: String) -> void:
+	for setup in ROOMS.values():
+		characters.sync(get_node(setup.node), run_game.table_definition(setup.table))
 	bar_display.refresh()
 	refresh_route_labels()
 	current_room = destination
@@ -885,7 +887,7 @@ func restore_checkpoint(state: Dictionary) -> bool:
 		if table_game != null:
 			refresh_table()
 		else:
-			seat_panel.pregame(run_game.cash, table_content.tables[active_table_id], run_game.inventory, run_game)
+			seat_panel.pregame(run_game.cash, run_game.table_definition(active_table_id), run_game.inventory, run_game)
 	refresh_economy()
 	return true
 

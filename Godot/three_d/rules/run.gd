@@ -88,17 +88,25 @@ func table_blocked_reason(table_id := "cargo-table") -> String:
 		return "当前牌桌尚未结算"
 	if table_id in completed:
 		return "本局已完成此桌，可继续探索或撤离"
-	var definition: Dictionary = content.tables[table_id]
+	var definition: Dictionary = table_definition(table_id)
 	if definition.unlocksAfter != null and definition.unlocksAfter not in completed:
 		return "先完成" + table_name(definition.unlocksAfter) + "并离座"
 	if cash < int(definition.buyIn):
 		return "随身现金不足 %d，无法买入" % int(definition.buyIn)
 	return ""
 
+func table_definition(table_id: String) -> Dictionary:
+	if table != null and table.state.tableDef.id == table_id:
+		return table.state.tableDef.duplicate(true)
+	var definition: Dictionary = content.tables[table_id].duplicate(true)
+	if variant_plan.has("opponents"):
+		definition.opponentIds = variant_plan.opponents[table_id].duplicate()
+	return definition
+
 func enter_table(seed_value: int, expected_revision: int, table_id := "cargo-table", pledged_item := "") -> RefCounted:
 	if expected_revision != revision or not table_blocked_reason(table_id).is_empty():
 		return null
-	var definition: Dictionary = content.tables[table_id]
+	var definition: Dictionary = table_definition(table_id)
 	if not pledged_item.is_empty():
 		if not definition.get("allowCollateral", false) or pledged_item not in inventory or content.items[pledged_item].kind != "valuable":
 			return null
@@ -361,7 +369,7 @@ func service_view(mode := "bag", product := "") -> Dictionary:
 	if not reservation.is_empty():
 		text += "\n%s：当前第 %d 轮，第 %d 轮结束前有效，尾款 %d" % [offer_name(reservation.id), search_index, reservation.expiresAfterSearch, reservation.finalCost]
 	for table_id in full_intel:
-		text += "\n%s：对手 %s；奖励 %s" % [table_name(table_id), "、".join(content.tables[table_id].opponentIds.map(func(id): return actor_name(id))), "、".join(content.tables[table_id].baseRewardPool.map(func(id): return item_name(id)))]
+		text += "\n%s：对手 %s；奖励 %s" % [table_name(table_id), "、".join(table_definition(table_id).opponentIds.map(func(id): return actor_name(id))), "、".join(content.tables[table_id].baseRewardPool.map(func(id): return item_name(id)))]
 	for actor in opponent_notes:
 		text += "\n%s 风格：%s" % [actor_name(actor), archetype_name(opponent_notes[actor])]
 	for table_id in known_rules:
