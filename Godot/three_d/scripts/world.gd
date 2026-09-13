@@ -574,7 +574,9 @@ func _notification(what: int) -> void:
 func start_table(seed_value: int = -1) -> void:
 	if not seated or table_game != null or paused:
 		return
-	table_game = run_game.enter_table(int(Time.get_ticks_usec() % 2147483647) if seed_value < 0 else seed_value, run_game.revision, active_table_id, seat_panel.selected_collateral())
+	if seed_value < 0:
+		seed_value = int(run_game.variant_plan.table_seeds[active_table_id]) if not run_game.variant_plan.is_empty() else int(Time.get_ticks_usec() % 2147483647)
+	table_game = run_game.enter_table(seed_value, run_game.revision, active_table_id, seat_panel.selected_collateral())
 	if table_game == null:
 		return
 	refresh_economy()
@@ -732,7 +734,7 @@ func confirm_run_action() -> void:
 	if not run_panel.visible or paused or run_confirm.disabled:
 		return
 	if run_action == "enter":
-		if not run_game.start(run_revision, str(scene_choice.get_item_metadata(scene_choice.selected))):
+		if not run_game.start(run_revision, str(scene_choice.get_item_metadata(scene_choice.selected)), int(randi() % 2147483646) + 1):
 			return
 		exit_notice.title = "查看出口告示"
 		close_run_panel()

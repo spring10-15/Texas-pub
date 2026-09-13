@@ -3,11 +3,14 @@ extends RefCounted
 const TableRules = preload("res://three_d/rules/table.gd")
 const Routes = preload("res://three_d/rules/routes.gd")
 const SearchEvents = preload("res://three_d/rules/search_events.gd")
+const Variants = preload("res://three_d/rules/run_variants.gd")
 const Advanced = preload("res://three_d/rules/advanced_services.gd")
 const SUPPORTED_ITEMS := ["marked-lens", "steadying-drink", "sleeve-clip", "signal-lighter", "player-notes", "disposable-phone", "kitchen-pass", "dock-passkey", "false-bottom-wallet"]
 const ITEM_NAMES := {"marked-lens": "标记镜片", "steadying-drink": "镇定酒", "sleeve-clip": "袖口夹", "signal-lighter":"信号打火机", "player-notes":"玩家笔记", "disposable-phone":"一次性手机", "kitchen-pass":"后厨通行证", "dock-passkey":"码头密钥", "false-bottom-wallet":"夹层钱包"}
 const SCENE_NAMES := {"smoky-den":"烟雾酒馆", "high-rise-suite":"高层套房", "rooftop-club":"屋顶会所", "neon-poker-club":"霓虹扑克俱乐部"}
 var search_results: Dictionary = {}
+var run_seed := 0
+var variant_plan: Dictionary = {}
 var scene_id := "smoky-den"
 var collateral := ""
 var last_table_result: Dictionary = {}
@@ -42,10 +45,12 @@ func _init(definitions: Dictionary) -> void:
 	content = definitions
 	vault = int(content.startingVault)
 
-func start(expected_revision: int, destination := "smoky-den") -> bool:
+func start(expected_revision: int, destination := "smoky-den", seed_value := 0) -> bool:
 	if expected_revision != revision or active or vault < 120 or not content.scenes.has(destination):
 		return false
 	scene_id = destination
+	run_seed = seed_value
+	variant_plan = Variants.generate(content, scene_id, run_seed)
 	search_results.clear()
 	bankroll = mini(int(content.standardBankroll), vault)
 	vault -= bankroll
@@ -69,7 +74,7 @@ func start(expected_revision: int, destination := "smoky-den") -> bool:
 	reservation.clear()
 	full_intel.clear()
 	opponent_notes.clear()
-	offer_index = 0
+	offer_index = variant_plan.initial_offer
 	active = true
 	revision += 1
 	return true
@@ -234,6 +239,8 @@ func service_reason(kind: String, item_id: String, target_id := "") -> String:
 	return ""
 
 func shop_stock() -> Array:
+	if not variant_plan.is_empty():
+		return variant_plan.shelves[str(clampi(search_index, 1, 5))].duplicate()
 	var shops: Dictionary = content.shops[scene_id]
 	var stock: Array = shops.get(str(search_index), shops["3"]).duplicate()
 	# The two-table slice must offer the phone before its final table.

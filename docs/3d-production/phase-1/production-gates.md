@@ -17,3 +17,5 @@
 当前玩法证据见 [状态机草案](state-machine.md)；历史实现/美术清单见 ../full-game-audit.md。自动断言数量与帧截图不代表转移覆盖率、真人上手或目标设备性能。
 
 Phase 1 补充产物：[难度曲线](difficulty-curve.md)、[八对手条件策略分布](opponent-profiles.md)、[16 步首次游玩说明](first-run-walkthrough.md)。难度与步骤来自现有规则；尚未完成真人计时和可识别性验收。
+
+种子落地进展见 [种子与有限池](seeded-pools.md)：货架/初始接应/四桌种子已接入并保存；房间、事件、对手池与跨酒馆流转仍未完成。
