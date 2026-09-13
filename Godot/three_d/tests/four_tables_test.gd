@@ -43,6 +43,9 @@ func run() -> void:
 	world.set_process(false)
 	world.show_run_panel("enter")
 	world.confirm_run_action()
+	# This regression follows the original linear corridor; room_pool_test covers both layouts.
+	world.run_game.variant_plan.room_layout = "linear"
+	world.travel("tavern")
 	var start_vault: int = world.run_game.vault
 	verify(world.run_game.enter_table(1, world.run_game.revision, "mirror-hall") == null, "Mirror remains locked initially")
 	verify(world.run_game.enter_table(1, world.run_game.revision, "embers-table") == null, "Embers remains locked initially")

@@ -33,10 +33,10 @@ static func generate(content: Dictionary, scene: String, seed_value: int) -> Dic
 		var pressure := shuffled(PRESSURE_POOL, rng)
 		var value := shuffled(VALUE_POOL, rng)
 		for i in range(TABLES.size()): opponents[TABLES[i]] = [pressure[i], value[i]]
-	return {"version":3,"opponents":opponents,"shelves":shelves,"table_seeds":table_seeds,"initial_offer":offer,"events":events}
+	return {"version":4,"room_layout":"fork" if seed_value != 0 and rng.next() < 0.5 else "linear","opponents":opponents,"shelves":shelves,"table_seeds":table_seeds,"initial_offer":offer,"events":events}
 
 static func valid(plan: Dictionary, content: Dictionary, scene: String) -> bool:
-	if plan.get("version") not in [1, 2, 3] or not plan.get("shelves") is Dictionary or not plan.get("table_seeds") is Dictionary:
+	if plan.get("version") not in [1, 2, 3, 4] or not plan.get("shelves") is Dictionary or not plan.get("table_seeds") is Dictionary:
 		return false
 	if not plan.get("initial_offer") is int or plan.initial_offer < 0 or plan.initial_offer >= content.routes[scene].fixedRoutes.size():
 		return false
@@ -70,6 +70,10 @@ static func valid(plan: Dictionary, content: Dictionary, scene: String) -> bool:
 				if not actor is String or not content.opponents.has(actor) or seen.has(actor): return false
 				seen[actor] = true
 	elif plan.has("opponents"):
+		return false
+	if plan.version >= 4:
+		if plan.get("room_layout") not in ["linear", "fork"]: return false
+	elif plan.has("room_layout"):
 		return false
 	return true
 

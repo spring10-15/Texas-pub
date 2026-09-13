@@ -61,6 +61,7 @@ func run() -> void:
 	var legacy := Checkpoint.capture(r)
 	legacy.variant_plan.version = 2
 	legacy.variant_plan.erase("opponents")
+	legacy.variant_plan.erase("room_layout")
 	var loaded: RefCounted = Checkpoint.restore(legacy,content)
 	verify(loaded != null and loaded.table_definition("cargo-table").opponentIds==content.tables["cargo-table"].opponentIds,"Old plan retains historical roster")
 	var world: Node = load("res://three_d/scenes/main.tscn").instantiate()

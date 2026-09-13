@@ -238,6 +238,11 @@ func build_tavern(room_name := "Tavern", offset := 10.0) -> void:
 		exit_notice = target(room, "ExitNoticeTarget", Vector3(-2.73, 1.6, 2.55), Vector3(0.16, 0.52, 0.59), "discover_exit", "查看出口告示")
 		preload("res://three_d/scripts/tavern_layout.gd").build(self, room)
 		ledger_door = make_door(room, Vector3(2.83, 1.1, 1.65), "前往账房地窖 · 需完成货运桌", "enter_ledger")
+		var passage := Node3D.new()
+		passage.name = "MirrorPassage"
+		room.add_child(passage)
+		make_door(passage, Vector3(2.83, 1.1, 2.85), "前往镜厅", "room:mirror")
+		passage.hide()
 	else:
 		make_door(room, Vector3(-2.83, 1.1, 1.65), "返回烟雾酒馆", "back_tavern")
 	if room_name in ["LedgerCellar", "MirrorHall"]:
@@ -437,9 +442,9 @@ func request_action(anchor: Area3D) -> bool:
 		return true
 	if str(anchor.action_id).begins_with("room:"):
 		var destination: String = str(anchor.action_id).trim_prefix("room:")
-		var required: String = table_content.tables[ROOMS[destination].table].unlocksAfter
-		if required not in run_game.completed:
-			hint_label.text = "先完成" + run_game.table_name(required) + "并离座"
+		var reason: String = run_game.room_blocked_reason(ROOMS[destination].table)
+		if not reason.is_empty():
+			hint_label.text = reason
 			return false
 		travel(destination)
 		return true
@@ -462,8 +467,8 @@ func request_action(anchor: Area3D) -> bool:
 		"enter_stash":
 			show_run_panel("extract")
 		"enter_ledger":
-			if "cargo-table" not in run_game.completed:
-				hint_label.text = "先完成货运桌并离座"
+			if not run_game.room_blocked_reason("ledger-cellar").is_empty():
+				hint_label.text = run_game.room_blocked_reason("ledger-cellar")
 				return false
 			travel("ledger")
 		"back_tavern":
@@ -513,6 +518,7 @@ func leave_seat() -> void:
 	if table_game != null and not run_game.settle_table(run_game.revision):
 		return
 	table_game = null
+	refresh_route_labels()
 	refresh_economy()
 	clear_cards()
 	seated = false
@@ -866,6 +872,8 @@ func restore_checkpoint(state: Dictionary) -> bool:
 		return false
 	if (state.room == "stash") == restored.active or (restored.table != null and not state.seated):
 		return false
+	if state.room != "stash" and not restored.room_blocked_reason(ROOMS[state.room].table).is_empty():
+		return false
 	if restored.table != null and restored.table.state.tableDef.id != ROOMS.get(state.room, ROOMS.tavern).table:
 		return false
 	run_game = restored
@@ -922,6 +930,28 @@ func install_prop(parent: Node3D, id: String) -> void:
 	parent.add_child(make_detailed_prop(id))
 
 func refresh_route_labels() -> void:
+	var fork: bool = run_game.variant_plan.get("room_layout", "linear") == "fork"
+	var passage: Node3D = get_node("Tavern/MirrorPassage")
+	passage.visible = fork
+	for node in passage.get_children():
+		if node is Area3D: node.collision_layer = 2 if fork else 0
+	for setup in ROOMS.values():
+		for node in get_node(setup.node).find_children("*", "Area3D", true, false):
+			if setup.node == "LedgerCellar" and str(node.action_id).begins_with("room:"):
+				node.action_id = "room:embers" if fork else "room:mirror"
+			var destination: String = "ledger" if str(node.action_id) == "enter_ledger" else str(node.action_id).trim_prefix("room:")
+			if not ROOMS.has(destination): continue
+			var id: String = ROOMS[destination].table
+			node.title = "前往%s · 买入 %d · %s" % [run_game.table_name(id), table_content.tables[id].buyIn, run_game.room_blocked_reason(id)]
+			if not node.has_node("RoomSign"):
+				var sign := Label3D.new()
+				sign.name = "RoomSign"
+				sign.position = Vector3(-.16,.25,0)
+				sign.rotation.y = -PI/2
+				sign.font_size = 32
+				sign.pixel_size = .0015
+				node.add_child(sign)
+			node.get_node("RoomSign").text = "%s · %d\n%s" % [run_game.table_name(id), table_content.tables[id].buyIn, "开放" if run_game.room_blocked_reason(id).is_empty() else run_game.room_blocked_reason(id)]
 	for node in get_node("Tavern").get_children():
 		if node is Area3D and str(node.action_id).begins_with("route:"):
 			node.title = run_game.route_name(str(node.action_id).trim_prefix("route:")) + " · 查看撤离条件"
@@ -935,3 +965,5 @@ func refresh_route_labels() -> void:
 				node.title = RunRules.SearchEvents.event_for(run_game, setup.table).title + " · 查看"
 			if node is Area3D and str(node.action_id) == "back_tavern":
 				node.title = "返回" + RunRules.SCENE_NAMES[run_game.scene_id]
+
+	show_focus(player.focused)

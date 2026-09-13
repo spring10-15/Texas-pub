@@ -89,11 +89,22 @@ func table_blocked_reason(table_id := "cargo-table") -> String:
 	if table_id in completed:
 		return "本局已完成此桌，可继续探索或撤离"
 	var definition: Dictionary = table_definition(table_id)
-	if definition.unlocksAfter != null and definition.unlocksAfter not in completed:
-		return "先完成" + table_name(definition.unlocksAfter) + "并离座"
+	var room_reason := room_blocked_reason(table_id)
+	if not room_reason.is_empty(): return room_reason
 	if cash < int(definition.buyIn):
 		return "随身现金不足 %d，无法买入" % int(definition.buyIn)
 	return ""
+
+func room_requirements(table_id: String) -> Array:
+	if variant_plan.get("room_layout", "linear") == "fork":
+		if table_id in ["ledger-cellar", "mirror-hall"]: return ["cargo-table"]
+		if table_id == "embers-table": return ["ledger-cellar", "mirror-hall"]
+	var required: Variant = content.tables[table_id].unlocksAfter
+	return [] if required == null else [required]
+
+func room_blocked_reason(table_id: String) -> String:
+	var missing := room_requirements(table_id).filter(func(id): return id not in completed)
+	return "" if missing.is_empty() else "先完成" + "、".join(missing.map(func(id): return table_name(id))) + "并离座"
 
 func table_definition(table_id: String) -> Dictionary:
 	if table != null and table.state.tableDef.id == table_id:

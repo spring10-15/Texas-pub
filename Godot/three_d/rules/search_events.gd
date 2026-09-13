@@ -24,13 +24,13 @@ static func reason(run: RefCounted, site: String, id: String) -> String:
 	var option := choice(run, site, id)
 	if option.is_empty(): return "未知选择"
 	if not run.active or run.table != null: return "只能在离桌探索时处理"
-	var required: Variant = run.content.tables[site].unlocksAfter
-	if required != null and required not in run.completed: return "该房间尚未解锁"
+	if not run.room_blocked_reason(site).is_empty(): return "该房间尚未解锁"
 	if run.search_results.has(site): return "本局已处理此处"
 	if run.action_points < 1: return "行动力不足"
 	if run.cash < int(option.get("cost", 0)): return "随身现金不足"
 	if option.has("item") and run.slots_used() + int(run.content.items[option.item].slots) > int(run.content.inventorySlots): return "背包已满"
 	if option.has("route") and run.route_known(option.route): return "已知这条路线，无需重复取线索"
+	if option.has("intel") and option.intel in run.completed: return "该牌桌已完成，无需购买情报"
 	if option.has("intel") and run.full_intel.has(option.intel): return "已知全部情报"
 	if option.get("cool", false) and (run.heat_reduced or run.heat <= 0): return "本轮已降过风声或无需降低"
 	return ""

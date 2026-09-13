@@ -45,6 +45,7 @@ func _initialize() -> void:
 	saved.variant_plan.version = 1
 	saved.variant_plan.erase("events")
 	saved.variant_plan.erase("opponents")
+	saved.variant_plan.erase("room_layout")
 	var restored: RefCounted = Checkpoint.restore(saved,content)
 	verify(restored != null and Run.SearchEvents.event_id(restored,"cargo-table")=="cargo-table","Version 1 retains original event placement")
 	for corruption in ["missing","duplicate","unknown"]:
