@@ -1250,21 +1250,69 @@
       "source": "Godot/three_d/rules/table.gd",
       "entry": "act",
       "outcome": "rejected"
+    },
+    {
+      "id": "poker_action.fold",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_action.call",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_action.check",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_action.raise",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_action.open",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_action.custom_raise",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_action.raise_to_all_in",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_action.all_in",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
     }
   ],
   "pending_families": {
     "poker": [
-      "fold",
-      "check",
-      "call",
-      "raise",
-      "all-in",
       "fold_award",
       "street_advance",
       "showdown",
       "next_hand",
       "table_finish",
-      "side_pots"
+      "side_pots",
+      "short_all_in",
+      "exact_call_all_in",
+      "queue_reopen",
+      "lone_funded_queue",
+      "aggression_discount"
     ],
     "world": [
       "room_entry",
