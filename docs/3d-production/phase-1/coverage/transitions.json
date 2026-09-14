@@ -848,12 +848,100 @@
       "source": "Godot/three_d/rules/run.gd",
       "entry": "service_action",
       "outcome": "rejected"
+    },
+    {
+      "id": "tool.lens",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "tool.sleeve",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "tool.preserve_preview",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "tool.heat_cap",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "tool.stale_revision",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "tool.inactive",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "tool.mismatch",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "tool.no_table",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "tool.finished",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "tool.unowned",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "tool.used",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "tool.river",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "tool.after_preflop",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "tool.after_action",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "tool.other_actor",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(lens/sleeve)",
+      "outcome": "rejected"
     }
   ],
   "pending_families": {
     "services": [
-      "lens",
-      "sleeve",
       "signal",
       "notes",
       "phone-route",
