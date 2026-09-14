@@ -1394,19 +1394,58 @@
       "source": "Godot/three_d/rules/poker.gd",
       "entry": "Table.advance -> settle_pots",
       "outcome": "accepted"
+    },
+    {
+      "id": "ending.fold_award",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act/advance/next_hand",
+      "outcome": "accepted"
+    },
+    {
+      "id": "ending.hand_limit",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act/advance/next_hand",
+      "outcome": "accepted"
+    },
+    {
+      "id": "ending.continue_hand",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act/advance/next_hand",
+      "outcome": "accepted"
+    },
+    {
+      "id": "ending.folded_return",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act/advance/next_hand",
+      "outcome": "accepted"
+    },
+    {
+      "id": "ending.finished_guard",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act/advance/next_hand",
+      "outcome": "rejected"
+    },
+    {
+      "id": "ending.single_funded",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act/advance/next_hand",
+      "outcome": "accepted"
+    },
+    {
+      "id": "ending.player_bankrupt",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act/advance/next_hand",
+      "outcome": "accepted"
     }
   ],
   "pending_families": {
     "poker": [
-      "fold_award",
-      "table_finish",
       "short_all_in",
       "exact_call_all_in",
       "queue_reopen",
       "lone_funded_queue",
       "aggression_discount",
-      "next_hand_heads_up",
-      "next_hand_finished_guard"
+      "next_hand_heads_up"
     ],
     "world": [
       "room_entry",
