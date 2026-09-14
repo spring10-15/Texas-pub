@@ -30,6 +30,10 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		return null
 	if values.offer_index < 0 or values.offer_index >= content.routes[values.scene_id].fixedRoutes.size():
 		return null
+	var completed_ids := {}
+	for id in values.completed:
+		if not content.tables.has(id) or completed_ids.has(id): return null
+		completed_ids[id] = true
 	if values.arrival_completed < 0 or values.arrival_completed > values.completed.size(): return null
 	var visited := {}
 	for id in values.venue_history:
