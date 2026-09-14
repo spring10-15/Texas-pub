@@ -938,6 +938,72 @@
       "source": "Godot/three_d/rules/run.gd",
       "entry": "service_action(lens/sleeve)",
       "outcome": "rejected"
+    },
+    {
+      "id": "reservation.success",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action(reserve/phone-route)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "reservation.renew_expired",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action(reserve/phone-route)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "reservation.phone_preserves",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action(reserve/phone-route)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "reservation.stale_revision",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action(reserve/phone-route)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "reservation.inactive",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action(reserve/phone-route)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "reservation.wrong_item",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action(reserve/phone-route)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "reservation.table_active",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action(reserve/phone-route)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "reservation.no_actions",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action(reserve/phone-route)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "reservation.unknown_route",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action(reserve/phone-route)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "reservation.valid_booking",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action(reserve/phone-route)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "reservation.cash_short",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action(reserve/phone-route)",
+      "outcome": "rejected"
     }
   ],
   "pending_families": {
@@ -946,8 +1012,7 @@
       "notes",
       "phone-route",
       "phone-table",
-      "pass",
-      "reserve"
+      "pass"
     ],
     "poker": [
       "fold",
