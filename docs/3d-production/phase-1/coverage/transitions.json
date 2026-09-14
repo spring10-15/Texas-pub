@@ -596,12 +596,135 @@
       "source": "Godot/three_d/rules/run.gd",
       "entry": "enter_table",
       "outcome": "rejected"
+    },
+    {
+      "id": "settlement.ivory",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.lighter",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.ruby",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.emerald",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.pearl",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.watch",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.bond",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.antique",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.idol",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.promissory",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.break_even",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.loss",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.full_bag",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.collateral_lost",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.collateral_tie",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.side_pot_only",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.legacy_award",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "settlement.stale_revision",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "settlement.inactive",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "settlement.no_table",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "settlement.unfinished",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "rejected"
     }
   ],
   "pending_families": {
-    "run_lifecycle": [
-      "settle_table"
-    ],
     "services": [
       "buy",
       "sell",
