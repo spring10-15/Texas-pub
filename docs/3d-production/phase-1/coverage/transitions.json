@@ -1358,19 +1358,53 @@
       "source": "Godot/three_d/rules/table.gd",
       "entry": "advance/next_hand",
       "outcome": "accepted"
+    },
+    {
+      "id": "payout.single_winner",
+      "source": "Godot/three_d/rules/poker.gd",
+      "entry": "Table.advance -> settle_pots",
+      "outcome": "accepted"
+    },
+    {
+      "id": "payout.three_tiers",
+      "source": "Godot/three_d/rules/poker.gd",
+      "entry": "Table.advance -> settle_pots",
+      "outcome": "accepted"
+    },
+    {
+      "id": "payout.folded_best",
+      "source": "Godot/three_d/rules/poker.gd",
+      "entry": "Table.advance -> settle_pots",
+      "outcome": "accepted"
+    },
+    {
+      "id": "payout.three_way_tie",
+      "source": "Godot/three_d/rules/poker.gd",
+      "entry": "Table.advance -> settle_pots",
+      "outcome": "accepted"
+    },
+    {
+      "id": "payout.tied_side_pots",
+      "source": "Godot/three_d/rules/poker.gd",
+      "entry": "Table.advance -> settle_pots",
+      "outcome": "accepted"
+    },
+    {
+      "id": "payout.odd_chip",
+      "source": "Godot/three_d/rules/poker.gd",
+      "entry": "Table.advance -> settle_pots",
+      "outcome": "accepted"
     }
   ],
   "pending_families": {
     "poker": [
       "fold_award",
       "table_finish",
-      "side_pots",
       "short_all_in",
       "exact_call_all_in",
       "queue_reopen",
       "lone_funded_queue",
       "aggression_discount",
-      "showdown_winner_allocation",
       "next_hand_heads_up",
       "next_hand_finished_guard"
     ],
