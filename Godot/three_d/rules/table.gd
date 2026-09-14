@@ -73,7 +73,7 @@ func legal_actions(id: String) -> Dictionary:
 	return {"fold": true, "check": cost == 0, "call": cost > 0 and player.stack >= cost, "raise": can_raise, "allIn": player.stack > 0}
 
 func act(id: String, kind: String, expected_revision: int, raise_target := -1) -> bool:
-	if revision != expected_revision:
+	if revision != expected_revision or kind not in ["fold", "check", "call", "raise", "all-in"]:
 		return false
 	var legal := legal_actions(id)
 	var key := "allIn" if kind == "all-in" else kind
