@@ -722,15 +722,136 @@
       "source": "Godot/three_d/rules/run.gd",
       "entry": "settle_table",
       "outcome": "rejected"
+    },
+    {
+      "id": "service.buy",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "service.sell",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "service.drink",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "service.cool",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "service.intel",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "service.stale_revision",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.inactive",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.mismatch",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.table_active",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.no_actions",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.not_stocked",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.buy_cash",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.full_bag",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.sell_unowned",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.cool_used",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.cool_unneeded",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.drink_unowned",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.cool_cash",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.intel_known",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.intel_unknown",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "service.unknown_action",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
     }
   ],
   "pending_families": {
     "services": [
-      "buy",
-      "sell",
-      "drink",
-      "cool",
-      "intel",
       "lens",
       "sleeve",
       "signal",
