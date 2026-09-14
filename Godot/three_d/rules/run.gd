@@ -11,6 +11,9 @@ const SCENE_NAMES := {"smoky-den":"烟雾酒馆", "high-rise-suite":"高层套�
 var search_results: Dictionary = {}
 var run_seed := 0
 var variant_plan: Dictionary = {}
+var venue_history: Array[String] = []
+var arrival_completed := 0
+var transfer_log: Array = []
 var scene_id := "smoky-den"
 var collateral := ""
 var last_table_result: Dictionary = {}
@@ -49,6 +52,9 @@ func start(expected_revision: int, destination := "smoky-den", seed_value := 0) 
 	if expected_revision != revision or active or vault < 120 or not content.scenes.has(destination):
 		return false
 	scene_id = destination
+	venue_history.assign([destination])
+	arrival_completed = 0
+	transfer_log.clear()
 	run_seed = seed_value
 	variant_plan = Variants.generate(content, scene_id, run_seed)
 	search_results.clear()
@@ -76,6 +82,48 @@ func start(expected_revision: int, destination := "smoky-den", seed_value := 0) 
 	opponent_notes.clear()
 	offer_index = variant_plan.initial_offer
 	active = true
+	revision += 1
+	return true
+
+func transfer_quote(destination: String) -> Dictionary:
+	var exit_quote := extraction_quote("general")
+	var fee: int = exit_quote.fee + 15
+	var reason: String = exit_quote.reason
+	if not content.scenes.has(destination): reason = "未知酒馆"
+	elif destination == scene_id or destination in venue_history: reason = "本晚已去过这家酒馆"
+	elif completed.size() <= arrival_completed: reason = "至少完成本店一桌并离座后再转场"
+	elif completed.size() >= Variants.TABLES.size(): reason = "本晚四桌已完成，请撤离落袋"
+	elif action_points < 1: reason = "转场需要 1 行动力"
+	elif cash < fee: reason = "现金不足以支付出口费和 15 车费"
+	return {"destination":destination,"exit_fee":exit_quote.fee,"fare":15,"fee":fee,"remaining":cash-fee,"reason":reason,"revision":revision}
+
+func transfer_venue(destination: String, expected_revision: int) -> bool:
+	if expected_revision != revision: return false
+	var quote := transfer_quote(destination)
+	if not quote.reason.is_empty(): return false
+	var previous := variant_plan if not variant_plan.is_empty() else Variants.generate(content,scene_id,run_seed)
+	var next_plan := Variants.generate(content,destination,run_seed + (SCENE_NAMES.keys().find(destination)+1)*104729)
+	# These are evening-wide opportunities: moving cannot reroll remaining cards, actors or rewards.
+	for key in ["table_seeds","opponents","events","room_layout"]:
+		if previous.has(key): next_plan[key] = previous[key].duplicate(true) if previous[key] is Dictionary else previous[key]
+	if not previous.has("opponents"):
+		for id in Variants.TABLES: next_plan.opponents[id] = content.tables[id].opponentIds.duplicate()
+	if not previous.has("events"):
+		for id in Variants.TABLES: next_plan.events[id] = id
+	if not previous.has("room_layout"): next_plan.room_layout = "linear"
+	transfer_log.append({"from":scene_id,"to":destination,"fee":quote.fee,"after_tables":completed.size()})
+	if venue_history.is_empty(): venue_history.append(scene_id)
+	venue_history.append(destination)
+	arrival_completed = completed.size()
+	cash -= quote.fee
+	action_points -= 1
+	scene_id = destination
+	variant_plan = next_plan
+	offer_index = next_plan.initial_offer
+	public_exit = false
+	route_flags.clear()
+	reservation.clear()
+	service_message = "已转场至" + SCENE_NAMES[destination] + "；出口费和车费共 %d，原预约结束。" % quote.fee
 	revision += 1
 	return true
 
@@ -187,6 +235,7 @@ func extract(expected_revision: int, kind := "general") -> bool:
 	if expected_revision != revision or not quote.reason.is_empty():
 		return false
 	last_result = {"cash": cash, "valuables": quote.valuables, "fee": quote.fee, "net": quote.net, "profit": quote.net - bankroll, "route":kind, "lostCash":quote.lostCash, "lostGoods":quote.lostGoods}
+	last_result["journey"] = transfer_log.duplicate(true)
 	vault += int(quote.net)
 	cash = 0
 	inventory.clear()
@@ -412,6 +461,7 @@ func abandon(expected_revision: int) -> bool:
 	var salvaged := mini(80, cash) if "false-bottom-wallet" in inventory else 0
 	vault += salvaged
 	last_result = {"cash": cash, "valuables": valuable_total(), "fee": 0, "net": salvaged, "profit": salvaged - bankroll, "abandoned": true}
+	last_result["journey"] = transfer_log.duplicate(true)
 	cash = 0
 	inventory.clear()
 	active = false
@@ -422,7 +472,7 @@ func route_offer() -> Dictionary:
 	return content.routes[scene_id].fixedRoutes[offer_index]
 
 func fixed_known() -> bool:
-	return "cargo-table" in completed or route_flags.get("fixed", false)
+	return completed.size() > arrival_completed or route_flags.get("fixed", false)
 
 func emergency_known() -> bool:
 	return heat >= 4 or not completed.is_empty() or valuable_total() > 0

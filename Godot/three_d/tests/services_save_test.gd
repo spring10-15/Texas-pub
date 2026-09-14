@@ -78,8 +78,9 @@ func run_tests() -> void:
 	root.add_child(world)
 	await physics_frame
 	world.set_process(false)
-	world.show_run_panel("enter")
-	world.confirm_run_action()
+	# This test requires the lens fixture; seeded stock absence is covered separately.
+	world.run_game.start(world.run_game.revision,"smoky-den",0)
+	world.travel("tavern")
 	world.open_services("product", "marked-lens")
 	world.service_action("buy", "marked-lens", world.run_game.revision)
 	verify(world.run_game.inventory == ["marked-lens"] and not world.services_panel.visible, "Actual service UI callback buys item")

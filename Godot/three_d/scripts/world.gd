@@ -57,6 +57,7 @@ var saving_enabled := false
 var save_clock := 0.0
 var last_saved: PackedByteArray
 var save_notice: Label
+var transfer_button: Button
 var scene_choice: OptionButton
 var selected_route := "general"
 var props: RefCounted
@@ -356,7 +357,7 @@ func build_ui() -> void:
 		scene_choice.set_item_metadata(scene_choice.item_count - 1, id)
 	column.add_child(scene_choice)
 	column.move_child(scene_choice, 2)
-	scene_choice.item_selected.connect(func(_index): show_run_panel("enter"))
+	scene_choice.item_selected.connect(func(_index): show_run_panel("transfer" if run_action == "transfer" else "enter"))
 	var cancel := Button.new()
 	cancel.text = "返回探索"
 	cancel.custom_minimum_size.y = 40
@@ -367,6 +368,11 @@ func build_ui() -> void:
 	routes_button.custom_minimum_size.y = 36
 	routes_button.pressed.connect(func(): close_run_panel(); open_services())
 	column.add_child(routes_button)
+	transfer_button = Button.new()
+	transfer_button.text = "继续去下一家酒馆 · 查看转场费用"
+	transfer_button.pressed.connect(func(): show_run_panel("transfer"))
+	column.add_child(transfer_button)
+	transfer_button.hide()
 	forfeit_button = Button.new()
 	forfeit_button.text = "无法撤离：查看放弃本局的损失"
 	forfeit_button.custom_minimum_size.y = 36
@@ -683,6 +689,9 @@ func refresh_economy() -> void:
 	elif not run_game.last_result.is_empty():
 		var result: Dictionary = run_game.last_result
 		economy_label.text = "金库 %d  ·  上局到账 %d / 费用 %d / 净变化 %+d" % [run_game.vault, result.net, result.fee, result.profit]
+		var travel_fees := 0
+		for hop in result.get("journey", []): travel_fees += int(hop.fee)
+		if travel_fees > 0: economy_label.text += " · 转场已扣 %d" % travel_fees
 		if result.get("forced", false):
 			economy_label.text += " · 风声封锁，已触发紧急结算"
 	else:
@@ -693,7 +702,15 @@ func show_run_panel(action: String, preview_only := false) -> void:
 	run_action = "extract" if action.begins_with("route:") else action
 	run_revision = run_game.revision
 	run_confirm.disabled = false
-	scene_choice.visible = action == "enter"
+	scene_choice.visible = action in ["enter","transfer"]
+	transfer_button.visible = run_action == "extract" and selected_route == "general" and not preview_only and run_game.active and run_game.completed.size() > 0 and run_game.completed.size() < 4 and run_game.venue_history.size() < 4
+	for i in range(scene_choice.item_count):
+		scene_choice.set_item_disabled(i, action == "transfer" and (scene_choice.get_item_metadata(i) == run_game.scene_id or scene_choice.get_item_metadata(i) in run_game.venue_history))
+	if action == "transfer" and scene_choice.is_item_disabled(scene_choice.selected):
+		for i in range(scene_choice.item_count):
+			if not scene_choice.is_item_disabled(i):
+				scene_choice.select(i)
+				break
 	forfeit_button.hide()
 	if action == "enter":
 		var destination: String = scene_choice.get_item_metadata(scene_choice.selected)
@@ -707,6 +724,16 @@ func show_run_panel(action: String, preview_only := false) -> void:
 			run_action = "reset"
 			run_body.text = "金库不足 120，暂时无法出发。\n可将试玩资金重置为 1,200，再开始新局。"
 			run_confirm.text = "重置试玩资金"
+	elif action == "transfer":
+		var destination: String = scene_choice.get_item_metadata(scene_choice.selected)
+		var quote: Dictionary = run_game.transfer_quote(destination)
+		var scene: Dictionary = table_content.scenes[destination]
+		run_heading.text = "继续今晚 · " + RunRules.SCENE_NAMES[destination]
+		run_body.text = "当前出口费 %d + 车费 15 = %d；消耗 1 行动力。\n随身现金 %d → %d；金库不变，财物尚未落袋。\n保留背包、风声 %d、已完成 %d / 4 桌和已用搜索机会。\n原预约失效且不退款；新店出口需重新发现。\n新店普通出口 %d + 现金 %d%%；每桌额外风声 +%d。" % [quote.exit_fee,quote.fee,run_game.cash,quote.remaining,run_game.heat,run_game.completed.size(),scene.generalExtractionFlatFee,roundi(scene.generalExtractionRate*100),scene.entryHeatBonus]
+		run_confirm.text = "支付并继续下一家"
+		if not quote.reason.is_empty():
+			run_body.text += "\n" + quote.reason
+			run_confirm.disabled = true
 	elif action == "abandon":
 		run_heading.text = "放弃本局"
 		run_body.text = "损失随身现金 %d 及全部背包物品。\n夹层钱包可保留至多 80 现金；其余损失。\n当前金库 %d。\n确认后返回藏匿点，这笔损失会保存。" % [run_game.cash, run_game.vault]
@@ -744,6 +771,11 @@ func confirm_run_action() -> void:
 	if run_action == "enter":
 		if not run_game.start(run_revision, str(scene_choice.get_item_metadata(scene_choice.selected)), int(randi() % 2147483646) + 1):
 			return
+		exit_notice.title = "查看出口告示"
+		close_run_panel()
+		travel("tavern")
+	elif run_action == "transfer":
+		if not run_game.transfer_venue(str(scene_choice.get_item_metadata(scene_choice.selected)),run_revision): return
 		exit_notice.title = "查看出口告示"
 		close_run_panel()
 		travel("tavern")

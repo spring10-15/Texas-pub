@@ -1,7 +1,7 @@
 extends RefCounted
 const Run = preload("res://three_d/rules/run.gd")
 const TableCheckpoint = preload("res://three_d/rules/table_checkpoint.gd")
-const FIELDS := ["vault", "active", "cash", "bankroll", "heat", "public_exit", "completed", "last_result", "revision", "inventory", "known_rules", "used_tools", "preview", "preview_hand", "action_points", "search_index", "heat_reduced", "service_message", "last_reward", "route_flags", "reservation", "offer_index", "full_intel", "opponent_notes", "collateral", "last_table_result", "scene_id", "search_results", "run_seed", "variant_plan"]
+const FIELDS := ["vault", "active", "cash", "bankroll", "heat", "public_exit", "completed", "last_result", "revision", "inventory", "known_rules", "used_tools", "preview", "preview_hand", "action_points", "search_index", "heat_reduced", "service_message", "last_reward", "route_flags", "reservation", "offer_index", "full_intel", "opponent_notes", "collateral", "last_table_result", "scene_id", "search_results", "run_seed", "variant_plan", "venue_history", "arrival_completed", "transfer_log"]
 
 static func capture(run: RefCounted) -> Dictionary:
 	var values := {}
@@ -14,12 +14,14 @@ static func capture(run: RefCounted) -> Dictionary:
 static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 	var run := Run.new(content)
 	values = values.duplicate(true)
-	for field in ["route_flags", "reservation", "offer_index", "full_intel", "opponent_notes", "collateral", "last_table_result", "scene_id", "search_results", "run_seed", "variant_plan"]:
+	for field in ["route_flags", "reservation", "offer_index", "full_intel", "opponent_notes", "collateral", "last_table_result", "scene_id", "search_results", "run_seed", "variant_plan", "venue_history", "arrival_completed", "transfer_log"]:
 		if not values.has(field):
 			values[field] = run.get(field)
 	for field in FIELDS:
 		if not values.has(field) or typeof(values[field]) != typeof(run.get(field)):
 			return null
+	if values.venue_history.is_empty() and values.active:
+		values.venue_history = [values.scene_id]
 	if values.vault < 0 or values.cash < 0 or values.heat < 0 or values.heat > 6 or not values.get("table") is Dictionary:
 		return null
 	if not content.scenes.has(values.scene_id):
@@ -28,6 +30,20 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		return null
 	if values.offer_index < 0 or values.offer_index >= content.routes[values.scene_id].fixedRoutes.size():
 		return null
+	if values.arrival_completed < 0 or values.arrival_completed > values.completed.size(): return null
+	var visited := {}
+	for id in values.venue_history:
+		if not id is String or not content.scenes.has(id) or visited.has(id): return null
+		visited[id] = true
+	if not values.venue_history.is_empty() and values.venue_history.back() != values.scene_id: return null
+	if values.transfer_log.size() != maxi(0,values.venue_history.size()-1): return null
+	var previous_tables := 0
+	for i in range(values.transfer_log.size()):
+		var hop: Variant = values.transfer_log[i]
+		if not hop is Dictionary or hop.get("from") != values.venue_history[i] or hop.get("to") != values.venue_history[i+1] or not hop.get("fee") is int or hop.fee < 15: return null
+		if not hop.get("after_tables") is int or hop.after_tables <= previous_tables or hop.after_tables >= 4 or hop.after_tables > values.completed.size(): return null
+		previous_tables = hop.after_tables
+	if values.arrival_completed != previous_tables: return null
 	for id in values.inventory:
 		if not content.items.has(id):
 			return null
