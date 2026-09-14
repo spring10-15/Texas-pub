@@ -15,6 +15,8 @@ static func reason(run: RefCounted, kind: String, item: String, target: String) 
 			return "请选一位有效对手"
 		if kind == "signal" and item in run.used_tools:
 			return "本桌已使用过信号打火机"
+		if kind == "notes" and run.opponent_notes.has(target):
+			return "已记录这位对手的风格"
 		return ""
 	if run.table != null:
 		return "请先结束牌桌并离座"
@@ -29,6 +31,10 @@ static func reason(run: RefCounted, kind: String, item: String, target: String) 
 			return "预约现金不足"
 	elif kind == "phone-table" and not run.content.tables.has(target):
 		return "请选择有效牌桌"
+	elif kind == "phone-table" and target in run.completed:
+		return "该牌桌已完成，无需获取情报"
+	elif kind == "phone-table" and run.full_intel.has(target):
+		return "已知该桌全部情报"
 	elif kind == "pass":
 		if item not in ["kitchen-pass", "dock-passkey"]:
 			return "不是路线通行证"
