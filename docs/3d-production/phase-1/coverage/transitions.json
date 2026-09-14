@@ -1160,6 +1160,96 @@
       "source": "Godot/three_d/rules/advanced_services.gd",
       "entry": "service_action",
       "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.stale_revision",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.unknown_action",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.not_playing",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.wrong_turn",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.unknown_actor",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.folded_actor",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.empty_stack",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.check_owes",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.call_zero",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.call_short",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.raise_used",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.raise_short",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.open_short",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.matched_raise_short",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_guard.below_minimum",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "rejected"
     }
   ],
   "pending_families": {
@@ -1174,8 +1264,7 @@
       "showdown",
       "next_hand",
       "table_finish",
-      "side_pots",
-      "action_guards"
+      "side_pots"
     ],
     "world": [
       "room_entry",
