@@ -404,6 +404,126 @@
       "source": "Godot/three_d/rules/routes.gd",
       "entry": "Run.extract -> Routes.quote",
       "outcome": "rejected"
+    },
+    {
+      "id": "search.goods",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "search.route",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "search.cash",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "search.paid_intel",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "search.free_intel",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "search.cool",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "search.unknown_choice",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.inactive",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.table_active",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.locked",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.repeat",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.no_action_points",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.insufficient_cash",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.full_bag",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.known_route",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.completed_intel",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.known_intel",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.cool_used",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.cool_unneeded",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
+    },
+    {
+      "id": "search.stale_revision",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "service_action(search)",
+      "outcome": "rejected"
     }
   ],
   "pending_families": {
@@ -425,17 +545,6 @@
       "phone-table",
       "pass",
       "reserve"
-    ],
-    "search": [
-      "goods",
-      "route",
-      "cash",
-      "paid_intel",
-      "free_intel",
-      "cool",
-      "repeat",
-      "locked",
-      "resource_guards"
     ],
     "poker": [
       "fold",

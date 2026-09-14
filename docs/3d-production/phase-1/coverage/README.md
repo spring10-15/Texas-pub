@@ -46,3 +46,11 @@ route_guard.* 新增 24 个具名结果：20 个拒绝结果与 4 个允许边�
 python3 Godot/three_d/tests/collect_coverage.py
 python3 Godot/three_d/tests/test_collect_coverage.py
 ```
+
+## 搜索结果与拒绝守卫（2026-09-14）
+
+search.* 新增 20 个结果：物品、路线、现金、付费情报、免费情报、降风声六类成功，以及未知选择、非活动局、活动牌桌、房间未解锁、重复处理、无行动力、现金不足、背包满、路线已知、情报目标桌已完成、情报已知、已经降过风声、无需降风声、旧 revision 十四类拒绝。测试走公开 service_action(search) 入口，先核对查询原因且查询不改变状态；成功用独立预期的完整 checkpoint 对比，拒绝要求完整 checkpoint 不变。消息内容仅要求非空且与领取记录一致，不把文案本身当作经济状态证明。
+
+本套件固定烟雾酒馆和种子 0，以隔离语义结果。它不替代现有 search_events/event_pool 的事件置换、其他物品奖励、存档及物理交互测试，也不声称覆盖所有边界与守卫冲突组合。初始 search 待拆分族已列入目录；其他待拆分族仍保留。
+
+执行 search_coverage_test.gd 以及上述三个覆盖套件，再运行 collect_coverage.py 和 test_collect_coverage.py。本轮四套件全部通过，汇总器 3 个测试通过：87 个登记结果均有当前证据。全局状态转移分母尚未完成，不能据此宣布达到 95% 或完成 Phase 1。
