@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 CATALOG = ROOT / 'docs/3d-production/phase-1/coverage/transitions.json'
 SUITES = {
+    'advanced': ('advanced_coverage_test.gd', {'advanced'}),
     'reservation': ('reservation_coverage_test.gd', {'reservation'}),
     'tool': ('tool_coverage_test.gd', {'tool'}),
     'service': ('service_coverage_test.gd', {'service'}),

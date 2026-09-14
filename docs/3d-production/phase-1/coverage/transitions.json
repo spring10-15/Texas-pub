@@ -1004,16 +1004,165 @@
       "source": "Godot/three_d/rules/advanced_services.gd",
       "entry": "service_action(reserve/phone-route)",
       "outcome": "rejected"
+    },
+    {
+      "id": "advanced.phone_route",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "advanced.phone_table",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "advanced.phone_rules_only",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "advanced.kitchen",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "advanced.dock",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "advanced.notes",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "advanced.notes_folded",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "advanced.signal",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "advanced.inactive",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.unowned",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.mismatch",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.table_active",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.no_actions",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.phone_unknown",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.phone_completed",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.phone_known",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.pass_invalid",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.pass_known",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.no_table",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.finished",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.target_unknown",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.target_player",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.target_folded",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.signal_used",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.notes_known",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "advanced.stale_revision",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
     }
   ],
   "pending_families": {
-    "services": [
-      "signal",
-      "notes",
-      "phone-route",
-      "phone-table",
-      "pass"
-    ],
     "poker": [
       "fold",
       "check",
@@ -1046,6 +1195,12 @@
       "invalid_data",
       "legacy_migration",
       "rng_replay"
+    ],
+    "signal_analysis": [
+      "strong",
+      "medium",
+      "weak",
+      "active_opponent_count"
     ]
   }
 }
