@@ -1,0 +1,150 @@
+{
+  "schema": 1,
+  "status": "incomplete_catalog",
+  "counting_rule": "One semantic accepted/rejected outcome per ID. Multiple input cases may exercise one ID. Overall denominator is not finalized while pending families remain.",
+  "transitions": [
+    {
+      "id": "transfer.success",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "accepted"
+    },
+    {
+      "id": "transfer.stale_revision",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "rejected"
+    },
+    {
+      "id": "transfer.inactive",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "rejected"
+    },
+    {
+      "id": "transfer.table_active",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "rejected"
+    },
+    {
+      "id": "transfer.unknown_destination",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "rejected"
+    },
+    {
+      "id": "transfer.already_visited",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "rejected"
+    },
+    {
+      "id": "transfer.no_local_completion",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "rejected"
+    },
+    {
+      "id": "transfer.evening_complete",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "rejected"
+    },
+    {
+      "id": "transfer.no_action_points",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "rejected"
+    },
+    {
+      "id": "transfer.insufficient_cash",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "rejected"
+    },
+    {
+      "id": "transfer.exit_unknown",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "rejected"
+    },
+    {
+      "id": "transfer.exit_locked",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "transfer_venue",
+      "outcome": "rejected"
+    }
+  ],
+  "pending_families": {
+    "run_lifecycle": [
+      "start",
+      "enter_table",
+      "settle_table",
+      "discover_exit",
+      "extract",
+      "abandon",
+      "reset_demo",
+      "enforce_pressure"
+    ],
+    "services": [
+      "buy",
+      "sell",
+      "drink",
+      "cool",
+      "intel",
+      "lens",
+      "sleeve",
+      "signal",
+      "notes",
+      "phone-route",
+      "phone-table",
+      "pass",
+      "reserve"
+    ],
+    "search": [
+      "goods",
+      "route",
+      "cash",
+      "paid_intel",
+      "free_intel",
+      "cool",
+      "repeat",
+      "locked",
+      "resource_guards"
+    ],
+    "poker": [
+      "fold",
+      "check",
+      "call",
+      "raise",
+      "all-in",
+      "fold_award",
+      "street_advance",
+      "showdown",
+      "next_hand",
+      "table_finish",
+      "side_pots",
+      "action_guards"
+    ],
+    "world": [
+      "room_entry",
+      "seat",
+      "leave_seat",
+      "pause",
+      "resume",
+      "physical_raycast",
+      "prop_interactions",
+      "modal_guards"
+    ],
+    "persistence": [
+      "capture",
+      "write",
+      "read",
+      "restore",
+      "invalid_data",
+      "legacy_migration",
+      "rng_replay"
+    ]
+  }
+}
