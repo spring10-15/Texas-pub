@@ -524,11 +524,82 @@
       "source": "Godot/three_d/rules/run.gd",
       "entry": "service_action(search)",
       "outcome": "rejected"
+    },
+    {
+      "id": "entry.success",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "entry.collateral",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "accepted"
+    },
+    {
+      "id": "entry.stale_revision",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "entry.unknown_table",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "entry.inactive",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "entry.table_active",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "entry.completed",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "entry.locked",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "entry.insufficient_cash",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "entry.collateral_disallowed",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "entry.collateral_unowned",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "rejected"
+    },
+    {
+      "id": "entry.collateral_not_valuable",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "rejected"
     }
   ],
   "pending_families": {
     "run_lifecycle": [
-      "enter_table",
       "settle_table"
     ],
     "services": [
