@@ -40,7 +40,11 @@ func _initialize() -> void:
 	for id in hits:
 		if id not in expected: failures.append("Uncatalogued hit: "+id)
 	var missing: Array = expected.filter(func(id): return not hits.has(id))
-	var report := {"scope":"transfer subgraph only","source_sha256":FileAccess.get_file_as_string("res://three_d/rules/run.gd").sha256_text(),"catalog_sha256":FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json").sha256_text(),"denominator":expected.size(),"numerator":hits.size(),"missing":missing,"failures":failures,"hits":hits,"overall_state_transition_coverage":null,"overall_status":"Other families not yet enumerated; no global percentage claimed."}
+	var hashes := {}
+	for file in DirAccess.get_files_at("res://three_d/rules"):
+		if not (file.ends_with(".gd") or file.ends_with(".json")): continue
+		hashes[file] = FileAccess.get_file_as_string("res://three_d/rules/"+file).sha256_text()
+	var report := {"scope":"transfer subgraph only","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/transfer_coverage_test.gd").sha256_text(),"catalog_sha256":FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json").sha256_text(),"denominator":expected.size(),"numerator":hits.size(),"missing":missing,"failures":failures,"hits":hits,"overall_state_transition_coverage":null,"overall_status":"Other families not yet enumerated; no global percentage claimed."}
 	FileAccess.open("res://../output/3d/transfer-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("TRANSFER_COVERAGE covered=",hits.size()," total=",expected.size()," missing=",missing," failures=",failures)
 	quit(0 if failures.is_empty() and missing.is_empty() else 1)

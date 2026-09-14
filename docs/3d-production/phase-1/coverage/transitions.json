@@ -74,18 +74,198 @@
       "source": "Godot/three_d/rules/run.gd",
       "entry": "transfer_venue",
       "outcome": "rejected"
+    },
+    {
+      "id": "start.success",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "start",
+      "outcome": "accepted"
+    },
+    {
+      "id": "start.stale",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "start",
+      "outcome": "rejected"
+    },
+    {
+      "id": "start.active",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "start",
+      "outcome": "rejected"
+    },
+    {
+      "id": "start.low_vault",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "start",
+      "outcome": "rejected"
+    },
+    {
+      "id": "start.unknown_venue",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "start",
+      "outcome": "rejected"
+    },
+    {
+      "id": "reset.success",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "reset_demo",
+      "outcome": "accepted"
+    },
+    {
+      "id": "reset.stale",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "reset_demo",
+      "outcome": "rejected"
+    },
+    {
+      "id": "reset.active",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "reset_demo",
+      "outcome": "rejected"
+    },
+    {
+      "id": "reset.sufficient_funds",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "reset_demo",
+      "outcome": "rejected"
+    },
+    {
+      "id": "discover.success",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "discover_exit",
+      "outcome": "accepted"
+    },
+    {
+      "id": "discover.inactive",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "discover_exit",
+      "outcome": "rejected"
+    },
+    {
+      "id": "discover.table_active",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "discover_exit",
+      "outcome": "rejected"
+    },
+    {
+      "id": "discover.already_known",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "discover_exit",
+      "outcome": "rejected"
+    },
+    {
+      "id": "extract.general",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "extract",
+      "outcome": "accepted"
+    },
+    {
+      "id": "extract.fixed",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "extract",
+      "outcome": "accepted"
+    },
+    {
+      "id": "extract.service-stairs",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "extract",
+      "outcome": "accepted"
+    },
+    {
+      "id": "extract.river-launch",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "extract",
+      "outcome": "accepted"
+    },
+    {
+      "id": "extract.dropbag-cash",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "extract",
+      "outcome": "accepted"
+    },
+    {
+      "id": "extract.dropbag-valuables",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "extract",
+      "outcome": "accepted"
+    },
+    {
+      "id": "extract.stale",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "extract",
+      "outcome": "rejected"
+    },
+    {
+      "id": "extract.rejected_quote",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "extract",
+      "outcome": "rejected"
+    },
+    {
+      "id": "abandon.success",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "abandon",
+      "outcome": "accepted"
+    },
+    {
+      "id": "abandon.wallet",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "abandon",
+      "outcome": "accepted"
+    },
+    {
+      "id": "abandon.stale",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "abandon",
+      "outcome": "rejected"
+    },
+    {
+      "id": "abandon.inactive",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "abandon",
+      "outcome": "rejected"
+    },
+    {
+      "id": "abandon.table_active",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "abandon",
+      "outcome": "rejected"
+    },
+    {
+      "id": "pressure.below_limit",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enforce_pressure",
+      "outcome": "rejected"
+    },
+    {
+      "id": "pressure.inactive",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enforce_pressure",
+      "outcome": "rejected"
+    },
+    {
+      "id": "pressure.table_active",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enforce_pressure",
+      "outcome": "rejected"
+    },
+    {
+      "id": "pressure.extract",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enforce_pressure",
+      "outcome": "accepted"
+    },
+    {
+      "id": "pressure.abandon",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enforce_pressure",
+      "outcome": "accepted"
     }
   ],
   "pending_families": {
     "run_lifecycle": [
-      "start",
       "enter_table",
-      "settle_table",
-      "discover_exit",
-      "extract",
-      "abandon",
-      "reset_demo",
-      "enforce_pressure"
+      "settle_table"
     ],
     "services": [
       "buy",
@@ -145,6 +325,14 @@
       "invalid_data",
       "legacy_migration",
       "rng_replay"
+    ],
+    "route_quotes": [
+      "general_guards",
+      "reservation_guards",
+      "special_route_guards",
+      "emergency_guards",
+      "affordability",
+      "unknown_route"
     ]
   }
 }
