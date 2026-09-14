@@ -1298,21 +1298,81 @@
       "source": "Godot/three_d/rules/table.gd",
       "entry": "act",
       "outcome": "accepted"
+    },
+    {
+      "id": "poker_progress.actor_pending",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "advance/next_hand",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_progress.next_while_playing",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "advance/next_hand",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_progress.advance_stale",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "advance/next_hand",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_progress.flop",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "advance/next_hand",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_progress.turn",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "advance/next_hand",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_progress.river",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "advance/next_hand",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_progress.showdown",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "advance/next_hand",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_progress.advance_finished_hand",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "advance/next_hand",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_progress.next_stale",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "advance/next_hand",
+      "outcome": "rejected"
+    },
+    {
+      "id": "poker_progress.next_hand",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "advance/next_hand",
+      "outcome": "accepted"
     }
   ],
   "pending_families": {
     "poker": [
       "fold_award",
-      "street_advance",
-      "showdown",
-      "next_hand",
       "table_finish",
       "side_pots",
       "short_all_in",
       "exact_call_all_in",
       "queue_reopen",
       "lone_funded_queue",
-      "aggression_discount"
+      "aggression_discount",
+      "showdown_winner_allocation",
+      "next_hand_heads_up",
+      "next_hand_finished_guard"
     ],
     "world": [
       "room_entry",
