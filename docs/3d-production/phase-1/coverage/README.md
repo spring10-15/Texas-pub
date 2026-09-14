@@ -28,3 +28,21 @@ python3 Godot/three_d/tests/test_collect_coverage.py
 ```
 
 两份执行报告核对当前目录、所有规则文件及各自测试脚本的摘要。汇总器拒绝过期来源、已有失败、缺失或杜撰命中、夸大计数；3 个单元测试（含 7 个缺陷子情境）通过，缺陷只在内存中注入，不改真实证据文件。摘要文件 output/3d/coverage-summary.json 显示 43 个已登记结果均有当前证据，全局覆盖率仍为 null，未枚举的状态族保持显式待办。
+
+## 撤离守卫与边界（2026-09-14）
+
+route_guard.* 新增 24 个具名结果：20 个拒绝结果与 4 个允许边界（风声 5 的普通出口附加费、预约有效期最后一轮、两种特殊出口最高允许风声）。测试通过实际 Run.extract 入口执行，报价前后不变，拒绝后完整 checkpoint 不变，成功时校验独立计算的费用与到账。四酒馆 × 两个预约方案 × 24 个结果共 192 个情境通过；这些样本只贡献 24 个语义命中。
+
+“丢贵重物但紧急出口未知”不作为独立最终结果：有贵重物时 emergency_known 为真；无贵重物时最终原因是“没有可舍弃的贵重物”。源码中的条件存在并不代表可到达一个额外的独立拒绝状态。复杂条件重叠时的优先级仍不等同于本批隔离守卫覆盖。
+
+本批完成初始 pending_families.route_quotes 的拆分；总目录仍因其它状态族未完整枚举而未封板。现在 67 个已登记结果均有当前证据，整体百分比依旧为空。
+
+更新汇总前，先运行新增套件及原两套件，避免目录摘要过期：
+
+```sh
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path Godot --script res://three_d/tests/route_guard_coverage_test.gd -- --test
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path Godot --script res://three_d/tests/lifecycle_coverage_test.gd -- --test
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path Godot --script res://three_d/tests/transfer_coverage_test.gd -- --test
+python3 Godot/three_d/tests/collect_coverage.py
+python3 Godot/three_d/tests/test_collect_coverage.py
+```

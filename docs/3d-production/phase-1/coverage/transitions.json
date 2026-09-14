@@ -260,6 +260,150 @@
       "source": "Godot/three_d/rules/run.gd",
       "entry": "enforce_pressure",
       "outcome": "accepted"
+    },
+    {
+      "id": "route_guard.general_unknown",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.general_locked",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.fixed_missing",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.fixed_expired",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.fixed_heat",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.stairs_unknown",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.stairs_heat",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.river_unknown",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.river_heat",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.emergency_unknown",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.goods_empty",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.unknown_kind",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.inactive",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.table_active",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.general_surcharge",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "accepted"
+    },
+    {
+      "id": "route_guard.fixed_expiry_boundary",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "accepted"
+    },
+    {
+      "id": "route_guard.stairs_heat_boundary",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "accepted"
+    },
+    {
+      "id": "route_guard.river_heat_boundary",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "accepted"
+    },
+    {
+      "id": "route_guard.cash_general",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.cash_fixed",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.cash_service-stairs",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.cash_river-launch",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.cash_dropbag-cash",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
+    },
+    {
+      "id": "route_guard.cash_dropbag-valuables",
+      "source": "Godot/three_d/rules/routes.gd",
+      "entry": "Run.extract -> Routes.quote",
+      "outcome": "rejected"
     }
   ],
   "pending_families": {
@@ -325,14 +469,6 @@
       "invalid_data",
       "legacy_migration",
       "rng_replay"
-    ],
-    "route_quotes": [
-      "general_guards",
-      "reservation_guards",
-      "special_route_guards",
-      "emergency_guards",
-      "affordability",
-      "unknown_route"
     ]
   }
 }
