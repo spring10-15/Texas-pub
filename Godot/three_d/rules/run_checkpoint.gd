@@ -24,6 +24,14 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		values.venue_history = [values.scene_id]
 	if values.vault < 0 or values.cash < 0 or values.heat < 0 or values.heat > 6 or not values.get("table") is Dictionary:
 		return null
+	if values.bankroll < 0 or values.revision < 0 or values.search_index < 1:
+		return null
+	if values.action_points < 0 or values.action_points > int(content.searchActions):
+		return null
+	for id in values.known_rules:
+		if not id is String or not content.tables.has(id): return null
+	for id in values.used_tools:
+		if not id is String or not content.items.has(id): return null
 	if not content.scenes.has(values.scene_id):
 		return null
 	if not values.variant_plan.is_empty() and not Run.Variants.valid(values.variant_plan, content, values.scene_id):
@@ -48,9 +56,12 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		if not hop.get("after_tables") is int or hop.after_tables <= previous_tables or hop.after_tables >= 4 or hop.after_tables > values.completed.size(): return null
 		previous_tables = hop.after_tables
 	if values.arrival_completed != previous_tables: return null
+	var occupied := 0
 	for id in values.inventory:
-		if not content.items.has(id):
+		if not id is String or not content.items.has(id):
 			return null
+		occupied += int(content.items[id].slots)
+	if occupied > int(content.inventorySlots): return null
 	if not values.collateral.is_empty() and (not content.items.has(values.collateral) or content.items[values.collateral].kind != "valuable" or values.table.is_empty()):
 		return null
 	for field in FIELDS:
