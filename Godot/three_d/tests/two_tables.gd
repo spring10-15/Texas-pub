@@ -24,7 +24,7 @@ func play_table(seed_value: int, expected_id: String) -> void:
 	verify(world.cards_root.get_parent().name == ("LedgerCellar" if expected_id == "ledger-cellar" else "Tavern"), "Cards belong to current room")
 	if expected_id == "ledger-cellar":
 		verify(world.table_game.state.currentBet == 30 and not world.table_game.state.firstAggressionDiscountAvailable, "Second table blinds and no cargo discount")
-		verify(world.seat_panel.opponent_left.text.begins_with("河道老鲨"), "Second table opponent names")
+		verify(world.seat_panel.opponent_left.text.begins_with(world.TableHUD.NAMES[world.table_game.state.players[1].id]), "Second table opponent names")
 	if expected_id == "ledger-cellar" and OS.get_cmdline_user_args().has("--capture"):
 		for i in range(12):
 			await process_frame

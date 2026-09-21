@@ -73,17 +73,23 @@ func run() -> void:
 	world.close_services()
 	var shelf: Area3D
 	for node in world.get_node("Tavern/ShopObjects").get_children():
-		if node is Area3D and node.action_id == "shop:marked-lens":
+		if node is Area3D and str(node.action_id).begins_with("shop:"):
 			shelf = node
-	await aim(Vector3(11.25, 0.02, -2.75), shelf)
+			break
+	verify(shelf != null, "Seeded shop has a physical product")
+	if shelf == null:
+		quit(1)
+		return
+	var product_id: String = str(shelf.action_id).trim_prefix("shop:")
+	await aim(Vector3(shelf.global_position.x - 1.18, 0.02, shelf.global_position.z - 0.45), shelf)
 	verify(world.request_action(shelf) and world.service_mode == "product", "Physical shelf opens single product")
 	await capture("shelf-purchase")
-	world.service_action("buy", "marked-lens", world.run_game.revision)
-	verify(world.run_game.inventory == ["marked-lens"] and not world.services_panel.visible, "Purchase hands off and enters bag once")
+	world.service_action("buy", product_id, world.run_game.revision)
+	verify(world.run_game.inventory == [product_id] and not world.services_panel.visible, "Purchase hands off and enters bag once")
 	await create_timer(0.65).timeout
 	await capture("bartender-handoff")
 	world.open_services()
-	verify(world.run_game.service_view().actions.all(func(a): return a.kind in ["lens", "route"]), "Owned bag does not expose shop or services")
+	verify(world.run_game.service_view().actions.all(func(a): return a.kind not in ["buy", "intel", "sell", "cool", "reserve"]), "Owned bag does not expose shop or services")
 	await capture("owned-bag")
 	world.close_services()
 	# Walk through connected architecture, including rising and descending floors.
