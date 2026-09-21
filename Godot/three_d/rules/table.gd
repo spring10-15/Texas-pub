@@ -21,19 +21,21 @@ func ordered_after(pivot: int, include_pivot := true, require_chips := true) -> 
 			ordered.append(player)
 	return ordered
 
-func start_hand() -> void:
+func start_hand(rotate_dealer := false) -> void:
 	revision += 1
 	state.merge({"pot": 0, "currentBet": 0, "community": [], "street": "preflop", "raiseUsed": false, "firstAggressionDiscountAvailable": state.tableDef.id == "cargo-table", "turnCounter": 0, "pendingNextHand": false, "pendingConclusion": false, "status": "playing", "summary": {}, "currentActorId": ""}, true)
 	for player in state.players:
 		player.merge({"folded": player.stack <= 0, "currentBet": 0, "handContribution": 0, "holeCards": [], "lastAction": ""}, true)
-	state.dealerSeat = (state.handNumber - 1) % state.players.size()
-	if state.players[state.dealerSeat].folded:
-		state.dealerSeat = ordered_after(state.dealerSeat)[0].seatIndex
-	var starters := ordered_after(state.dealerSeat)
-	if starters.size() < 2 or state.players[0].stack <= 0:
+	var dealer: int = int(state.get("dealerSeat",0))
+	var funded := ordered_after(dealer)
+	if funded.size() < 2 or state.players[0].stack <= 0:
 		state.status = "finished"
 		state.pendingConclusion = true
 		return
+	if rotate_dealer or state.players[dealer].folded:
+		dealer = funded[0].seatIndex
+	state.dealerSeat = dealer
+	var starters := ordered_after(dealer)
 	# Heads-up: dealer posts small blind; preserve all starters before posting all-in blinds.
 	var small: Dictionary = state.players[state.dealerSeat] if starters.size() == 2 else starters[0]
 	var big: Dictionary = starters[0] if starters.size() == 2 else starters[1]
@@ -183,7 +185,7 @@ func next_hand(expected_revision: int) -> bool:
 	if revision != expected_revision or state.status != "hand_over":
 		return false
 	state.handNumber += 1
-	start_hand()
+	start_hand(true)
 	return true
 
 func find_player(id: String) -> Dictionary:
