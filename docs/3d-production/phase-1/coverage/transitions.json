@@ -1484,6 +1484,36 @@
       "source": "Godot/three_d/rules/table.gd",
       "entry": "advance",
       "outcome": "accepted"
+    },
+    {
+      "id": "signal.strong",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "apply(signal)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "signal.three_active_weak",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "apply(signal)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "signal.folded_opponent_medium",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "apply(signal)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "signal.folded_player_medium",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "apply(signal)",
+      "outcome": "accepted"
+    },
+    {
+      "id": "signal.all_in_counts",
+      "source": "Godot/three_d/rules/advanced_services.gd",
+      "entry": "apply(signal)",
+      "outcome": "accepted"
     }
   ],
   "pending_families": {
@@ -1513,12 +1543,6 @@
       "invalid_data",
       "legacy_migration",
       "rng_replay"
-    ],
-    "signal_analysis": [
-      "strong",
-      "medium",
-      "weak",
-      "active_opponent_count"
     ]
   }
 }
