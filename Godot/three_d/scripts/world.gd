@@ -957,15 +957,24 @@ func restore_checkpoint(state: Dictionary) -> bool:
 	return_transform = state.return
 	seated = state.seated
 	table_game = run_game.table
+	table_delay = 0
+	clear_cards()
+	services_panel.hide()
+	run_panel.hide()
+	run_action = ""
+	player.controls_enabled = not seated and not paused
+	player.camera.current = not seated
+	seat_camera.current = seated
+	explore_instructions.visible = not seated
+	seat_panel.visible = seated and not paused
+	crosshair.visible = player.controls_enabled
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if player.controls_enabled else Input.MOUSE_MODE_VISIBLE
 	if seated:
-		seat_camera.current = true
-		player.controls_enabled = false
-		explore_instructions.hide()
-		seat_panel.show()
 		if table_game != null:
 			refresh_table()
 		else:
 			seat_panel.pregame(run_game.cash, run_game.table_definition(active_table_id), run_game.inventory, run_game)
+	if paused: pause_game()
 	refresh_economy()
 	return true
 
