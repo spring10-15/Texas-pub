@@ -54,6 +54,7 @@ var ledger_door: Area3D
 var services_panel: Control
 var save_path := "user://three-d-checkpoint.save"
 var saving_enabled := false
+var playtest_seed := 0
 var save_clock := 0.0
 var last_saved: PackedByteArray
 var save_notice: Label
@@ -67,6 +68,10 @@ var service_mode := "bag"
 var product_id := ""
 
 func _ready() -> void:
+	if not configure_playtest(OS.get_cmdline_user_args()):
+		push_error("--playtest-seed requires one integer from 1 to 2147483646")
+		get_tree().quit(1)
+		return
 	table_content = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
 	run_game = RunRules.new(table_content)
 	configure_input()
@@ -96,7 +101,20 @@ func _ready() -> void:
 	readiness = true
 	if not OS.get_cmdline_user_args().has("--test"):
 		get_tree().auto_accept_quit = false
-		load_checkpoint()
+		if playtest_seed == 0: load_checkpoint()
+	if playtest_seed > 0:
+		save_notice.text = "对照试玩 · 编号 %d · 本次不读写正式存档" % playtest_seed
+
+func configure_playtest(arguments: PackedStringArray) -> bool:
+	var selected := 0
+	for argument in arguments:
+		if argument == "--playtest-seed": return false
+		if not argument.begins_with("--playtest-seed="): continue
+		var value := argument.trim_prefix("--playtest-seed=")
+		if selected != 0 or not value.is_valid_int() or value.to_int() < 1 or value.to_int() > 2147483646: return false
+		selected = value.to_int()
+	playtest_seed = selected
+	return true
 
 func configure_input() -> void:
 	var bindings := {"move_forward": KEY_W, "move_back": KEY_S, "move_left": KEY_A, "move_right": KEY_D, "interact": KEY_E, "pause": KEY_ESCAPE, "inventory": KEY_B}
@@ -769,7 +787,7 @@ func confirm_run_action() -> void:
 	if not run_panel.visible or paused or run_confirm.disabled:
 		return
 	if run_action == "enter":
-		if not run_game.start(run_revision, str(scene_choice.get_item_metadata(scene_choice.selected)), int(randi() % 2147483646) + 1):
+		if not run_game.start(run_revision, str(scene_choice.get_item_metadata(scene_choice.selected)), playtest_seed if playtest_seed > 0 else int(randi() % 2147483646) + 1):
 			return
 		exit_notice.title = "查看出口告示"
 		close_run_panel()
@@ -871,6 +889,7 @@ func checkpoint_state() -> Dictionary:
 	return {"run": RunCheckpoint.capture(run_game), "room": current_room, "player": player.global_transform, "look": player.camera.rotation, "seated": seated, "return": return_transform, "caseOpen": case_open, "props": props.states.duplicate()}
 
 func save_checkpoint() -> bool:
+	if playtest_seed > 0: return false
 	var state := checkpoint_state()
 	var bytes := var_to_bytes(state)
 	if bytes == last_saved:
@@ -884,6 +903,7 @@ func save_checkpoint() -> bool:
 	return true
 
 func load_checkpoint() -> void:
+	if playtest_seed > 0: return
 	var loaded := SaveStore.read_checkpoint(save_path)
 	if loaded.status == "missing":
 		saving_enabled = true
