@@ -916,10 +916,21 @@ func load_checkpoint() -> void:
 	pause_game()
 	save_notice.text = "已恢复进度，点击继续"
 
+func checkpoint_position_valid(position: Vector3, room: String) -> bool:
+	# Broad room envelope includes the upper kitchen and lower quay, not decorative river.
+	# This rejects remote coordinates; it is not a collision-free spawn test.
+	var local := position - Vector3(0 if room == "stash" else ROOMS[room].x, 0, 0)
+	var bounds := AABB(Vector3(-3.2, -0.25, -3.7), Vector3(6.4, 3.5, 7.4)) if room == "stash" else AABB(Vector3(-4.2, -1.5, -14.2), Vector3(8.4, 6.0, 17.9))
+	return bounds.has_point(local)
+
 func restore_checkpoint(state: Dictionary) -> bool:
 	if state.get("room") not in ["stash", "tavern", "ledger", "mirror", "embers"] or not state.get("player") is Transform3D or not state.get("look") is Vector3 or not state.get("return") is Transform3D or not state.get("seated") is bool or not state.get("run") is Dictionary or not state.get("caseOpen") is bool:
 		return false
 	if not state.player.is_finite() or not state.look.is_finite() or not state["return"].is_finite():
+		return false
+	if not checkpoint_position_valid(state.player.origin, state.room):
+		return false
+	if state.seated and not checkpoint_position_valid(state["return"].origin, state.room):
 		return false
 	var saved_props: Variant = state.get("props", {})
 	if not saved_props is Dictionary:
