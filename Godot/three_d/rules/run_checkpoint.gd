@@ -34,6 +34,15 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		if not id is String or not content.items.has(id): return null
 	if not content.scenes.has(values.scene_id):
 		return null
+	if not values.reservation.is_empty():
+		var booking: Dictionary = values.reservation
+		if not booking.get("id") is String or not content.routes[values.scene_id].fixedRoutes.any(func(route): return route.id == booking.id):
+			return null
+		for field in ["reserveCost", "finalCost", "maxHeat", "expiresAfterSearch"]:
+			if not (booking.get(field) is int or booking.get(field) is float): return null
+			var amount := float(booking[field])
+			if not is_finite(amount) or amount < 0 or amount != floor(amount): return null
+		if booking.maxHeat > 6 or booking.expiresAfterSearch < 1: return null
 	if not values.variant_plan.is_empty() and not Run.Variants.valid(values.variant_plan, content, values.scene_id):
 		return null
 	if values.offer_index < 0 or values.offer_index >= content.routes[values.scene_id].fixedRoutes.size():
