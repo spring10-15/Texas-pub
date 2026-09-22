@@ -17,6 +17,8 @@ var start_button: Button
 var next_button: Button
 var leave_button: Button
 var raise_amount: SpinBox
+var raise_preview: Label
+var raise_context := {}
 var action_buttons := {}
 var displayed_revision := -1
 var result_banner: Label
@@ -77,6 +79,8 @@ func _ready() -> void:
 	raise_amount.custom_minimum_size = Vector2(120, 44)
 	raise_amount.step = 1
 	buttons.add_child(raise_amount)
+	raise_preview = text(rows, "", 16)
+	raise_amount.value_changed.connect(func(_value): update_raise_preview())
 	start_button = make_button(buttons, "开始牌局")
 	start_button.pressed.connect(func(): start_requested.emit())
 	next_button = make_button(buttons, "下一手")
@@ -150,6 +154,7 @@ func pregame(cash := 0, definition: Dictionary = {}, inventory: Array = [], run:
 	for button in action_buttons.values():
 		button.hide()
 	raise_amount.hide()
+	raise_preview.hide()
 	start_button.show()
 	next_button.hide()
 	leave_button.show()
@@ -193,9 +198,12 @@ func refresh(view: Dictionary, locked := false) -> void:
 	var minimum: int = view.tableDef.openBet if view.currentBet == 0 else view.currentBet + int(view.tableDef.raiseIncrement)
 	raise_amount.visible = playing
 	raise_amount.editable = your_turn and view.legal.get("raise", false)
+	raise_context = {"paid":int(you.currentBet),"stack":int(you.stack),"discount":10 if view.firstAggressionDiscountAvailable else 0}
+	raise_preview.visible = your_turn and view.legal.get("raise", false)
 	raise_amount.max_value = maxi(minimum, you.currentBet + you.stack)
 	raise_amount.min_value = minimum
 	raise_amount.value = minimum
+	update_raise_preview()
 	start_button.hide()
 	next_button.visible = view.status == "hand_over"
 	leave_button.visible = view.status == "finished"
@@ -207,3 +215,12 @@ func refresh(view: Dictionary, locked := false) -> void:
 
 func selected_collateral() -> String:
 	return str(collateral_choice.get_item_metadata(collateral_choice.selected)) if collateral_choice.visible and collateral_choice.selected >= 0 else ""
+
+func update_raise_preview() -> void:
+	if raise_context.is_empty(): return
+	var target := int(raise_amount.value)
+	var cost := maxi(0,target-int(raise_context.paid)-int(raise_context.discount))
+	if cost >= int(raise_context.stack):
+		raise_preview.text = "转为全押 · 实付 %d · 下注到 %d" % [raise_context.stack,int(raise_context.paid)+int(raise_context.stack)]
+	else:
+		raise_preview.text = "加注到 %d · 实付 %d%s" % [target,cost," · 本手首次进攻少付 10" if raise_context.discount > 0 else ""]
