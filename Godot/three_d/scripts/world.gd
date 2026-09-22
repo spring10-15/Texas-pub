@@ -899,6 +899,13 @@ func load_checkpoint() -> void:
 func restore_checkpoint(state: Dictionary) -> bool:
 	if state.get("room") not in ["stash", "tavern", "ledger", "mirror", "embers"] or not state.get("player") is Transform3D or not state.get("look") is Vector3 or not state.get("return") is Transform3D or not state.get("seated") is bool or not state.get("run") is Dictionary or not state.get("caseOpen") is bool:
 		return false
+	if not state.player.is_finite() or not state.look.is_finite() or not state["return"].is_finite():
+		return false
+	var saved_props: Variant = state.get("props", {})
+	if not saved_props is Dictionary:
+		return false
+	for value in saved_props.values():
+		if not value is bool: return false
 	var restored := RunCheckpoint.restore(state.run, table_content)
 	if restored == null:
 		return false
