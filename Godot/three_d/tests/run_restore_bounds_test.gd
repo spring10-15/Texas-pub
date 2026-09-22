@@ -15,6 +15,14 @@ func _initialize() -> void:
 	cases.typed_rule = ["known_rules",[42]]
 	cases.typed_tool = ["used_tools",[42]]
 	cases.typed_item = ["inventory",[42]]
+	cases.intel_unknown = ["full_intel",{"unknown-table":true}]
+	cases.intel_key_type = ["full_intel",{42:true}]
+	cases.intel_value_type = ["full_intel",{"cargo-table":"yes"}]
+	cases.note_unknown = ["opponent_notes",{"unknown-actor":"Nit"}]
+	cases.note_value_type = ["opponent_notes",{"ledger-clerk":42}]
+	cases.note_archetype = ["opponent_notes",{"ledger-clerk":"unknown-style"}]
+	cases.route_unknown = ["route_flags",{"unknown-route":true}]
+	cases.route_type = ["route_flags",{"fixed":"yes"}]
 	var heavy: Array = []
 	for i in range(int(content.inventorySlots)/2+1): heavy.append("sealed-bond")
 	cases.weighted_overfull = ["inventory",heavy]
@@ -35,6 +43,14 @@ func _initialize() -> void:
 		for i in range(int(content.inventorySlots)): valid.inventory.append("ivory-chip")
 		var restored := Checkpoint.restore(valid,content)
 		verify(restored != null and Checkpoint.capture(restored) == valid,"Full bag and boundary actions restore "+str(points))
+	var informed := original.duplicate(true)
+	informed.full_intel = {"cargo-table":true,"mirror-hall":true}
+	informed.opponent_notes = {"ledger-clerk":content.opponents["ledger-clerk"].archetype}
+	informed.route_flags = {"fixed":true,"river-launch":false,"service-stairs":true}
+	var informed_run := Checkpoint.restore(informed,content)
+	verify(informed_run != null and Checkpoint.capture(informed_run) == informed,"Known information restores without changes")
+	if informed_run != null:
+		verify(not informed_run.service_view("bag").text.is_empty(),"Restored information can be displayed")
 	var legacy := original.duplicate(true)
 	for field in ["route_flags","reservation","offer_index","full_intel","opponent_notes","collateral","last_table_result","scene_id","search_results","run_seed","variant_plan","venue_history","arrival_completed","transfer_log"]: legacy.erase(field)
 	verify(Checkpoint.restore(legacy,content) != null,"Legacy optional fields still migrate")

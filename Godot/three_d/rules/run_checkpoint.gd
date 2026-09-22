@@ -32,6 +32,13 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		if not id is String or not content.tables.has(id): return null
 	for id in values.used_tools:
 		if not id is String or not content.items.has(id): return null
+	for id in values.full_intel:
+		if not id is String or not content.tables.has(id) or not values.full_intel[id] is bool: return null
+	var archetypes: Array = content.opponents.values().map(func(actor): return actor.archetype)
+	for id in values.opponent_notes:
+		if not id is String or not content.opponents.has(id) or not values.opponent_notes[id] is String or values.opponent_notes[id] not in archetypes: return null
+	for id in values.route_flags:
+		if id not in ["fixed", "service-stairs", "river-launch"] or not values.route_flags[id] is bool: return null
 	if not content.scenes.has(values.scene_id):
 		return null
 	if not values.reservation.is_empty():

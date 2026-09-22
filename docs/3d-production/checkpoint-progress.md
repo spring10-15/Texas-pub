@@ -46,3 +46,13 @@
 修复后 32 项检查通过（`output/3d/world-restore-mode-after.log`）。这是内存世界恢复的模式切换验证，不代表所有系统弹窗、正在执行的动画或任意坏变换已验证；未读写正式存档。
 
 完整回归 51 个 Godot 套件和 6 个 Python 测试通过；报告 `output/3d/regression/20260922-222601/report.json`。
+
+## 2026-09-22：已知情报、对手笔记与路线标记
+
+RunCheckpoint 现在逐条校验 full_intel 的牌桌 ID 和布尔值、opponent_notes 的对手 ID 与风格字符串、route_flags 的支持路线和布尔值。对手风格允许当前内容表中已定义的风格，不强行重写保存的笔记。未知键或类型错误返回 null，不修改输入快照。
+
+扩展 `run_restore_bounds_test.gd`：修复前八类坏信息都被接受，47 项检查中八项失败（`output/3d/run-info-before.log`）；修复后 47 项全过（`output/3d/run-info-after.log`）。合法多桌情报、已记笔记及已知/未知路线标记往返保持，恢复后背包文本可生成；旧版本缺少可选字段的迁移仍通过。
+
+边界：搜索结果和历史结算摘要等其他嵌套字段仍未完全验证。本轮不把存档范围测试项数计入完整语义覆盖率，也不读取正式玩家存档。
+
+完整回归 51 个 Godot 套件、6 个 Python 测试通过，17 个语义套件证据随规则哈希更新；报告 `output/3d/regression/20260922-222900/report.json`。全状态转移分母仍未完成。
