@@ -41,6 +41,37 @@ func run() -> void:
 	var saved: Dictionary = world.checkpoint_state()
 	world.props.restore({})
 	verify("prop_restore", world.restore_checkpoint(saved) and world.props.states.lamp and is_equal_approx(float(lamp.node.light_energy),0.0))
+	world.travel("tavern")
+	world.player.position = Vector3(9.55, 0.02, 1.15)
+	world.player.camera.look_at(world.table_target.global_position)
+	for i in range(5): await physics_frame
+	var unopened: Dictionary = world.checkpoint_state()
+	verify("seat_blocked", not world.request_action(world.table_target) and not world.seated and world.checkpoint_state()==unopened)
+	world.travel("stash")
+	world.player.camera.look_at(world.door_target.global_position)
+	for i in range(3): await physics_frame
+	var door: bool = world.request_action(world.door_target)
+	if door: world.confirm_run_action()
+	verify("room_entry", door and world.current_room=="tavern" and world.run_game.active and world.run_game.vault==900 and world.run_game.cash==300)
+	world.player.position = Vector3(9.55, 0.02, 1.15)
+	world.player.camera.look_at(world.table_target.global_position)
+	for i in range(5): await physics_frame
+	var return_position: Vector3 = world.player.global_position
+	verify("seat", world.request_action(world.table_target) and world.seated and world.seat_panel.visible and not world.player.controls_enabled and world.seat_camera.current)
+	world.pause_game()
+	verify("pause", world.paused and not world.seat_panel.visible and world.pause_panel.visible and not world.player.controls_enabled)
+	world.resume()
+	verify("resume", not world.paused and world.seat_panel.visible and not world.pause_panel.visible and world.seated)
+	world.leave_seat()
+	verify("leave_pregame", not world.seated and world.table_game==null and world.player.controls_enabled and world.player.camera.current and world.player.global_position.is_equal_approx(return_position))
+	world.player.camera.look_at(world.table_target.global_position)
+	for i in range(5): await physics_frame
+	var seated_again: bool = world.request_action(world.table_target)
+	if seated_again: world.start_table(301)
+	var active_table: RefCounted = world.table_game
+	var cash_before: int = world.run_game.cash
+	world.leave_seat()
+	verify("leave_active_rejected", seated_again and active_table!=null and world.seated and world.table_game==active_table and world.run_game.cash==cash_before)
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("world.")).map(func(row): return row.id)

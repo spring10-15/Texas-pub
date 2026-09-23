@@ -1556,6 +1556,48 @@
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "restore_checkpoint",
       "outcome": "accepted"
+    },
+    {
+      "id": "world.seat_blocked",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.room_entry",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "confirm_run_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.seat",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.pause",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "pause_game",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.resume",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "resume",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.leave_pregame",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "leave_seat",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.leave_active_rejected",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "leave_seat",
+      "outcome": "rejected"
     }
   ],
   "pending_families": {
