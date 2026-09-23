@@ -392,7 +392,7 @@ func build_ui() -> void:
 	column.add_child(transfer_button)
 	transfer_button.hide()
 	forfeit_button = Button.new()
-	forfeit_button.text = "无法撤离：查看放弃本局的损失"
+	forfeit_button.text = "查看主动放弃本局的损失"
 	forfeit_button.custom_minimum_size.y = 36
 	forfeit_button.pressed.connect(func(): show_run_panel("abandon"))
 	column.add_child(forfeit_button)
@@ -771,10 +771,13 @@ func show_run_panel(action: String, preview_only := false) -> void:
 			run_confirm.disabled = true
 		else:
 			run_heading.text = visible_route_name(selected_route) + " · 撤离结算"
-			run_body.text = "现金 %d · 费用 %d\n舍弃现金 %d · 舍弃贵重物价值 %d\n带回贵重物 %d · 最终到账 %d\n本局净变化 %+d" % [run_game.cash, quote.fee, quote.lostCash, quote.lostGoods, quote.valuables, quote.net, quote.net - run_game.bankroll]
+			if quote.reason.is_empty():
+				run_body.text = "现金 %d · 费用 %d\n舍弃现金 %d · 舍弃贵重物价值 %d\n带回贵重物 %d · 最终到账 %d\n本局净变化 %+d" % [run_game.cash, quote.fee, quote.lostCash, quote.lostGoods, quote.valuables, quote.net, quote.net - run_game.bankroll]
+			else:
+				run_body.text = "当前路线不可用：%s\n随身现金 %d · 此路线费用 %d" % [quote.reason, run_game.cash, quote.fee]
+				run_body.text += available_route_text(selected_route)
 			run_confirm.text = "支付费用并返回藏匿点"
 			if not quote.reason.is_empty():
-				run_body.text += "\n" + quote.reason
 				run_confirm.disabled = true
 				forfeit_button.visible = run_game.active and run_game.table == null
 	if preview_only:
@@ -1026,6 +1029,16 @@ func visible_route_name(kind: String) -> String:
 	if run_game.route_known(kind):
 		return run_game.route_name(kind)
 	return {"general":"大厅出口", "fixed":"库房货梯", "service-stairs":"后厨楼梯", "river-launch":"装卸码头", "dropbag-cash":"检修口", "dropbag-valuables":"检修口"}.get(kind, "出口")
+
+func available_route_text(excluded_kind: String) -> String:
+	var options: PackedStringArray = []
+	for kind in RunRules.Routes.NAMES:
+		if kind == excluded_kind or not run_game.route_known(kind):
+			continue
+		var quote: Dictionary = run_game.extraction_quote(kind)
+		if quote.reason.is_empty():
+			options.append("%s：费用 %d，弃现金 %d，弃贵重物 %d，预计到账 %d" % [run_game.route_name(kind), quote.fee, quote.lostCash, quote.lostGoods, quote.net])
+	return "\n已知可用路线（到实际入口按 E）：\n" + "\n".join(options) if not options.is_empty() else "\n当前没有其他已知可用路线；可继续探索。"
 
 func refresh_route_labels() -> void:
 	var fork: bool = run_game.variant_plan.get("room_layout", "linear") == "fork"
