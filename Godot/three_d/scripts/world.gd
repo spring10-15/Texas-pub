@@ -55,6 +55,7 @@ var services_panel: Control
 var save_path := "user://three-d-checkpoint.save"
 var saving_enabled := false
 var playtest_seed := 0
+var playtest_trace_path := ""
 var save_clock := 0.0
 var last_saved: PackedByteArray
 var save_notice: Label
@@ -113,8 +114,31 @@ func configure_playtest(arguments: PackedStringArray) -> bool:
 		var value := argument.trim_prefix("--playtest-seed=")
 		if selected != 0 or not value.is_valid_int() or value.to_int() < 1 or value.to_int() > 2147483646: return false
 		selected = value.to_int()
+	if playtest_seed != selected:
+		playtest_trace_path = ""
 	playtest_seed = selected
 	return true
+
+func trace_playtest(event: String, choice := "", details := {}) -> void:
+	if playtest_seed == 0:
+		return
+	if playtest_trace_path.is_empty():
+		var directory := "user://playtest-traces"
+		if DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(directory)) != OK:
+			push_error("Cannot create playtest trace directory")
+			return
+		playtest_trace_path = "%s/seed-%d-%d-%d.jsonl" % [directory, playtest_seed, int(Time.get_unix_time_from_system()), OS.get_process_id()]
+		print("PLAYTEST_TRACE ", ProjectSettings.globalize_path(playtest_trace_path))
+	var existed := FileAccess.file_exists(playtest_trace_path)
+	var file := FileAccess.open(playtest_trace_path, FileAccess.READ_WRITE if existed else FileAccess.WRITE)
+	if file == null:
+		push_error("Cannot write playtest trace: " + playtest_trace_path)
+		return
+	if existed:
+		file.seek_end()
+	var record := {"time": Time.get_datetime_string_from_system(), "elapsed_ms": Time.get_ticks_msec(), "seed": playtest_seed, "event": event, "choice": choice, "run_revision": run_game.revision, "scene": run_game.scene_id, "room": current_room, "cash": run_game.cash, "vault": run_game.vault, "heat": run_game.heat, "table": active_table_id if seated else "", "details": details}
+	file.store_line(JSON.stringify(record))
+	file.close()
 
 func configure_input() -> void:
 	var bindings := {"move_forward": KEY_W, "move_back": KEY_S, "move_left": KEY_A, "move_right": KEY_D, "interact": KEY_E, "pause": KEY_ESCAPE, "inventory": KEY_B}
@@ -540,8 +564,11 @@ func travel(destination: String) -> void:
 func leave_seat() -> void:
 	if paused or not seated or (table_game != null and table_game.state.status != "finished"):
 		return
+	var finished_table := table_game != null
 	if table_game != null and not run_game.settle_table(run_game.revision):
 		return
+	if finished_table:
+		trace_playtest("table_settled", active_table_id)
 	table_game = null
 	refresh_route_labels()
 	refresh_economy()
@@ -612,6 +639,7 @@ func start_table(seed_value: int = -1) -> void:
 	table_game = run_game.enter_table(seed_value, run_game.revision, active_table_id, seat_panel.selected_collateral())
 	if table_game == null:
 		return
+	trace_playtest("table_started", active_table_id, {"buy_in": int(table_game.state.tableDef.buyIn)})
 	refresh_economy()
 	table_delay = 0.45
 	refresh_table()
@@ -619,12 +647,17 @@ func start_table(seed_value: int = -1) -> void:
 func play_action(kind: String, expected_revision: int, raise_target: int = -1) -> void:
 	if paused or services_panel.visible or table_game == null or table_delay > 0:
 		return
+	var legal: Dictionary = table_game.legal_actions("player")
+	var street: String = table_game.state.street
+	var hand: int = table_game.state.handNumber
 	if table_game.act("player", kind, expected_revision, raise_target):
+		trace_playtest("table_action", kind, {"legal_before": legal, "street_before": street, "hand_before": hand, "raise_target": raise_target})
 		table_delay = 0.45
 		refresh_table()
 
 func continue_hand(expected_revision: int) -> void:
 	if not paused and not services_panel.visible and table_game != null and table_game.next_hand(expected_revision):
+		trace_playtest("next_hand", active_table_id, {"hand": table_game.state.handNumber})
 		table_delay = 0.45
 		refresh_table()
 
@@ -802,28 +835,35 @@ func confirm_run_action() -> void:
 	if not run_panel.visible or paused or run_confirm.disabled:
 		return
 	if run_action == "enter":
-		if not run_game.start(run_revision, str(scene_choice.get_item_metadata(scene_choice.selected)), playtest_seed if playtest_seed > 0 else int(randi() % 2147483646) + 1):
+		var destination: String = str(scene_choice.get_item_metadata(scene_choice.selected))
+		if not run_game.start(run_revision, destination, playtest_seed if playtest_seed > 0 else int(randi() % 2147483646) + 1):
 			return
+		trace_playtest("run_started", destination)
 		exit_notice.title = "查看出口告示"
 		close_run_panel()
 		travel("tavern")
 	elif run_action == "transfer":
-		if not run_game.transfer_venue(str(scene_choice.get_item_metadata(scene_choice.selected)),run_revision): return
+		var destination: String = str(scene_choice.get_item_metadata(scene_choice.selected))
+		if not run_game.transfer_venue(destination,run_revision): return
+		trace_playtest("venue_transferred", destination)
 		exit_notice.title = "查看出口告示"
 		close_run_panel()
 		travel("tavern")
 	elif run_action == "extract":
 		if not run_game.extract(run_revision, selected_route):
 			return
+		trace_playtest("run_extracted", selected_route)
 		close_run_panel()
 		travel("stash")
 	elif run_action == "abandon":
 		if not run_game.abandon(run_revision):
 			return
+		trace_playtest("run_abandoned")
 		close_run_panel()
 		travel("stash")
 	elif run_action == "reset":
 		if run_game.reset_demo(run_revision):
+			trace_playtest("bankroll_reset")
 			refresh_economy()
 			show_run_panel("enter")
 
@@ -879,6 +919,7 @@ func service_action(kind: String, item_id: String, revision: int, target_id := "
 		show_run_panel("route:" + item_id, true)
 		return
 	if run_game.service_action(kind, item_id, revision, target_id):
+		trace_playtest("service_action", kind, {"item": item_id, "target": target_id})
 		refresh_economy()
 		if table_game != null:
 			refresh_table()

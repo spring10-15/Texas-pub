@@ -16,6 +16,8 @@ func run_tests() -> void:
 	verify(world.configure_playtest(PackedStringArray()),"Normal mode remains available")
 	verify(world.playtest_seed == 0,"Normal mode uses random departure")
 	verify(world.configure_playtest(PackedStringArray(["--playtest-seed=20260922"])),"Valid fixed seed")
+	var trace_path := "user://playtest-trace-test-%d.jsonl" % OS.get_process_id()
+	world.playtest_trace_path = trace_path
 	var before: Dictionary = world.checkpoint_state()
 	world.save_path = "user://playtest-isolation-%d.save" % OS.get_process_id()
 	world.load_checkpoint()
@@ -24,11 +26,32 @@ func run_tests() -> void:
 	world.show_run_panel("enter")
 	world.confirm_run_action()
 	verify(world.run_game.run_seed == 20260922 and world.run_game.bankroll == 300 and world.run_game.vault == 900,"UI departure uses fixed seed and fresh bankroll")
+	var first_trace := FileAccess.get_file_as_string(trace_path).split("\n", false)
+	verify(first_trace.size() == 1 and JSON.parse_string(first_trace[0]).event == "run_started" and JSON.parse_string(first_trace[0]).seed == 20260922,"Accepted departure writes one isolated trace event")
+	world.open_services("bar")
+	world.service_action("buy", "nonexistent", world.run_game.revision)
+	verify(FileAccess.get_file_as_string(trace_path).split("\n", false).size() == 1,"Rejected service action does not enter trace")
+	world.service_action("intel", "cargo-table", world.run_game.revision)
+	var service_trace := FileAccess.get_file_as_string(trace_path).split("\n", false)
+	verify(service_trace.size() == 2 and JSON.parse_string(service_trace[1]).event == "service_action" and JSON.parse_string(service_trace[1]).choice == "intel","Accepted service action appends a trace event")
+	world.close_services()
+	world.seated = true
+	world.start_table(301)
+	verify(FileAccess.get_file_as_string(trace_path).split("\n", false).size() == 3,"Starting a table writes one trace event")
+	world.table_delay = 0
+	var turn: int = world.table_game.revision
+	world.play_action("fold", turn)
+	var poker_trace := FileAccess.get_file_as_string(trace_path).split("\n", false)
+	verify(poker_trace.size() == 4 and JSON.parse_string(poker_trace[3]).event == "table_action" and JSON.parse_string(poker_trace[3]).details.legal_before.fold,"Accepted poker action preserves pre-action legal choices")
+	world.table_game = null
+	world.seated = false
 	var plan: Dictionary = world.run_game.variant_plan.duplicate(true)
 	world.run_game = world.RunRules.new(world.table_content)
 	world.travel("stash")
 	world.show_run_panel("enter")
 	world.confirm_run_action()
 	verify(world.run_game.variant_plan == plan,"Same initial conditions reproduce plan")
+	verify(FileAccess.get_file_as_string(trace_path).split("\n", false).size() == 5,"Repeated fresh departure appends instead of replacing trace")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(trace_path))
 	print("PLAYTEST_SEED checks=",checks," failures=",failures)
 	quit(0 if failures.is_empty() else 1)
