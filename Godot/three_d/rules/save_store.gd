@@ -26,6 +26,10 @@ static func read_checkpoint(path: String) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return {"status": "unreadable"}
+	if file.get_length() < 4 or file.get_32() > file.get_length() - 4:
+		file.close()
+		return {"status": "invalid"}
+	file.seek(0)
 	var envelope: Variant = file.get_var(false)
 	file.close()
 	if not envelope is Dictionary or envelope.get("version") != VERSION:

@@ -1666,6 +1666,12 @@
       "outcome": "rejected"
     },
     {
+      "id": "persistence_io.read_truncated",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "read_checkpoint",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_io.read_version",
       "source": "Godot/three_d/rules/save_store.gd",
       "entry": "read_checkpoint",
