@@ -41,6 +41,8 @@ func run() -> void:
 	var saved: Dictionary = world.checkpoint_state()
 	world.props.restore({})
 	verify("prop_restore", world.restore_checkpoint(saved) and world.props.states.lamp and is_equal_approx(float(lamp.node.light_energy),0.0))
+	for prop_id in ["drawer0", "window", "card", "chip"]:
+		await use_stash_prop(world, prop_id)
 	world.travel("tavern")
 	world.player.position = Vector3(9.55, 0.02, 1.15)
 	world.player.camera.look_at(world.table_target.global_position)
@@ -84,7 +86,25 @@ func run() -> void:
 	var world_hashes := {}
 	for file in WORLD_SOURCES:
 		world_hashes[file] = FileAccess.get_file_as_string("res://three_d/scripts/"+file).sha256_text()
-	var report := {"scope":"Physical lamp interaction, busy/pause/modal refusals, visual result and in-memory restore","source_sha256":hashes,"world_source_sha256":world_hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_coverage_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
+	var report := {"scope":"Physical stash prop interactions, busy/pause/modal refusals, visual results, in-memory restore, seating and room entry","source_sha256":hashes,"world_source_sha256":world_hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_coverage_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
 	FileAccess.open("res://../output/3d/world-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("WORLD_COVERAGE covered=",hits.size()," total=",expected.size()," failed=",failures.size())
 	quit(0 if failures.is_empty() and missing.is_empty() else 1)
+
+func use_stash_prop(world: Node3D, prop_id: String) -> void:
+	var entry: Dictionary = world.props.entries[prop_id]
+	var anchor: Area3D = entry.anchor
+	var offset := Vector3(0, 0, 0.65)
+	if prop_id == "drawer0": offset = Vector3(0.7, 0, 0.65)
+	if prop_id in ["card", "chip"]: offset = Vector3(0, 0, -0.7)
+	world.player.global_position = Vector3(anchor.global_position.x + offset.x, 0.02, anchor.global_position.z + offset.z)
+	for i in range(3): await physics_frame
+	world.player.camera.look_at(anchor.global_position)
+	await physics_frame
+	var before: Dictionary = RunCheckpoint.capture(world.run_game)
+	var activated: bool = world.request_action(anchor)
+	await create_timer(0.5).timeout
+	var actual: Variant = entry.node.get_indexed(NodePath(entry.property))
+	var opened: Variant = entry.opened
+	var visual_ok: bool = actual.is_equal_approx(opened) if actual is Vector3 else is_equal_approx(float(actual), float(opened))
+	verify("prop_" + prop_id, activated and world.props.states[prop_id] and visual_ok and RunCheckpoint.capture(world.run_game)==before)

@@ -1598,6 +1598,30 @@
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "leave_seat",
       "outcome": "rejected"
+    },
+    {
+      "id": "world.prop_drawer0",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.prop_window",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.prop_card",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.prop_chip",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
     }
   ],
   "pending_families": {
