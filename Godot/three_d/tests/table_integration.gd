@@ -98,6 +98,19 @@ func run() -> void:
 	verify(world.current_room == "stash" and world.run_game.vault == 900 + net and not world.run_game.active, "Exit button settles cash and returns to stash")
 	world.run_confirm.pressed.emit()
 	verify(world.run_game.vault == 900 + net, "Duplicate exit input cannot pay twice")
+	var save_path := "user://first-run-integration-%d.save" % OS.get_process_id()
+	world.save_path = save_path
+	verify(world.save_checkpoint(), "Completed run saves after returning to stash")
+	var reopened: Node3D = load("res://three_d/scenes/main.tscn").instantiate()
+	root.add_child(reopened)
+	await physics_frame
+	reopened.set_process(false)
+	reopened.save_path = save_path
+	reopened.load_checkpoint()
+	verify(reopened.current_room == "stash" and not reopened.run_game.active and reopened.run_game.vault == 900 + net and reopened.paused, "Restart restores completed run and vault")
+	reopened.resume()
+	verify(reopened.player.controls_enabled and not reopened.run_game.extract(reopened.run_game.revision), "Restart resumes exploration without a second payout")
+	verify(DirAccess.remove_absolute(ProjectSettings.globalize_path(save_path)) == OK, "Temporary completed-run save is removed")
 	var report := {"checks": checks, "failed": failures.size(), "failures": failures, "transitions": frames}
 	var file := FileAccess.open(output.path_join("table-integration.json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "  "))
