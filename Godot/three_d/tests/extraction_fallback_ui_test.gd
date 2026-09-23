@@ -48,6 +48,14 @@ func run() -> void:
 		session.heat = 0
 		world.show_run_panel("extract")
 		verify(not world.run_confirm.disabled and world.run_body.text.contains("最终到账") and not world.run_body.text.contains("已知可用路线"), scene + " affordable exit keeps normal settlement")
+		session.route_flags = {"service-stairs":true, "river-launch":true}
+		session.reservation = session.route_offer().duplicate(true)
+		session.reservation.expiresAfterSearch = 1
+		session.search_index = 2
+		world.show_run_panel("route:fixed")
+		await process_frame
+		verify(world.run_body.text.contains("预约已过期") and world.run_body.text.contains("紧急出口 · 丢贵重物"), scene + " longest fallback list shows known routes")
+		verify(world.run_panel.get_combined_minimum_size().x <= world.run_panel.size.x and world.run_panel.get_combined_minimum_size().y <= world.run_panel.size.y and world.run_body.get_combined_minimum_size().y <= world.run_body.size.y, scene + " longest fallback text fits panel")
 		world.close_run_panel()
 	world.queue_free()
 	print("EXTRACTION_FALLBACK_UI ", JSON.stringify({"checks":checks, "failed":failures.size(), "failures":failures}))
