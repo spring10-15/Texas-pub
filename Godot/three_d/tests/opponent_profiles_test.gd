@@ -29,8 +29,10 @@ func _initialize() -> void:
 		{"id":"strong_final","odds":.72,"bet":20,"stack":100,"last":true,"repeats":0},
 		{"id":"repeated_raises","odds":.64,"bet":0,"stack":100,"last":false,"repeats":8}]
 	var distributions := {}
+	var sampled_actions := {}
 	for id in content.opponents:
 		distributions[id] = {}
+		sampled_actions[id] = []
 		for fixture in cases:
 			var table := {"tableDef":{"buyIn":120,"openBet":40},"street":"turn","handNumber":3 if fixture.last else 1,"totalHands":3,"currentBet":fixture.bet,"playerPattern":{"raiseCount":fixture.repeats}}
 			var actor := {"stack":fixture.stack}
@@ -40,10 +42,21 @@ func _initialize() -> void:
 				var action := Opponent.choose_with_odds(table,actor,legal,content.opponents[id],(i+.5)/100.0,fixture.odds)
 				verify(legal.get("allIn" if action=="all-in" else action,false), "Policy emits legal action " + id)
 				counts[action] += 1
+				sampled_actions[id].append(action)
 			distributions[id][fixture.id] = counts
 	verify(distributions["dock-braggart"].weak_free.raise > distributions["ledger-clerk"].weak_free.raise, "Maniac bluffs more than nit under identical information")
 	verify(distributions["smiling-knife"].strong_final["all-in"] > distributions["smiling-knife"].strong_early["all-in"], "Final hand increases knife pressure")
-	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"scope":"Conditional policy probe: 6 fixed public situations and equity inputs, 100 uniform random quantiles per opponent. Not gameplay win rates or human recognizability evidence.","cases":cases,"distributions":distributions}
+	var pairwise_differences := {}
+	var ids: Array = content.opponents.keys()
+	ids.sort()
+	for left in range(ids.size()):
+		for right in range(left + 1, ids.size()):
+			var differences := 0
+			for sample in range(sampled_actions[ids[left]].size()):
+				if sampled_actions[ids[left]][sample] != sampled_actions[ids[right]][sample]:
+					differences += 1
+			pairwise_differences[ids[left] + "/" + ids[right]] = differences
+	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"scope":"Conditional policy probe: 6 fixed public situations and equity inputs, 100 uniform random quantiles per opponent. Pairwise differences count distinct choices under the same input and random quantile. Not gameplay win rates or human recognizability evidence.","cases":cases,"distributions":distributions,"pairwiseDifferences":pairwise_differences}
 	FileAccess.open("res://../output/3d/opponent-profiles.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("OPPONENT_PROFILES checks=",checks," failed=",failures.size()," failures=",failures)
 	quit(0 if failures.is_empty() else 1)
