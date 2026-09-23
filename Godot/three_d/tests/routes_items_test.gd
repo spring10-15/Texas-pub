@@ -120,6 +120,7 @@ func run_tests() -> void:
 	world.run_game.inventory.append("kitchen-pass")
 	world.open_services()
 	world.service_action("pass", "kitchen-pass", world.run_game.revision)
+	verify(world.get_node("Tavern/KitchenExit").title.begins_with(world.run_game.route_name("service-stairs")) and not world.get_node("Tavern/KitchenExit").title.contains("线索未明"), "Revealed physical target shows current route")
 	if OS.get_cmdline_user_args().has("--capture"):
 		for i in range(12):
 			await process_frame

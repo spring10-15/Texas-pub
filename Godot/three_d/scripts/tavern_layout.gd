@@ -3,7 +3,7 @@ extends RefCounted
 static func sign_at(w: Node3D, room: Node3D, value: String, pos: Vector3, yaw := 0.0) -> void:
 	var sign := Label3D.new()
 	sign.text = value
-	var kind: String = {"预约接应 · 货梯":"fixed", "后厨出口":"service-stairs", "河边接驳":"river-launch", "← 后厨楼梯    库房 ↑    装卸码头 →":"directions"}.get(value, "")
+	var kind: String = {"预约接应 · 货梯":"fixed", "后厨出口":"service-stairs", "河边接驳":"river-launch", "检修口 · 紧急撤离":"emergency", "← 后厨楼梯    库房 ↑    装卸码头 →":"directions"}.get(value, "")
 	if not kind.is_empty():
 		sign.set_meta("route_kind", kind)
 	sign.font_size = 44

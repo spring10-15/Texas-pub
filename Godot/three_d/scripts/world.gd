@@ -500,6 +500,7 @@ func request_action(anchor: Area3D) -> bool:
 		"discover_exit":
 			run_game.discover_exit()
 			exit_notice.title = "出口已确认 · 门口可查看撤离费用"
+			refresh_route_labels()
 			refresh_economy()
 			show_focus(anchor)
 		"sit":
@@ -764,13 +765,18 @@ func show_run_panel(action: String, preview_only := false) -> void:
 			run_confirm.disabled = true
 	else:
 		var quote: Dictionary = run_game.extraction_quote(selected_route)
-		run_heading.text = run_game.route_name(selected_route) + " · 撤离结算"
-		run_body.text = "现金 %d · 费用 %d\n舍弃现金 %d · 舍弃贵重物价值 %d\n带回贵重物 %d · 最终到账 %d\n本局净变化 %+d" % [run_game.cash, quote.fee, quote.lostCash, quote.lostGoods, quote.valuables, quote.net, quote.net - run_game.bankroll]
-		run_confirm.text = "支付费用并返回藏匿点"
-		if not quote.reason.is_empty():
-			run_body.text += "\n" + quote.reason
+		if not run_game.route_known(selected_route):
+			run_heading.text = visible_route_name(selected_route) + " · 路线未确认"
+			run_body.text = "尚未获得这条路线的线索；取得线索后可查看费用、风险和预计到账。"
 			run_confirm.disabled = true
-			forfeit_button.visible = run_game.active and run_game.table == null
+		else:
+			run_heading.text = visible_route_name(selected_route) + " · 撤离结算"
+			run_body.text = "现金 %d · 费用 %d\n舍弃现金 %d · 舍弃贵重物价值 %d\n带回贵重物 %d · 最终到账 %d\n本局净变化 %+d" % [run_game.cash, quote.fee, quote.lostCash, quote.lostGoods, quote.valuables, quote.net, quote.net - run_game.bankroll]
+			run_confirm.text = "支付费用并返回藏匿点"
+			if not quote.reason.is_empty():
+				run_body.text += "\n" + quote.reason
+				run_confirm.disabled = true
+				forfeit_button.visible = run_game.active and run_game.table == null
 	if preview_only:
 		run_confirm.disabled = true
 		run_confirm.text = "到实际入口按 E 撤离"
@@ -1016,6 +1022,11 @@ func install_prop(parent: Node3D, id: String) -> void:
 			child.hide()
 	parent.add_child(make_detailed_prop(id))
 
+func visible_route_name(kind: String) -> String:
+	if run_game.route_known(kind):
+		return run_game.route_name(kind)
+	return {"general":"大厅出口", "fixed":"库房货梯", "service-stairs":"后厨楼梯", "river-launch":"装卸码头", "dropbag-cash":"检修口", "dropbag-valuables":"检修口"}.get(kind, "出口")
+
 func refresh_route_labels() -> void:
 	var fork: bool = run_game.variant_plan.get("room_layout", "linear") == "fork"
 	var passage: Node3D = get_node("Tavern/MirrorPassage")
@@ -1041,10 +1052,17 @@ func refresh_route_labels() -> void:
 			node.get_node("RoomSign").text = "%s · %d\n%s" % [run_game.table_name(id), table_content.tables[id].buyIn, "开放" if run_game.room_blocked_reason(id).is_empty() else run_game.room_blocked_reason(id)]
 	for node in get_node("Tavern").get_children():
 		if node is Area3D and str(node.action_id).begins_with("route:"):
-			node.title = run_game.route_name(str(node.action_id).trim_prefix("route:")) + " · 查看撤离条件"
+			var kind: String = str(node.action_id).trim_prefix("route:")
+			node.title = visible_route_name(kind) + (" · 查看撤离条件" if run_game.route_known(kind) else " · 线索未明")
 	for label_node in get_node("Tavern").get_children():
 		if label_node is Label3D and label_node.has_meta("route_kind"):
-			label_node.text = ("← " + run_game.route_name("service-stairs") + "    接应 ↑    " + run_game.route_name("river-launch") + " →") if label_node.get_meta("route_kind") == "directions" else run_game.route_name(label_node.get_meta("route_kind"))
+			var kind: String = str(label_node.get_meta("route_kind"))
+			if kind == "directions":
+				label_node.text = "← " + visible_route_name("service-stairs") + "    库房 ↑    " + visible_route_name("river-launch") + " →"
+			elif kind == "emergency":
+				label_node.text = "检修口 · 紧急撤离" if run_game.route_known("dropbag-cash") else "检修口"
+			else:
+				label_node.text = visible_route_name(kind)
 
 	for setup in ROOMS.values():
 		for node in get_node(setup.node).get_children():
