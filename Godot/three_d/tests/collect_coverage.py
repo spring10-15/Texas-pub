@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[3]
 CATALOG = ROOT / 'docs/3d-production/phase-1/coverage/transitions.json'
 SUITES = {
     'signal': ('signal_coverage_test.gd', {'signal'}),
+    'world': ('world_coverage_test.gd', {'world'}),
     'queue': ('short_stack_queue_test.gd', {'queue'}),
     'ending': ('table_endings_test.gd', {'ending'}),
     'payout': ('payout_coverage_test.gd', {'payout'}),
@@ -40,6 +41,10 @@ def collect():
         expected = {i for i in ids if i.split('.')[0] in prefixes}
         if report['catalog_sha256'] != digest(CATALOG) or report['source_sha256'] != hashes or report['test_sha256'] != digest(Path(__file__).parent / test):
             raise ValueError(f'{name}: stale source/catalog/test evidence; rerun the suite')
+        if name == 'world':
+            world_sources = {name: digest(ROOT / 'Godot/three_d/scripts' / name) for name in ('world.gd', 'player.gd', 'scene_props.gd')}
+            if report.get('world_source_sha256') != world_sources:
+                raise ValueError('world: stale world script evidence; rerun the suite')
         if report['failures'] or report['missing'] or set(report['hits']) != expected or report['numerator'] != len(expected) or report['denominator'] != len(expected):
             raise ValueError(f'{name}: failed, missing or inconsistent evidence')
         hits.update(expected)

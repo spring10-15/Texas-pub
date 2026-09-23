@@ -1514,6 +1514,48 @@
       "source": "Godot/three_d/rules/advanced_services.gd",
       "entry": "apply(signal)",
       "outcome": "accepted"
+    },
+    {
+      "id": "world.raycast_unfocused",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.prop_on",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.busy_guard",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.prop_visual",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.pause_guard",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.modal_guard",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.prop_restore",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "accepted"
     }
   ],
   "pending_families": {
