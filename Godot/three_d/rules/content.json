@@ -172,7 +172,8 @@
         "caution": 0.62,
         "bluff": 0.08,
         "finalHandSpike": 0.12,
-        "patternPunish": 0.18
+        "patternPunish": 0.18,
+        "valueRaiseShift": 0.03
       }
     },
     "smiling-knife": {
@@ -186,7 +187,8 @@
         "caution": 0.42,
         "bluff": 0.12,
         "finalHandSpike": 0.24,
-        "patternPunish": 0.06
+        "patternPunish": 0.06,
+        "valueRaiseShift": 0.04
       }
     },
     "river-shark": {
@@ -200,7 +202,8 @@
         "caution": 0.42,
         "bluff": 0.09,
         "finalHandSpike": 0.06,
-        "patternPunish": 0.05
+        "patternPunish": 0.05,
+        "valueRaiseShift": 0.09
       }
     },
     "velvet-rook": {
@@ -228,7 +231,8 @@
         "caution": 0.5,
         "bluff": 0.08,
         "finalHandSpike": 0.11,
-        "patternPunish": 0.08
+        "patternPunish": 0.08,
+        "valueRaiseShift": -0.04
       }
     },
     "ash-smuggler": {

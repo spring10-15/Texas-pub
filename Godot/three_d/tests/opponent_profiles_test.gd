@@ -46,6 +46,18 @@ func _initialize() -> void:
 			distributions[id][fixture.id] = counts
 	verify(distributions["dock-braggart"].weak_free.raise > distributions["ledger-clerk"].weak_free.raise, "Maniac bluffs more than nit under identical information")
 	verify(distributions["smiling-knife"].strong_final["all-in"] > distributions["smiling-knife"].strong_early["all-in"], "Final hand increases knife pressure")
+	var value_table := {"tableDef":{"buyIn":120,"openBet":40},"street":"turn","handNumber":1,"totalHands":3,"currentBet":20,"playerPattern":{"raiseCount":0}}
+	var value_actor := {"stack":200}
+	var value_legal := {"allIn":true,"raise":true,"call":true,"check":false,"fold":true}
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["house-viper"],.5,.65)=="raise", "Viper applies measured value pressure")
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["river-shark"],.5,.65)=="call", "River shark waits for stronger value")
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["smiling-knife"],.5,.65)=="call", "Knife coasts before final hand")
+	value_table.handNumber = 3
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["smiling-knife"],.5,.65)=="raise", "Knife presses on final hand")
+	value_table.handNumber = 1
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["calm-widow"],.5,.65)=="call", "Widow waits without a repeated raise pattern")
+	value_table.playerPattern.raiseCount = 8
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["calm-widow"],.5,.65)=="raise", "Widow punishes repeated raises")
 	var pairwise_differences := {}
 	var ids: Array = content.opponents.keys()
 	ids.sort()

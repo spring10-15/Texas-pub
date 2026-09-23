@@ -66,15 +66,18 @@ static func choose_with_odds(table: Dictionary, actor: Dictionary, legal: Dictio
 	var all_in_chance: float = profile.aggression * 0.16 + hand_factor * 0.62 + biases[2] + maxf(0, odds - 0.66) * 0.42 - pressure * 0.08
 	var bluff_chance: float = profile.bluff * 0.4 + hand_factor * 0.18 + biases[1] - maxf(0, odds - 0.55) * 0.25
 	var caution: float = profile.caution * 0.22 + pressure * 0.18
+	var value_raise_shift: float = 0.0
+	if profile.has("valueRaiseShift"):
+		value_raise_shift = float(profile.valueRaiseShift) - hand_factor * 0.3 - minf(0.1, table.playerPattern.raiseCount * profile.patternPunish * 0.08)
 	if table.currentBet == 0:
 		if legal.get("allIn", false) and actor.stack <= table.tableDef.openBet * 2.5 and odds > 0.63 and random_value < 0.18 + all_in_chance:
 			return "all-in"
-		if legal.get("raise", false) and (odds > 0.62 - raise_chance * 0.3 or (odds < 0.42 and random_value < bluff_chance)):
+		if legal.get("raise", false) and (odds > 0.62 - raise_chance * 0.3 + value_raise_shift or (odds < 0.42 and random_value < bluff_chance)):
 			return "raise"
 		return "check"
 	if legal.get("allIn", false) and (table.handNumber == table.totalHands or actor.stack <= maxf(table.currentBet, table.tableDef.openBet) * 2.5) and odds > 0.68 and random_value < 0.16 + all_in_chance:
 		return "all-in"
-	if legal.get("raise", false) and (odds > 0.72 - raise_chance * 0.25 or (odds < 0.38 and random_value < bluff_chance * 0.85)):
+	if legal.get("raise", false) and (odds > 0.72 - raise_chance * 0.25 + value_raise_shift or (odds < 0.38 and random_value < bluff_chance * 0.85)):
 		return "raise"
 	if legal.get("call", false) and (odds > 0.24 + caution * 0.55 or pressure < 0.18):
 		return "call"
