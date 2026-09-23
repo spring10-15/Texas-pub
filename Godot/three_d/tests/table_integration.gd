@@ -87,6 +87,12 @@ func run() -> void:
 	for i in range(5):
 		await physics_frame
 	verify(world.request_action(world.exit_notice), "Discover exit through real scene interaction")
+	world.open_services("bag")
+	var route_buttons: Array = world.services_panel.rows.get_children().filter(func(child): return child is Button and child.text.begins_with("查看路线"))
+	var general_quote: Dictionary = world.run_game.extraction_quote("general")
+	verify(route_buttons.any(func(button): return button.text.contains("普通出口") and button.text.contains("到账 %d" % general_quote.net)), "Backpack shows the discovered exit's current payout")
+	verify(not route_buttons.any(func(button): return button.text.contains("后厨楼梯") or button.text.contains("河边接驳")), "Backpack hides unknown special exits")
+	world.close_services()
 	var door: Area3D = world.get_node("Tavern/DoorTarget")
 	world.player.position = Vector3(8.0, 0.02, 1.65)
 	world.player.camera.look_at(door.global_position)
