@@ -710,8 +710,10 @@ func refresh_economy() -> void:
 		var travel_fees := 0
 		for hop in result.get("journey", []): travel_fees += int(hop.fee)
 		if travel_fees > 0: economy_label.text += " · 转场已扣 %d" % travel_fees
-		if result.get("forced", false):
-			economy_label.text += " · 风声封锁，已触发紧急结算"
+		if result.get("abandoned", false):
+			economy_label.text += "\n%s：损失现金 %d、贵重物价值 %d；背包已清空" % ["风声封锁，无法通过任一路线，被迫放弃本局" if result.get("forced", false) else "主动放弃本局", int(result.get("lostCash", result.cash - result.net)), int(result.get("lostGoods", result.valuables))]
+		elif result.get("forced", false):
+			economy_label.text += " · 风声封锁，已走紧急出口"
 	else:
 		economy_label.text = "金库 %d  ·  每次最多带出 300  ·  自动存档，可关闭后继续" % run_game.vault
 

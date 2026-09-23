@@ -157,6 +157,13 @@ func run_tests() -> void:
 		root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../output/3d/abandon-preview.png"))
 	world.run_confirm.pressed.emit()
 	verify(world.current_room == "stash" and world.run_game.vault == vault_before + 80 and world.run_game.last_result.abandoned, "Confirmation matches the loss preview")
+	verify(world.economy_label.text.contains("主动放弃本局") and world.economy_label.text.contains("损失现金 70") and world.economy_label.text.contains("贵重物价值 %d" % int(content.items["ivory-chip"].value)), "Result explains voluntary loss after returning to stash")
+	verify(world.run_game.start(world.run_game.revision, "smoky-den", 0), "Third run starts for forced loss")
+	world.travel("tavern")
+	world.run_game.cash = 9
+	world.run_game.heat = 6
+	world.check_pressure()
+	verify(world.current_room == "stash" and world.run_game.last_result.abandoned and world.run_game.last_result.forced and world.economy_label.text.contains("风声封锁") and world.economy_label.text.contains("被迫放弃本局") and world.economy_label.text.contains("损失现金 9"), "Forced loss explains why no exit was available")
 	var report := {"checks":checks, "failed":failures.size(), "failures":failures}
 	print("ROUTES_ITEMS ", JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)

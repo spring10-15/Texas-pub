@@ -464,7 +464,7 @@ func abandon(expected_revision: int) -> bool:
 	if expected_revision != revision or not quote.reason.is_empty():
 		return false
 	vault = int(quote.vaultAfter)
-	last_result = {"cash": cash, "valuables": quote.lostGoods, "fee": 0, "net": quote.salvaged, "profit": quote.profit, "abandoned": true}
+	last_result = {"cash": cash, "valuables": quote.lostGoods, "fee": 0, "net": quote.salvaged, "profit": quote.profit, "abandoned": true, "lostCash": quote.lostCash, "lostGoods": quote.lostGoods}
 	last_result["journey"] = transfer_log.duplicate(true)
 	cash = 0
 	inventory.clear()
