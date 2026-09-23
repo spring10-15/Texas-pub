@@ -94,6 +94,30 @@ func run() -> void:
 	var settled: Dictionary = world.checkpoint_state()
 	world.leave_seat()
 	verify("leave_unseated", world.checkpoint_state() == settled)
+	world.show_run_panel("transfer")
+	var destination: String = world.scene_choice.get_item_metadata(world.scene_choice.selected)
+	var travel_quote: Dictionary = world.run_game.transfer_quote(destination)
+	var vault_before: int = world.run_game.vault
+	var cash_before_travel: int = world.run_game.cash
+	world.confirm_run_action()
+	verify("transfer_confirm", travel_quote.reason.is_empty() and world.current_room == "tavern" and world.run_game.scene_id == destination and world.run_game.venue_history.size() == 2 and world.run_game.vault == vault_before and world.run_game.cash == cash_before_travel - travel_quote.fee and not world.run_game.public_exit and not world.run_panel.visible)
+	world.run_game.discover_exit()
+	var exit_quote: Dictionary = world.run_game.extraction_quote()
+	world.show_run_panel("extract")
+	world.confirm_run_action()
+	verify("extract_confirm", exit_quote.reason.is_empty() and world.current_room == "stash" and not world.run_game.active and world.run_game.vault == vault_before + exit_quote.net and world.run_game.cash == 0 and not world.run_panel.visible)
+	world.show_run_panel("enter")
+	world.confirm_run_action()
+	var before_abandon: Dictionary = world.run_game.abandon_quote()
+	world.show_run_panel("abandon")
+	world.confirm_run_action()
+	verify("abandon_confirm", before_abandon.reason.is_empty() and world.current_room == "stash" and not world.run_game.active and world.run_game.vault == before_abandon.vaultAfter and world.run_game.last_result.abandoned and world.run_game.cash == 0 and not world.run_panel.visible)
+	world.run_game.vault = 119
+	world.show_run_panel("enter")
+	var reset_offered: bool = world.run_action == "reset"
+	world.confirm_run_action()
+	verify("reset_confirm", reset_offered and world.run_game.vault == int(world.table_content.startingVault) and not world.run_game.active and world.current_room == "stash" and world.run_panel.visible and world.run_action == "enter")
+	world.close_run_panel()
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("world.")).map(func(row): return row.id)
@@ -106,7 +130,7 @@ func run() -> void:
 	var world_hashes := {}
 	for file in WORLD_SOURCES:
 		world_hashes[file] = FileAccess.get_file_as_string("res://three_d/scripts/"+file).sha256_text()
-	var report := {"scope":"Physical stash prop interactions, busy/pause/modal refusals, visual results, in-memory restore, seating and room entry","source_sha256":hashes,"world_source_sha256":world_hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_coverage_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
+	var report := {"scope":"Physical stash props, room entry, seating, full table leave, venue transfer, extraction, abandonment and demo reset through world UI","source_sha256":hashes,"world_source_sha256":world_hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_coverage_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
 	FileAccess.open("res://../output/3d/world-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("WORLD_COVERAGE covered=",hits.size()," total=",expected.size()," failed=",failures.size())
 	quit(0 if failures.is_empty() and missing.is_empty() else 1)

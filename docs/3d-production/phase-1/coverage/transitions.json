@@ -1612,6 +1612,30 @@
       "outcome": "rejected"
     },
     {
+      "id": "world.transfer_confirm",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "confirm_run_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.extract_confirm",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "confirm_run_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.abandon_confirm",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "confirm_run_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.reset_confirm",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "confirm_run_action",
+      "outcome": "accepted"
+    },
+    {
       "id": "world.prop_drawer0",
       "source": "Godot/three_d/scripts/scene_props.gd",
       "entry": "interact",
