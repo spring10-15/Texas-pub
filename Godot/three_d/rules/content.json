@@ -217,7 +217,8 @@
         "caution": 0.6,
         "bluff": 0.1,
         "finalHandSpike": 0.05,
-        "patternPunish": 0.07
+        "patternPunish": 0.07,
+        "callOddsShift": -0.15
       }
     },
     "house-viper": {

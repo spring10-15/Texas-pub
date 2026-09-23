@@ -46,6 +46,7 @@ func _initialize() -> void:
 			distributions[id][fixture.id] = counts
 	verify(distributions["dock-braggart"].weak_free.raise > distributions["ledger-clerk"].weak_free.raise, "Maniac bluffs more than nit under identical information")
 	verify(distributions["smiling-knife"].strong_final["all-in"] > distributions["smiling-knife"].strong_early["all-in"], "Final hand increases knife pressure")
+	verify(distributions["velvet-rook"].weak_pressure.call > distributions["ash-smuggler"].weak_pressure.call, "Calling station continues with a weak draw under pressure")
 	var value_table := {"tableDef":{"buyIn":120,"openBet":40},"street":"turn","handNumber":1,"totalHands":3,"currentBet":20,"playerPattern":{"raiseCount":0}}
 	var value_actor := {"stack":200}
 	var value_legal := {"allIn":true,"raise":true,"call":true,"check":false,"fold":true}
