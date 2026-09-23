@@ -46,6 +46,6 @@ static func quote(run: RefCounted, kind: String) -> Dictionary:
 		reason = "当前没有进行中的出局"
 	elif run.table != null:
 		reason = "请先完成牌桌并离座"
-	elif run.cash < fee:
+	elif reason.is_empty() and run.cash < fee:
 		reason = "随身现金不足以支付费用"
 	return {"route": kind, "fee": fee, "lostCash": lost_cash, "lostGoods": lost_goods, "valuables": goods, "net": maxi(0, run.cash - fee - lost_cash) + goods, "reason": reason, "revision": run.revision}

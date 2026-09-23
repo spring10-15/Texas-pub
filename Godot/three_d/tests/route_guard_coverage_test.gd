@@ -71,6 +71,10 @@ func _initialize() -> void:
 					ok = ok and accepted and quote.fee==fee and r.vault==before.vault+net and r.cash==0 and r.inventory.is_empty() and not r.active
 				else:
 					ok = ok and not accepted and Checkpoint.capture(r)==before
+				if key in ["general_unknown", "general_locked", "fixed_expired", "fixed_heat", "stairs_unknown", "stairs_heat", "river_unknown", "river_heat", "emergency_unknown", "goods_empty"]:
+					r.cash = 0
+					var overlap: Dictionary = Checkpoint.capture(r)
+					ok = ok and r.extraction_quote(route).reason == cases[key][1] and not r.extract(r.revision, route) and Checkpoint.capture(r) == overlap
 				samples += 1
 				var id: String = "route_guard."+key
 				if ok: hits[id] = {"test":"route_guard_coverage_test.gd","postcondition_verified":true}
