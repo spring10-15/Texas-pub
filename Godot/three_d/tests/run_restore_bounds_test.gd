@@ -23,6 +23,14 @@ func _initialize() -> void:
 	cases.note_archetype = ["opponent_notes",{"ledger-clerk":"unknown-style"}]
 	cases.route_unknown = ["route_flags",{"unknown-route":true}]
 	cases.route_type = ["route_flags",{"fixed":"yes"}]
+	cases.search_unknown = ["search_results",{"missing":{}}]
+	cases.search_type = ["search_results",{"cargo-table":"done"}]
+	cases.search_event = ["search_results",{"cargo-table":{"event":"missing","choice":"goods","message":"done"}}]
+	cases.search_choice = ["search_results",{"cargo-table":{"event":"cargo-table","choice":"missing","message":"done"}}]
+	cases.search_message = ["search_results",{"cargo-table":{"event":"cargo-table","choice":"goods","message":42}}]
+	cases.summary_missing = ["last_table_result",{"table":"cargo-table"}]
+	cases.summary_unknown = ["last_table_result",{"table":"missing","net":10}]
+	cases.summary_net = ["last_table_result",{"table":"cargo-table","net":"ten"}]
 	var heavy: Array = []
 	for i in range(int(content.inventorySlots)/2+1): heavy.append("sealed-bond")
 	cases.weighted_overfull = ["inventory",heavy]
@@ -51,6 +59,16 @@ func _initialize() -> void:
 	verify(informed_run != null and Checkpoint.capture(informed_run) == informed,"Known information restores without changes")
 	if informed_run != null:
 		verify(not informed_run.service_view("bag").text.is_empty(),"Restored information can be displayed")
+	var searched := Run.new(content)
+	searched.start(searched.revision,"smoky-den",0)
+	verify(searched.service_action("search","cargo-table",searched.revision,"goods"),"Real search succeeds")
+	var searched_save := Checkpoint.capture(searched)
+	var searched_run := Checkpoint.restore(searched_save,content)
+	verify(searched_run != null and Checkpoint.capture(searched_run) == searched_save,"Search result round trip preserves rewards and state")
+	if searched_run != null:
+		verify(not searched_run.service_action("search","cargo-table",searched_run.revision,"goods") and Checkpoint.capture(searched_run) == searched_save,"Restored search cannot award twice")
+	searched_save.search_results["cargo-table"].erase("event")
+	verify(Checkpoint.restore(searched_save,content) != null,"Legacy search without event identity remains accepted")
 	var legacy := original.duplicate(true)
 	for field in ["route_flags","reservation","offer_index","full_intel","opponent_notes","collateral","last_table_result","scene_id","search_results","run_seed","variant_plan","venue_history","arrival_completed","transfer_log"]: legacy.erase(field)
 	verify(Checkpoint.restore(legacy,content) != null,"Legacy optional fields still migrate")

@@ -24,7 +24,8 @@ func run() -> void:
 			r.inventory.assign(["ivory-chip","kitchen-pass"])
 			r.route_flags = {"service-stairs":true,"fixed":true}
 			r.reservation = {"id":"fixture"}
-			r.search_results = {"cargo-table":{"choice":"goods"}}
+			var event: Dictionary = Run.SearchEvents.event_for(r,"cargo-table")
+			r.search_results = {"cargo-table":{"event":Run.SearchEvents.event_id(r,"cargo-table"),"choice":event.choices[0].id,"message":"已完成搜索（迁移夹具）"}}
 			var before := Checkpoint.capture(r)
 			var quote: Dictionary = r.transfer_quote(destination)
 			verify(quote.fee==r.extraction_quote().fee+15 and Checkpoint.capture(r)==before,"Preview quotes exact exit fee plus fare without mutation")
@@ -44,6 +45,7 @@ func run() -> void:
 			verify(not r.transfer_venue(third,r.revision) and Checkpoint.capture(r)==after,"Must play at arrival before another hop")
 			var loaded: RefCounted = Checkpoint.restore(after,content)
 			verify(loaded != null and Checkpoint.capture(loaded)==after,"Whole journey restores")
+			if loaded == null: continue
 			loaded.discover_exit()
 			var exit_quote: Dictionary = loaded.extraction_quote()
 			verify(loaded.extract(loaded.revision) and loaded.vault==before.vault+exit_quote.net and loaded.last_result.journey==r.transfer_log,"Arrival can extract once with journey audit at destination rates")

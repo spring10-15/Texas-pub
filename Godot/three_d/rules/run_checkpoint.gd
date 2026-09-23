@@ -39,6 +39,19 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		if not id is String or not content.opponents.has(id) or not values.opponent_notes[id] is String or values.opponent_notes[id] not in archetypes: return null
 	for id in values.route_flags:
 		if id not in ["fixed", "service-stairs", "river-launch"] or not values.route_flags[id] is bool: return null
+	for site in values.search_results:
+		if not site is String or not Run.SearchEvents.EVENTS.has(site): return null
+		var result: Variant = values.search_results[site]
+		if not result is Dictionary or not result.get("message") is String or not result.get("choice") is String: return null
+		var event: Variant = result.get("event", site)
+		if not event is String or not Run.SearchEvents.EVENTS.has(event): return null
+		if not Run.SearchEvents.EVENTS[event].choices.any(func(option): return option.id == result.choice): return null
+	if not values.last_table_result.is_empty():
+		var summary: Dictionary = values.last_table_result
+		if not summary.get("table") is String or not content.tables.has(summary.table): return null
+		if not (summary.get("net") is int or summary.get("net") is float): return null
+		var net := float(summary.net)
+		if not is_finite(net) or net != floor(net): return null
 	if not content.scenes.has(values.scene_id):
 		return null
 	if not values.reservation.is_empty():
