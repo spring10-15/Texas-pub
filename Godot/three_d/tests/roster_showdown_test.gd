@@ -90,7 +90,7 @@ func play(content: Dictionary, scene: String, site: String, actor: String, seed_
 	var quote: Dictionary = r.extraction_quote()
 	var vault: int = r.vault
 	verify(quote.reason.is_empty() and r.extract(r.revision) and r.vault == vault+int(quote.net) and r.cash == 0 and r.inventory.is_empty(),"Ordinary exit banks the quoted amount once "+key)
-	completed[key] = {"seed":seed_value,"showdowns":showdowns,"steps":steps}
+	completed[key] = {"seed":seed_value,"showdowns":showdowns,"steps":steps,"buyIn":buy_in,"playerChips":returned,"playerNet":returned-buy_in,"targetChips":t.find_player(actor).stack}
 func _initialize() -> void:
 	var content: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
 	for scene in Run.SCENE_NAMES:
