@@ -107,6 +107,18 @@ func run_tests() -> void:
 	world.save_path = path
 	verify(world.save_checkpoint(), "World writes complete checkpoint")
 	var saved: Dictionary = Store.read_checkpoint(path).state
+	verify(DirAccess.remove_absolute(ProjectSettings.globalize_path(path)) == OK, "Fixture removes current checkpoint")
+	verify(world.save_checkpoint() and Store.read_checkpoint(path).status == "ok", "Unchanged world recreates a missing checkpoint")
+	verify(Store.read_checkpoint(path).state == saved, "Recreated checkpoint matches the in-memory world")
+	var disk := FileAccess.open(path, FileAccess.READ)
+	var envelope: Dictionary = disk.get_var(false)
+	disk.close()
+	envelope.payload[0] = (envelope.payload[0] + 1) % 256
+	disk = FileAccess.open(path, FileAccess.WRITE)
+	disk.store_var(envelope)
+	disk.close()
+	verify(Store.read_checkpoint(path).status == "invalid", "Fixture corrupts the on-disk checkpoint")
+	verify(world.save_checkpoint() and Store.read_checkpoint(path).status == "ok" and Store.read_checkpoint(path).state == saved, "Unchanged world repairs a corrupt checkpoint from valid memory")
 	var fresh: Node3D = load("res://three_d/scenes/main.tscn").instantiate()
 	root.add_child(fresh)
 	await physics_frame

@@ -897,7 +897,9 @@ func save_checkpoint() -> bool:
 	var state := checkpoint_state()
 	var bytes := var_to_bytes(state)
 	if bytes == last_saved:
-		return true
+		var on_disk: Dictionary = SaveStore.read_checkpoint(save_path)
+		if on_disk.status == "ok" and on_disk.state == state:
+			return true
 	var error := SaveStore.write_checkpoint(save_path, state)
 	if error != OK:
 		save_notice.text = "保存失败：%s，请保留窗口并检查磁盘" % error_string(error)
