@@ -27,3 +27,7 @@
 - 原有回归：3D 操作 26 项、牌桌界面 58 项、双桌 27 项、服务存档 46 项、道具路线 54 项。测试使用 --test 隔离玩家存档。
 - Metal 实机截图：output/3d/open-window.png、shelf-purchase.png、bartender-handoff.png、owned-bag.png、service-junction.png、upper-kitchen-exit.png、storeroom-lift.png、river-quay.png、hand-result-banner.png。
 - 本轮不改扑克规则、道具价格或路线收费。尚未完成长时间性能验收。
+
+## 2026-09-23 放弃本局预览
+
+放弃确认框现在按实际结算规则逐项列出保留现金、损失现金、丢失贵重物价值、放弃后的金库和本局净变化。夹层钱包存在时，预览与最终结算共用 `Run.abandon_quote()`，避免把可保留的 80 现金也误报为损失。`routes_items_test.gd` 核对报价无状态变更、确认后金额一致，并在 Metal 运行截图 `output/3d/abandon-preview.png` 目视确认可读。费用和钱包上限未变。

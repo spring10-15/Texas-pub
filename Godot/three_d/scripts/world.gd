@@ -753,9 +753,13 @@ func show_run_panel(action: String, preview_only := false) -> void:
 			run_body.text += "\n" + quote.reason
 			run_confirm.disabled = true
 	elif action == "abandon":
+		var quote: Dictionary = run_game.abandon_quote()
 		run_heading.text = "放弃本局"
-		run_body.text = "损失随身现金 %d 及全部背包物品。\n夹层钱包可保留至多 80 现金；其余损失。\n当前金库 %d。\n确认后返回藏匿点，这笔损失会保存。" % [run_game.cash, run_game.vault]
+		run_body.text = "随身现金 %d：保留 %d，损失 %d。\n丢失全部背包物品，其中贵重物价值 %d。\n金库 %d → %d；本局净变化 %+d。\n确认后返回藏匿点，这笔损失会保存。" % [run_game.cash, quote.salvaged, quote.lostCash, quote.lostGoods, run_game.vault, quote.vaultAfter, quote.profit]
 		run_confirm.text = "确认放弃并损失随身财物"
+		if not quote.reason.is_empty():
+			run_body.text += "\n" + quote.reason
+			run_confirm.disabled = true
 	else:
 		var quote: Dictionary = run_game.extraction_quote(selected_route)
 		run_heading.text = run_game.route_name(selected_route) + " · 撤离结算"

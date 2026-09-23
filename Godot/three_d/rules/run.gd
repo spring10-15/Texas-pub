@@ -455,12 +455,16 @@ func valuable_total() -> int:
 			total += int(content.items[id].value)
 	return total
 
-func abandon(expected_revision: int) -> bool:
-	if expected_revision != revision or not active or table != null:
-		return false
+func abandon_quote() -> Dictionary:
 	var salvaged := mini(80, cash) if "false-bottom-wallet" in inventory else 0
-	vault += salvaged
-	last_result = {"cash": cash, "valuables": valuable_total(), "fee": 0, "net": salvaged, "profit": salvaged - bankroll, "abandoned": true}
+	return {"salvaged": salvaged, "lostCash": cash - salvaged, "lostGoods": valuable_total(), "vaultAfter": vault + salvaged, "profit": salvaged - bankroll, "reason": "当前没有进行中的出局" if not active else ("请先完成牌桌并离座" if table != null else ""), "revision": revision}
+
+func abandon(expected_revision: int) -> bool:
+	var quote := abandon_quote()
+	if expected_revision != revision or not quote.reason.is_empty():
+		return false
+	vault = int(quote.vaultAfter)
+	last_result = {"cash": cash, "valuables": quote.lostGoods, "fee": 0, "net": quote.salvaged, "profit": quote.profit, "abandoned": true}
 	last_result["journey"] = transfer_log.duplicate(true)
 	cash = 0
 	inventory.clear()

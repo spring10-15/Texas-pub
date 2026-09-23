@@ -80,8 +80,14 @@ func run_tests() -> void:
 	verify(loaded.opponent_notes == run.opponent_notes and loaded.used_tools == run.used_tools, "Reads and tool use survive save")
 	run = fresh()
 	run.inventory.append("false-bottom-wallet")
+	run.inventory.append("ivory-chip")
+	run.cash = 150
+	var before_abandon: Dictionary = Checkpoint.capture(run)
+	var loss_quote: Dictionary = run.abandon_quote()
+	verify(loss_quote.salvaged == 80 and loss_quote.lostCash == 70 and loss_quote.lostGoods == int(content.items["ivory-chip"].value) and loss_quote.vaultAfter == 980 and loss_quote.profit == -220 and loss_quote.reason.is_empty(), "Abandon preview itemizes the exact loss")
+	verify(Checkpoint.capture(run) == before_abandon, "Viewing abandon preview never changes the run")
 	verify(run.abandon(run.revision), "Wallet applies at loss")
-	verify(run.vault == 980 and run.last_result.net == 80, "Wallet salvages max 80")
+	verify(run.vault == loss_quote.vaultAfter and run.last_result.net == loss_quote.salvaged and run.last_result.valuables == loss_quote.lostGoods, "Final abandoned result matches preview")
 	run = fresh()
 	run.search_index = 2
 	verify("disposable-phone" in run.shop_stock(), "Phone can be bought before final table")
@@ -137,6 +143,20 @@ func run_tests() -> void:
 		root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../output/3d/special-route-runtime.png"))
 	world.run_confirm.pressed.emit()
 	verify(world.current_room == "stash" and world.run_game.vault == 1175, "Special exit UI settles and returns")
+	verify(world.run_game.start(world.run_game.revision, "smoky-den", 0), "Second run starts for loss preview")
+	world.travel("tavern")
+	world.run_game.cash = 150
+	world.run_game.inventory.assign(["false-bottom-wallet", "ivory-chip"])
+	var vault_before: int = world.run_game.vault
+	world.show_run_panel("abandon")
+	verify(not world.run_confirm.disabled and world.run_body.text.contains("随身现金 150：保留 80，损失 70") and world.run_body.text.contains("贵重物价值 %d" % int(content.items["ivory-chip"].value)) and world.run_body.text.contains("金库 %d → %d" % [vault_before, vault_before + 80]), "Confirmation shows exact wallet and valuable loss")
+	if OS.get_cmdline_user_args().has("--capture"):
+		for i in range(12):
+			await process_frame
+		await RenderingServer.frame_post_draw
+		root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../output/3d/abandon-preview.png"))
+	world.run_confirm.pressed.emit()
+	verify(world.current_room == "stash" and world.run_game.vault == vault_before + 80 and world.run_game.last_result.abandoned, "Confirmation matches the loss preview")
 	var report := {"checks":checks, "failed":failures.size(), "failures":failures}
 	print("ROUTES_ITEMS ", JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)
