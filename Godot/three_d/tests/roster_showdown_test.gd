@@ -69,7 +69,7 @@ func play(content: Dictionary, scene: String, site: String, actor: String, seed_
 					for profile_id in profiles:
 						choices[profile_id] = Opponent.choose_with_odds(t.state,player,legal,content.opponents[profile_id],random_value,odds)
 					verify(choices[id] == decision,"Matched policy reproduces live decision "+key)
-					matched_contexts.append({"actor":id,"street":t.state.street,"hand":t.state.handNumber,"bet":t.state.currentBet,"stack":player.stack,"odds":snappedf(odds,0.01),"legal":legal.duplicate(),"choices":choices})
+					matched_contexts.append({"actor":id,"street":t.state.street,"hand":t.state.handNumber,"totalHands":t.state.totalHands,"playerRaises":t.state.playerPattern.raiseCount,"bet":t.state.currentBet,"stack":player.stack,"odds":snappedf(odds,0.01),"randomValue":snappedf(random_value,0.001),"legal":legal.duplicate(),"choices":choices})
 					for left in range(profiles.size()):
 						for right in range(left+1,profiles.size()):
 							var pair: String = profiles[left]+"/"+profiles[right]

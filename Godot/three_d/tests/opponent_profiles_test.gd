@@ -27,7 +27,8 @@ func _initialize() -> void:
 		{"id":"marginal_pressure","odds":.35,"bet":40,"stack":60,"last":false,"repeats":0},
 		{"id":"strong_early","odds":.72,"bet":20,"stack":100,"last":false,"repeats":0},
 		{"id":"strong_final","odds":.72,"bet":20,"stack":100,"last":true,"repeats":0},
-		{"id":"repeated_raises","odds":.64,"bet":0,"stack":100,"last":false,"repeats":8}]
+		{"id":"pattern_baseline","odds":.52,"bet":0,"stack":200,"last":false,"repeats":0},
+		{"id":"repeated_raises","odds":.52,"bet":0,"stack":200,"last":false,"repeats":8}]
 	var distributions := {}
 	var sampled_actions := {}
 	for id in content.opponents:
@@ -46,6 +47,7 @@ func _initialize() -> void:
 			distributions[id][fixture.id] = counts
 	verify(distributions["dock-braggart"].weak_free.raise > distributions["ledger-clerk"].weak_free.raise, "Maniac bluffs more than nit under identical information")
 	verify(distributions["smiling-knife"].strong_final["all-in"] > distributions["smiling-knife"].strong_early["all-in"], "Final hand increases knife pressure")
+	verify(distributions["calm-widow"].repeated_raises.raise > distributions["calm-widow"].pattern_baseline.raise, "Widow responds to repeated player raises at identical equity")
 	verify(distributions["velvet-rook"].weak_pressure.call > distributions["ash-smuggler"].weak_pressure.call, "Calling station continues with a weak draw under pressure")
 	var value_table := {"tableDef":{"buyIn":120,"openBet":40},"street":"turn","handNumber":1,"totalHands":3,"currentBet":20,"playerPattern":{"raiseCount":0}}
 	var value_actor := {"stack":200}
@@ -69,7 +71,7 @@ func _initialize() -> void:
 				if sampled_actions[ids[left]][sample] != sampled_actions[ids[right]][sample]:
 					differences += 1
 			pairwise_differences[ids[left] + "/" + ids[right]] = differences
-	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"scope":"Conditional policy probe: 6 fixed public situations and equity inputs, 100 uniform random quantiles per opponent. Pairwise differences count distinct choices under the same input and random quantile. Not gameplay win rates or human recognizability evidence.","cases":cases,"distributions":distributions,"pairwiseDifferences":pairwise_differences}
+	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"scope":"Conditional policy probe: 7 fixed public situations and equity inputs, 100 uniform random quantiles per opponent. Pairwise differences count distinct choices under the same input and random quantile. Not gameplay win rates or human recognizability evidence.","cases":cases,"distributions":distributions,"pairwiseDifferences":pairwise_differences}
 	FileAccess.open("res://../output/3d/opponent-profiles.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("OPPONENT_PROFILES checks=",checks," failed=",failures.size()," failures=",failures)
 	quit(0 if failures.is_empty() else 1)
