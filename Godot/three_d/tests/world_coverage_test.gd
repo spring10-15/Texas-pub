@@ -74,6 +74,26 @@ func run() -> void:
 	var cash_before: int = world.run_game.cash
 	world.leave_seat()
 	verify("leave_active_rejected", seated_again and active_table!=null and world.seated and world.table_game==active_table and world.run_game.cash==cash_before)
+	var steps := 0
+	while world.table_game.state.status != "finished" and steps < 200:
+		steps += 1
+		var table: RefCounted = world.table_game
+		if table.state.status == "hand_over":
+			table.next_hand(table.revision)
+		elif table.state.currentActorId.is_empty():
+			table.advance(table.revision)
+		else:
+			var actor: String = table.state.currentActorId
+			var legal: Dictionary = table.legal_actions(actor)
+			var action := "fold" if actor != "player" else ("check" if legal.check else "call")
+			table.act(actor, action, table.revision)
+	var finished: bool = steps < 200 and world.table_game.state.status == "finished"
+	var returned_stack: int = world.table_game.state.players[0].stack
+	world.leave_seat()
+	verify("leave_finished", finished and not world.seated and world.table_game == null and world.player.controls_enabled and world.player.camera.current and world.run_game.cash == cash_before + returned_stack and "cargo-table" in world.run_game.completed)
+	var settled: Dictionary = world.checkpoint_state()
+	world.leave_seat()
+	verify("leave_unseated", world.checkpoint_state() == settled)
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("world.")).map(func(row): return row.id)

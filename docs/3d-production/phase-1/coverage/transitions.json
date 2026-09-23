@@ -1600,6 +1600,18 @@
       "outcome": "rejected"
     },
     {
+      "id": "world.leave_finished",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "leave_seat",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.leave_unseated",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "leave_seat",
+      "outcome": "rejected"
+    },
+    {
       "id": "world.prop_drawer0",
       "source": "Godot/three_d/scripts/scene_props.gd",
       "entry": "interact",
