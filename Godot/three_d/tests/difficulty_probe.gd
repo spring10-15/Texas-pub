@@ -1,7 +1,7 @@
 extends SceneTree
 const Run = preload("res://three_d/rules/run.gd")
 const Opponent = preload("res://three_d/rules/opponent.gd")
-const SEEDS := [1, 17, 43, 79]
+const SEEDS := [1, 17, 43, 79, 101, 137, 173, 211, 257, 307, 359, 419]
 var failures: Array[String] = []
 var results := []
 
@@ -61,7 +61,7 @@ func _initialize() -> void:
 			for seed_value in SEEDS:
 				for policy in ["passive", "equity-guided"]:
 					play(content, scene, site, seed_value, policy)
-	var report := {"results":results,"failures":failures,"scope":"Four fixed seeds per venue/table and two deterministic player policies against production AI. Independent table-entry fixtures; not human skill, whole-evening survival, or win-rate balance evidence."}
+	var report := {"seeds":SEEDS,"results":results,"failures":failures,"scope":"Twelve fixed seeds per venue/table and two deterministic player policies against production AI. Independent table-entry fixtures; not human skill, whole-evening survival, or win-rate balance evidence."}
 	FileAccess.open("res://../output/3d/difficulty-probe.json", FileAccess.WRITE).store_string(JSON.stringify(report, "  "))
 	print("DIFFICULTY_PROBE results=", results.size(), " failed=", failures.size(), " failures=", failures)
-	quit(0 if failures.is_empty() and results.size() == 128 else 1)
+	quit(0 if failures.is_empty() and results.size() == 384 else 1)
