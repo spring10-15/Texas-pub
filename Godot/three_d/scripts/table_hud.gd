@@ -198,7 +198,7 @@ func refresh(view: Dictionary, locked := false) -> void:
 	var minimum: int = view.tableDef.openBet if view.currentBet == 0 else view.currentBet + int(view.tableDef.raiseIncrement)
 	raise_amount.visible = playing
 	raise_amount.editable = your_turn and view.legal.get("raise", false)
-	raise_context = {"paid":int(you.currentBet),"stack":int(you.stack),"discount":10 if view.firstAggressionDiscountAvailable else 0}
+	raise_context = {"paid":int(you.currentBet),"stack":int(you.stack),"discount":int(view.tableDef.get("firstAggressionDiscount", 0)) if view.firstAggressionDiscountAvailable else 0}
 	raise_preview.visible = your_turn and view.legal.get("raise", false)
 	raise_amount.max_value = maxi(minimum, you.currentBet + you.stack)
 	raise_amount.min_value = minimum

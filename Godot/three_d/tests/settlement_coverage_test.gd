@@ -8,6 +8,7 @@ func _initialize() -> void:
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json"))
 	# Finished-table fixtures isolate the settlement boundary; poker outcomes are tested separately.
 	var cases := [["ivory", "cargo-table", 61, "ivory-chip"], ["lighter", "cargo-table", 89, "old-silver-lighter"], ["ruby", "cargo-table", 90, "ruby-cufflink"], ["emerald", "ledger-cellar", 129, "emerald-brooch"], ["pearl", "ledger-cellar", 130, "pearl-necklace"], ["watch", "mirror-hall", 169, "gold-cased-watch"], ["bond", "mirror-hall", 170, "sealed-bond"], ["antique", "mirror-hall", 121, "antique-coin"], ["idol", "embers-table", 219, "obsidian-idol"], ["promissory", "embers-table", 220, "vault-promissory"], ["break_even", "cargo-table", 60, ""], ["loss", "cargo-table", 0, ""], ["full_bag", "cargo-table", 61, "old-silver-lighter"], ["collateral_lost", "mirror-hall", 0, ""], ["collateral_tie", "mirror-hall", 120, ""], ["side_pot_only", "mirror-hall", 120, ""], ["legacy_award", "mirror-hall", 120, ""]]
+	var observed_rewards := {}
 	for row in cases:
 		var key: String = row[0]
 		var id: String = row[1]
@@ -42,9 +43,21 @@ func _initialize() -> void:
 		var completed: Array = before.completed.duplicate()
 		completed.append(id)
 		ok = ok and r.completed == completed
+		if ok and not reward.is_empty():
+			if not observed_rewards.has(id): observed_rewards[id] = []
+			if reward not in observed_rewards[id]: observed_rewards[id].append(reward)
 		var settled := Checkpoint.capture(r)
 		ok = ok and not r.settle_table(r.revision) and Checkpoint.capture(r) == settled
 		record(key,ok)
+	for id in content.tables:
+		var listed: Array = content.tables[id].baseRewardPool.duplicate()
+		var observed: Array = observed_rewards.get(id, []).duplicate()
+		listed.sort()
+		observed.sort()
+		if listed != observed:
+			var mismatch := "Reward disclosure mismatch for %s: listed %s, settled %s" % [id, listed, observed]
+			failures.append(mismatch)
+			push_error(mismatch)
 	for key in ["stale_revision","inactive","no_table","unfinished"]:
 		var r := Run.new(content)
 		r.start(r.revision,"smoky-den",0)

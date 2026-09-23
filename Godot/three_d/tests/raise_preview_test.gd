@@ -16,7 +16,7 @@ func run_tests() -> void:
 		var t := Table.new()
 		t.start(content.tables[table_id],7)
 		hud.refresh(t.public_state())
-		var discount := 10 if table_id == "cargo-table" else 0
+		var discount: int = int(content.tables[table_id].get("firstAggressionDiscount", 0))
 		var minimum: int = int(t.state.currentBet)+int(t.state.tableDef.raiseIncrement)
 		verify(hud.raise_preview.visible and hud.raise_preview.text.contains("实付 %d" % (minimum-discount)),"Minimum cost "+table_id)
 		hud.raise_amount.value = minimum+1
@@ -35,6 +35,17 @@ func run_tests() -> void:
 		verify(hud.raise_preview.text.begins_with("加注到" if discount else "转为全押"),"Maximum action type "+table_id)
 		verify(boundary.act("player","raise",boundary.revision,int(hud.raise_amount.value)),"Maximum raise accepted "+table_id)
 		verify(hud.raise_preview.text.contains("实付 %d" % (before-int(boundary.state.players[0].stack))),"Maximum preview debit "+table_id)
+	var adjusted: Dictionary = content.tables["cargo-table"].duplicate(true)
+	adjusted.firstAggressionDiscount = 5
+	var configured := Table.new()
+	configured.start(adjusted, 7)
+	hud.refresh(configured.public_state())
+	var configured_target: int = int(configured.state.currentBet) + int(adjusted.raiseIncrement)
+	var configured_due: int = configured_target - int(configured.state.players[0].currentBet) - 5
+	verify(hud.raise_preview.text.contains("实付 %d" % configured_due), "Preview reads configured discount")
+	var configured_stack: int = configured.state.players[0].stack
+	verify(configured.act("player", "raise", configured.revision, configured_target), "Configured raise accepted")
+	verify(configured_stack - int(configured.state.players[0].stack) == configured_due and not configured.state.firstAggressionDiscountAvailable, "Configured discount charged once")
 	var fresh := Table.new()
 	fresh.start(content.tables["cargo-table"],7)
 	hud.refresh(fresh.public_state())

@@ -60,7 +60,6 @@
       },
       "tableToolHeatBonus": 1,
       "baseRewardPool": [
-        "ruby-cufflink",
         "pearl-necklace",
         "emerald-brooch"
       ],
@@ -128,8 +127,7 @@
       "winHeatRelief": 1,
       "baseRewardPool": [
         "obsidian-idol",
-        "vault-promissory",
-        "emerald-brooch"
+        "vault-promissory"
       ],
       "signatureReward": "vault-promissory"
     }

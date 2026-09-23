@@ -23,7 +23,7 @@ func ordered_after(pivot: int, include_pivot := true, require_chips := true) -> 
 
 func start_hand(rotate_dealer := false) -> void:
 	revision += 1
-	state.merge({"pot": 0, "currentBet": 0, "community": [], "street": "preflop", "raiseUsed": false, "firstAggressionDiscountAvailable": state.tableDef.id == "cargo-table", "turnCounter": 0, "pendingNextHand": false, "pendingConclusion": false, "status": "playing", "summary": {}, "currentActorId": ""}, true)
+	state.merge({"pot": 0, "currentBet": 0, "community": [], "street": "preflop", "raiseUsed": false, "firstAggressionDiscountAvailable": int(state.tableDef.get("firstAggressionDiscount", 0)) > 0, "turnCounter": 0, "pendingNextHand": false, "pendingConclusion": false, "status": "playing", "summary": {}, "currentActorId": ""}, true)
 	for player in state.players:
 		player.merge({"folded": player.stack <= 0, "currentBet": 0, "handContribution": 0, "holeCards": [], "lastAction": ""}, true)
 	var dealer: int = int(state.get("dealerSeat",0))
@@ -64,7 +64,7 @@ func legal_actions(id: String) -> Dictionary:
 	if player.is_empty() or player.folded or player.stack <= 0:
 		return {}
 	var cost := maxi(0, state.currentBet - player.currentBet)
-	var discount := 10 if state.firstAggressionDiscountAvailable else 0
+	var discount := int(state.tableDef.get("firstAggressionDiscount", 0)) if state.firstAggressionDiscountAvailable else 0
 	var open_cost := maxi(0, int(state.tableDef.openBet) - discount)
 	var raise_cost := maxi(0, int(state.tableDef.raiseIncrement) - discount)
 	var can_raise: bool
@@ -92,7 +92,7 @@ func act(id: String, kind: String, expected_revision: int, raise_target := -1) -
 		var target := maxi(minimum, raise_target)
 		amount = target - int(player.currentBet)
 		if state.firstAggressionDiscountAvailable:
-			amount = maxi(0, amount - 10)
+			amount = maxi(0, amount - int(state.tableDef.firstAggressionDiscount))
 			state.firstAggressionDiscountAvailable = false
 		if player.stack <= amount:
 			kind = "all-in"
