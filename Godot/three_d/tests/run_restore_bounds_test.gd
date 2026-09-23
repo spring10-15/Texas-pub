@@ -69,6 +69,18 @@ func _initialize() -> void:
 		verify(not searched_run.service_action("search","cargo-table",searched_run.revision,"goods") and Checkpoint.capture(searched_run) == searched_save,"Restored search cannot award twice")
 	searched_save.search_results["cargo-table"].erase("event")
 	verify(Checkpoint.restore(searched_save,content) != null,"Legacy search without event identity remains accepted")
+	var playing := Run.new(content)
+	playing.start(playing.revision,"smoky-den",42)
+	verify(playing.enter_table(113,playing.revision,"cargo-table") != null,"Real table opened for checkpoint validation")
+	var table_save := Checkpoint.capture(playing)
+	verify(Checkpoint.restore(table_save,content) != null,"Canonical table definition restores")
+	for label in ["changed_buyin","changed_hands","unknown_table"]:
+		var broken := table_save.duplicate(true)
+		match label:
+			"changed_buyin": broken.table.state.tableDef.buyIn = 120
+			"changed_hands": broken.table.state.tableDef.hands = 99
+			"unknown_table": broken.table.state.tableDef.id = "unknown"
+		verify(Checkpoint.restore(broken,content) == null and Checkpoint.capture(playing) == table_save,"Reject forged table definition: "+label)
 	var legacy := original.duplicate(true)
 	for field in ["route_flags","reservation","offer_index","full_intel","opponent_notes","collateral","last_table_result","scene_id","search_results","run_seed","variant_plan","venue_history","arrival_completed","transfer_log"]: legacy.erase(field)
 	verify(Checkpoint.restore(legacy,content) != null,"Legacy optional fields still migrate")

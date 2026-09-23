@@ -37,6 +37,26 @@ func _initialize() -> void:
 			verify(original.state.status == "finished", "Resumed table completes")
 			var copy := Checkpoint.restore(Checkpoint.capture(original))
 			verify(not copy.advance(copy.revision), "Saved terminal table cannot settle twice")
+	var sample := Table.new()
+	sample.start(definitions.tables["cargo-table"], 42)
+	var good := Checkpoint.capture(sample)
+	var invalid := {"negative_revision":["revision",-1],"rng_overflow":["rngValue",0x100000000]}
+	for label in invalid:
+		var broken := good.duplicate(true)
+		broken[invalid[label][0]] = invalid[label][1]
+		verify(Checkpoint.restore(broken) == null and Checkpoint.capture(sample) == good,"Reject invalid metadata: "+label)
+	for label in ["duplicate_card","missing_card","extra_chips","bad_actor","bad_bet","bad_status","bad_player","bad_definition"]:
+		var broken := good.duplicate(true)
+		match label:
+			"duplicate_card": broken.state.deck[0] = broken.state.players[0].holeCards[0]
+			"missing_card": broken.state.deck.pop_back()
+			"extra_chips": broken.state.players[0].stack += 1
+			"bad_actor": broken.state.currentActorId = "ghost"
+			"bad_bet": broken.state.players[0].currentBet = -1
+			"bad_status": broken.state.status = "done"
+			"bad_player": broken.state.players[1] = "invalid"
+			"bad_definition": broken.state.tableDef.buyIn = 0
+		verify(Checkpoint.restore(broken) == null and Checkpoint.capture(sample) == good,"Reject malformed table state: "+label)
 	verify(Checkpoint.restore({}) == null, "Malformed snapshot rejected")
 	DirAccess.remove_absolute(path)
 	print("TABLE_CHECKPOINT ", JSON.stringify({"checks": checks, "failed": failures.size(), "failures": failures}))

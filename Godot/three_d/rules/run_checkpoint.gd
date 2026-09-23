@@ -99,10 +99,13 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		else:
 			run.set(field, values[field])
 	if not values.table.is_empty():
+		var stored_state: Variant = values.table.get("state")
+		if not stored_state is Dictionary or not stored_state.get("tableDef") is Dictionary:
+			return null
+		var id: Variant = stored_state.tableDef.get("id")
+		if not id is String or not content.tables.has(id) or stored_state.tableDef != run.table_definition(id):
+			return null
 		run.table = TableCheckpoint.restore(values.table)
 		if run.table == null or not run.active:
 			return null
-		if run.variant_plan.has("opponents"):
-			var id: String = run.table.state.tableDef.id
-			if run.table.state.tableDef.opponentIds != run.variant_plan.opponents.get(id): return null
 	return run
