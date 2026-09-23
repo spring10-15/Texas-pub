@@ -1,9 +1,13 @@
 extends SceneTree
 var failures: Array[String] = []
 var checks := 0
+var hits := {}
 func verify(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label); push_error(label)
+func record(id: String, ok: bool) -> void:
+	verify(ok, id)
+	if ok: hits["persistence_restore." + id] = {"test":"world_restore_atomic_test.gd", "postcondition_verified":true}
 func _initialize() -> void:
 	call_deferred("run_tests")
 func run_tests() -> void:
@@ -14,6 +18,7 @@ func run_tests() -> void:
 	world.run_game.start(world.run_game.revision)
 	world.travel("tavern")
 	var baseline: Dictionary = world.checkpoint_state()
+	var invalid_groups := {"invalid_props":true,"invalid_transform":true,"outside_room":true}
 	for key in ["props_type","prop_value","player_nan","look_inf","return_nan","basis_nan","player_remote","wrong_room","return_remote"]:
 		var bad: Dictionary = baseline.duplicate(true)
 		bad.run.cash += 100
@@ -30,10 +35,14 @@ func run_tests() -> void:
 				bad.seated = true
 				bad["return"].origin.z = -1e9
 		var accepted: bool = world.restore_checkpoint(bad)
+		var unchanged: bool = world.checkpoint_state() == baseline
 		verify(not accepted,"Invalid world snapshot rejected "+key)
-		verify(world.checkpoint_state() == baseline,"Failed restore leaves entire world unchanged "+key)
+		verify(unchanged,"Failed restore leaves entire world unchanged "+key)
+		var group: String = "invalid_props" if key.begins_with("props") else ("outside_room" if key in ["player_remote","wrong_room","return_remote"] else "invalid_transform")
+		invalid_groups[group] = invalid_groups[group] and not accepted and unchanged
 		world.restore_checkpoint(baseline)
-	verify(world.restore_checkpoint(baseline) and world.checkpoint_state() == baseline,"Valid snapshot restores exactly")
+	for group in invalid_groups: record(group, invalid_groups[group])
+	record("valid", world.restore_checkpoint(baseline) and world.checkpoint_state() == baseline)
 	for pos in [Vector3(10,0.05,-7),Vector3(7.25,1.2,-12.5),Vector3(12.75,-1.2,-13)]:
 		var valid: Dictionary = baseline.duplicate(true)
 		valid.player.origin = pos
@@ -41,21 +50,33 @@ func run_tests() -> void:
 	world.restore_checkpoint(baseline)
 	var legacy: Dictionary = baseline.duplicate(true)
 	legacy.erase("props")
-	verify(world.restore_checkpoint(legacy),"Legacy snapshot without props accepted")
+	record("legacy_props", world.restore_checkpoint(legacy))
 	var seated_save: Dictionary = baseline.duplicate(true)
 	seated_save.seated = true
 	seated_save["return"] = seated_save.player
-	verify(world.restore_checkpoint(seated_save),"Seated pregame snapshot restores")
+	record("seated", world.restore_checkpoint(seated_save) and world.seated and world.seat_panel.visible)
 	world.start_table(42)
 	verify(world.cards_root.get_child_count() > 0,"Live table has displayed cards")
-	verify(world.restore_checkpoint(baseline),"Exploration replaces live table")
-	verify(world.player.camera.current and not world.seat_camera.current,"Exploration camera replaces seat camera")
-	verify(world.player.controls_enabled and world.crosshair.visible,"Exploration movement and crosshair restored")
-	verify(not world.seat_panel.visible and world.explore_instructions.visible,"Exploration UI replaces table UI")
-	verify(world.cards_root.get_child_count() == 0,"Previous hand visuals removed")
+	var replaced: bool = world.restore_checkpoint(baseline)
+	record("replace_live_table", replaced and world.player.camera.current and not world.seat_camera.current and world.player.controls_enabled and world.crosshair.visible and not world.seat_panel.visible and world.explore_instructions.visible and world.cards_root.get_child_count() == 0 and world.checkpoint_state() == baseline)
 	world.pause_game()
-	verify(world.restore_checkpoint(seated_save) and world.paused and not world.seat_panel.visible,"Restoring seated while paused keeps table controls hidden")
+	record("paused_seated", world.restore_checkpoint(seated_save) and world.paused and not world.seat_panel.visible)
 	world.resume()
 	verify(world.seat_camera.current and world.seat_panel.visible and not world.player.controls_enabled,"Resume returns to restored seat")
-	print("WORLD_RESTORE_ATOMIC checks=",checks," failures=",failures)
-	quit(0 if failures.is_empty() else 1)
+	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
+	var catalog: Dictionary = JSON.parse_string(catalog_text)
+	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("persistence_restore.")).map(func(row): return row.id)
+	var missing: Array = expected.filter(func(id): return not hits.has(id))
+	for id in hits:
+		if id not in expected: failures.append("Uncatalogued " + id)
+	var hashes := {}
+	for file in DirAccess.get_files_at("res://three_d/rules"):
+		if file.ends_with(".gd") or file.ends_with(".json"):
+			hashes[file] = FileAccess.get_file_as_string("res://three_d/rules/" + file).sha256_text()
+	var world_hashes := {}
+	for file in ["world.gd", "player.gd", "scene_props.gd"]:
+		world_hashes[file] = FileAccess.get_file_as_string("res://three_d/scripts/" + file).sha256_text()
+	var report := {"scope":"World snapshot validation, legacy props, seating, live-table replacement and paused restore","source_sha256":hashes,"world_source_sha256":world_hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_restore_atomic_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"failed":failures.size(),"overall_state_transition_coverage":null}
+	FileAccess.open("res://../output/3d/persistence-restore-coverage.json", FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
+	print("PERSISTENCE_RESTORE ", JSON.stringify(report))
+	quit(0 if failures.is_empty() and missing.is_empty() else 1)

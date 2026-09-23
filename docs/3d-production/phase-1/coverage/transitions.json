@@ -1622,6 +1622,90 @@
       "source": "Godot/three_d/scripts/scene_props.gd",
       "entry": "interact",
       "outcome": "accepted"
+    },
+    {
+      "id": "persistence_io.read_missing",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "read_checkpoint",
+      "outcome": "missing"
+    },
+    {
+      "id": "persistence_io.write_new",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "write_checkpoint",
+      "outcome": "accepted"
+    },
+    {
+      "id": "persistence_io.read_valid",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "read_checkpoint",
+      "outcome": "accepted"
+    },
+    {
+      "id": "persistence_io.write_replace",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "write_checkpoint",
+      "outcome": "accepted"
+    },
+    {
+      "id": "persistence_io.read_corrupt",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "read_checkpoint",
+      "outcome": "rejected"
+    },
+    {
+      "id": "persistence_io.read_version",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "read_checkpoint",
+      "outcome": "rejected"
+    },
+    {
+      "id": "persistence_restore.invalid_props",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "rejected"
+    },
+    {
+      "id": "persistence_restore.invalid_transform",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "rejected"
+    },
+    {
+      "id": "persistence_restore.outside_room",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "rejected"
+    },
+    {
+      "id": "persistence_restore.valid",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "accepted"
+    },
+    {
+      "id": "persistence_restore.legacy_props",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "accepted"
+    },
+    {
+      "id": "persistence_restore.seated",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "accepted"
+    },
+    {
+      "id": "persistence_restore.replace_live_table",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "accepted"
+    },
+    {
+      "id": "persistence_restore.paused_seated",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "accepted"
     }
   ],
   "pending_families": {

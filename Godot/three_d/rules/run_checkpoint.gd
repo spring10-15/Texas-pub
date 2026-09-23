@@ -28,6 +28,11 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		return null
 	if values.action_points < 0 or values.action_points > int(content.searchActions):
 		return null
+	if values.preview_hand < 0:
+		return null
+	if not values.preview.is_empty():
+		if not values.preview.get("rank") is int or values.preview.rank < 2 or values.preview.rank > 14 or values.preview.get("suit") not in ["S", "H", "D", "C"] or values.preview_hand < 1:
+			return null
 	for id in values.known_rules:
 		if not id is String or not content.tables.has(id): return null
 	for id in values.used_tools:

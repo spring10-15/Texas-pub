@@ -31,6 +31,10 @@ func _initialize() -> void:
 	cases.summary_missing = ["last_table_result",{"table":"cargo-table"}]
 	cases.summary_unknown = ["last_table_result",{"table":"missing","net":10}]
 	cases.summary_net = ["last_table_result",{"table":"cargo-table","net":"ten"}]
+	cases.preview_rank = ["preview",{"rank":"A","suit":"S"}]
+	cases.preview_suit = ["preview",{"rank":14,"suit":"X"}]
+	cases.preview_missing = ["preview",{"rank":14}]
+	cases.preview_hand_negative = ["preview_hand",-1]
 	var heavy: Array = []
 	for i in range(int(content.inventorySlots)/2+1): heavy.append("sealed-bond")
 	cases.weighted_overfull = ["inventory",heavy]
