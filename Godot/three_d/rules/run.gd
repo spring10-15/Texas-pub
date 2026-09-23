@@ -424,6 +424,12 @@ func service_view(mode := "bag", product := "") -> Dictionary:
 				visible.append(action)
 	actions = visible
 	for action in actions:
+		if action.kind == "route":
+			var quote: Dictionary = extraction_quote(action.id)
+			if quote.reason.is_empty():
+				action.label += " · 费用 %d / 弃现 %d / 弃物 %d / 到账 %d" % [quote.fee, quote.lostCash, quote.lostGoods, quote.net]
+			else:
+				action.label += " · 暂不可用：" + quote.reason
 		action.reason = "" if action.kind == "route" else service_reason(action.kind, action.id, action.get("target", ""))
 	var text := "" if mode == "bag" else last_reward + "\n" + service_message
 	if not reservation.is_empty():
