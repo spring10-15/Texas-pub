@@ -1,4 +1,4 @@
-"""Run every Godot regression once; capture tools and fixture generators are excluded."""
+"""Run every Godot regression once; capture tools and manual probes are excluded."""
 import argparse
 import hashlib
 import json
@@ -12,7 +12,7 @@ from pathlib import Path
 TESTS = Path(__file__).resolve().parent
 ROOT = TESTS.parents[2]
 EXTRA = {'smoke.gd', 'table_integration.gd', 'table_parity.gd', 'two_tables.gd'}
-EXCLUDED = {'capture.gd', 'capture_table.gd'}
+EXCLUDED = {'capture.gd', 'capture_table.gd', 'difficulty_probe.gd'}
 
 
 def passed(code, log):

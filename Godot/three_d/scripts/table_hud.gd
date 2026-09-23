@@ -175,7 +175,15 @@ func refresh(view: Dictionary, locked := false) -> void:
 		label.text = "%s · 筹码 %d\n%s\n%s" % [NAMES.get(seat.id, seat.id), seat.stack, state_text, cards_text(seat.holeCards) if not seat.holeCards.is_empty() else "暗牌"]
 	hand.text = "你的手牌  %s     筹码 %d" % [cards_text(you.holeCards), you.stack]
 	if playing:
-		status.text = "轮到你 · 需跟注 %d" % owed if your_turn else ("正在翻牌…" if view.currentActorId.is_empty() else "%s正在行动…" % NAMES.get(view.currentActorId, view.currentActorId))
+		if your_turn:
+			if owed == 0:
+				status.text = "轮到你 · 可过牌 · 当前底池 %d" % view.pot
+			elif view.legal.get("call", false):
+				status.text = "轮到你 · 跟注实付 %d · 跟注后底池 %d" % [owed, view.pot + owed]
+			else:
+				status.text = "轮到你 · 跟注需 %d，筹码仅 %d · 可选择全押或弃牌" % [owed, you.stack]
+		else:
+			status.text = "正在翻牌…" if view.currentActorId.is_empty() else "%s正在行动…" % NAMES.get(view.currentActorId, view.currentActorId)
 	else:
 		var winners: PackedStringArray = []
 		for id in view.summary.get("awards", {}):

@@ -16,6 +16,8 @@ func run_tests() -> void:
 		var t := Table.new()
 		t.start(content.tables[table_id],7)
 		hud.refresh(t.public_state())
+		var due: int = maxi(0, int(t.state.currentBet)-int(t.state.players[0].currentBet))
+		verify(hud.status.text.contains("跟注实付 %d" % due) and hud.status.text.contains("跟注后底池 %d" % (int(t.state.pot)+due)), "Call cost and resulting pot visible "+table_id)
 		var discount: int = int(content.tables[table_id].get("firstAggressionDiscount", 0))
 		var minimum: int = int(t.state.currentBet)+int(t.state.tableDef.raiseIncrement)
 		verify(hud.raise_preview.visible and hud.raise_preview.text.contains("实付 %d" % (minimum-discount)),"Minimum cost "+table_id)
@@ -49,6 +51,11 @@ func run_tests() -> void:
 	var fresh := Table.new()
 	fresh.start(content.tables["cargo-table"],7)
 	hud.refresh(fresh.public_state())
+	var short_view: Dictionary = fresh.public_state()
+	short_view.players[0].stack = 5
+	short_view.legal.call = false
+	hud.refresh(short_view)
+	verify(hud.status.text.contains("筹码仅 5") and hud.status.text.contains("全押或弃牌"), "Short stack sees affordable choices")
 	hud.pregame(300,content.tables["cargo-table"])
 	verify(not hud.raise_preview.visible,"Hidden before hand")
 	if OS.get_cmdline_user_args().has("--capture"):
