@@ -6,7 +6,9 @@
 
 同日把两套既有拒绝测试接入覆盖证据：`run_restore_bounds_test.gd` 对 33 种畸形运行快照确认拒绝、输入和活动 Run 均不变；`table_checkpoint_test.gd` 对 11 种畸形牌桌快照确认拒绝且活动牌桌不变。分别登记 `persistence_run.invalid_fields_rejected` 与 `persistence_table.invalid_snapshot_rejected`。这是对运行/牌桌快照拒绝路径的代表性验证，其他 restore 条件仍留在 pending；当前目录登记数 356，全局分母仍未完成。
 
-同日补齐短额与精确跟注全押的座位变体：四种桌规 × 三个行动座位 × 两种筹码条件，共 24 个真实队列前置。先按当前下注轮行动构造行动者，再验证欠注/匹配、剩余队列顺序、下注目标、`raiseUsed`、首攻折扣标志与总筹码守恒。现有 `queue.short_all_in` 与 `queue.exact_call_all_in` 已覆盖这些座位，不重复增加 ID；扑克 pending 只剩短额全押加注的座位变体和单人有筹码队列的单挑变体。专项 254 项检查通过。
+2026-09-25 前一批短额与精确跟注全押座位变体：四种桌规 × 三个行动座位 × 两种筹码条件，共 24 个真实队列前置。先按当前下注轮行动构造行动者，再验证欠注/匹配、剩余队列顺序、下注目标、`raiseUsed`、首攻折扣标志与总筹码守恒。现有 `queue.short_all_in` 与 `queue.exact_call_all_in` 已覆盖这些座位，不重复增加 ID；该批完成时扑克 pending 仍保留两类座位变体，专项 254 项检查通过。
+
+随后补齐 A7 所列的两类扑克队列座位变体，并把它们接入现有 `short_stack_queue_test.gd`：短额全押加注和单一有筹码者欠注/跟齐/自动发牌分别轮换四桌 × 三座位，共 24 个新座位案例；连同前一批短额与精确跟注全押的 24 个案例，报告记录 48 个座位案例、590 项检查，全部通过。各输入只复现既有 `queue.short_all_in_raise_one_raise_rule`、`queue.lone_funded_*` 与 `queue.runout_showdown_conserves` 语义，不新增目录 ID；`pending_families.poker` 已清空。全局状态转移分母仍未封板，overall coverage 继续为空。
 
 2026-09-25 按 A4 世界取证补上禁用交互目标：射线仍聚焦到 disabled anchor 时，提示显示其 `disabled_reason`，玩家请求被拒绝且完整世界快照不变。`world_coverage_test.gd` 直接通过 Godot 实例设置导出属性；`interactable.gd` 已纳入世界脚本证据哈希，防止测试报告在交互逻辑变化后仍被误认为新鲜。世界子图 69/69，全目录 343/343 有当前证据；状态转移分母仍未完成。
 
