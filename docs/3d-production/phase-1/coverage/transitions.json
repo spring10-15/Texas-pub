@@ -1774,6 +1774,24 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.case_close",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.case_reopen",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.cross_prop_busy",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_io.read_missing",
       "source": "Godot/three_d/rules/save_store.gd",
       "entry": "read_checkpoint",

@@ -67,6 +67,32 @@ func run() -> void:
 	verify("prop_lamp_reverse", lamp_reversed and not world.props.states.lamp and is_equal_approx(float(lamp.node.light_energy),1.7) and RunCheckpoint.capture(world.run_game)==lamp_before_reverse)
 	for prop_id in ["drawer0", "window", "card", "chip"]:
 		await use_stash_prop(world, prop_id)
+	var case_before: Dictionary = RunCheckpoint.capture(world.run_game)
+	var case_aimed: bool = await aim_room_anchor(world, world.case_target)
+	var case_closed: bool = case_aimed and world.case_open and world.request_action(world.case_target)
+	await create_timer(0.75).timeout
+	verify("case_close", case_closed and not world.case_open and world.case_target.title=="打开皮箱" and world.lid.rotation.is_equal_approx(world.lid_open_rotation + Vector3(deg_to_rad(102),0,0)) and RunCheckpoint.capture(world.run_game)==case_before)
+	case_aimed = await aim_room_anchor(world, world.case_target)
+	var case_reopened: bool = case_aimed and world.request_action(world.case_target)
+	await create_timer(0.75).timeout
+	verify("case_reopen", case_reopened and world.case_open and world.case_target.title=="合上皮箱" and world.lid.rotation.is_equal_approx(world.lid_open_rotation) and RunCheckpoint.capture(world.run_game)==case_before)
+	var lamp_anchor: Area3D = world.props.entries.lamp.anchor
+	var window_anchor: Area3D = world.props.entries.window.anchor
+	var lamp_aimed: bool = await aim_room_anchor(world, lamp_anchor)
+	var lamp_position: Vector3 = world.player.global_position
+	var window_aimed: bool = await aim_room_anchor(world, window_anchor)
+	var window_position: Vector3 = world.player.global_position
+	world.player.global_position = lamp_position
+	world.player.camera.look_at(lamp_anchor.global_position)
+	for i in range(2): await physics_frame
+	var lamp_started: bool = lamp_aimed and window_aimed and world.request_action(lamp_anchor)
+	world.player.global_position = window_position
+	world.player.camera.look_at(window_anchor.global_position)
+	world.player.update_focus()
+	var busy_before: Dictionary = world.checkpoint_state()
+	var cross_rejected: bool = not world.request_action(window_anchor)
+	verify("cross_prop_busy", lamp_started and world.action_busy and world.player.focused==window_anchor and cross_rejected and not world.props.states.window and world.checkpoint_state()==busy_before)
+	await create_timer(0.5).timeout
 	var room_prop_results := {"light_on":true, "light_off":true, "cupboard_open":true, "cupboard_close":true}
 	for room_name in ["tavern", "ledger", "mirror", "embers"]:
 		world.travel(room_name)
