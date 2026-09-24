@@ -15,7 +15,7 @@ class CoverageEvidenceTests(unittest.TestCase):
 
     def test_changed_source_catalog_or_test_is_rejected(self):
         original_digest = coverage.digest
-        for changed in [coverage.CATALOG, coverage.ROOT / 'Godot/three_d/rules/routes.gd', coverage.ROOT / 'Godot/three_d/scripts/world.gd', Path(coverage.__file__).parent / 'lifecycle_coverage_test.gd', Path(coverage.__file__).parent / 'save_store_test.gd', Path(coverage.__file__).parent / 'world_restore_atomic_test.gd']:
+        for changed in [coverage.CATALOG, coverage.ROOT / 'Godot/three_d/rules/routes.gd', coverage.ROOT / 'Godot/three_d/scripts/world.gd', Path(coverage.__file__).parent / 'lifecycle_coverage_test.gd', Path(coverage.__file__).parent / 'save_store_test.gd', Path(coverage.__file__).parent / 'world_restore_atomic_test.gd', Path(coverage.__file__).parent / 'world_rng_replay_test.gd']:
             with self.subTest(changed=changed):
                 with patch.object(coverage, 'digest', side_effect=lambda path: 'stale' if path == changed else original_digest(path)):
                     with self.assertRaisesRegex(ValueError, 'stale'):

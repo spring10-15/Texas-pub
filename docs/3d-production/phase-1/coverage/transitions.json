@@ -1994,6 +1994,18 @@
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "restore_checkpoint",
       "outcome": "accepted"
+    },
+    {
+      "id": "persistence_replay.world_rng_resume",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "load_checkpoint",
+      "outcome": "accepted"
+    },
+    {
+      "id": "persistence_replay.rng_negative_control",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "load_checkpoint",
+      "outcome": "rejected"
     }
   ],
   "pending_families": {

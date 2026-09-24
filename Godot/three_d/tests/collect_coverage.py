@@ -8,6 +8,7 @@ CATALOG = ROOT / 'docs/3d-production/phase-1/coverage/transitions.json'
 SUITES = {
     'persistence-io': ('save_store_test.gd', {'persistence_io'}),
     'persistence-restore': ('world_restore_atomic_test.gd', {'persistence_restore'}),
+    'persistence-replay': ('world_rng_replay_test.gd', {'persistence_replay'}),
     'signal': ('signal_coverage_test.gd', {'signal'}),
     'world': ('world_coverage_test.gd', {'world'}),
     'queue': ('short_stack_queue_test.gd', {'queue'}),
