@@ -1300,6 +1300,30 @@
       "outcome": "accepted"
     },
     {
+      "id": "poker_discount.passive_action_preserves",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_discount.first_aggression_consumes",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_discount.consumed_aggression_full_cost",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
+    },
+    {
+      "id": "poker_discount.next_hand_resets",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "start_hand",
+      "outcome": "accepted"
+    },
+    {
       "id": "poker_progress.actor_pending",
       "source": "Godot/three_d/rules/table.gd",
       "entry": "advance/next_hand",
@@ -1457,6 +1481,12 @@
     },
     {
       "id": "queue.raise_reopens_prior_caller",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted"
+    },
+    {
+      "id": "queue.all_in_raise_reopens_prior_caller",
       "source": "Godot/three_d/rules/table.gd",
       "entry": "act",
       "outcome": "accepted"
@@ -2064,11 +2094,10 @@
   ],
   "pending_families": {
     "poker": [
-      "short_all_in",
-      "exact_call_all_in",
-      "queue_reopen",
-      "lone_funded_queue",
-      "aggression_discount"
+      "short_all_in_seat_variants",
+      "exact_call_all_in_seat_variants",
+      "short_all_in_raise_reopen_boundaries",
+      "lone_funded_queue_heads_up_variants"
     ],
     "world": [
       "room_entry",

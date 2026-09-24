@@ -79,6 +79,16 @@ func _initialize() -> void:
 		for p in t.state.players: total += int(p.stack)
 		verify(total == buy_in*3,"Runout wealth conserved "+table_id)
 		record("runout_showdown_conserves",failure_count)
+	# An all-in that raises the target must recall a player who had already called.
+	var t := Table.new()
+	t.start(content.tables["cargo-table"],7)
+	t.act("player","call",t.revision)
+	t.state.players[1].stack = 50
+	var all_in_target: int = int(t.state.players[1].currentBet)+int(t.state.players[1].stack)
+	var reopened := t.act(t.state.players[1].id,"all-in",t.revision)
+	var reopen_ok: bool = reopened and all_in_target > 20 and t.state.currentBet == all_in_target and t.state.toAct == [t.state.players[2].id,"player"] and t.state.raiseUsed
+	verify(reopen_ok,"All-in raise recalls prior caller")
+	if reopen_ok: hits["queue.all_in_raise_reopens_prior_caller"] = {"test":"short_stack_queue_test.gd","postcondition_verified":true}
 	write_report()
 	print("SHORT_STACK_QUEUE checks=",checks," failures=",failures)
 	quit(0 if failures.is_empty() else 1)

@@ -16,6 +16,7 @@ SUITES = {
     'payout': ('payout_coverage_test.gd', {'payout'}),
     'poker_progress': ('poker_progress_coverage_test.gd', {'poker_progress'}),
     'poker_action': ('poker_action_coverage_test.gd', {'poker_action'}),
+    'poker_discount': ('poker_discount_coverage_test.gd', {'poker_discount'}),
     'poker_guard': ('poker_guard_coverage_test.gd', {'poker_guard'}),
     'advanced': ('advanced_coverage_test.gd', {'advanced'}),
     'reservation': ('reservation_coverage_test.gd', {'reservation'}),
