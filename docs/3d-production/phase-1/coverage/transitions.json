@@ -2289,8 +2289,6 @@
     "world": [],
     "persistence": [
       "read_unreadable",
-      "restore",
-      "invalid_data",
       "legacy_migration"
     ]
   }
