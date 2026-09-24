@@ -1,7 +1,7 @@
 # capture-12-shots.log
 # cmd: /Applications/Godot.app/Contents/MacOS/Godot --path /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot --script /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/V1-extraction-visual/repro/capture_extraction_states.gd -- --test
-# started: 2026-09-23 17:48:40
-# elapsed_s: 4.2
+# started: 2026-09-25 07:05:22
+# elapsed_s: 4.7
 # exit_code: 0
 
 --- stdout+stderr ---
@@ -10,33 +10,33 @@ Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
 
 CAPTURE_ENV {"display_server":"macOS","driver":"metal","screen_scale":2.0,"screen_size":[3024,1964],"video_adapter":"Apple M5 (Apple9)","window":[1376,768]}
 CAPTURE_TIME boot=0 ms
-CAPTURE_TIME world_ready=560 ms
-CAPTURE_TIME smoky-den travel=80 ms
-CAPTURE_TIME smoky-den__short-cash frames=99 draw=9 save=140
+CAPTURE_TIME world_ready=612 ms
+CAPTURE_TIME smoky-den travel=106 ms
+CAPTURE_TIME smoky-den__short-cash frames=99 draw=8 save=136
 CAPTURE_ROW {"body":"当前路线不可用：随身现金不足以支付费用\n随身现金 19 · 此路线费用 71\n已知可用路线（到实际入口按 E）：\n紧急出口 · 丢现金：费用 10，弃现金 7，弃贵重物 0，预计到账 2","body_min_h":121.0,"body_size_h":121.0,"confirm_disabled":true,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"smoky-den__short-cash.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":true,"heading":"普通出口 · 撤离结算","panel_min":[582.0,448.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"short-cash","venue":"smoky-den"}
-CAPTURE_TIME smoky-den__normal frames=89 draw=9 save=142
+CAPTURE_TIME smoky-den__normal frames=89 draw=8 save=132
 CAPTURE_ROW {"body":"现金 300 · 费用 60\n舍弃现金 0 · 舍弃贵重物价值 0\n带回贵重物 60 · 最终到账 300\n本局净变化 +0","body_min_h":121.0,"body_size_h":121.0,"confirm_disabled":false,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"smoky-den__normal.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":false,"heading":"普通出口 · 撤离结算","panel_min":[292.0,400.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"normal","venue":"smoky-den"}
-CAPTURE_TIME smoky-den__expired-reservation frames=90 draw=9 save=138
+CAPTURE_TIME smoky-den__expired-reservation frames=90 draw=7 save=130
 CAPTURE_ROW {"body":"当前路线不可用：预约已过期\n随身现金 300 · 此路线费用 10\n已知可用路线（到实际入口按 E）：\n普通出口：费用 60，弃现金 0，弃贵重物 0，预计到账 300\n后厨楼梯：费用 25，弃现金 0，弃贵重物 0，预计到账 335\n河边接驳：费用 40，弃现金 0，弃贵重物 0，预计到账 320\n紧急出口 · 丢现金：费用 10，弃现金 120，弃贵重物 0，预计到账 230\n紧急出口 · 丢贵重物：费用 10，弃现金 0，弃贵重物 60，预计到账 290","body_min_h":245.0,"body_size_h":245.0,"confirm_disabled":true,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"smoky-den__expired-reservation.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":true,"heading":"后厨货梯接应 · 撤离结算","panel_min":[633.0,528.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"expired-reservation","venue":"smoky-den"}
-CAPTURE_TIME high-rise-suite travel=49 ms
-CAPTURE_TIME high-rise-suite__short-cash frames=99 draw=8 save=139
+CAPTURE_TIME high-rise-suite travel=50 ms
+CAPTURE_TIME high-rise-suite__short-cash frames=99 draw=8 save=133
 CAPTURE_ROW {"body":"当前路线不可用：随身现金不足以支付费用\n随身现金 19 · 此路线费用 115\n已知可用路线（到实际入口按 E）：\n紧急出口 · 丢现金：费用 10，弃现金 7，弃贵重物 0，预计到账 2","body_min_h":121.0,"body_size_h":121.0,"confirm_disabled":true,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"high-rise-suite__short-cash.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":true,"heading":"普通出口 · 撤离结算","panel_min":[582.0,448.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"short-cash","venue":"high-rise-suite"}
-CAPTURE_TIME high-rise-suite__normal frames=88 draw=9 save=136
+CAPTURE_TIME high-rise-suite__normal frames=89 draw=8 save=133
 CAPTURE_ROW {"body":"现金 300 · 费用 96\n舍弃现金 0 · 舍弃贵重物价值 0\n带回贵重物 60 · 最终到账 264\n本局净变化 -36","body_min_h":121.0,"body_size_h":121.0,"confirm_disabled":false,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"high-rise-suite__normal.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":false,"heading":"普通出口 · 撤离结算","panel_min":[292.0,400.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"normal","venue":"high-rise-suite"}
-CAPTURE_TIME high-rise-suite__expired-reservation frames=89 draw=8 save=140
+CAPTURE_TIME high-rise-suite__expired-reservation frames=88 draw=9 save=131
 CAPTURE_ROW {"body":"当前路线不可用：预约已过期\n随身现金 300 · 此路线费用 20\n已知可用路线（到实际入口按 E）：\n普通出口：费用 96，弃现金 0，弃贵重物 0，预计到账 264\n维修电梯：费用 30，弃现金 0，弃贵重物 0，预计到账 330\n地下车库：费用 45，弃现金 0，弃贵重物 0，预计到账 315\n紧急出口 · 丢现金：费用 10，弃现金 120，弃贵重物 0，预计到账 230\n紧急出口 · 丢贵重物：费用 10，弃现金 0，弃贵重物 60，预计到账 290","body_min_h":245.0,"body_size_h":245.0,"confirm_disabled":true,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"high-rise-suite__expired-reservation.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":true,"heading":"贵宾电梯 · 撤离结算","panel_min":[633.0,528.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"expired-reservation","venue":"high-rise-suite"}
-CAPTURE_TIME rooftop-club travel=49 ms
-CAPTURE_TIME rooftop-club__short-cash frames=99 draw=8 save=138
+CAPTURE_TIME rooftop-club travel=50 ms
+CAPTURE_TIME rooftop-club__short-cash frames=98 draw=9 save=130
 CAPTURE_ROW {"body":"当前路线不可用：随身现金不足以支付费用\n随身现金 19 · 此路线费用 90\n已知可用路线（到实际入口按 E）：\n紧急出口 · 丢现金：费用 10，弃现金 7，弃贵重物 0，预计到账 2","body_min_h":121.0,"body_size_h":121.0,"confirm_disabled":true,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"rooftop-club__short-cash.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":true,"heading":"普通出口 · 撤离结算","panel_min":[582.0,448.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"short-cash","venue":"rooftop-club"}
-CAPTURE_TIME rooftop-club__normal frames=89 draw=8 save=137
+CAPTURE_TIME rooftop-club__normal frames=88 draw=8 save=130
 CAPTURE_ROW {"body":"现金 300 · 费用 67\n舍弃现金 0 · 舍弃贵重物价值 0\n带回贵重物 60 · 最终到账 293\n本局净变化 -7","body_min_h":121.0,"body_size_h":121.0,"confirm_disabled":false,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"rooftop-club__normal.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":false,"heading":"普通出口 · 撤离结算","panel_min":[292.0,400.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"normal","venue":"rooftop-club"}
-CAPTURE_TIME rooftop-club__expired-reservation frames=90 draw=9 save=137
+CAPTURE_TIME rooftop-club__expired-reservation frames=89 draw=8 save=130
 CAPTURE_ROW {"body":"当前路线不可用：预约已过期\n随身现金 300 · 此路线费用 15\n已知可用路线（到实际入口按 E）：\n普通出口：费用 67，弃现金 0，弃贵重物 0，预计到账 293\n消防楼梯：费用 15，弃现金 0，弃贵重物 0，预计到账 345\n停机坪接应：费用 45，弃现金 0，弃贵重物 0，预计到账 315\n紧急出口 · 丢现金：费用 10，弃现金 120，弃贵重物 0，预计到账 230\n紧急出口 · 丢贵重物：费用 10，弃现金 0，弃贵重物 60，预计到账 290","body_min_h":245.0,"body_size_h":245.0,"confirm_disabled":true,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"rooftop-club__expired-reservation.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":true,"heading":"员工通道 · 撤离结算","panel_min":[633.0,528.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"expired-reservation","venue":"rooftop-club"}
 CAPTURE_TIME neon-poker-club travel=50 ms
-CAPTURE_TIME neon-poker-club__short-cash frames=100 draw=7 save=139
+CAPTURE_TIME neon-poker-club__short-cash frames=100 draw=8 save=137
 CAPTURE_ROW {"body":"当前路线不可用：随身现金不足以支付费用\n随身现金 19 · 此路线费用 91\n已知可用路线（到实际入口按 E）：\n紧急出口 · 丢现金：费用 10，弃现金 7，弃贵重物 0，预计到账 2","body_min_h":121.0,"body_size_h":121.0,"confirm_disabled":true,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"neon-poker-club__short-cash.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":true,"heading":"普通出口 · 撤离结算","panel_min":[582.0,448.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"short-cash","venue":"neon-poker-club"}
-CAPTURE_TIME neon-poker-club__normal frames=89 draw=9 save=138
+CAPTURE_TIME neon-poker-club__normal frames=88 draw=9 save=134
 CAPTURE_ROW {"body":"现金 300 · 费用 76\n舍弃现金 0 · 舍弃贵重物价值 0\n带回贵重物 60 · 最终到账 284\n本局净变化 -16","body_min_h":121.0,"body_size_h":121.0,"confirm_disabled":false,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"neon-poker-club__normal.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":false,"heading":"普通出口 · 撤离结算","panel_min":[292.0,400.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"normal","venue":"neon-poker-club"}
-CAPTURE_TIME neon-poker-club__expired-reservation frames=90 draw=9 save=137
+CAPTURE_TIME neon-poker-club__expired-reservation frames=90 draw=8 save=129
 CAPTURE_ROW {"body":"当前路线不可用：预约已过期\n随身现金 300 · 此路线费用 20\n已知可用路线（到实际入口按 E）：\n普通出口：费用 76，弃现金 0，弃贵重物 0，预计到账 284\n传感器盲区走廊：费用 20，弃现金 0，弃贵重物 0，预计到账 340\n后台传送门：费用 45，弃现金 0，弃贵重物 0，预计到账 315\n紧急出口 · 丢现金：费用 10，弃现金 120，弃贵重物 0，预计到账 230\n紧急出口 · 丢贵重物：费用 10，弃现金 0，弃贵重物 60，预计到账 290","body_min_h":245.0,"body_size_h":245.0,"confirm_disabled":true,"confirm_text":"支付费用并返回藏匿点","exists":true,"file":"neon-poker-club__expired-reservation.png","forfeit_text":"查看主动放弃本局的损失","forfeit_visible":true,"heading":"数据节点闸门 · 撤离结算","panel_min":[633.0,528.0],"panel_size":[700.0,540.0],"png":[1376,768],"save_err":0,"scenario":"expired-reservation","venue":"neon-poker-club"}
 CAPTURE_DONE made=12

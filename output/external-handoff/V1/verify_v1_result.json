@@ -78,18 +78,18 @@
   ],
   "png_sha256": {
     "screenshots": {
-      "smoky-den__normal.png": "08ca48bb59888592f2d77214849351797a954c3fa1275baecae69ac42689a43b",
-      "smoky-den__short-cash.png": "729de3533a782923e23f27c4117419206eb19207bdf934bf34f4b30fa950c8a6",
-      "smoky-den__expired-reservation.png": "b90a306f6a7835b5efef65655cfee8121b854303c2e78b6d438af97d371f129f",
-      "high-rise-suite__normal.png": "96dcdba017cdc610543dc47fc160fbd36a21425f95fad797cba3d9b1bdd6c41d",
-      "high-rise-suite__short-cash.png": "a42e40bf3805453f7961f627630345243ffb4e1567361a1f7c589412bcd902b7",
-      "high-rise-suite__expired-reservation.png": "c2e2ee5cc7147879a87f4aeb88375d7eb8f6e38ee5c579746b5758183789c3ff",
-      "rooftop-club__normal.png": "48ad1fb7cc799cd9e2e3beca9ece217e0f1b9af90fe2a5ae07d2655aa5196c27",
-      "rooftop-club__short-cash.png": "69272531cb486c306d1d1510dd96e3992592ea7c8cd59977a04a0130fd6ea58d",
-      "rooftop-club__expired-reservation.png": "928031e84ebda582789f005fd0eb326872aebd46d6e7cd5d3507ce49e96bf0f3",
-      "neon-poker-club__normal.png": "022f1aa6e5eb1d53eb78fa3d76d6e02fae34a7569ded1a0c6d10cfc98c94b521",
-      "neon-poker-club__short-cash.png": "5e0d809963512e29b1f9e8b2ae46ce788d574eb9fdb0b21cd001a79264b89992",
-      "neon-poker-club__expired-reservation.png": "8f9b5fb4aeae4cd5300740ed8d7f19e6ffd65fb4b8ce25a7c9335243c6ae5530"
+      "smoky-den__normal.png": "c8d8fc797800ced2b5d7e1e35c98cef157e35bb2557f5eb532638fa028d20690",
+      "smoky-den__short-cash.png": "897a612dd3de0f081af9b6e965578ac6e4659f7f803935822f1b2ebc6135c751",
+      "smoky-den__expired-reservation.png": "43ebb15d00f0925a451ecc188ceb40cb9cf7463cc15947b49c1a4a0d3bac8444",
+      "high-rise-suite__normal.png": "45a806387067964fefae5e2e3005f2a29a0678e2329129dc47a271566d35ca32",
+      "high-rise-suite__short-cash.png": "f5be60470b2cd57c29c6c08a2147ad884415fcc1f84bcc4383b3e89525a6bd13",
+      "high-rise-suite__expired-reservation.png": "4574b5ae020658fabb1c2076d75dbb1c8f2567737e1fe172df67a2bde3b2e62a",
+      "rooftop-club__normal.png": "6b8125938b67c007ebeea361c4611128afa095d86adec1a8da284c66228efbd4",
+      "rooftop-club__short-cash.png": "d3c7146a1c68d5bedf980117dd83afe5aa54478738c5ee6f5de0f94cfd35e6ff",
+      "rooftop-club__expired-reservation.png": "add774ed2e4fdec349fda22dcb1668edc2d360694c5697298d0465409ca2e9a5",
+      "neon-poker-club__normal.png": "a15c9309960d676fc869a9029cdc33199c60c568955a584344203a13a1a28a0c",
+      "neon-poker-club__short-cash.png": "53be2b77757cae74a5b1214e51af198a2dd3aa17bde67807784d1a3c72a353cc",
+      "neon-poker-club__expired-reservation.png": "8fa22f65c5206116f9beb2048b905c9f5d2d4b146550c430877c77e065ad76b9"
     },
     "screenshots-supplement": {
       "smoky-den__bag-expired-routes.png": "10785f474c8fc2ccfd504b77ba801d37ca18ef4ff11861497bf2d55c969aef84",

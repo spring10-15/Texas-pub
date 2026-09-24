@@ -395,3 +395,15 @@ python3 output/external-handoff/V1/run_godot.py \
 
 **未覆盖**：本脚本只核"文件与矩阵自洽"，**不核画面内容**（文字是否被裁切、按钮是否被遮挡）。
 后者是 §5 / `issues.md` 的人工目视结论，无法脚本化——这正是任务书「尺寸断言不能替代画面」的另一面。
+
+## 14. 当前主线复验（2026-09-25）
+
+为消除原交付基线 `07f2245` 与当前主线之间的版本差异，在提交 `79c379a`（`git rev-parse HEAD`）重新以窗口模式完整采集原 4 店 × 3 状态共 12 张图；本次执行时游戏源码与测试均与该提交一致，之后只追加本节记录。Godot 为 `4.7.2.stable.official.ed1daf0bf`，实际命令：
+
+```bash
+python3 output/external-handoff/V1/run_godot.py \
+  --log output/external-handoff/V1/capture-12-shots.log --timeout 300 --windowed \
+  -- --script "<仓库根>/docs/3d-production/external-handoff/V1-extraction-visual/repro/capture_extraction_states.gd" -- --test
+```
+
+结果 `exit=0`、`CAPTURE_DONE made=12`、日志 12 个 `CAPTURE_ROW`，无 `SCRIPT ERROR` / `ERROR`。`verify_visual.py` 复验为 `CONFIRM=14 REFUTE=0`，主矩阵 12 张与补充矩阵 4 张均可解析、尺寸和矩阵相符。再次目视检查霓虹扑克俱乐部最长备选文案图，文案末行及确认、返回、背包、主动放弃按钮均在画面内。12 张主图已由本次运行更新，矩阵结构和值未变；本文原有的 2026-09-23 初次运行记录保留作历史记录。
