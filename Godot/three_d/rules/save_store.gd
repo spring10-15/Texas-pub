@@ -3,6 +3,9 @@ extends RefCounted
 const VERSION := 1
 
 static func write_checkpoint(path: String, state: Dictionary) -> Error:
+	return _write_checkpoint(path, state, func(temporary_path: String): return read_checkpoint(temporary_path))
+
+static func _write_checkpoint(path: String, state: Dictionary, readback: Callable) -> Error:
 	var bytes := var_to_bytes(state)
 	var envelope := {"version": VERSION, "digest": bytes.hex_encode().sha256_text(), "payload": bytes}
 	var temporary := path + ".tmp"
@@ -16,7 +19,7 @@ static func write_checkpoint(path: String, state: Dictionary) -> Error:
 	if result != OK:
 		return result
 	# Verify the complete temporary file before replacing the last usable checkpoint.
-	if read_checkpoint(temporary).get("status") != "ok":
+	if readback.call(temporary).get("status") != "ok":
 		DirAccess.remove_absolute(temporary)
 		return ERR_FILE_CORRUPT
 	var rename_error := DirAccess.rename_absolute(temporary, path)

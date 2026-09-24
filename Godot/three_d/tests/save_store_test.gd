@@ -22,6 +22,11 @@ func _initialize() -> void:
 	var replaced: bool = Store.write_checkpoint(path, state) == OK
 	loaded = Store.read_checkpoint(path)
 	record("write_replace", replaced and loaded.status == "ok" and loaded.state == state and not FileAccess.file_exists(path + ".tmp"))
+	var original_bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
+	var invalid_readback := func(_temporary_path: String) -> Dictionary: return {"status":"invalid"}
+	var verification_error: Error = Store._write_checkpoint(path, {"cash": 999}, invalid_readback)
+	var verification_rejected: bool = verification_error == ERR_FILE_CORRUPT and Store.read_checkpoint(path).status == "ok" and FileAccess.get_file_as_bytes(path) == original_bytes and not FileAccess.file_exists(path + ".tmp")
+	record("write_temp_verification_rejected", verification_rejected)
 	var file := FileAccess.open(path, FileAccess.READ)
 	var envelope: Dictionary = file.get_var(false)
 	file.close()

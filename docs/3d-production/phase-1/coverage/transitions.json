@@ -2038,6 +2038,12 @@
       "outcome": "rejected"
     },
     {
+      "id": "persistence_io.write_temp_verification_rejected",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "write_checkpoint",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_io.read_corrupt",
       "source": "Godot/three_d/rules/save_store.gd",
       "entry": "read_checkpoint",
@@ -2282,7 +2288,6 @@
     "poker": [],
     "world": [],
     "persistence": [
-      "write",
       "read_unreadable",
       "restore",
       "invalid_data",

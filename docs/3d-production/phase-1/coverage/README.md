@@ -1,6 +1,8 @@
 # 状态转移覆盖：目录与执行证据
 
-> 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 379，当前登记证据为 379/379；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
+> 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 380，当前登记证据为 380/380；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
+
+2026-09-25 存档写入失败保护：新增 `persistence_io.write_temp_verification_rejected`，通过私有 `_write_checkpoint()` 的读回校验器注入无效结果，验证返回 `ERR_FILE_CORRUPT`、旧存档字节保持不变、临时文件被清理；线上入口仍使用真实 `read_checkpoint()`。A5 同组的新建、覆盖、临时文件复核失败、临时文件打开失败和原子重命名失败现在均有正式后继证据；`checkpoint_state()` 不产生任意 `Object` 引用，因此不把外部手工传入的非游戏状态算作玩家路径。从 `pending_families.persistence` 移除 `write`，待审组从 5 减至 4；完整回归 59/59，目录证据 380/380，覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-063601/report.json`。
 
 2026-09-25 存档 RNG 重放族收口：A5 `rng_replay` 的三行结果均落在现有目录 ID：牌桌恢复逐动作边界对照（`persistence_table.rng_replay`，660 个动作边界）、世界恢复后的 160 步同步重放（`persistence_replay.world_rng_resume`）及 +12345 RNG 扰动后的 60 步差异负对照（`persistence_replay.rng_negative_control`）。当前两份专项报告均为全命中、无缺项，目录哈希与相关 Run/Table/World 源码哈希匹配。因此从 `pending_families.persistence` 移除 `rng_replay`，待审组从 6 减至 5；完整回归 59/59，目录证据 379/379，覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-062450/report.json`。
 
