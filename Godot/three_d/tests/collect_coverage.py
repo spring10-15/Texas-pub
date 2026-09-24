@@ -9,6 +9,8 @@ SUITES = {
     'persistence-io': ('save_store_test.gd', {'persistence_io'}),
     'persistence-capture': ('persistence_capture_coverage_test.gd', {'persistence_capture'}),
     'persistence-restore': ('world_restore_atomic_test.gd', {'persistence_restore'}),
+    'persistence-run': ('run_restore_bounds_test.gd', {'persistence_run'}),
+    'persistence-table': ('table_checkpoint_test.gd', {'persistence_table'}),
     'persistence-replay': ('world_rng_replay_test.gd', {'persistence_replay'}),
     'signal': ('signal_coverage_test.gd', {'signal'}),
     'world': ('world_coverage_test.gd', {'world'}),

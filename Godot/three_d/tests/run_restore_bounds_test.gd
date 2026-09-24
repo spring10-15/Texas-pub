@@ -3,6 +3,7 @@ const Run = preload("res://three_d/rules/run.gd")
 const Checkpoint = preload("res://three_d/rules/run_checkpoint.gd")
 var failures: Array[String] = []
 var checks := 0
+var invalid_cases := 0
 func verify(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label); push_error(label)
@@ -45,8 +46,11 @@ func _initialize() -> void:
 		var bad := original.duplicate(true)
 		bad[cases[key][0]] = cases[key][1]
 		var before := bad.duplicate(true)
-		verify(Checkpoint.restore(bad,content) == null,"Reject "+key)
-		verify(bad == before and Checkpoint.capture(r) == original,"Rejected input does not mutate live state "+key)
+		var rejected: bool = Checkpoint.restore(bad,content) == null
+		var unchanged: bool = bad == before and Checkpoint.capture(r) == original
+		verify(rejected,"Reject "+key)
+		verify(unchanged,"Rejected input does not mutate live state "+key)
+		invalid_cases += 1 if rejected and unchanged else 0
 	# Legitimate duplicate valuables are allowed up to capacity.
 	for points in [0,int(content.searchActions)]:
 		var valid := original.duplicate(true)
@@ -88,5 +92,18 @@ func _initialize() -> void:
 	var legacy := original.duplicate(true)
 	for field in ["route_flags","reservation","offer_index","full_intel","opponent_notes","collateral","last_table_result","scene_id","search_results","run_seed","variant_plan","venue_history","arrival_completed","transfer_log"]: legacy.erase(field)
 	verify(Checkpoint.restore(legacy,content) != null,"Legacy optional fields still migrate")
-	print("RUN_RESTORE_BOUNDS checks=",checks," failures=",failures)
+	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
+	var catalog: Dictionary = JSON.parse_string(catalog_text)
+	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("persistence_run.")).map(func(row): return row.id)
+	var hits := {}
+	if invalid_cases == cases.size() and failures.is_empty():
+		hits["persistence_run.invalid_fields_rejected"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true}
+	var missing: Array = expected.filter(func(id): return not hits.has(id))
+	var hashes := {}
+	for source_file in DirAccess.get_files_at("res://three_d/rules"):
+		if source_file.ends_with(".gd") or source_file.ends_with(".json"):
+			hashes[source_file] = FileAccess.get_file_as_string("res://three_d/rules/" + source_file).sha256_text()
+	var report := {"scope":"Reject malformed run checkpoint fields without mutating input or live state","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/run_restore_bounds_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"failed":failures.size(),"invalid_cases":invalid_cases,"overall_state_transition_coverage":null}
+	FileAccess.open("res://../output/3d/persistence-run-coverage.json", FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
+	print("RUN_RESTORE_BOUNDS ", JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)

@@ -2116,6 +2116,18 @@
       "outcome": "accepted"
     },
     {
+      "id": "persistence_run.invalid_fields_rejected",
+      "source": "Godot/three_d/rules/run_checkpoint.gd",
+      "entry": "restore",
+      "outcome": "rejected"
+    },
+    {
+      "id": "persistence_table.invalid_snapshot_rejected",
+      "source": "Godot/three_d/rules/table_checkpoint.gd",
+      "entry": "restore",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_replay.world_rng_resume",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "load_checkpoint",

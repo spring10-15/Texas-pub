@@ -4,6 +4,7 @@ const Checkpoint = preload("res://three_d/rules/table_checkpoint.gd")
 const Store = preload("res://three_d/rules/save_store.gd")
 var checks := 0
 var failures: Array[String] = []
+var invalid_cases := 0
 func verify(ok: bool, message: String) -> void:
 	checks += 1
 	if not ok:
@@ -44,7 +45,9 @@ func _initialize() -> void:
 	for label in invalid:
 		var broken := good.duplicate(true)
 		broken[invalid[label][0]] = invalid[label][1]
-		verify(Checkpoint.restore(broken) == null and Checkpoint.capture(sample) == good,"Reject invalid metadata: "+label)
+		var rejected: bool = Checkpoint.restore(broken) == null and Checkpoint.capture(sample) == good
+		verify(rejected,"Reject invalid metadata: "+label)
+		invalid_cases += 1 if rejected else 0
 	for label in ["duplicate_card","missing_card","extra_chips","bad_actor","bad_bet","bad_status","bad_player","bad_definition"]:
 		var broken := good.duplicate(true)
 		match label:
@@ -56,8 +59,25 @@ func _initialize() -> void:
 			"bad_status": broken.state.status = "done"
 			"bad_player": broken.state.players[1] = "invalid"
 			"bad_definition": broken.state.tableDef.buyIn = 0
-		verify(Checkpoint.restore(broken) == null and Checkpoint.capture(sample) == good,"Reject malformed table state: "+label)
-	verify(Checkpoint.restore({}) == null, "Malformed snapshot rejected")
+		var rejected: bool = Checkpoint.restore(broken) == null and Checkpoint.capture(sample) == good
+		verify(rejected,"Reject malformed table state: "+label)
+		invalid_cases += 1 if rejected else 0
+	var malformed_rejected: bool = Checkpoint.restore({}) == null
+	verify(malformed_rejected, "Malformed snapshot rejected")
+	invalid_cases += 1 if malformed_rejected else 0
 	DirAccess.remove_absolute(path)
-	print("TABLE_CHECKPOINT ", JSON.stringify({"checks": checks, "failed": failures.size(), "failures": failures}))
+	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
+	var catalog: Dictionary = JSON.parse_string(catalog_text)
+	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("persistence_table.")).map(func(row): return row.id)
+	var hits := {}
+	if invalid_cases == 11 and failures.is_empty():
+		hits["persistence_table.invalid_snapshot_rejected"] = {"test":"table_checkpoint_test.gd","postcondition_verified":true}
+	var missing: Array = expected.filter(func(id): return not hits.has(id))
+	var hashes := {}
+	for source_file in DirAccess.get_files_at("res://three_d/rules"):
+		if source_file.ends_with(".gd") or source_file.ends_with(".json"):
+			hashes[source_file] = FileAccess.get_file_as_string("res://three_d/rules/" + source_file).sha256_text()
+	var report := {"scope":"Reject malformed table checkpoint state without mutating the live table","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/table_checkpoint_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"failed":failures.size(),"invalid_cases":invalid_cases,"overall_state_transition_coverage":null}
+	FileAccess.open("res://../output/3d/persistence-table-coverage.json", FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
+	print("TABLE_CHECKPOINT ", JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)
