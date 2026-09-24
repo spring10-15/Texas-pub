@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A5 收尾自检：按内容锚点重推 source_line，并核对 evidence_path 存在、CSV 可解析、17 条既有 ID 不重复。
+"""A5 收尾自检：按内容锚点重推 source_line，并核对 evidence_path 存在、CSV 可解析、23 条目录 ID 均有映射。
 
 用法（仓库根）：
     python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_outcomes.py
@@ -22,6 +22,9 @@ CATALOG_IDS = [
     "persistence_restore.seated", "persistence_restore.replace_live_table", "persistence_restore.paused_seated",
     "persistence_table.rng_replay",
     "persistence_run.legacy_variant_plan_restored",
+    "persistence_capture.run_snapshot_isolated", "persistence_capture.table_snapshot_isolated",
+    "persistence_restore.locked_room", "persistence_restore.legacy_run_fields",
+    "persistence_run.invalid_fields_rejected", "persistence_table.invalid_snapshot_rejected",
 ]
 
 problems = []
@@ -80,20 +83,20 @@ def main() -> int:
             problems.append(f"七组缺失：{fid}")
     for cid in CATALOG_IDS:
         n = catalog_seen.get(cid, 0)
-        if n != 1:
-            problems.append(f"既有 ID 应恰好出现一次：{cid} 出现 {n} 次")
+        if n == 0:
+            problems.append(f"目录 ID 缺少审计行映射：{cid}")
     for cid in catalog_seen:
         if cid not in CATALOG_IDS:
             problems.append(f"未知既有 ID（可能重复计数或拼写错）：{cid}")
 
     print(f"rows={len(rows)} families={families_seen}")
-    print(f"catalog_ids_mapped={len(catalog_seen)}/{len(CATALOG_IDS)}")
+    print(f"catalog_ids_mapped={len(set(catalog_seen) & set(CATALOG_IDS))}/{len(CATALOG_IDS)} (同一语义可由多行复用 ID)")
     if problems:
         print("FAIL:")
         for p in problems:
             print("  -", p)
         return 1
-    print("OK: 所有 evidence_path 存在、source_line 按内容锚点命中、七组齐全、既有 ID 不重复")
+    print("OK: 所有 evidence_path 存在、source_line 按内容锚点命中、七组齐全、目录 ID 均有映射")
     return 0
 
 
