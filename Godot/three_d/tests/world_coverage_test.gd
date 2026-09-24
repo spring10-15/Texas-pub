@@ -58,6 +58,13 @@ func run() -> void:
 	var saved: Dictionary = world.checkpoint_state()
 	world.props.restore({})
 	verify("prop_restore", world.restore_checkpoint(saved) and world.props.states.lamp and is_equal_approx(float(lamp.node.light_energy),0.0))
+	world.player.position = Vector3(1.6, 0.02, -1.1)
+	world.player.camera.look_at(anchor.global_position)
+	for i in range(3): await physics_frame
+	var lamp_before_reverse: Dictionary = RunCheckpoint.capture(world.run_game)
+	var lamp_reversed: bool = world.request_action(anchor)
+	await create_timer(0.5).timeout
+	verify("prop_lamp_reverse", lamp_reversed and not world.props.states.lamp and is_equal_approx(float(lamp.node.light_energy),1.7) and RunCheckpoint.capture(world.run_game)==lamp_before_reverse)
 	for prop_id in ["drawer0", "window", "card", "chip"]:
 		await use_stash_prop(world, prop_id)
 	world.travel("tavern")
@@ -179,3 +186,14 @@ func use_stash_prop(world: Node3D, prop_id: String) -> void:
 	var opened: Variant = entry.opened
 	var visual_ok: bool = actual.is_equal_approx(opened) if actual is Vector3 else is_equal_approx(float(actual), float(opened))
 	verify("prop_" + prop_id, activated and world.props.states[prop_id] and visual_ok and RunCheckpoint.capture(world.run_game)==before)
+	world.player.global_position = Vector3(anchor.global_position.x + offset.x, 0.02, anchor.global_position.z + offset.z)
+	for i in range(3): await physics_frame
+	world.player.camera.look_at(anchor.global_position)
+	await physics_frame
+	before = RunCheckpoint.capture(world.run_game)
+	var reversed: bool = world.request_action(anchor)
+	await create_timer(0.5).timeout
+	actual = entry.node.get_indexed(NodePath(entry.property))
+	var closed: Variant = entry.closed
+	visual_ok = actual.is_equal_approx(closed) if actual is Vector3 else is_equal_approx(float(actual), float(closed))
+	verify("prop_" + prop_id + "_reverse", reversed and not world.props.states[prop_id] and visual_ok and RunCheckpoint.capture(world.run_game)==before)

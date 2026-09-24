@@ -1720,6 +1720,36 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.prop_drawer0_reverse",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.prop_window_reverse",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.prop_card_reverse",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.prop_chip_reverse",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.prop_lamp_reverse",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_io.read_missing",
       "source": "Godot/three_d/rules/save_store.gd",
       "entry": "read_checkpoint",
