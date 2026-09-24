@@ -1744,7 +1744,19 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.pause_repeated",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "pause_game",
+      "outcome": "accepted"
+    },
+    {
       "id": "world.resume",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "resume",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.resume_repeated",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "resume",
       "outcome": "accepted"
@@ -1754,6 +1766,12 @@
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "leave_seat",
       "outcome": "accepted"
+    },
+    {
+      "id": "world.leave_paused_rejected",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "leave_seat",
+      "outcome": "rejected"
     },
     {
       "id": "world.leave_active_rejected",
