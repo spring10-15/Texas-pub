@@ -1696,6 +1696,12 @@
       "outcome": "rejected"
     },
     {
+      "id": "world.seated_world_action_rejected",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "rejected"
+    },
+    {
       "id": "world.room_entry",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "confirm_run_action",

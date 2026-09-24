@@ -53,7 +53,7 @@ func run() -> void:
 	for i in range(3): await physics_frame
 	world.player.update_focus()
 	var occluded: Dictionary = world.checkpoint_state()
-	verify("raycast_occluded", reachable and world.player.focused!=anchor and not world.request_action(anchor) and world.checkpoint_state()==occluded)
+	verify("raycast_occluded", reachable and world.player.focused==null and world.hint_label.text.is_empty() and not world.request_action(anchor) and world.checkpoint_state()==occluded)
 	occluder.queue_free()
 	for i in range(3): await physics_frame
 	world.player.update_focus()
@@ -193,6 +193,9 @@ func run() -> void:
 	for i in range(5): await physics_frame
 	var return_position: Vector3 = world.player.global_position
 	verify("seat", world.request_action(world.table_target) and world.seated and world.seat_panel.visible and not world.player.controls_enabled and world.seat_camera.current)
+	var seated_action_before: Dictionary = world.checkpoint_state()
+	world.player.focused = world.props.entries.lamp.anchor
+	verify("seated_world_action_rejected", world.seated and not world.player.controls_enabled and not world.request_action(world.props.entries.lamp.anchor) and world.checkpoint_state()==seated_action_before)
 	var seated_before_services: Dictionary = world.checkpoint_state()
 	world.open_services()
 	verify("services_open_seated", world.services_panel.visible and not world.seat_panel.visible and not world.player.controls_enabled and world.seat_camera.current and world.checkpoint_state()==seated_before_services)
@@ -290,6 +293,14 @@ func run() -> void:
 	world.close_run_panel()
 	var services_run_started: bool = world.run_game.start(world.run_game.revision, "smoky-den", 7)
 	world.travel("tavern")
+	world.show_run_panel("enter")
+	world.pause_game()
+	var paused_confirm_before: Dictionary = world.checkpoint_state()
+	var paused_confirm_revision: int = world.run_game.revision
+	world.confirm_run_action()
+	verify("confirm_hidden", world.paused and world.run_panel.visible and world.run_game.revision==paused_confirm_revision and world.checkpoint_state()==paused_confirm_before)
+	world.resume()
+	world.close_run_panel()
 	world.open_services("bar")
 	var intel_before: Dictionary = RunCheckpoint.capture(world.run_game)
 	world.service_action("intel", "cargo-table", world.run_game.revision)
@@ -318,6 +329,13 @@ func run() -> void:
 	var sale_view: Dictionary = world.run_game.service_view("bar")
 	var sell_row_visible: bool = world.services_panel.rows.get_children().any(func(row): return row is Button and row.text.contains("卖 " + world.run_game.item_name(sell_item)))
 	verify("services_sell", sell_offered and not sell_item in world.run_game.inventory and world.run_game.cash == sale_before.cash + sale_value and world.run_game.action_points == sale_before.action_points - 1 and world.run_game.revision == sale_before.revision + 1 and world.services_panel.visible and sale_view.revision == world.run_game.revision and not sale_view.actions.any(func(action): return action.kind == "sell" and action.id == sell_item) and not sell_row_visible)
+	world.open_services("bar")
+	world.pause_game()
+	var paused_service_before: Dictionary = world.checkpoint_state()
+	world.service_action("intel", "cargo-table", world.run_game.revision)
+	verify("services_action_hidden", world.paused and world.services_panel.visible and world.checkpoint_state()==paused_service_before and world.run_game.known_rules==sale_before.known_rules and world.run_game.revision==sale_before.revision+1)
+	world.resume()
+	world.close_services()
 	var pressure_world: Node3D = load("res://three_d/scenes/main.tscn").instantiate()
 	pressure_world.name = "PressureExitCoverageWorld"
 	pressure_world.position = Vector3(100, 0, 0)
@@ -348,7 +366,7 @@ func run() -> void:
 	var world_hashes := {}
 	for file in WORLD_SOURCES:
 		world_hashes[file] = FileAccess.get_file_as_string("res://three_d/scripts/"+file).sha256_text()
-	var report := {"scope":"Physical stash props, room entry, seating, normal/forced table leave, venue transfer, extraction, abandonment and demo reset through world UI","source_sha256":hashes,"world_source_sha256":world_hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_coverage_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
+	var report := {"scope":"Physical stash props, room entry, seating, modal guards, normal/forced table leave, venue transfer, extraction, abandonment and demo reset through world UI","source_sha256":hashes,"world_source_sha256":world_hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_coverage_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
 	FileAccess.open("res://../output/3d/world-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("WORLD_COVERAGE covered=",hits.size()," total=",expected.size()," failed=",failures.size())
 	quit(0 if failures.is_empty() and missing.is_empty() else 1)
