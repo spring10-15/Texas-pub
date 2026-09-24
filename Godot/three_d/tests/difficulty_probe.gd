@@ -4,6 +4,7 @@ const Opponent = preload("res://three_d/rules/opponent.gd")
 const SEEDS := [1, 17, 43, 79, 101, 137, 173, 211, 257, 307, 359, 419]
 var failures: Array[String] = []
 var results := []
+var repeated_raise_contexts := []
 
 func play(content: Dictionary, scene: String, site: String, seed_value: int, policy: String) -> void:
 	var run := Run.new(content)
@@ -32,14 +33,25 @@ func play(content: Dictionary, scene: String, site: String, seed_value: int, pol
 			var legal: Dictionary = table.legal_actions(id)
 			var action: String
 			if id != "player":
-				action = Opponent.choose(table.state, actor, legal, content.opponents[id], table.rng.next())
+				var random_value: float = table.rng.next()
+				action = Opponent.choose(table.state, actor, legal, content.opponents[id], random_value)
+				if policy == "pressure-raiser" and table.state.playerPattern.raiseCount >= 2:
+					var others: int = table.state.players.filter(func(p): return p.id != id and not p.folded).size()
+					var odds: float = Opponent.estimate_odds(actor.holeCards, table.state.community, others, table.state.seed + table.state.handNumber * 137 + table.state.turnCounter * 19 + actor.seatIndex * 11)
+					var choices := {}
+					for profile_id in content.opponents:
+						choices[profile_id] = Opponent.choose_with_odds(table.state, actor, legal, content.opponents[profile_id], random_value, odds)
+					if choices[id] != action: failures.append("counterfactual " + scene + "/" + site + "/" + str(seed_value))
+					repeated_raise_contexts.append({"venue":scene,"table":site,"seed":seed_value,"actor":id,"street":table.state.street,"hand":table.state.handNumber,"playerRaises":table.state.playerPattern.raiseCount,"odds":snappedf(odds,0.01),"bet":table.state.currentBet,"legal":legal.duplicate(),"choices":choices})
 			else:
 				action = "check" if legal.get("check", false) else ("call" if legal.get("call", false) else "all-in")
-				if policy == "equity-guided":
+				if policy in ["equity-guided", "pressure-raiser"]:
 					var others: int = table.state.players.filter(func(p): return p.id != id and not p.folded).size()
 					var odds: float = Opponent.estimate_odds(actor.holeCards, table.state.community, others, table.state.seed + table.state.handNumber * 137 + table.state.turnCounter * 19, 35)
-					if odds < 0.27 and legal.get("fold", false) and not legal.get("check", false): action = "fold"
-					elif odds > 0.68 and legal.get("raise", false): action = "raise"
+					var fold_below: float = 0.2 if policy == "pressure-raiser" else 0.27
+					var raise_above: float = 0.4 if policy == "pressure-raiser" else 0.68
+					if odds < fold_below and legal.get("fold", false) and not legal.get("check", false): action = "fold"
+					elif odds > raise_above and legal.get("raise", false): action = "raise"
 				actions[action] += 1
 			if not table.act(id, action, table.revision):
 				failures.append("action " + scene + "/" + site + "/" + str(seed_value) + "/" + policy)
@@ -61,7 +73,9 @@ func _initialize() -> void:
 			for seed_value in SEEDS:
 				for policy in ["passive", "equity-guided"]:
 					play(content, scene, site, seed_value, policy)
-	var report := {"seeds":SEEDS,"results":results,"failures":failures,"scope":"Twelve fixed seeds per venue/table and two deterministic player policies against production AI. Independent table-entry fixtures; not human skill, whole-evening survival, or win-rate balance evidence."}
+				if seed_value in SEEDS.slice(0, 4):
+					play(content, scene, site, seed_value, "pressure-raiser")
+	var report := {"seeds":SEEDS,"results":results,"repeatedRaiseContexts":repeated_raise_contexts,"failures":failures,"scope":"Twelve fixed seeds per venue/table for passive and equity-guided players, plus the first four seeds for a raise-heavy diagnostic player, against production AI. Repeated-raise contexts compare all eight opponent policies on identical information. Independent table-entry fixtures; not human skill, whole-evening survival, or win-rate balance evidence."}
 	FileAccess.open("res://../output/3d/difficulty-probe.json", FileAccess.WRITE).store_string(JSON.stringify(report, "  "))
 	print("DIFFICULTY_PROBE results=", results.size(), " failed=", failures.size(), " failures=", failures)
-	quit(0 if failures.is_empty() and results.size() == 384 else 1)
+	quit(0 if failures.is_empty() and results.size() == 448 else 1)
