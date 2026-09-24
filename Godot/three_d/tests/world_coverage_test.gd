@@ -21,10 +21,19 @@ func run() -> void:
 	var anchor: Area3D = lamp.anchor
 	var original: Dictionary = world.checkpoint_state()
 	verify("raycast_unfocused", not world.request_action(anchor) and world.checkpoint_state()==original)
+	var focus_events: Array = []
+	world.player.focus_changed.connect(func(hit): focus_events.append(hit))
+	world.player.position = Vector3(1.6, 0.02, -1.1)
+	world.player.camera.look_at(anchor.global_position)
+	for i in range(3): await physics_frame
+	world.player.update_focus()
+	verify("focus_acquired", world.player.focused==anchor and not focus_events.is_empty() and focus_events.back()==anchor and world.hint_label.text.contains(anchor.title))
 	var target: Vector3 = anchor.global_position
 	world.player.global_position = Vector3(target.x, 0.02, target.z + 3.0)
 	world.player.camera.look_at(target)
 	for i in range(3): await physics_frame
+	world.player.update_focus()
+	verify("focus_cleared", world.player.focused==null and not focus_events.is_empty() and focus_events.back()==null and world.hint_label.text.is_empty())
 	var far: Dictionary = world.checkpoint_state()
 	verify("raycast_out_of_reach", world.player.camera.global_position.distance_to(target)>world.player.REACH and world.player.focused!=anchor and not world.request_action(anchor) and world.checkpoint_state()==far)
 	world.player.position = Vector3(1.6, 0.02, -1.1)
@@ -48,6 +57,8 @@ func run() -> void:
 	await create_timer(0.5).timeout
 	verify("prop_visual", is_equal_approx(float(lamp.node.light_energy),0.0) and world.props.states.lamp)
 	world.pause_game()
+	for i in range(2): await physics_frame
+	verify("focus_controls_disabled", not world.player.controls_enabled and world.player.focused==null and not focus_events.is_empty() and focus_events.back()==null and world.hint_label.text.is_empty())
 	var paused: Dictionary = world.checkpoint_state()
 	verify("pause_guard", not world.request_action(anchor) and world.checkpoint_state()==paused)
 	world.open_services()

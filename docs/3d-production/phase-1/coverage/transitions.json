@@ -1540,6 +1540,24 @@
       "outcome": "rejected"
     },
     {
+      "id": "world.focus_acquired",
+      "source": "Godot/three_d/scripts/player.gd",
+      "entry": "update_focus",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.focus_cleared",
+      "source": "Godot/three_d/scripts/player.gd",
+      "entry": "update_focus",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.focus_controls_disabled",
+      "source": "Godot/three_d/scripts/player.gd",
+      "entry": "update_focus",
+      "outcome": "accepted"
+    },
+    {
       "id": "world.prop_on",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "request_action",
