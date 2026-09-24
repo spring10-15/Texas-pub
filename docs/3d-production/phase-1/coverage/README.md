@@ -2,6 +2,8 @@
 
 > 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 377，当前登记证据为 377/377；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
 
+2026-09-25 世界暂停/恢复分支复核：`world_coverage_test.gd` 和 A4 审计逐项覆盖 `world.pause`、`world.pause_repeated`、`world.pause_guard`、`world.resume`、`world.resume_repeated`、`world.toggle_pause_services`、`world.toggle_pause_run_panel`、`world.toggle_pause_resume`、`world.toggle_pause_pregame_leave` 与 `world.leave_paused_rejected`。这些结果均有正式后继状态断言和当前证据，因此从 `pending_families.world` 移除 `pause`、`resume`，待审组从 8 减至 6；登记数仍为 377。完整回归 59/59、目录证据 377/377、覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-054208/report.json`。全局状态转移分母仍未封板。
+
 2026-09-25 快照捕获字段完整性：`persistence_capture_coverage_test.gd` 现在独立核对 Run 全部显式存档字段及嵌套牌桌快照、Table 的 `state/revision/rngValue`、World 的八个字段与实际值；原有三类深拷贝隔离也继续验证。新增 `persistence_capture.run_fields_complete`、`persistence_capture.table_fields_complete`、`persistence_capture.world_fields_complete`，捕获子图 6/6，因此从 `pending_families.persistence` 移除 `capture`。完整回归 59/59，目录证据 372/372，覆盖汇总器单测 3/3。该结果证明当前序列化入口字段完整及快照隔离，不证明 restore 的全部合法/非法状态或全局覆盖率。报告：`output/3d/regression/20260925-050408/report.json`。
 
 2026-09-25 存档封套拒绝分支：`save_store_test.gd` 新增 `persistence_io.read_invalid_envelope`，逐一写入非字典封套、缺失版本、非整数版本、缺失 payload 和错误摘要；每种输入都要求返回 `invalid` 且原文件字节不变。I/O 子图 11/11；全量回归 59/59，目录证据 373/373，覆盖汇总器单测 3/3。`pending_families.persistence.read` 已收窄为 `read_unreadable`，当前执行环境无法可靠模拟文件存在但操作系统拒绝读取的分支；其余存档分支仍待审，整体覆盖率保持 unavailable。报告：`output/3d/regression/20260925-051031/report.json`。

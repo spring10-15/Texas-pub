@@ -2272,8 +2272,6 @@
       "room_entry",
       "seat",
       "leave_seat",
-      "pause",
-      "resume",
       "physical_raycast",
       "prop_interactions",
       "modal_guards"
