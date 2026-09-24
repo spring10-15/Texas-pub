@@ -1,0 +1,11 @@
+CMD: /Applications/Godot.app/Contents/MacOS/Godot --headless --path Godot --script /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot/three_d/tests/two_tables.gd -- --test
+DURATION: 1.42s
+EXIT: 0
+ERROR_LINES: 0
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TWO_TABLES {"checks":27,"failed":0,"failures":[]}
+
+--- STDERR ---
+

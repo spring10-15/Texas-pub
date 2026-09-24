@@ -1,0 +1,49 @@
+CMD: /Applications/Godot.app/Contents/MacOS/Godot --headless --path Godot --script /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A2-boundaries/repro/diag_first_discount.gd -- --test
+DURATION: 0.14s
+EXIT: 0
+ERROR_LINES: 0
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+=== A2-3 首次加注优惠诊断 (L-2) ===
+cargo-table 参数：buyIn=60.0 smallBlind=10.0 openBet=20.0 raiseIncrement=20.0 hands=2.0 discount=10
+优惠语义：实付 = 目标下注额 - 当前已投 - 10；但 state.currentBet 记录**不减 10 的目标值**。
+
+--- 用例 1：玩家首次进攻（翻前）使用优惠 ---
+  座位0(玩家) 首行动=player  下注前：stack=300 pot=30 其他跟注=30 全桌=900
+  加注后：stack=270 实付=30 currentBet=40 pot=60 其他跟注=30 全桌=900 优惠标记=false
+
+--- 用例 2：同一手第二次进攻（跨街：翻前→翻牌） ---
+  进入街道=flop handNumber=1 优惠标记=false 首行动者=dock-braggart
+  dock-braggart 在翻牌下注前：stack=260 其他跟注=0 全桌=900
+  翻牌加注后：stack=240 实付=20 currentBet=20 pot=130 全桌=900
+
+--- 用例 3：下一手是否复位 ---
+  第二手：庄家=1 首行动=dock-braggart 优惠标记=true stack=260
+  第二手首次进攻实付=30（若享优惠应为 30，全额为 40）currentBet=40
+
+--- 用例 4：对手作为首次进攻者使用优惠 ---
+  玩家跟注后首行动者=dock-braggart (座位1) 优惠标记=true
+  dock-braggart 加注后：stack=270 已投(盲注)=10 实付=20 currentBet=40 pot=70 全桌=900
+
+--- 用例 5：加注可负担性边界（含优惠） ---
+  stack=29 → 可加注=false (规则要求 stack > 30) 可跟注=true 可全下=true
+       改为跟注：实付=20（跟注不享优惠）currentBet=20
+  stack=30 → 可加注=false (规则要求 stack > 30) 可跟注=true 可全下=true
+       改为跟注：实付=20（跟注不享优惠）currentBet=20
+  stack=31 → 可加注=true (规则要求 stack > 30) 可跟注=true 可全下=true
+       实付=30 剩余=1 currentBet=40
+  stack=32 → 可加注=true (规则要求 stack > 30) 可跟注=true 可全下=true
+       实付=30 剩余=2 currentBet=40
+
+--- 用例 6：对照组 ledger-cellar（无首攻优惠） ---
+  firstAggressionDiscountAvailable=false openBet=30.0
+  实付=60 currentBet=60（当前下注额 30.0 + 加注步长 30.0 = 60，无优惠）
+
+DIAG_FIRST_DISCOUNT checks=52 failures=0
+SEMANTIC_QUESTIONS（交主 Agent 决定，不在本诊断内定论）:
+  - 优惠让实付(30)与 currentBet(40) 相差 10：这 10 应理解为「折扣」还是「下注额的虚拟抬升」？底池按实付记账，因此 pot 小于名义下注额×人数。需主 Agent 确认设计意图。
+  - 玩家 stack 刚好等于跟注额时，跟注后 stack=0：下一手会被判 folded（table.gd:27-28）。这属于「打光」的正常语义，还是应判 all-in 并保留在桌？属语义确认项。
+
+--- STDERR ---
+

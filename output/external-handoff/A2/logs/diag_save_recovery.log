@@ -1,0 +1,87 @@
+CMD: /Applications/Godot.app/Contents/MacOS/Godot --headless --path Godot --script /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A2-boundaries/repro/diag_save_recovery.gd -- --test
+DURATION: 0.65s
+EXIT: 0
+ERROR_LINES: 3
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+=== A2-4 存档恢复边界诊断 (L-3) ===
+专用文件：user://a2-boundary-probe.save（玩家真实存档未被读写）
+
+--- 组1：RunCheckpoint.restore() 纯规则校验 ---
+  非法存档 cash=-1                   → 拒绝（符合预期）
+  非法存档 vault=-1                  → 拒绝（符合预期）
+  非法存档 heat=7                    → 拒绝（符合预期）
+  非法存档 heat=-1                   → 拒绝（符合预期）
+  非法存档 bankroll=-1               → 拒绝（符合预期）
+  非法存档 revision=-1               → 拒绝（符合预期）
+  非法存档 search_index=0            → 拒绝（符合预期）
+  非法存档 action_points=-1          → 拒绝（符合预期）
+  非法存档 action_points=上限+1        → 拒绝（符合预期）
+  非法存档 known_rules=未知桌           → 拒绝（符合预期）
+  非法存档 used_tools=未知道具           → 拒绝（符合预期）
+  非法存档 inventory=未知道具            → 拒绝（符合预期）
+  非法存档 scene_id=未知酒馆             → 拒绝（符合预期）
+  非法存档 offer_index=越界            → 拒绝（符合预期）
+  非法存档 completed=重复项             → 拒绝（符合预期）
+  缺 cash 字段                      → 拒绝（符合预期）
+  cash 类型不符                      → 拒绝（符合预期）
+  背包超容量（7 件 / 上限 6.0 格）          → 拒绝（符合预期）
+
+--- 组2：SaveStore 文件层（专用文件）---
+  写入成功 → user://a2-boundary-probe.save
+  正常文件读回 status=ok
+  (a) 改 payload 不改 digest → status=invalid
+  (b) 改 payload 并重算 digest → status=ok（证明摘要只防意外损坏，不防有意改档）
+  (c) version=0 → status=invalid
+  (d) 截断到 1312/2624 字节 → status=invalid
+  (e) payload 缺 run 字段 → read status=ok
+      再走 RunCheckpoint.restore → 拒绝
+
+--- 组4：RNG 恢复是否确定性延续 ---
+  恢复后牌堆与未中断一致 = true
+
+--- 组3：world.restore_checkpoint() 姿态与房间一致性 ---
+  基线：room=tavern seated=false active=true
+  基线恢复（自身 capture → restore 往返）→ 接受
+  NaN 姿态 → 接受；恢复后玩家坐标=(nan, nan, nan) 有限=false
+  FINDING 预期拒绝但被接受 → NaN 姿态（world.gd:900 只校验 is Transform3D）
+  坐标 (9999,0,9999) 越界 → 接受；恢复后坐标=(9999.0, 0.0, 9999.0)
+  FINDING 预期拒绝但被接受 → 越界坐标 (9999,0,9999)
+  room=nowhere                   → 拒绝（符合预期）
+  props 非 Dictionary（经 :912 抛错，而非守卫 :900 拦截） → 拒绝（符合预期）
+  半恢复探针：返回=拒绝  |  房间 tavern→tavern  |  现金 300→400
+
+清理：A2 专用文件已删除
+
+DIAG_SAVE_RECOVERY checks=35 failures=0 findings=5
+FINDINGS（预期拒绝但被接受 → 校验缺口）:
+  * 预期拒绝但被接受：NaN 姿态（world.gd:900 只校验 is Transform3D）
+  * L-3 线索2 复现：NaN 姿态被接受并写入玩家关节，坐标变为非有限值 (nan, nan, nan)
+  * 预期拒绝但被接受：越界坐标 (9999,0,9999)
+  * L-3 线索2 复现：越界坐标 (9999.0, 0.0, 9999.0) 被接受（无房间包围盒校验）
+  * 半恢复确认：world.gd:911 先执行 run_game = restored，:912 才因 props 类型不符抛 SCRIPT ERROR。函数返回失败，但 run_game **已被替换**（现金 300→400；房间未变 tavern）→ 拒绝不彻底、无回滚，世界停在半恢复状态。
+SEMANTIC_QUESTIONS（交主 Agent 决定）:
+  - run_checkpoint.gd 对 preview / full_intel / opponent_notes / last_result 等只做类型检查，不对内容做语义校验；这类字段被篡改不会导致拒绝。是否属可接受范围请主 Agent 确认。
+  - world.gd:900 只校验 player 是 Transform3D，不校验坐标有限性与房间边界；restore_checkpoint 直接把 state.player 写进玩家关节（:917）。是否补 is_finite() 与房间包围盒校验，请主 Agent 决定。
+
+--- STDERR ---
+ERROR: Condition "(uint32_t)buff.size() != len" is true. Returning: Variant()
+   at: get_var (core/io/file_access.cpp:366)
+   GDScript backtrace (most recent call first):
+       [0] read_checkpoint (res://three_d/rules/save_store.gd:29)
+       [1] group_file_layer (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A2-boundaries/repro/diag_save_recovery.gd:184)
+       [2] run (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A2-boundaries/repro/diag_save_recovery.gd:61)
+SCRIPT ERROR: Invalid type in function 'restore' in base 'RefCounted (scene_props.gd)'. Cannot convert argument 1 from String to Dictionary.
+          at: restore_checkpoint (res://three_d/scripts/world.gd:912)
+          GDScript backtrace (most recent call first):
+              [0] restore_checkpoint (res://three_d/scripts/world.gd:912)
+              [1] group_world_layer (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A2-boundaries/repro/diag_save_recovery.gd:253)
+              [2] settle (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A2-boundaries/repro/diag_save_recovery.gd:54)
+SCRIPT ERROR: Invalid type in function 'restore' in base 'RefCounted (scene_props.gd)'. Cannot convert argument 1 from String to Dictionary.
+          at: restore_checkpoint (res://three_d/scripts/world.gd:912)
+          GDScript backtrace (most recent call first):
+              [0] restore_checkpoint (res://three_d/scripts/world.gd:912)
+              [1] group_world_layer (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A2-boundaries/repro/diag_save_recovery.gd:263)
+              [2] settle (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A2-boundaries/repro/diag_save_recovery.gd:54)
+

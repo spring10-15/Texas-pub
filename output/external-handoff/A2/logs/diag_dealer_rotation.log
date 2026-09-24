@@ -1,0 +1,44 @@
+CMD: /Applications/Godot.app/Contents/MacOS/Godot --headless --path Godot --script /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A2-boundaries/repro/diag_dealer_rotation.gd -- --test
+DURATION: 0.14s
+EXIT: 0
+ERROR_LINES: 0
+--- STDOUT ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+=== A2-2 庄位轮换诊断 (L-1) ===
+规则来源：table.gd:24-46 start_hand / :184-189 next_hand / :40-51 盲注与首行动者 / :31 players[0] 特判
+
+--- fixture=deep busted_seat=1  (基数财富=2400) ---
+  hand=1  dealer=0 small=0 big=2 firstPreflop=player  postflop_first=ledger-clerk
+  hand=2  dealer=2 small=2 big=0 firstPreflop=ledger-clerk  postflop_first=player
+  hand=3  dealer=0 small=0 big=2 firstPreflop=player  postflop_first=ledger-clerk
+  hand=4  dealer=2 small=2 big=0 firstPreflop=ledger-clerk  postflop_first=player
+
+--- fixture=deep busted_seat=2  (基数财富=2400) ---
+  hand=1  dealer=0 small=0 big=1 firstPreflop=player  postflop_first=dock-braggart
+  hand=2  dealer=1 small=1 big=0 firstPreflop=dock-braggart  postflop_first=player
+  hand=3  dealer=0 small=0 big=1 firstPreflop=player  postflop_first=dock-braggart
+  hand=4  dealer=1 small=1 big=0 firstPreflop=dock-braggart  postflop_first=player
+
+--- fixture=deep busted_seat=0  (基数财富=2400) ---
+  规则守卫命中：status=finished 期望=finished（table.gd:31 对 players[0] 的特判）
+
+--- fixture=shallow busted_seat=1  (基数财富=240) ---
+  hand=1  dealer=0 small=0 big=2 firstPreflop=player  postflop_first=ledger-clerk
+  hand=2  dealer=2 small=2 big=0 firstPreflop=ledger-clerk  postflop_first=player
+  hand=3  dealer=0 small=0 big=2 firstPreflop=player  postflop_first=ledger-clerk
+  hand=4  dealer=2 small=2 big=0 firstPreflop=ledger-clerk  postflop_first=player
+
+--- fixture=shallow busted_seat=2  (基数财富=240) ---
+  hand=1  dealer=0 small=0 big=1 firstPreflop=player  postflop_first=dock-braggart
+  hand=2  dealer=1 small=1 big=0 firstPreflop=dock-braggart  postflop_first=player
+  hand=3  dealer=0 small=0 big=1 firstPreflop=player  postflop_first=dock-braggart
+  hand=4  dealer=1 small=1 big=0 firstPreflop=dock-braggart  postflop_first=player
+
+--- fixture=shallow busted_seat=0  (基数财富=240) ---
+  规则守卫命中：status=finished 期望=finished（table.gd:31 对 players[0] 的特判）
+
+DIAG_DEALER_ROTATION checks=168 failures=0 记录手数=16
+
+--- STDERR ---
+
