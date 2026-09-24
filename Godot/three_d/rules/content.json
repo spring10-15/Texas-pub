@@ -174,7 +174,7 @@
         "finalHandSpike": 0.12,
         "patternPunish": 0.18,
         "valueRaiseShift": 0.03,
-        "repeatRaiseCounter": 0.08
+        "repeatRaiseCounter": 0.16
       }
     },
     "smiling-knife": {
