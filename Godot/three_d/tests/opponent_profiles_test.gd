@@ -54,6 +54,8 @@ func _initialize() -> void:
 	var value_legal := {"allIn":true,"raise":true,"call":true,"check":false,"fold":true}
 	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["house-viper"],.5,.65)=="raise", "Viper applies measured value pressure")
 	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["river-shark"],.5,.65)=="call", "River shark waits for stronger value")
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["river-shark"],.5,.70)=="raise", "River shark presses once its value read is strong")
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["ledger-clerk"],.5,.70)=="call", "Ledger clerk calls without applying river shark's value raise")
 	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["smiling-knife"],.5,.65)=="call", "Knife coasts before final hand")
 	value_table.handNumber = 3
 	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["smiling-knife"],.5,.65)=="raise", "Knife presses on final hand")

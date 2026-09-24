@@ -204,7 +204,7 @@
         "bluff": 0.09,
         "finalHandSpike": 0.06,
         "patternPunish": 0.05,
-        "valueRaiseShift": 0.09
+        "valueRaiseShift": 0.0
       }
     },
     "velvet-rook": {
