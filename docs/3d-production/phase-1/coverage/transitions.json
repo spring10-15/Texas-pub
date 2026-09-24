@@ -2280,12 +2280,7 @@
   ],
   "pending_families": {
     "poker": [],
-    "world": [
-      "leave_seat",
-      "physical_raycast",
-      "prop_interactions",
-      "modal_guards"
-    ],
+    "world": [],
     "persistence": [
       "write",
       "read_unreadable",
