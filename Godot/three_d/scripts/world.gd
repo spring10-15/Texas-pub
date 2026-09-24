@@ -992,6 +992,8 @@ func restore_checkpoint(state: Dictionary) -> bool:
 		return false
 	if not state.player.is_finite() or not state.look.is_finite() or not state["return"].is_finite():
 		return false
+	if absf(state.look.x) > PlayerController.LOOK_PITCH_LIMIT:
+		return false
 	if not checkpoint_position_valid(state.player.origin, state.room):
 		return false
 	if state.seated and not checkpoint_position_valid(state["return"].origin, state.room):

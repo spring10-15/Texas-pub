@@ -6,6 +6,7 @@ signal pause_requested
 const MOVE_SPEED := 2.5
 const REACH := 2.0
 const LOOK_SENSITIVITY := 0.002
+const LOOK_PITCH_LIMIT := 1.25
 var camera: Camera3D
 var ray: RayCast3D
 var controls_enabled := true
@@ -43,7 +44,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * LOOK_SENSITIVITY)
-		camera.rotation.x = clampf(camera.rotation.x - event.relative.y * LOOK_SENSITIVITY, -1.25, 1.25)
+		camera.rotation.x = clampf(camera.rotation.x - event.relative.y * LOOK_SENSITIVITY, -LOOK_PITCH_LIMIT, LOOK_PITCH_LIMIT)
 	if event.is_action_pressed("interact") and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		update_focus()
 		if is_instance_valid(focused):

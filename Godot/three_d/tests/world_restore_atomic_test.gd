@@ -2,6 +2,7 @@ extends SceneTree
 const Store = preload("res://three_d/rules/save_store.gd")
 const Run = preload("res://three_d/rules/run.gd")
 const RunCheckpoint = preload("res://three_d/rules/run_checkpoint.gd")
+const PlayerController = preload("res://three_d/scripts/player.gd")
 var failures: Array[String] = []
 var checks := 0
 var hits := {}
@@ -22,7 +23,7 @@ func run_tests() -> void:
 	world.travel("tavern")
 	var baseline: Dictionary = world.checkpoint_state()
 	var invalid_groups := {"invalid_props":true,"invalid_transform":true,"outside_room":true,"active_in_stash":true,"locked_room":true}
-	for key in ["props_type","prop_value","player_nan","look_inf","return_nan","basis_nan","player_remote","wrong_room","return_remote","active_in_stash","locked_room"]:
+	for key in ["props_type","prop_value","player_nan","look_inf","look_remote","return_nan","basis_nan","player_remote","wrong_room","return_remote","active_in_stash","locked_room"]:
 		var bad: Dictionary = baseline.duplicate(true)
 		bad.run.cash += 100
 		match key:
@@ -30,6 +31,7 @@ func run_tests() -> void:
 			"prop_value": bad.props = {"lamp":"yes"}
 			"player_nan": bad.player.origin.x = NAN
 			"look_inf": bad.look.x = INF
+			"look_remote": bad.look.x = PlayerController.LOOK_PITCH_LIMIT + 0.1
 			"return_nan": bad["return"].origin.z = NAN
 			"basis_nan": bad.player.basis.x.x = NAN
 			"player_remote": bad.player.origin.x = 1e9
@@ -51,6 +53,11 @@ func run_tests() -> void:
 		invalid_groups[group] = invalid_groups[group] and not accepted and unchanged
 		world.restore_checkpoint(baseline)
 	for group in invalid_groups: record(group, invalid_groups[group])
+	for pitch in [-PlayerController.LOOK_PITCH_LIMIT, PlayerController.LOOK_PITCH_LIMIT]:
+		var pitch_boundary: Dictionary = baseline.duplicate(true)
+		pitch_boundary.look.x = pitch
+		verify(world.restore_checkpoint(pitch_boundary) and is_equal_approx(world.player.camera.rotation.x, pitch),"Camera pitch control boundary restores: "+str(pitch))
+	world.restore_checkpoint(baseline)
 	var seated_snapshot: Dictionary = baseline.duplicate(true)
 	seated_snapshot.seated = true
 	seated_snapshot["return"] = seated_snapshot.player

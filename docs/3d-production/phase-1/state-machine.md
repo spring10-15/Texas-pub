@@ -77,3 +77,9 @@ A2 关于“刚好跟注打光是否出局”的疑问：本手 stack=0 且未�
 牌桌恢复必须同时满足 `sum(player.handContribution) == pot`、`max(player.currentBet) == currentBet` 且每名玩家的当前街下注不超过本手累计投入。仅检查 `sum(stack) + pot == 3 × buyIn` 不足以证明底池分配可信：如果投入记录与底池脱节，摊牌可能按错误份额分配。
 
 `TableCheckpoint.restore()` 现执行这些交叉字段校验。`table_checkpoint_test.gd` 以合法开局存档分别增加/减少一名玩家累计投入、篡改当前下注目标、制造当前下注超过累计投入的状态，并验证都被拒绝；两桌、20 个种子的 660 个合法恢复续局边界仍一致。此证据不替代所有行动顺序与边池派彩组合的守恒测试。
+
+## 2026-09-25：恢复视角匹配可达控制范围
+
+玩家控制器将相机俯仰限制在 `[-1.25, 1.25]` 弧度；World 检查点恢复现在共用同一个 `PlayerController.LOOK_PITCH_LIMIT`，拒绝有限但超出控制范围的 `look.x`。World 恢复测试验证超界快照被拒绝且完整世界状态不变，并验证两个合法端点均能恢复。该检查只约束俯仰，不证明存档位置避开了每个动态碰撞体。
+
+定向世界恢复套件 63 项检查通过；完整回归 59/59，目录证据 377/377，覆盖汇总器 3/3。报告：`output/3d/regression/20260925-053539/report.json`。这只复用既有 `persistence_restore.invalid_transform` 语义，不扩充全局分母。
