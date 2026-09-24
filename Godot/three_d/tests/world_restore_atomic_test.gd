@@ -19,8 +19,8 @@ func run_tests() -> void:
 	world.run_game.start(world.run_game.revision)
 	world.travel("tavern")
 	var baseline: Dictionary = world.checkpoint_state()
-	var invalid_groups := {"invalid_props":true,"invalid_transform":true,"outside_room":true}
-	for key in ["props_type","prop_value","player_nan","look_inf","return_nan","basis_nan","player_remote","wrong_room","return_remote"]:
+	var invalid_groups := {"invalid_props":true,"invalid_transform":true,"outside_room":true,"active_in_stash":true,"locked_room":true}
+	for key in ["props_type","prop_value","player_nan","look_inf","return_nan","basis_nan","player_remote","wrong_room","return_remote","active_in_stash","locked_room"]:
 		var bad: Dictionary = baseline.duplicate(true)
 		bad.run.cash += 100
 		match key:
@@ -35,11 +35,17 @@ func run_tests() -> void:
 			"return_remote":
 				bad.seated = true
 				bad["return"].origin.z = -1e9
+			"active_in_stash":
+				bad.room = "stash"
+				bad.player.origin = Vector3(1.95, 0.05, 1.7)
+			"locked_room":
+				bad.room = "ledger"
+				bad.player.origin = Vector3(world.ROOMS.ledger.x - 2.0, 0.05, 1.7)
 		var accepted: bool = world.restore_checkpoint(bad)
 		var unchanged: bool = world.checkpoint_state() == baseline
 		verify(not accepted,"Invalid world snapshot rejected "+key)
 		verify(unchanged,"Failed restore leaves entire world unchanged "+key)
-		var group: String = "invalid_props" if key.begins_with("props") else ("outside_room" if key in ["player_remote","wrong_room","return_remote"] else "invalid_transform")
+		var group: String = key if key in ["active_in_stash","locked_room"] else ("invalid_props" if key.begins_with("props") else ("outside_room" if key in ["player_remote","wrong_room","return_remote"] else "invalid_transform"))
 		invalid_groups[group] = invalid_groups[group] and not accepted and unchanged
 		world.restore_checkpoint(baseline)
 	for group in invalid_groups: record(group, invalid_groups[group])
@@ -73,6 +79,18 @@ func run_tests() -> void:
 	legacy_restored = legacy_restored and DirAccess.remove_absolute(ProjectSettings.globalize_path(legacy_path)) == OK
 	world.saving_enabled = false
 	record("legacy_props", legacy_restored)
+	var corrupt_path := "user://corrupt-world-test-%d.save" % OS.get_process_id()
+	var corrupt_file := FileAccess.open(corrupt_path, FileAccess.WRITE)
+	corrupt_file.store_string("invalid checkpoint")
+	corrupt_file.close()
+	var corrupt_bytes: PackedByteArray = FileAccess.get_file_as_bytes(corrupt_path)
+	var before_corrupt: Dictionary = world.checkpoint_state()
+	world.save_path = corrupt_path
+	world.saving_enabled = true
+	world.load_checkpoint()
+	var corrupt_preserved: bool = world.checkpoint_state() == before_corrupt and not world.saving_enabled and not world.paused and FileAccess.get_file_as_bytes(corrupt_path) == corrupt_bytes and world.save_notice.text.contains("已保留原文件")
+	corrupt_preserved = corrupt_preserved and DirAccess.remove_absolute(ProjectSettings.globalize_path(corrupt_path)) == OK
+	record("corrupt_load_preserved", corrupt_preserved)
 	var seated_save: Dictionary = baseline.duplicate(true)
 	seated_save.seated = true
 	seated_save["return"] = seated_save.player

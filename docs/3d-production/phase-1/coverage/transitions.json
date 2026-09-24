@@ -1942,6 +1942,18 @@
       "outcome": "rejected"
     },
     {
+      "id": "persistence_restore.active_in_stash",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "rejected"
+    },
+    {
+      "id": "persistence_restore.locked_room",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_restore.valid",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "restore_checkpoint",
@@ -1952,6 +1964,12 @@
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "restore_checkpoint",
       "outcome": "accepted"
+    },
+    {
+      "id": "persistence_restore.corrupt_load_preserved",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "load_checkpoint",
+      "outcome": "rejected"
     },
     {
       "id": "persistence_restore.seated",
