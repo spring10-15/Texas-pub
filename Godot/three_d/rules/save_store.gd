@@ -17,8 +17,12 @@ static func write_checkpoint(path: String, state: Dictionary) -> Error:
 		return result
 	# Verify the complete temporary file before replacing the last usable checkpoint.
 	if read_checkpoint(temporary).get("status") != "ok":
+		DirAccess.remove_absolute(temporary)
 		return ERR_FILE_CORRUPT
-	return DirAccess.rename_absolute(temporary, path)
+	var rename_error := DirAccess.rename_absolute(temporary, path)
+	if rename_error != OK:
+		DirAccess.remove_absolute(temporary)
+	return rename_error
 
 static func read_checkpoint(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):

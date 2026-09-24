@@ -1996,6 +1996,18 @@
       "outcome": "accepted"
     },
     {
+      "id": "persistence_io.write_open_rejected",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "write_checkpoint",
+      "outcome": "rejected"
+    },
+    {
+      "id": "persistence_io.write_rename_rejected",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "write_checkpoint",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_io.read_corrupt",
       "source": "Godot/three_d/rules/save_store.gd",
       "entry": "read_checkpoint",
