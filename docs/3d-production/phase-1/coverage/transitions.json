@@ -1750,6 +1750,30 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.room_light_on",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.room_light_off",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.room_cupboard_open",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.room_cupboard_close",
+      "source": "Godot/three_d/scripts/scene_props.gd",
+      "entry": "interact",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_io.read_missing",
       "source": "Godot/three_d/rules/save_store.gd",
       "entry": "read_checkpoint",

@@ -67,6 +67,15 @@ func run() -> void:
 	verify("prop_lamp_reverse", lamp_reversed and not world.props.states.lamp and is_equal_approx(float(lamp.node.light_energy),1.7) and RunCheckpoint.capture(world.run_game)==lamp_before_reverse)
 	for prop_id in ["drawer0", "window", "card", "chip"]:
 		await use_stash_prop(world, prop_id)
+	var room_prop_results := {"light_on":true, "light_off":true, "cupboard_open":true, "cupboard_close":true}
+	for room_name in ["tavern", "ledger", "mirror", "embers"]:
+		world.travel(room_name)
+		for i in range(3): await physics_frame
+		var prefix: String = {"tavern":"Tavern", "ledger":"LedgerCellar", "mirror":"MirrorHall", "embers":"EmbersRoom"}[room_name]
+		await use_room_prop(world, prefix + "light", "light_on", "light_off", room_prop_results)
+		await use_room_prop(world, prefix + "cupboard", "cupboard_open", "cupboard_close", room_prop_results)
+	for outcome in room_prop_results:
+		verify("room_" + outcome, room_prop_results[outcome])
 	world.travel("tavern")
 	world.player.position = Vector3(9.55, 0.02, 1.15)
 	world.player.camera.look_at(world.table_target.global_position)
@@ -197,3 +206,34 @@ func use_stash_prop(world: Node3D, prop_id: String) -> void:
 	var closed: Variant = entry.closed
 	visual_ok = actual.is_equal_approx(closed) if actual is Vector3 else is_equal_approx(float(actual), float(closed))
 	verify("prop_" + prop_id + "_reverse", reversed and not world.props.states[prop_id] and visual_ok and RunCheckpoint.capture(world.run_game)==before)
+
+func aim_room_anchor(world: Node3D, anchor: Area3D) -> bool:
+	var target: Vector3 = anchor.global_position
+	for radius in [0.55, 0.8, 1.1, 1.45]:
+		for step in range(16):
+			var angle: float = TAU * step / 16.0
+			var position := Vector3(target.x + cos(angle) * radius, 0.02, target.z + sin(angle) * radius)
+			world.player.global_position = position
+			world.player.velocity = Vector3.ZERO
+			for i in range(2): await physics_frame
+			world.player.global_position = position
+			world.player.camera.look_at(target)
+			for i in range(2): await physics_frame
+			world.player.update_focus()
+			if world.player.focused == anchor: return true
+	return false
+
+func use_room_prop(world: Node3D, id: String, opened_key: String, closed_key: String, results: Dictionary) -> void:
+	var entry: Dictionary = world.props.entries[id]
+	var anchor: Area3D = entry.anchor
+	var before: Dictionary = RunCheckpoint.capture(world.run_game)
+	var aimed: bool = await aim_room_anchor(world, anchor)
+	var opened: bool = aimed and world.request_action(anchor)
+	await create_timer(0.5).timeout
+	var actual: Variant = entry.node.get_indexed(NodePath(entry.property))
+	results[opened_key] = results[opened_key] and opened and world.props.states[id] and is_equal_approx(float(actual), float(entry.opened)) and RunCheckpoint.capture(world.run_game)==before
+	aimed = await aim_room_anchor(world, anchor)
+	var closed: bool = aimed and world.request_action(anchor)
+	await create_timer(0.5).timeout
+	actual = entry.node.get_indexed(NodePath(entry.property))
+	results[closed_key] = results[closed_key] and closed and not world.props.states[id] and is_equal_approx(float(actual), float(entry.closed)) and RunCheckpoint.capture(world.run_game)==before
