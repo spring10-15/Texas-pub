@@ -23,18 +23,24 @@ static func restore(snapshot: Dictionary) -> RefCounted:
 	var expected_ids: Array = ["player"] + definition.opponentIds
 	var seen := {}
 	var chips := 0
+	var contributions := 0
+	var highest_current_bet := 0
 	for i in range(3):
 		var player: Variant = state.players[i]
 		if not player is Dictionary or player.get("id") != expected_ids[i] or player.get("seatIndex") != i or not player.get("stack") is int or player.stack < 0:
 			return null
 		if not player.get("currentBet") is int or player.currentBet < 0 or not player.get("handContribution") is int or player.handContribution < 0 or not player.get("folded") is bool or not player.get("holeCards") is Array:
 			return null
+		if player.currentBet > player.handContribution:
+			return null
 		chips += player.stack
+		contributions += player.handContribution
+		highest_current_bet = maxi(highest_current_bet, player.currentBet)
 		for card in player.holeCards:
 			if not valid_card(card,seen): return null
 	for card in state.community + state.deck:
 		if not valid_card(card,seen): return null
-	if seen.size() != 52 or chips + (state.pot if state.status == "playing" else 0) != definition.buyIn * 3:
+	if seen.size() != 52 or contributions != state.pot or highest_current_bet != state.currentBet or chips + (state.pot if state.status == "playing" else 0) != definition.buyIn * 3:
 		return null
 	for id in state.toAct:
 		if id not in expected_ids: return null

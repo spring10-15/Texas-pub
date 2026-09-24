@@ -2242,6 +2242,18 @@
       "outcome": "accepted"
     },
     {
+      "id": "persistence_table.contribution_total_consistent",
+      "source": "Godot/three_d/rules/table_checkpoint.gd",
+      "entry": "restore",
+      "outcome": "rejected"
+    },
+    {
+      "id": "persistence_table.current_bet_consistent",
+      "source": "Godot/three_d/rules/table_checkpoint.gd",
+      "entry": "restore",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_replay.world_rng_resume",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "load_checkpoint",

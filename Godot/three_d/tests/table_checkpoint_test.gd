@@ -5,6 +5,8 @@ const Store = preload("res://three_d/rules/save_store.gd")
 var checks := 0
 var failures: Array[String] = []
 var invalid_cases := 0
+var contribution_mismatch_cases := 0
+var current_bet_mismatch_cases := 0
 var replay_cases := 0
 var replay_ok := true
 func verify(ok: bool, message: String) -> void:
@@ -55,7 +57,7 @@ func _initialize() -> void:
 		var rejected: bool = Checkpoint.restore(broken) == null and Checkpoint.capture(sample) == good
 		verify(rejected,"Reject invalid metadata: "+label)
 		invalid_cases += 1 if rejected else 0
-	for label in ["duplicate_card","missing_card","extra_chips","bad_actor","bad_bet","bad_status","bad_player","bad_definition"]:
+	for label in ["duplicate_card","missing_card","extra_chips","bad_actor","bad_bet","bad_status","bad_player","bad_definition","contribution_over_pot","contribution_under_pot","current_bet_mismatch","current_bet_over_contribution"]:
 		var broken := good.duplicate(true)
 		match label:
 			"duplicate_card": broken.state.deck[0] = broken.state.players[0].holeCards[0]
@@ -66,9 +68,17 @@ func _initialize() -> void:
 			"bad_status": broken.state.status = "done"
 			"bad_player": broken.state.players[1] = "invalid"
 			"bad_definition": broken.state.tableDef.buyIn = 0
+			"contribution_over_pot": broken.state.players[1].handContribution += 1
+			"contribution_under_pot": broken.state.players[2].handContribution -= 1
+			"current_bet_mismatch": broken.state.currentBet -= 1
+			"current_bet_over_contribution": broken.state.players[1].currentBet += 1
 		var rejected: bool = Checkpoint.restore(broken) == null and Checkpoint.capture(sample) == good
 		verify(rejected,"Reject malformed table state: "+label)
 		invalid_cases += 1 if rejected else 0
+		if label in ["contribution_over_pot", "contribution_under_pot"]:
+			contribution_mismatch_cases += 1 if rejected else 0
+		if label in ["current_bet_mismatch", "current_bet_over_contribution"]:
+			current_bet_mismatch_cases += 1 if rejected else 0
 	var malformed_rejected: bool = Checkpoint.restore({}) == null
 	verify(malformed_rejected, "Malformed snapshot rejected")
 	invalid_cases += 1 if malformed_rejected else 0
@@ -77,8 +87,12 @@ func _initialize() -> void:
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("persistence_table.")).map(func(row): return row.id)
 	var hits := {}
-	if invalid_cases == 11 and failures.is_empty():
+	if invalid_cases == 15 and failures.is_empty():
 		hits["persistence_table.invalid_snapshot_rejected"] = {"test":"table_checkpoint_test.gd","postcondition_verified":true}
+	if contribution_mismatch_cases == 2 and failures.is_empty():
+		hits["persistence_table.contribution_total_consistent"] = {"test":"table_checkpoint_test.gd","postcondition_verified":true}
+	if current_bet_mismatch_cases == 2 and failures.is_empty():
+		hits["persistence_table.current_bet_consistent"] = {"test":"table_checkpoint_test.gd","postcondition_verified":true}
 	if replay_ok and replay_cases > 0 and failures.is_empty():
 		hits["persistence_table.rng_replay"] = {"test":"table_checkpoint_test.gd","postcondition_verified":true,"action_boundaries":replay_cases}
 	var missing: Array = expected.filter(func(id): return not hits.has(id))
