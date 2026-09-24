@@ -11,7 +11,14 @@
 
 已完成完整出局与库存快照、玩家位置恢复和主场景自动保存；读取失败时保留原文件并暂停覆盖，界面显示原因。系统强杀、磁盘写满和跨平台存档尚未验收。
 
-运行：在项目根目录执行 Godot 的 --headless --path Godot --script 参数，分别指定 res://three_d/tests/save_store_test.gd 和 res://three_d/tests/table_checkpoint_test.gd。
+运行：在项目根目录执行以下两条命令：
+
+```sh
+Godot --headless --path Godot --script res://three_d/tests/save_store_test.gd -- --test
+Godot --headless --path Godot --script res://three_d/tests/table_checkpoint_test.gd -- --test
+```
+
+这两项是纯规则/文件测试，`-- --test` 对它们并非必需；统一写出参数便于复制命令。凡实例化 `main.tscn` 的世界交互测试则必须带 `-- --test`，避免读取或覆盖正式存档。
 
 ## 2026-09-22：拒绝世界存档时保持原状态
 
