@@ -187,6 +187,25 @@ func run() -> void:
 	world.confirm_run_action()
 	verify("reset_confirm", reset_offered and world.run_game.vault == int(world.table_content.startingVault) and not world.run_game.active and world.current_room == "stash" and world.run_panel.visible and world.run_action == "enter")
 	world.close_run_panel()
+	var services_run_started: bool = world.run_game.start(world.run_game.revision, "smoky-den", 7)
+	world.travel("tavern")
+	world.open_services("bar")
+	var intel_before: Dictionary = RunCheckpoint.capture(world.run_game)
+	world.service_action("intel", "cargo-table", world.run_game.revision)
+	verify("services_intel", services_run_started and world.services_panel.visible and world.run_game.known_rules == ["cargo-table"] and world.run_game.action_points == intel_before.action_points - 1 and world.run_game.revision == intel_before.revision + 1 and world.run_game.cash == intel_before.cash and world.run_game.service_view("bar").revision == world.run_game.revision)
+	world.close_services()
+	var product_id := ""
+	for stocked_id in world.run_game.shop_stock():
+		if world.run_game.service_reason("buy", stocked_id).is_empty():
+			product_id = stocked_id
+			break
+	if not product_id.is_empty():
+		world.open_services("product", product_id)
+		var buy_before: Dictionary = RunCheckpoint.capture(world.run_game)
+		world.service_action("buy", product_id, world.run_game.revision)
+		verify("services_buy", not world.services_panel.visible and world.player.controls_enabled and product_id in world.run_game.inventory and world.run_game.cash == buy_before.cash - int(world.table_content.items[product_id].buy) and world.run_game.action_points == buy_before.action_points - 1 and world.run_game.revision == buy_before.revision + 1 and world.hint_label.text.contains(world.run_game.item_name(product_id)))
+	else:
+		verify("services_buy", false)
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("world.")).map(func(row): return row.id)

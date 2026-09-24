@@ -1792,6 +1792,18 @@
       "outcome": "rejected"
     },
     {
+      "id": "world.services_intel",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.services_buy",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_io.read_missing",
       "source": "Godot/three_d/rules/save_store.gd",
       "entry": "read_checkpoint",
