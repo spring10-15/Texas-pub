@@ -44,7 +44,7 @@ func run_tests() -> void:
 	hud.refresh(configured.public_state())
 	var configured_target: int = int(configured.state.currentBet) + int(adjusted.raiseIncrement)
 	var configured_due: int = configured_target - int(configured.state.players[0].currentBet) - 5
-	verify(hud.raise_preview.text.contains("实付 %d" % configured_due), "Preview reads configured discount")
+	verify(hud.raise_preview.text.contains("实付 %d" % configured_due) and hud.raise_preview.text.contains("少付 5"), "Preview amount and reminder read configured discount")
 	var configured_stack: int = configured.state.players[0].stack
 	verify(configured.act("player", "raise", configured.revision, configured_target), "Configured raise accepted")
 	verify(configured_stack - int(configured.state.players[0].stack) == configured_due and not configured.state.firstAggressionDiscountAvailable, "Configured discount charged once")

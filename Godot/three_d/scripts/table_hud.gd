@@ -231,4 +231,4 @@ func update_raise_preview() -> void:
 	if cost >= int(raise_context.stack):
 		raise_preview.text = "转为全押 · 实付 %d · 下注到 %d" % [raise_context.stack,int(raise_context.paid)+int(raise_context.stack)]
 	else:
-		raise_preview.text = "加注到 %d · 实付 %d%s" % [target,cost," · 本手首次进攻少付 10" if raise_context.discount > 0 else ""]
+		raise_preview.text = "加注到 %d · 实付 %d%s" % [target,cost," · 本手首次进攻少付 %d" % int(raise_context.discount) if raise_context.discount > 0 else ""]
