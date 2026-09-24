@@ -1,0 +1,134 @@
+# a4-world-probe.log
+# cmd: /Applications/Godot.app/Contents/MacOS/Godot --path /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot --headless --script /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A4-world-audit/repro/a4_world_probe.gd -- --test
+# started: 2026-09-23 23:11:06
+# elapsed_s: 25.7
+# exit_code: 0
+
+--- stdout+stderr ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+A4NOTE world ready; saving_enabled=false; save_path isolated
+A4CASE raycast_unfocused PASS focused!=anchor=true r=false snapshot_unchanged=true
+A4CASE raycast_out_of_reach PASS dist=3.01(REACH=2.0) focused!=anchor=true r=false snapshot_unchanged=true
+A4CASE raycast_occluded_solid PASS focused!=anchor=true r=false snapshot_unchanged=true
+A4ISO guard_paused_isolated: 把 controls_enabled 置真，使 paused 成为唯一决定因素
+A4CASE guard_paused_isolated PASS aim=true r=false snapshot_unchanged=true
+A4ISO guard_run_panel_isolated: 把 controls_enabled 置真，使 run_panel.visible 成为唯一决定因素
+A4CASE guard_run_panel_isolated PASS aim=true r=false snapshot_unchanged=true
+A4CASE guard_services_natural PASS services_visible=true controls=false r=false snapshot_unchanged=true
+A4CASE prop_lamp_forward PASS r=true states=true dist=0.81
+A4CASE prop_lamp_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_lamp_visual_open PASS actual=0.0 want_opened=0.0
+A4CASE prop_lamp_reverse PASS r=true states=false actual=1.70000004768372 want_closed=1.7
+A4CASE prop_lamp_run_untouched PASS run 未变=true
+A4CASE prop_drawer0_forward PASS r=true states=true dist=1.30
+A4CASE prop_drawer0_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_drawer0_visual_open PASS actual=(-2.47, 0.42, -1.53) want_opened=(-2.47, 0.42, -1.53)
+A4CASE prop_drawer0_reverse PASS r=true states=false actual=(-2.47, 0.42, -1.93) want_closed=(-2.47, 0.42, -1.93)
+A4CASE prop_drawer0_run_untouched PASS run 未变=true
+A4CASE prop_drawer1_forward PASS r=true states=true dist=0.95
+A4CASE prop_drawer1_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_drawer1_visual_open PASS actual=(-2.47, 0.82, -1.53) want_opened=(-2.47, 0.82, -1.53)
+A4CASE prop_drawer1_reverse PASS r=true states=false actual=(-2.47, 0.82, -1.93) want_closed=(-2.47, 0.82, -1.93)
+A4CASE prop_drawer1_run_untouched PASS run 未变=true
+A4CASE prop_drawer2_forward PASS r=true states=true dist=0.68
+A4CASE prop_drawer2_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_drawer2_visual_open PASS actual=(-2.47, 1.22, -1.53) want_opened=(-2.47, 1.22, -1.53)
+A4CASE prop_drawer2_reverse PASS r=true states=false actual=(-2.47, 1.22, -1.93) want_closed=(-2.47, 1.22, -1.93)
+A4CASE prop_drawer2_run_untouched PASS run 未变=true
+A4CASE prop_window_forward PASS r=true states=true dist=0.64
+A4CASE prop_window_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_window_visual_open PASS actual=-0.94999998807907 want_opened=-0.95
+A4CASE prop_window_reverse PASS r=true states=false actual=0.0 want_closed=0.0
+A4CASE prop_window_run_untouched PASS run 未变=true
+A4CASE prop_card_forward PASS r=true states=true dist=0.95
+A4CASE prop_card_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_card_visual_open PASS actual=3.14159274101257 want_opened=3.14159265358979
+A4CASE prop_card_reverse PASS r=true states=false actual=0.0 want_closed=0.0
+A4CASE prop_card_run_untouched PASS run 未变=true
+A4CASE prop_chip_forward PASS r=true states=true dist=0.93
+A4CASE prop_chip_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_chip_visual_open PASS actual=4.71238899230957 want_opened=4.71238898038469
+A4CASE prop_chip_reverse PASS r=true states=false actual=0.0 want_closed=0.0
+A4CASE prop_chip_run_untouched PASS run 未变=true
+A4CASE cross_prop_busy PASS lamp=true window_aim=true action_busy=true window_press=false snapshot_unchanged=true
+A4CASE toggle_case_lid_present PASS stash.glb 内 CaseLidPivot 存在
+A4CASE toggle_case_close PASS r=true case_open true->false title=打开皮箱
+A4CASE toggle_case_open PASS r=true case_open=true title=合上皮箱
+A4CASE prop_Tavernlight_forward PASS r=true states=true dist=0.59
+A4CASE prop_Tavernlight_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_Tavernlight_visual_open PASS actual=0.0 want_opened=0.0
+A4CASE prop_Tavernlight_reverse PASS r=true states=false actual=0.80000001192093 want_closed=0.8
+A4CASE prop_Tavernlight_run_untouched PASS run 未变=true
+A4CASE prop_Taverncupboard_forward PASS r=true states=true dist=1.01
+A4CASE prop_Taverncupboard_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_Taverncupboard_visual_open PASS actual=-1.20000004768372 want_opened=-1.2
+A4CASE prop_Taverncupboard_reverse PASS r=true states=false actual=0.0 want_closed=0.0
+A4CASE prop_Taverncupboard_run_untouched PASS run 未变=true
+A4CASE prop_LedgerCellarlight_forward PASS r=true states=true dist=0.59
+A4CASE prop_LedgerCellarlight_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_LedgerCellarlight_visual_open PASS actual=0.0 want_opened=0.0
+A4CASE prop_LedgerCellarlight_reverse PASS r=true states=false actual=0.80000001192093 want_closed=0.8
+A4CASE prop_LedgerCellarlight_run_untouched PASS run 未变=true
+A4CASE prop_LedgerCellarcupboard_forward PASS r=true states=true dist=1.01
+A4CASE prop_LedgerCellarcupboard_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_LedgerCellarcupboard_visual_open PASS actual=-1.20000004768372 want_opened=-1.2
+A4CASE prop_LedgerCellarcupboard_reverse PASS r=true states=false actual=0.0 want_closed=0.0
+A4CASE prop_LedgerCellarcupboard_run_untouched PASS run 未变=true
+A4CASE prop_MirrorHalllight_forward PASS r=true states=true dist=0.59
+A4CASE prop_MirrorHalllight_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_MirrorHalllight_visual_open PASS actual=0.0 want_opened=0.0
+A4CASE prop_MirrorHalllight_reverse PASS r=true states=false actual=0.80000001192093 want_closed=0.8
+A4CASE prop_MirrorHalllight_run_untouched PASS run 未变=true
+A4CASE prop_MirrorHallcupboard_forward PASS r=true states=true dist=1.01
+A4CASE prop_MirrorHallcupboard_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_MirrorHallcupboard_visual_open PASS actual=-1.20000004768372 want_opened=-1.2
+A4CASE prop_MirrorHallcupboard_reverse PASS r=true states=false actual=0.0 want_closed=0.0
+A4CASE prop_MirrorHallcupboard_run_untouched PASS run 未变=true
+A4CASE prop_EmbersRoomlight_forward PASS r=true states=true dist=0.59
+A4CASE prop_EmbersRoomlight_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_EmbersRoomlight_visual_open PASS actual=0.0 want_opened=0.0
+A4CASE prop_EmbersRoomlight_reverse PASS r=true states=false actual=0.80000001192093 want_closed=0.8
+A4CASE prop_EmbersRoomlight_run_untouched PASS run 未变=true
+A4CASE prop_EmbersRoomcupboard_forward PASS r=true states=true dist=1.01
+A4CASE prop_EmbersRoomcupboard_busy PASS action_busy=true second=false snapshot_unchanged=true
+A4CASE prop_EmbersRoomcupboard_visual_open PASS actual=-1.20000004768372 want_opened=-1.2
+A4CASE prop_EmbersRoomcupboard_reverse PASS r=true states=false actual=0.0 want_closed=0.0
+A4CASE prop_EmbersRoomcupboard_run_untouched PASS run 未变=true
+A4CASE seat_blocked_no_run PASS r=false seated=false hint=先从藏匿点进入酒馆 snapshot_unchanged=true
+A4CASE enter_panel_open PASS r=true panel=true action=enter
+A4CASE confirm_enter PASS room=tavern active=true vault 1200->900 cash=300 panel=false
+A4CASE room_door_blocked PASS r=false room=tavern hint=先完成货运桌并离座 snapshot_unchanged=true
+A4CASE travel_all_destinations PASS tavern->tavern ledger->ledger mirror->mirror embers->embers stash->stash
+A4NOTE travel() 只核对 current_room；title/落点等后继见注释，未逐项断言
+A4ISO room_door_unlock: 显式注入 completed=[cargo-table] 以到达解锁分支（非玩家逐步累加）
+A4CASE room_door_unlock PASS r=true room=ledger
+A4ISO room_door_unlock 结束：erase completed=[cargo-table] 以复原状态
+A4CASE open_services_blocked_paused PASS paused=true services_visible=false
+A4CASE open_services_blocked_run_panel PASS run_panel=true services_visible=false
+A4CASE service_action_panel_hidden_noop PASS snapshot_unchanged=true
+A4CASE service_action_not_offered_noop PASS panel=true snapshot_unchanged=true
+A4CASE service_action_paused_noop PASS paused=true panel=true snapshot_unchanged=true
+A4CASE service_action_route_preview PASS services=false run_panel=true confirm_disabled=true
+A4CASE close_services_restores PASS open: panel=true controls=false | close: panel=false controls=true
+A4CASE seat PASS r=true seated=true seat_panel=true controls=false seat_cam=true
+A4CASE guard_seated_natural PASS r=false seated=true controls=false snapshot_unchanged=true
+A4CASE pause_seated PASS paused=true seat_panel=false pause_panel=true button=继续牌局
+A4CASE resume_seated PASS paused=false seat_panel=true pause_panel=false seated=true controls=false
+A4CASE services_while_seated PASS open: services=true seat_hidden=true | close: services=false seat_restored=true
+A4CASE leave_paused_rejected PASS seated=true paused=true snapshot_unchanged=true
+A4CASE leave_pregame PASS seated=false table=<null> controls=true cam=true back_to_return=true
+A4CASE leave_active_rejected PASS seated=true same_table=true cash 240->240
+A4CASE leave_finished PASS seated=false cash 240+100=340 completed=["cargo-table"]
+A4CASE leave_unseated PASS snapshot_unchanged=true seated=false
+A4ISO forced_pressure: 显式换上一个全新 Run 作为前置条件（cargo-table 已在上一阶段完成）
+A4ISO forced_pressure: 显式注入 heat=6 与 ivory-chip 以到达风声封锁分支（非玩家逐步累加）
+A4CASE leave_pregame_pressure_forced PASS seated=false active=false room=stash forced=true vault=1190
+A4CASE confirm_panel_hidden_noop PASS active false->false panel=false
+A4CASE confirm_paused_noop PASS panel=true paused=true revision_unchanged=true
+A4CASE confirm_disabled_unknown_route PASS confirm_disabled=true panel=true revision_unchanged=true
+A4CASE confirm_disabled_preview PASS confirm_disabled=true text=到实际入口按 E 撤离 revision_unchanged=true
+A4ISO confirm_disabled_exit_unknown: 换上一个未发现出口的全新 run（构造前置条件）
+A4CASE confirm_disabled_exit_unknown PASS confirm_disabled=true revision_unchanged=true active=true
+A4CASE no_save_file_written PASS 临时 save_path 未生成=true
+A4PROBE_DONE cases=115 fails=0

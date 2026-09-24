@@ -1,0 +1,97 @@
+# probe-world.log
+# cmd: /Applications/Godot.app/Contents/MacOS/Godot --path /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot --headless --script /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A4-world-audit/repro/probe_world_transitions.gd -- --test
+# started: 2026-09-23 18:00:26
+# elapsed_s: 33.4
+# exit_code: 1
+
+--- stdout+stderr ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+A4NOTE world instantiated, set_process(false); saving_enabled=false
+A4CASE raycast_not_aimed PASS r=false focused!=anchor=true snapshot_unchanged=true
+A4CASE raycast_too_far PASS dist=2.86(REACH=2.0) r=false focused!=anchor=true snapshot_unchanged=true
+A4CASE guard_paused PASS paused=false r=false snapshot_unchanged=true
+A4CASE guard_services_modal PASS services_visible=false r=false snapshot_unchanged=true
+A4CASE guard_run_panel PASS run_panel_visible=false r=false snapshot_unchanged=true
+A4CASE prop_lamp_forward PASS r=true states=true actual=0.0 want_opened=0.0
+A4CASE prop_lamp_reverse PASS r=true states=false actual=1.70000004768372 want_closed=1.7
+A4CASE prop_lamp_run_untouched PASS run_capture_before==after=true
+A4CASE prop_drawer0_forward PASS r=true states=true actual=(-2.47, 0.42, -1.53) want_opened=(-2.47, 0.42, -1.53)
+A4CASE prop_drawer0_reverse FAIL r=false states=true actual=(-2.47, 0.42, -1.53) want_closed=(-2.47, 0.42, -1.93)
+A4CASE prop_drawer0_run_untouched PASS run_capture_before==after=true
+A4CASE prop_drawer1_forward PASS r=true states=true actual=(-2.47, 0.82, -1.53) want_opened=(-2.47, 0.82, -1.53)
+A4CASE prop_drawer1_reverse FAIL r=false states=true actual=(-2.47, 0.82, -1.53) want_closed=(-2.47, 0.82, -1.93)
+A4CASE prop_drawer1_run_untouched PASS run_capture_before==after=true
+A4CASE prop_drawer2_forward PASS r=true states=true actual=(-2.47, 1.22, -1.53) want_opened=(-2.47, 1.22, -1.53)
+A4CASE prop_drawer2_reverse FAIL r=false states=true actual=(-2.47, 1.22, -1.53) want_closed=(-2.47, 1.22, -1.93)
+A4CASE prop_drawer2_run_untouched PASS run_capture_before==after=true
+A4CASE prop_window_forward PASS r=true states=true actual=-0.94999998807907 want_opened=-0.95
+A4CASE prop_window_reverse FAIL r=false states=true actual=-0.94999998807907 want_closed=0.0
+A4CASE prop_window_run_untouched PASS run_capture_before==after=true
+A4CASE prop_card_forward PASS r=true states=true actual=3.14159274101257 want_opened=3.14159265358979
+A4CASE prop_card_reverse PASS r=true states=false actual=0.0 want_closed=0.0
+A4CASE prop_card_run_untouched PASS run_capture_before==after=true
+A4CASE prop_chip_forward PASS r=true states=true actual=4.71238899230957 want_opened=4.71238898038469
+A4CASE prop_chip_reverse PASS r=true states=false actual=0.0 want_closed=0.0
+A4CASE prop_chip_run_untouched PASS run_capture_before==after=true
+A4CASE busy_guard PASS first=true action_busy=true second=false snapshot_unchanged=true
+A4CASE toggle_case_lid_present PASS CaseLidPivot found in stash.glb
+A4CASE toggle_case_close PASS r=true case_open true -> false title=打开皮箱
+A4CASE toggle_case_open PASS r=true case_open=true title=合上皮箱
+A4CASE seat_blocked_inactive PASS r=false seated=false hint=先从藏匿点进入酒馆 snapshot_unchanged=true
+A4CASE enter_panel_open PASS r=true run_panel=true run_action=enter
+A4CASE confirm_enter PASS room=tavern active=true vault 1200->900 cash=300 panel=false
+A4CASE room_door_blocked PASS r=false room=tavern hint=先完成货运桌并离座 snapshot_unchanged=true
+A4CASE discover_exit PASS r=true public_exit=true revision=2
+A4CASE discover_exit_repeat_noop PASS r=true revision 2 -> 2 (重复触发仍返回 true，但运行状态不变)
+A4CASE services_open_blocked_paused PASS paused 时 open_services 是否被拒绝（services_visible=false）
+A4CASE services_open_blocked_run_panel PASS run_panel 可见时 open_services 是否被拒绝（services_visible=false）
+A4CASE services_search_open PASS r=true visible=true mode=search
+SCRIPT ERROR: Trying to assign value of type 'Nil' to a variable of type 'bool'.
+          at: services_search_apply (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A4-world-audit/repro/probe_world_transitions.gd:317)
+          GDScript backtrace (most recent call first):
+              [0] services_search_apply (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A4-world-audit/repro/probe_world_transitions.gd:317)
+              [1] aim (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A4-world-audit/repro/probe_world_transitions.gd:71)
+              [2] settle (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A4-world-audit/repro/probe_world_transitions.gd:42)
+SCRIPT ERROR: Trying to assign value of type 'Nil' to a variable of type 'bool'.
+          at: services_bag_reject_and_preview (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A4-world-audit/repro/probe_world_transitions.gd:361)
+          GDScript backtrace (most recent call first):
+              [0] services_bag_reject_and_preview (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A4-world-audit/repro/probe_world_transitions.gd:361)
+              [1] settle (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A4-world-audit/repro/probe_world_transitions.gd:42)
+A4CASE prop_Tavernlight_aim FAIL no landing offset reached anchor (input not found)
+A4CASE prop_Taverncupboard_aim FAIL no landing offset reached anchor (input not found)
+A4CASE prop_LedgerCellarlight_aim FAIL no landing offset reached anchor (input not found)
+A4CASE prop_LedgerCellarcupboard_aim FAIL no landing offset reached anchor (input not found)
+A4CASE prop_MirrorHalllight_aim FAIL no landing offset reached anchor (input not found)
+A4CASE prop_MirrorHallcupboard_aim FAIL no landing offset reached anchor (input not found)
+A4CASE prop_EmbersRoomlight_aim FAIL no landing offset reached anchor (input not found)
+A4CASE prop_EmbersRoomcupboard_aim FAIL no landing offset reached anchor (input not found)
+A4CASE travel_all_destinations PASS tavern->tavern ledger->ledger mirror->mirror embers->embers stash->stash
+A4CASE seat_aim FAIL no landing offset reached table_target
+A4CASE leave_heat6_aim FAIL no landing offset reached table_target
+A4CASE active_door_aim FAIL no landing offset reached door_target
+A4CASE post_table_heat_is_one FAIL heat=0 table=<null> completed=[]
+A4CASE services_bar_open_aim FAIL no landing offset reached bar anchor
+A4CASE confirm_panel_hidden PASS active true -> true panel=false
+A4CASE confirm_paused PASS panel_visible=true revision_unchanged=true paused=false
+A4CASE confirm_disabled_unprepared_route PASS confirm_disabled=true panel_visible=true revision_unchanged=true
+A4CASE confirm_disabled_preview PASS confirm_disabled=true text=到实际入口按 E 撤离 revision_unchanged=true
+A4CASE confirm_disabled_exit_unknown PASS confirm_disabled=true revision_unchanged=true active=true
+A4PROBE_DONE cases=58 fails=17
+A4FAIL prop_drawer0_reverse :: r=false states=true actual=(-2.47, 0.42, -1.53) want_closed=(-2.47, 0.42, -1.93)
+A4FAIL prop_drawer1_reverse :: r=false states=true actual=(-2.47, 0.82, -1.53) want_closed=(-2.47, 0.82, -1.93)
+A4FAIL prop_drawer2_reverse :: r=false states=true actual=(-2.47, 1.22, -1.53) want_closed=(-2.47, 1.22, -1.93)
+A4FAIL prop_window_reverse :: r=false states=true actual=-0.94999998807907 want_closed=0.0
+A4FAIL prop_Tavernlight_aim :: no landing offset reached anchor (input not found)
+A4FAIL prop_Taverncupboard_aim :: no landing offset reached anchor (input not found)
+A4FAIL prop_LedgerCellarlight_aim :: no landing offset reached anchor (input not found)
+A4FAIL prop_LedgerCellarcupboard_aim :: no landing offset reached anchor (input not found)
+A4FAIL prop_MirrorHalllight_aim :: no landing offset reached anchor (input not found)
+A4FAIL prop_MirrorHallcupboard_aim :: no landing offset reached anchor (input not found)
+A4FAIL prop_EmbersRoomlight_aim :: no landing offset reached anchor (input not found)
+A4FAIL prop_EmbersRoomcupboard_aim :: no landing offset reached anchor (input not found)
+A4FAIL seat_aim :: no landing offset reached table_target
+A4FAIL leave_heat6_aim :: no landing offset reached table_target
+A4FAIL active_door_aim :: no landing offset reached door_target
+A4FAIL post_table_heat_is_one :: heat=0 table=<null> completed=[]
+A4FAIL services_bar_open_aim :: no landing offset reached bar anchor
