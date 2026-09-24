@@ -2050,6 +2050,12 @@
       "outcome": "rejected"
     },
     {
+      "id": "persistence_io.read_invalid_envelope",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "read_checkpoint",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_capture.run_snapshot_isolated",
       "source": "Godot/three_d/rules/run_checkpoint.gd",
       "entry": "capture",
@@ -2250,7 +2256,7 @@
     ],
     "persistence": [
       "write",
-      "read",
+      "read_unreadable",
       "restore",
       "invalid_data",
       "legacy_migration",

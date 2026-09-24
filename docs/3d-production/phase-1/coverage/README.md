@@ -1,8 +1,10 @@
 # 状态转移覆盖：目录与执行证据
 
-> 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 372，当前登记证据为 372/372；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
+> 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 373，当前登记证据为 373/373；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
 
 2026-09-25 快照捕获字段完整性：`persistence_capture_coverage_test.gd` 现在独立核对 Run 全部显式存档字段及嵌套牌桌快照、Table 的 `state/revision/rngValue`、World 的八个字段与实际值；原有三类深拷贝隔离也继续验证。新增 `persistence_capture.run_fields_complete`、`persistence_capture.table_fields_complete`、`persistence_capture.world_fields_complete`，捕获子图 6/6，因此从 `pending_families.persistence` 移除 `capture`。完整回归 59/59，目录证据 372/372，覆盖汇总器单测 3/3。该结果证明当前序列化入口字段完整及快照隔离，不证明 restore 的全部合法/非法状态或全局覆盖率。报告：`output/3d/regression/20260925-050408/report.json`。
+
+2026-09-25 存档封套拒绝分支：`save_store_test.gd` 新增 `persistence_io.read_invalid_envelope`，逐一写入非字典封套、缺失版本、非整数版本、缺失 payload 和错误摘要；每种输入都要求返回 `invalid` 且原文件字节不变。I/O 子图 11/11；全量回归 59/59，目录证据 373/373，覆盖汇总器单测 3/3。`pending_families.persistence.read` 已收窄为 `read_unreadable`，当前执行环境无法可靠模拟文件存在但操作系统拒绝读取的分支；其余存档分支仍待审，整体覆盖率保持 unavailable。报告：`output/3d/regression/20260925-051031/report.json`。
 
 2026-09-25 存档审计新增七项结果：`persistence_table.rng_replay` 在两桌、10 种子下验证 660 个恢复后动作边界一致；`persistence_run.legacy_variant_plan_restored` 用版本 2/3 内存旧计划验证历史对手阵容与线性房间图；`persistence_restore.save_repaired_from_memory` 验证有效内存状态可修复缺失/损坏的磁盘检查点；`persistence_restore.missing_checkpoint_recovered` 验证首次启动遇到缺档后可重新启用存盘且首次保存写出完整状态；`persistence_restore.playtest_save_blocked` 验证固定种子试玩模式不读写正式存档；`persistence_restore.active_table_not_seated` 与 `persistence_restore.table_id_mismatch` 验证两类矛盾快照被拒绝且不改变完整世界状态。恢复专项 59 项检查通过，恢复子图 18/18；RNG 重放、旧计划、修复专项分别通过 2,031、82、55 项。完整回归 59/59，覆盖汇总 `verified=365 catalogued=365`，汇总器单测 3/3 通过。旧计划使用内存样本，不代表验证过历史磁盘旧档。`pending_families` 仍包含世界交互与存档各阶段，整体覆盖率继续为 unavailable，不能据此宣称 Phase 1 通过。报告：`output/3d/regression/20260925-034925/report.json`。
 

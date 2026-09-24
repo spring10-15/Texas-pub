@@ -46,6 +46,21 @@ func _initialize() -> void:
 	var non_dictionary_bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
 	var non_dictionary_result: Dictionary = Store.read_checkpoint(path)
 	record("read_non_dictionary", non_dictionary_result.status == "invalid" and FileAccess.get_file_as_bytes(path) == non_dictionary_bytes)
+	var malformed_envelopes: Array = [
+		["not", "an envelope"],
+		{"digest": future_payload.hex_encode().sha256_text(), "payload": future_payload},
+		{"version": "1", "digest": future_payload.hex_encode().sha256_text(), "payload": future_payload},
+		{"version": Store.VERSION, "digest": future_payload.hex_encode().sha256_text()},
+		{"version": Store.VERSION, "digest": "bad-digest", "payload": future_payload}
+	]
+	var malformed_envelopes_preserved := true
+	for malformed_envelope in malformed_envelopes:
+		file = FileAccess.open(path, FileAccess.WRITE)
+		file.store_var(malformed_envelope, false)
+		file.close()
+		var malformed_bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
+		malformed_envelopes_preserved = malformed_envelopes_preserved and Store.read_checkpoint(path).status == "invalid" and FileAccess.get_file_as_bytes(path) == malformed_bytes
+	record("read_invalid_envelope", malformed_envelopes_preserved)
 	file = FileAccess.open(path, FileAccess.WRITE)
 	file.store_buffer(PackedByteArray([1, 2, 3]))
 	file.close()
