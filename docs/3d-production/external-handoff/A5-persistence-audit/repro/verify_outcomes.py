@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A5 收尾自检：按内容锚点重推 source_line，并核对 evidence_path 存在、CSV 可解析、35 条目录 ID 均有映射。
+"""A5 收尾自检：按内容锚点重推 source_line，并核对 evidence_path 存在、CSV 可解析、36 条目录 ID 均有映射。
 
 用法（仓库根）：
     python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_outcomes.py
@@ -32,6 +32,7 @@ CATALOG_IDS = [
     "persistence_replay.rng_negative_control",
     "persistence_restore.missing_checkpoint_recovered", "persistence_restore.playtest_save_blocked",
     "persistence_restore.active_table_not_seated", "persistence_restore.table_id_mismatch",
+    "persistence_capture.world_snapshot_isolated",
 ]
 
 problems = []

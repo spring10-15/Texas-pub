@@ -1,6 +1,6 @@
 # A5：存档、恢复与 RNG 重放状态转移取证
 
-> **当前源码与目录校订（2026-09-25，基线 `a1411a7`）**：近期 `world.gd` 在存档函数前增加试玩轨迹记录，导致本文件 19 条 `source_line` 偏移 3 行；已按原内容锚点刷新，行为未因此变化。A5 强后继证据现映射 35 个目录 ID，包括运行/牌桌 capture 隔离、原子写入失败、畸形快照拒绝、损坏/未来版本保留、锁定房间拒绝、缺字段恢复、表内 RNG 重放、版本 2/3 计划回填、缺档与损坏档恢复、试玩模式禁用存档，以及活动桌未入座和桌型/房间不匹配拒绝。相同语义的多个输入或负对照复用 ID，不扩大分母。版本迁移检查使用内存旧格式样本，不声称读取真实历史磁盘存档。恢复子图 18/18（59 项检查）；全量回归 59/59，目录证据 366/366。其他存档 family 仍待逐项审查，整体覆盖率不可用。
+> **当前源码与目录校订（2026-09-25，基线 `a1411a7`）**：近期 `world.gd` 在存档函数前增加试玩轨迹记录，导致本文件 19 条 `source_line` 偏移 3 行；已按原内容锚点刷新，行为未因此变化。A5 强后继证据现映射 36 个目录 ID，包括世界/运行/牌桌快照隔离、原子写入失败、畸形快照拒绝、损坏/未来版本保留、锁定房间拒绝、缺字段恢复、表内 RNG 重放、版本 2/3 计划回填、缺档与损坏档恢复、试玩模式禁用存档，以及活动桌未入座和桌型/房间不匹配拒绝。相同语义的多个输入或负对照复用 ID，不扩大分母。版本迁移检查使用内存旧格式样本，不声称读取真实历史磁盘存档。恢复子图 18/18（59 项检查）；快照 capture 子图 3/3；全量回归 59/59，目录证据 367/367。其他存档 family 仍待逐项审查，整体覆盖率不可用。
 
 日期：2026-09-24。执行范围：`Godot/three_d/rules/save_store.gd`、`run_checkpoint.gd`、`table_checkpoint.gd`，
 `Godot/three_d/scripts/world.gd` 的 `checkpoint_state` / `save_checkpoint` / `load_checkpoint` / `restore_checkpoint` 及直接依赖的恢复校验。
@@ -80,10 +80,10 @@ python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_ou
 > `evidence_status` 取值：`已登记且有后继状态证据` / `有测试但未登记` / `A5探针新增证据` / `证据不足（仅核对返回值）` / `unverified`。
 > 现有 15 条 `persistence_io.*` / `persistence_restore.*` 在 `outcomes.csv` 中**各出现且仅出现一次**（`existing_catalog_id` 列，去重映射）。
 
-### capture（目录里 0 条）
-1. `world.gd::checkpoint_state()` @944 — accepted，返回 `{run,room,player,look,seated,return,caseOpen,props}`（键名逐字核对）。`有测试但未登记`（world_restore_atomic / four_tables / services_save）。
-2. `run_checkpoint.gd::capture()` @6 — accepted，31 个 FIELDS 深拷贝 + `table` 子快照。`有测试但未登记`。
-3. `table_checkpoint.gd::capture()` @5 — accepted，`{state,revision,rngValue}`，`rngValue` 是重放关键字段。`有测试但未登记`。
+### capture（目录里 3 条）
+1. `world.gd::checkpoint_state()` @944 — accepted，返回 `{run,room,player,look,seated,return,caseOpen,props}`；`persistence_capture.world_snapshot_isolated` 直接验证 Run/props 嵌套拷贝与 live 状态隔离。
+2. `run_checkpoint.gd::capture()` @6 — accepted，31 个 FIELDS 深拷贝 + `table` 子快照；`persistence_capture.run_snapshot_isolated`。
+3. `table_checkpoint.gd::capture()` @5 — accepted，`{state,revision,rngValue}`，`rngValue` 是重放关键字段；`persistence_capture.table_snapshot_isolated`。
 
 ### write（目录里 2 条：write_new / write_replace）
 4. 首次写入 — accepted；`persistence_io.write_new`；`已登记且有后继状态证据`（save_store_test 断言文件存在；A5 探针复核读回全等且无 `.tmp`）。
@@ -197,7 +197,7 @@ python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_ou
 交付目录：`docs/3d-production/external-handoff/A5-persistence-audit/`
 
 - `README.md`：本文件。
-- `outcomes.csv`：原始审计初版 49 行；当前 50 行，七组齐全（capture 3 / write 6 / read 8 / restore 7 / invalid_data 17 / legacy_migration 6 / rng_replay 3），35 个目录 ID 全映射，1 行 `unverified`。
+- `outcomes.csv`：原始审计初版 49 行；当前 50 行，七组齐全（capture 3 / write 6 / read 8 / restore 7 / invalid_data 17 / legacy_migration 6 / rng_replay 3），36 个目录 ID 全映射，1 行 `unverified`。
 - `repro/`（仅新增诊断，均只读/隔离）：
   - `a5_save_store_probe.gd`、`a5_world_contradiction_probe.gd`、`a5_world_replay_probe.gd`、`a5_userdir_probe.gd`、`verify_outcomes.py`
 - `output/external-handoff/A5/`（原始日志，`exit_code` 与正文均核对）：
@@ -205,7 +205,7 @@ python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_ou
   - 既有测试（隔离 HOME 重跑，全部 exit=0、日志 0 条 `ERROR`/`SCRIPT ERROR`）：`existing-{save_store_test,world_restore_atomic_test,services_save_test,table_checkpoint_test,run_restore_bounds_test,reservation_restore_test,room_pool_test,opponent_pool_test,four_tables_test,playtest_seed_test,venue_transfer_test,completion_checkpoint_test,table_integration,scene_rules_test,event_pool_test}.log`
   - 隔离临时文件：`output/external-handoff/A5/tmp/`（含 `iso-home/`）
 
-收尾自检 `repro/verify_outcomes.py` 当前结果：`rows=50`、`catalog_ids_mapped=35/35`、所有 `evidence_path` 存在、`source_line` 按内容锚点命中、七组齐全、CSV 可被 `csv` 解析且列数一致。
+收尾自检 `repro/verify_outcomes.py` 当前结果：`rows=50`、`catalog_ids_mapped=36/36`、所有 `evidence_path` 存在、`source_line` 按内容锚点命中、七组齐全、CSV 可被 `csv` 解析且列数一致。
 
 > 说明：跑既有测试会按其自身设计刷新 `output/3d/*.json`（如 `persistence-io-coverage.json`、`persistence-restore-coverage.json`、`four-tables.json`、`table-integration.json` 等），这是既有测试的常规产物，非本 Agent 另行写入；覆盖目录 `docs/3d-production/phase-1/coverage/` 未被改动（hash 一致）。
 
@@ -217,4 +217,4 @@ python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_ou
 
 随后 `save_store.gd` 的写失败清理逻辑增加了 4 行，主 Agent 重跑锚点自检并更新受影响的 9 个 `source_line`。本轮又将“创建临时文件失败”与“重命名替换失败并清理 `.tmp`”登记为正式 `persistence_io.*` 回归结果。
 
-2026-09-25 当前检查补充：`world_restore_atomic_test.gd` 对“活动牌桌但 seated=false”和“活动桌与已解锁房间桌型不一致”新增正式后继断言；两种输入均拒绝且恢复前完整世界状态保持不变。A5 当前核验为 50 行、35/35 ID 映射；恢复子图 18/18（59 项检查），全回归 59/59，目录证据 366/366。报告见 `output/3d/regression/20260925-035659/report.json`。
+2026-09-25 当前检查补充：`world_restore_atomic_test.gd` 对“活动牌桌但 seated=false”和“活动桌与已解锁房间桌型不一致”新增正式后继断言；两种输入均拒绝且恢复前完整世界状态保持不变。`persistence_capture_coverage_test.gd` 新增 `persistence_capture.world_snapshot_isolated`，验证世界快照内嵌的 Run 与 props 深拷贝：改返回快照不改变 live 状态，后续 live 变更也不反向修改既有快照，并把 `world.gd` 纳入该报告的新鲜度哈希。A5 当前核验为 50 行、36/36 ID 映射；capture 子图 3/3、恢复子图 18/18（59 项检查），全回归 59/59，目录证据 367/367。报告见 `output/3d/regression/20260925-040802/report.json`。

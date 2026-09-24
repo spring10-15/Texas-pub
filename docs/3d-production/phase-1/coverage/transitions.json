@@ -2056,6 +2056,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "persistence_capture.world_snapshot_isolated",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "checkpoint_state",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_restore.invalid_props",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "restore_checkpoint",
