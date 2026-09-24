@@ -2080,6 +2080,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "persistence_restore.legacy_run_fields",
+      "source": "Godot/three_d/rules/run_checkpoint.gd",
+      "entry": "restore",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_restore.corrupt_load_preserved",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "load_checkpoint",

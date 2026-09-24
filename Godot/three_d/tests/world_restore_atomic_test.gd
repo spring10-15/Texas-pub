@@ -1,5 +1,7 @@
 extends SceneTree
 const Store = preload("res://three_d/rules/save_store.gd")
+const Run = preload("res://three_d/rules/run.gd")
+const RunCheckpoint = preload("res://three_d/rules/run_checkpoint.gd")
 var failures: Array[String] = []
 var checks := 0
 var hits := {}
@@ -79,6 +81,34 @@ func run_tests() -> void:
 	legacy_restored = legacy_restored and DirAccess.remove_absolute(ProjectSettings.globalize_path(legacy_path)) == OK
 	world.saving_enabled = false
 	record("legacy_props", legacy_restored)
+	var legacy_run_state: Dictionary = baseline.duplicate(true)
+	for field in ["route_flags", "reservation", "offer_index", "full_intel", "opponent_notes", "collateral", "last_table_result", "scene_id", "search_results", "run_seed", "variant_plan", "venue_history", "arrival_completed", "transfer_log"]:
+		legacy_run_state.run.erase(field)
+	var migrated_run: RefCounted = RunCheckpoint.restore(legacy_run_state.run, world.run_game.content)
+	var migrated_expected: Dictionary = legacy_run_state.duplicate(true)
+	if migrated_run != null:
+		migrated_expected.run = RunCheckpoint.capture(migrated_run)
+		var default_run := Run.new(world.run_game.content)
+		for field in ["route_flags", "reservation", "offer_index", "full_intel", "opponent_notes", "collateral", "last_table_result", "scene_id", "search_results", "run_seed", "variant_plan", "venue_history", "arrival_completed", "transfer_log"]:
+			var expected_default: Variant = default_run.get(field)
+			if field == "venue_history" and migrated_run.active:
+				expected_default = [migrated_run.scene_id]
+			verify(migrated_run.get(field) == expected_default, "Legacy field uses migration default: " + field)
+	var legacy_run_path := "user://legacy-run-test-%d.save" % OS.get_process_id()
+	var legacy_run_written: bool = Store.write_checkpoint(legacy_run_path, legacy_run_state) == OK
+	world.save_path = legacy_run_path
+	world.saving_enabled = true
+	if legacy_run_written:
+		world.load_checkpoint()
+	var legacy_run_restored: bool = legacy_run_written and migrated_run != null and world.saving_enabled and world.checkpoint_state() == migrated_expected
+	if legacy_run_restored:
+		world.resume()
+		var migrated_revision: int = world.run_game.revision
+		var continued_migrated: bool = world.run_game.service_action("intel", "cargo-table", migrated_revision)
+		legacy_run_restored = world.player.controls_enabled and continued_migrated and world.run_game.revision == migrated_revision + 1 and "cargo-table" in world.run_game.known_rules
+	legacy_run_restored = legacy_run_restored and DirAccess.remove_absolute(ProjectSettings.globalize_path(legacy_run_path)) == OK
+	world.saving_enabled = false
+	record("legacy_run_fields", legacy_run_restored)
 	var corrupt_path := "user://corrupt-world-test-%d.save" % OS.get_process_id()
 	var corrupt_file := FileAccess.open(corrupt_path, FileAccess.WRITE)
 	corrupt_file.store_string("invalid checkpoint")
