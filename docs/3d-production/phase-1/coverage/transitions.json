@@ -1558,6 +1558,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.interactable_disabled",
+      "source": "Godot/three_d/scripts/interactable.gd",
+      "entry": "prompt",
+      "outcome": "disabled target displays reason and rejects action"
+    },
+    {
       "id": "world.prop_on",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "request_action",

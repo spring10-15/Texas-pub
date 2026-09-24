@@ -1,6 +1,6 @@
 extends SceneTree
 const RunCheckpoint = preload("res://three_d/rules/run_checkpoint.gd")
-const WORLD_SOURCES := ["world.gd", "player.gd", "scene_props.gd"]
+const WORLD_SOURCES := ["world.gd", "player.gd", "scene_props.gd", "interactable.gd"]
 var hits := {}
 var failures: Array[String] = []
 var checks := 0
@@ -36,9 +36,16 @@ func run() -> void:
 	verify("focus_cleared", world.player.focused==null and not focus_events.is_empty() and focus_events.back()==null and world.hint_label.text.is_empty())
 	var far: Dictionary = world.checkpoint_state()
 	verify("raycast_out_of_reach", world.player.camera.global_position.distance_to(target)>world.player.REACH and world.player.focused!=anchor and not world.request_action(anchor) and world.checkpoint_state()==far)
+	anchor.enabled = false
+	anchor.disabled_reason = "出口尚未确认"
 	world.player.position = Vector3(1.6, 0.02, -1.1)
 	world.player.camera.look_at(anchor.global_position)
 	for i in range(3): await physics_frame
+	world.player.update_focus()
+	var disabled_before: Dictionary = world.checkpoint_state()
+	verify("interactable_disabled", world.player.focused==anchor and anchor.prompt()==anchor.disabled_reason and world.hint_label.text==anchor.disabled_reason and not world.player.can_interact(anchor) and not world.request_action(anchor) and world.checkpoint_state()==disabled_before)
+	anchor.enabled = true
+	anchor.disabled_reason = ""
 	world.player.update_focus()
 	var reachable: bool = world.player.focused==anchor and world.player.camera.global_position.distance_to(target)<world.player.REACH
 	var middle: Vector3 = (world.player.camera.global_position + target) * 0.5
