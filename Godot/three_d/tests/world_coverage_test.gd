@@ -318,6 +318,24 @@ func run() -> void:
 	var sale_view: Dictionary = world.run_game.service_view("bar")
 	var sell_row_visible: bool = world.services_panel.rows.get_children().any(func(row): return row is Button and row.text.contains("卖 " + world.run_game.item_name(sell_item)))
 	verify("services_sell", sell_offered and not sell_item in world.run_game.inventory and world.run_game.cash == sale_before.cash + sale_value and world.run_game.action_points == sale_before.action_points - 1 and world.run_game.revision == sale_before.revision + 1 and world.services_panel.visible and sale_view.revision == world.run_game.revision and not sale_view.actions.any(func(action): return action.kind == "sell" and action.id == sell_item) and not sell_row_visible)
+	var pressure_world: Node3D = load("res://three_d/scenes/main.tscn").instantiate()
+	pressure_world.name = "PressureExitCoverageWorld"
+	pressure_world.position = Vector3(100, 0, 0)
+	root.add_child(pressure_world)
+	await physics_frame
+	pressure_world.set_process(false)
+	var pressure_started: bool = pressure_world.run_game.start(pressure_world.run_game.revision)
+	pressure_world.travel("tavern")
+	pressure_world.run_game.heat = 6
+	pressure_world.player.position = Vector3(9.55, 0.02, 1.15)
+	pressure_world.player.camera.look_at(pressure_world.table_target.global_position)
+	for i in range(5): await physics_frame
+	pressure_world.player.update_focus()
+	var pressure_seated: bool = pressure_world.request_action(pressure_world.table_target)
+	var pressure_vault_before: int = pressure_world.run_game.vault
+	pressure_world.leave_seat()
+	verify("leave_forced_pressure_exit", pressure_started and pressure_seated and not pressure_world.seated and not pressure_world.run_game.active and pressure_world.current_room == "stash" and pressure_world.run_game.last_result.get("forced", false) and pressure_world.run_game.last_result.get("route", "") == "dropbag-cash" and pressure_world.run_game.last_result.get("lostCash", -1) == 120 and pressure_world.run_game.vault == pressure_vault_before + 170 and pressure_world.run_game.cash == 0)
+	pressure_world.queue_free()
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("world.")).map(func(row): return row.id)
@@ -330,7 +348,7 @@ func run() -> void:
 	var world_hashes := {}
 	for file in WORLD_SOURCES:
 		world_hashes[file] = FileAccess.get_file_as_string("res://three_d/scripts/"+file).sha256_text()
-	var report := {"scope":"Physical stash props, room entry, seating, full table leave, venue transfer, extraction, abandonment and demo reset through world UI","source_sha256":hashes,"world_source_sha256":world_hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_coverage_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
+	var report := {"scope":"Physical stash props, room entry, seating, normal/forced table leave, venue transfer, extraction, abandonment and demo reset through world UI","source_sha256":hashes,"world_source_sha256":world_hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_coverage_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
 	FileAccess.open("res://../output/3d/world-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("WORLD_COVERAGE covered=",hits.size()," total=",expected.size()," failed=",failures.size())
 	quit(0 if failures.is_empty() and missing.is_empty() else 1)

@@ -1822,6 +1822,12 @@
       "outcome": "rejected"
     },
     {
+      "id": "world.leave_forced_pressure_exit",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "leave_seat",
+      "outcome": "accepted"
+    },
+    {
       "id": "world.leave_active_rejected",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "leave_seat",

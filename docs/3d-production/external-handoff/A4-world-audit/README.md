@@ -2,7 +2,7 @@
 
 > **目录对齐历史快照（2026-09-25，基线 `4253a9e`）**：该版本复核了 `outcomes.csv` 中 15 条旧标注为“有测试但未登记”的记录，并映射到现有 `world.*` ID；不新增分母。其中 travel 的简略记录复用完整落点 ID，服务动作记录收窄为 `intel/cargo-table`，`toggle_pause()` 汇总行映射到五个分派后继 ID。当时 CSV 状态为 41 条正式后继证据、26 条探针证据。此数字属于该基线快照；当前行状态见下方主线复核补记。该对齐不代表 A4 全部 72 种源码结果已入目录，`pending_families.world` 仍待完整枚举。日志：`output/external-handoff/A4/a4-world-probe-current.log`。
 
-> **主线当前状态复核（2026-09-25，提交 `d4e4fa3` 后）**：现行 `world_coverage_test.gd` 对应的既有 `world.*` ID 已回填到 A4 CSV；72 行中 65 行具有正式测试后继证据，5 行保留为 A4 探针证据，另有 1 行不可达、1 行可达性未证实。67 行映射到现有目录 ID，没有新建重复分母。A4 verifier 通过；完整回归 59/59。剩余探针行集中在入座时世界锚点拒绝与 `leave_seat` 风声强制撤离，不能因已有探针日志就宣称这些入口已有正式回归命中。`pending_families.world` 仍需完整枚举。
+> **主线当前状态复核（2026-09-25，提交 `bdb15cf` 后）**：现行 `world_coverage_test.gd` 对应的既有 `world.*` ID 已回填到 A4 CSV；72 行中 66 行具有正式测试后继证据，4 行保留为 A4 探针证据，另有 1 行不可达、1 行可达性未证实。68 行映射到现有目录 ID，没有新建重复分母。新增 `world.leave_forced_pressure_exit`，从真实入座后离座触发风声强制撤离，核对丢现金路线、损失与到账；A4 verifier 通过。剩余探针行是静态遮挡清焦、入座时世界锚点拒绝、暂停时确认和服务动作拒绝；对应 postcondition 尚未全部在正式用例中直接覆盖。`pending_families.world` 仍需完整枚举。
 
 > **主 Agent 复核补记（2026-09-25）**：CSV 第 8 行原标为“源码未实现”，依据是当时没有静态 anchor 把 `enabled` 设为 false；但 `interactable.gd::prompt()` 与 `player.gd::can_interact()` 的导出属性分支都已实现，不应把“现有场景无此实例”写成“源码未实现”。现已用引擎测试实例设置禁用状态，断言提示原因、拒绝交互及完整世界快照不变，并登记为 `world.interactable_disabled`。随后补上酒保出售贵重物的 `world.services_sell` 后继：现金、物品、行动力、revision 与服务面板刷新均由正式入口断言。截至当前补记，正式世界子图 70/70、全目录 357/357 均有同版本证据；目录仍不完整，不能计算全局覆盖率。下文 2026-09-23 的 72 行盘点保留为当时快照。
 
