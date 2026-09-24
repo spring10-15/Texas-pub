@@ -91,6 +91,19 @@ func run_tests() -> void:
 	var corrupt_preserved: bool = world.checkpoint_state() == before_corrupt and not world.saving_enabled and not world.paused and FileAccess.get_file_as_bytes(corrupt_path) == corrupt_bytes and world.save_notice.text.contains("已保留原文件")
 	corrupt_preserved = corrupt_preserved and DirAccess.remove_absolute(ProjectSettings.globalize_path(corrupt_path)) == OK
 	record("corrupt_load_preserved", corrupt_preserved)
+	var future_path := "user://future-world-test-%d.save" % OS.get_process_id()
+	var future_payload: PackedByteArray = var_to_bytes(before_corrupt)
+	var future_envelope := {"version": Store.VERSION + 1, "digest": future_payload.hex_encode().sha256_text(), "payload": future_payload}
+	var future_file := FileAccess.open(future_path, FileAccess.WRITE)
+	future_file.store_var(future_envelope, false)
+	future_file.close()
+	var future_bytes: PackedByteArray = FileAccess.get_file_as_bytes(future_path)
+	world.save_path = future_path
+	world.saving_enabled = true
+	world.load_checkpoint()
+	var future_preserved: bool = world.checkpoint_state() == before_corrupt and not world.saving_enabled and not world.paused and FileAccess.get_file_as_bytes(future_path) == future_bytes and world.save_notice.text.contains("v%d" % (Store.VERSION + 1)) and world.save_notice.text.contains("v%d" % Store.VERSION)
+	future_preserved = future_preserved and DirAccess.remove_absolute(ProjectSettings.globalize_path(future_path)) == OK
+	record("unsupported_version_preserved", future_preserved)
 	var seated_save: Dictionary = baseline.duplicate(true)
 	seated_save.seated = true
 	seated_save["return"] = seated_save.player

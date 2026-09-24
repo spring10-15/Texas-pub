@@ -1972,6 +1972,12 @@
       "outcome": "rejected"
     },
     {
+      "id": "persistence_restore.unsupported_version_preserved",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "load_checkpoint",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_restore.seated",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "restore_checkpoint",

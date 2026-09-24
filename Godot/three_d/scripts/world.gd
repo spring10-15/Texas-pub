@@ -967,7 +967,10 @@ func load_checkpoint() -> void:
 		saving_enabled = true
 		return
 	if loaded.status != "ok" or not restore_checkpoint(loaded.state):
-		save_notice.text = "存档损坏或版本不兼容，已保留原文件；本次不覆盖存档"
+		if loaded.status == "unsupported_version":
+			save_notice.text = "存档版本 v%d 与当前版本 v%d 不兼容，已保留原文件；本次不覆盖存档" % [int(loaded.version), SaveStore.VERSION]
+		else:
+			save_notice.text = "存档损坏，已保留原文件；本次不覆盖存档"
 		saving_enabled = false
 		return
 	saving_enabled = true

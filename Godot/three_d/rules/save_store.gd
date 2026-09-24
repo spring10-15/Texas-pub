@@ -32,8 +32,13 @@ static func read_checkpoint(path: String) -> Dictionary:
 	file.seek(0)
 	var envelope: Variant = file.get_var(false)
 	file.close()
-	if not envelope is Dictionary or envelope.get("version") != VERSION:
+	if not envelope is Dictionary:
 		return {"status": "invalid"}
+	var stored_version: Variant = envelope.get("version")
+	if not stored_version is int:
+		return {"status": "invalid"}
+	if stored_version != VERSION:
+		return {"status": "unsupported_version", "version": stored_version}
 	var payload: Variant = envelope.get("payload")
 	if not payload is PackedByteArray or envelope.get("digest") != payload.hex_encode().sha256_text():
 		return {"status": "invalid"}
