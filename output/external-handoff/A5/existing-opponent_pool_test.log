@@ -1,0 +1,10 @@
+# existing-opponent_pool_test.log
+# cmd: /Applications/Godot.app/Contents/MacOS/Godot --path /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot --headless --script res://three_d/tests/opponent_pool_test.gd -- --test
+# started: 2026-09-24 01:35:26
+# elapsed_s: 4.3
+# exit_code: 0
+
+--- stdout+stderr ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+OPPONENT_POOL {"checks":802,"distinct_rosters_per_100_seeds":{"high-rise-suite":89,"neon-poker-club":90,"rooftop-club":89,"smoky-den":89},"failed":0,"failures":[],"scope":"Roster reachability, live policy decision and save/presentation consistency; not full-run wins or difficulty balance.","venue_table_actor_combinations":128}

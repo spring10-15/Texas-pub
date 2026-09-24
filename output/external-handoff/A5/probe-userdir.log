@@ -1,0 +1,11 @@
+# probe-userdir.log
+# cmd: /Applications/Godot.app/Contents/MacOS/Godot --path /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot --headless --script /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_userdir_probe.gd -- --test
+# started: 2026-09-24 01:35:17
+# elapsed_s: 0.1
+# exit_code: 0
+
+--- stdout+stderr ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+A5_USERDIR /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/output/external-handoff/A5/tmp/iso-home/Library/Application Support/Godot/app_userdata/Godot德扑酒馆/
+A5_HOME_ENV /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/output/external-handoff/A5/tmp/iso-home

@@ -1,0 +1,11 @@
+# probe-world_replay.log
+# cmd: /Applications/Godot.app/Contents/MacOS/Godot --path /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot --headless --script /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_world_replay_probe.gd -- --test --tmp=/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/output/external-handoff/A5/tmp
+# started: 2026-09-24 00:32:31
+# elapsed_s: 1.4
+# exit_code: 0
+
+--- stdout+stderr ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+A5_REPLAY saved {"hand":1,"revision":2,"rng":1320040479,"status":"ok","wrote":true}
+A5_REPLAY_PROBE {"failed":0,"failures":[],"final_hand":2,"final_restored_rng":808510903,"final_rng":808510903,"final_status":"finished","first_mismatch":{},"hands_covered":[1,2],"isolated_tmp":"/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/output/external-handoff/A5/tmp","mismatches":0,"negative_control_mismatches":60,"rng_equal_steps":160,"steps":160}

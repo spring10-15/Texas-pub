@@ -1,0 +1,10 @@
+# existing-table_checkpoint_test.log
+# cmd: /Applications/Godot.app/Contents/MacOS/Godot --path /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot --headless --script res://three_d/tests/table_checkpoint_test.gd -- --test
+# started: 2026-09-24 01:35:23
+# elapsed_s: 0.9
+# exit_code: 0
+
+--- stdout+stderr ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TABLE_CHECKPOINT {"checks":2031,"failed":0,"failures":[]}

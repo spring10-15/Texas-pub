@@ -1,0 +1,58 @@
+# probe-save_store.log
+# cmd: /Applications/Godot.app/Contents/MacOS/Godot --path /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot --headless --script /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd -- --test --tmp=/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/output/external-handoff/A5/tmp
+# started: 2026-09-23 23:31:38
+# elapsed_s: 0.2
+# exit_code: 0
+
+--- stdout+stderr ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+A5_CASE {"case":"read_missing","data":{"file_exists":false,"status":"missing"}}
+A5_CASE {"case":"write_new+read_valid","data":{"error":0,"state_equal":true,"status":"ok","tmp_left":false}}
+A5_CASE {"case":"write_replace","data":{"error":0,"state_equal":true,"status":"ok","tmp_left":false}}
+A5_CASE {"case":"digest_broken","data":{"digest_unchanged":true,"status":"invalid"}}
+A5_CASE {"case":"version_unsupported","data":{"distinguishable_from_digest":false,"status_missing_payload":"invalid","status_valid_payload":"invalid"}}
+A5_CASE {"case":"payload_not_dictionary","data":{"decoded_type":"Array","status":"invalid"}}
+ERROR: Condition "!p_allow_objects" is true. Returning: ERR_UNAUTHORIZED
+   at: decode_variant (core/io/marshalls.cpp:718)
+   GDScript backtrace (most recent call first):
+       [0] run_probe (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:105)
+       [1] _initialize (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:32)
+ERROR: Error when trying to decode Variant.
+   at: decode_variant (core/io/marshalls.cpp:860)
+   GDScript backtrace (most recent call first):
+       [0] run_probe (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:105)
+       [1] _initialize (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:32)
+A5_CASE {"case":"bytes_to_var_object_semantics","data":{"decoded_is_dictionary":false,"decoded_type":"Nil","payload_size":308}}
+ERROR: Condition "!p_allow_objects" is true. Returning: ERR_UNAUTHORIZED
+   at: decode_variant (core/io/marshalls.cpp:718)
+   GDScript backtrace (most recent call first):
+       [0] read_checkpoint (res://three_d/rules/save_store.gd:40)
+       [1] run_probe (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:110)
+       [2] _initialize (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:32)
+ERROR: Error when trying to decode Variant.
+   at: decode_variant (core/io/marshalls.cpp:860)
+   GDScript backtrace (most recent call first):
+       [0] read_checkpoint (res://three_d/rules/save_store.gd:40)
+       [1] run_probe (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:110)
+       [2] _initialize (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:32)
+A5_CASE {"case":"object_payload","data":{"status":"invalid"}}
+A5_CASE {"case":"write_object_state","data":{"plain_bytes_decoded_node_type":"Object","plain_roundtrip_is_dictionary":true,"plain_var_to_bytes_size":32,"read_status":"ok","write_error":0}}
+ERROR: Condition "!p_allow_objects" is true. Returning: ERR_UNAUTHORIZED
+   at: decode_variant (core/io/marshalls.cpp:718)
+   GDScript backtrace (most recent call first):
+       [0] read_checkpoint (res://three_d/rules/save_store.gd:40)
+       [1] run_probe (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:130)
+       [2] _initialize (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:32)
+ERROR: Error when trying to decode Variant.
+   at: decode_variant (core/io/marshalls.cpp:860)
+   GDScript backtrace (most recent call first):
+       [0] read_checkpoint (res://three_d/rules/save_store.gd:40)
+       [1] run_probe (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:130)
+       [2] _initialize (/Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/A5-persistence-audit/repro/a5_save_store_probe.gd:32)
+A5_CASE {"case":"resource_payload","data":{"status":"invalid"}}
+A5_CASE {"case":"truncated","data":{"status":"invalid"}}
+A5_CASE {"case":"length_prefix","data":{"lt4_status":"invalid","prefix_overflow_status":"invalid"}}
+A5_CASE {"case":"write_failure","data":{"absent_parent_error":7,"dir_target_error":1,"last_open_error":7}}
+A5_CASE {"case":"unreadable","data":{"chmod_exit":0,"chmod_locked":true,"file_exists":true,"reachable":true,"status":"unreadable"}}
+A5_SAVE_STORE_PROBE {"cases":{"bytes_to_var_object_semantics":{"decoded_is_dictionary":false,"decoded_type":"Nil","payload_size":308},"digest_broken":{"digest_unchanged":true,"status":"invalid"},"length_prefix":{"lt4_status":"invalid","prefix_overflow_status":"invalid"},"object_payload":{"status":"invalid"},"payload_not_dictionary":{"decoded_type":"Array","status":"invalid"},"read_missing":{"file_exists":false,"status":"missing"},"resource_payload":{"status":"invalid"},"truncated":{"status":"invalid"},"unreadable":{"chmod_exit":0,"chmod_locked":true,"file_exists":true,"reachable":true,"status":"unreadable"},"version_unsupported":{"distinguishable_from_digest":false,"status_missing_payload":"invalid","status_valid_payload":"invalid"},"write_failure":{"absent_parent_error":7,"dir_target_error":1,"last_open_error":7},"write_new+read_valid":{"error":0,"state_equal":true,"status":"ok","tmp_left":false},"write_object_state":{"plain_bytes_decoded_node_type":"Object","plain_roundtrip_is_dictionary":true,"plain_var_to_bytes_size":32,"read_status":"ok","write_error":0},"write_replace":{"error":0,"state_equal":true,"status":"ok","tmp_left":false}},"checks":14,"failed":0,"failures":[]}

@@ -1,16 +1,18 @@
 # 状态转移覆盖：目录与执行证据
 
-> 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 356，全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
+> 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 357，全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
 
 2026-09-25 补充旧版 v1 运行字段迁移：从完整世界快照中移除 14 个可选运行字段，将该旧形态写入隔离存档并经正式 `world.load_checkpoint()` 恢复；对照 `RunCheckpoint.restore()` 补出的默认值核对完整世界状态，随后继续执行真实情报动作并验证 revision 和已知规则变化。新增 `persistence_restore.legacy_run_fields`，恢复子图 13/13；这只验证 v1 内可选字段回填，不代表跨版本迁移。专项 40 项检查通过；全目录当前登记结果数为 354，完整转移分母仍未封板。
 
-同日把两套既有拒绝测试接入覆盖证据：`run_restore_bounds_test.gd` 对 33 种畸形运行快照确认拒绝、输入和活动 Run 均不变；`table_checkpoint_test.gd` 对 11 种畸形牌桌快照确认拒绝且活动牌桌不变。分别登记 `persistence_run.invalid_fields_rejected` 与 `persistence_table.invalid_snapshot_rejected`。这是对运行/牌桌快照拒绝路径的代表性验证，其他 restore 条件仍留在 pending；当前目录登记数 356，全局分母仍未完成。
+同日把两套既有拒绝测试接入覆盖证据：`run_restore_bounds_test.gd` 对 33 种畸形运行快照确认拒绝、输入和活动 Run 均不变；`table_checkpoint_test.gd` 对 11 种畸形牌桌快照确认拒绝且活动牌桌不变。分别登记 `persistence_run.invalid_fields_rejected` 与 `persistence_table.invalid_snapshot_rejected`。这是对运行/牌桌快照拒绝路径的代表性验证，其他 restore 条件仍留在 pending；当前目录登记数 357，全局分母仍未完成。
 
 2026-09-25 前一批短额与精确跟注全押座位变体：四种桌规 × 三个行动座位 × 两种筹码条件，共 24 个真实队列前置。先按当前下注轮行动构造行动者，再验证欠注/匹配、剩余队列顺序、下注目标、`raiseUsed`、首攻折扣标志与总筹码守恒。现有 `queue.short_all_in` 与 `queue.exact_call_all_in` 已覆盖这些座位，不重复增加 ID；该批完成时扑克 pending 仍保留两类座位变体，专项 254 项检查通过。
 
 随后补齐 A7 所列的两类扑克队列座位变体，并把它们接入现有 `short_stack_queue_test.gd`：短额全押加注和单一有筹码者欠注/跟齐/自动发牌分别轮换四桌 × 三座位，共 24 个新座位案例；连同前一批短额与精确跟注全押的 24 个案例，报告记录 48 个座位案例、590 项检查，全部通过。各输入只复现既有 `queue.short_all_in_raise_one_raise_rule`、`queue.lone_funded_*` 与 `queue.runout_showdown_conserves` 语义，不新增目录 ID；`pending_families.poker` 已清空。全局状态转移分母仍未封板，overall coverage 继续为空。
 
-2026-09-25 按 A4 世界取证补上禁用交互目标：射线仍聚焦到 disabled anchor 时，提示显示其 `disabled_reason`，玩家请求被拒绝且完整世界快照不变。`world_coverage_test.gd` 直接通过 Godot 实例设置导出属性；`interactable.gd` 已纳入世界脚本证据哈希，防止测试报告在交互逻辑变化后仍被误认为新鲜。世界子图 69/69，全目录 343/343 有当前证据；状态转移分母仍未完成。
+再将酒保出售贵重物的世界/UI 后继登记为 `world.services_sell`：正式 `world.service_action("sell", ...)` 执行后，贵重物从背包移除、现金增加对应售价、行动力与 revision 各按规则变化，服务弹窗保留且已售物品按钮从面板消失。`world_coverage_test.gd` 的世界子图为 70/70；全目录更新为 357 项，须在同一版本刷新全部套件证据后汇总。
+
+2026-09-25 按 A4 世界取证补上禁用交互目标：射线仍聚焦到 disabled anchor 时，提示显示其 `disabled_reason`，玩家请求被拒绝且完整世界快照不变。`world_coverage_test.gd` 直接通过 Godot 实例设置导出属性；`interactable.gd` 已纳入世界脚本证据哈希，防止测试报告在交互逻辑变化后仍被误认为新鲜。该批基线世界子图为 69/69、全目录 343/343；后续座位与出售结果见上文最新记录。状态转移分母仍未完成。
 
 根据 A5 存档取证，正式恢复套件新增三项拒绝后继：损坏磁盘档案读入失败时，完整世界快照及原文件字节不变、自动存盘关闭；活动局快照不能放在藏匿点；目标房间仍被前置桌锁住时不能载入。后两项同时断言拒绝后完整快照不变。定向恢复子图为 11/11。现有 `legacy_props` 证明的是当前版本内缺字段回填；没有历史发布版本的真实磁盘夹具，也没有跨版本迁移证明。
 

@@ -1,0 +1,10 @@
+# existing-room_pool_test.log
+# cmd: /Applications/Godot.app/Contents/MacOS/Godot --path /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot --headless --script res://three_d/tests/room_pool_test.gd -- --test
+# started: 2026-09-24 01:35:25
+# elapsed_s: 0.8
+# exit_code: 0
+
+--- stdout+stderr ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ROOM_POOL checks=722 failed=0 failures=[]

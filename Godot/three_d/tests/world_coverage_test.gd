@@ -307,6 +307,17 @@ func run() -> void:
 		verify("services_buy", not world.services_panel.visible and world.player.controls_enabled and product_id in world.run_game.inventory and world.run_game.cash == buy_before.cash - int(world.table_content.items[product_id].buy) and world.run_game.action_points == buy_before.action_points - 1 and world.run_game.revision == buy_before.revision + 1 and world.hint_label.text.contains(world.run_game.item_name(product_id)))
 	else:
 		verify("services_buy", false)
+	var sell_item := "ruby-cufflink"
+	world.run_game.action_points = 1 # Isolate the bartender wrapper after an imagined table refresh.
+	world.run_game.inventory.append(sell_item)
+	world.open_services("bar")
+	var sale_before: Dictionary = RunCheckpoint.capture(world.run_game)
+	var sale_value: int = world.run_game.sale_value(sell_item)
+	var sell_offered: bool = world.run_game.service_view("bar").actions.any(func(action): return action.kind == "sell" and action.id == sell_item and action.reason.is_empty())
+	world.service_action("sell", sell_item, world.run_game.revision)
+	var sale_view: Dictionary = world.run_game.service_view("bar")
+	var sell_row_visible: bool = world.services_panel.rows.get_children().any(func(row): return row is Button and row.text.contains("卖 " + world.run_game.item_name(sell_item)))
+	verify("services_sell", sell_offered and not sell_item in world.run_game.inventory and world.run_game.cash == sale_before.cash + sale_value and world.run_game.action_points == sale_before.action_points - 1 and world.run_game.revision == sale_before.revision + 1 and world.services_panel.visible and sale_view.revision == world.run_game.revision and not sale_view.actions.any(func(action): return action.kind == "sell" and action.id == sell_item) and not sell_row_visible)
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("world.")).map(func(row): return row.id)

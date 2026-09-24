@@ -1972,6 +1972,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.services_sell",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_io.read_missing",
       "source": "Godot/three_d/rules/save_store.gd",
       "entry": "read_checkpoint",
