@@ -2286,8 +2286,7 @@
       "read_unreadable",
       "restore",
       "invalid_data",
-      "legacy_migration",
-      "rng_replay"
+      "legacy_migration"
     ]
   }
 }
