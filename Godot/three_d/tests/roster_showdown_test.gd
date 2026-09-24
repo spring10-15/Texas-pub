@@ -15,11 +15,12 @@ var matched_policy_differences := {}
 var matched_contexts := []
 var varied_player_actions := {}
 var stale_bet_handover_restores := 0
+var varied_seed_samples := {}
 func verify(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label); push_error(label)
 func play(content: Dictionary, scene: String, site: String, actor: String, seed_value: int, live_ai := false, varied_player := false) -> void:
-	var key := ("ai-varied:" if live_ai and varied_player else ("ai:" if live_ai else "controlled:"))+scene+":"+site+":"+actor
+	var key := ("ai-varied:"+str(seed_value)+":" if live_ai and varied_player else ("ai:" if live_ai else "controlled:"))+scene+":"+site+":"+actor
 	var r := Run.new(content)
 	r.start(r.revision,scene,seed_value)
 	# Prior-room unlock fixture. The table, its hands, settlement and exit use public commands.
@@ -126,12 +127,16 @@ func _initialize() -> void:
 					for live_ai in [false,true]:
 						var key: String = ("ai:" if live_ai else "controlled:")+scene+":"+site+":"+actor
 						if not completed.has(key): play(content,scene,site,actor,seed_value,live_ai)
-					var varied_key: String = "ai-varied:"+scene+":"+site+":"+actor
-					if not completed.has(varied_key): play(content,scene,site,actor,seed_value,true,true)
-	verify(completed.size() == 384,"Three policies x four venues x four tables x eight opponents")
+					var varied_base_key: String = scene+":"+site+":"+actor
+					if int(varied_seed_samples.get(varied_base_key,0)) < 3:
+						var varied_key: String = "ai-varied:"+str(seed_value)+":"+varied_base_key
+						if not completed.has(varied_key):
+							play(content,scene,site,actor,seed_value,true,true)
+							varied_seed_samples[varied_base_key] = int(varied_seed_samples.get(varied_base_key,0)) + 1
+	verify(completed.size() == 640 and varied_seed_samples.size() == 128 and varied_seed_samples.values().all(func(count): return count == 3),"Two baseline policies plus three varied-player seeds for each venue/table/opponent combination")
 	verify(varied_player_actions.get("raise",0) > 0 and varied_player_actions.get("fold",0) > 0 and varied_player_actions.get("all-in",0) > 0,"Varied player policy reaches raises, folds and all-ins")
 	verify(stale_bet_handover_restores > 0,"Fold-ended hand with stale street bet restores exactly")
-	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed,"ai_actions":ai_actions,"ai_actions_by_actor":ai_actions_by_actor,"ai_table_appearances":ai_table_appearances,"varied_player_actions":varied_player_actions,"stale_bet_handover_restores":stale_bet_handover_restores,"matched_samples":matched_samples,"matched_samples_by_actor":matched_samples_by_actor,"matched_policy_differences":matched_policy_differences,"matched_contexts":matched_contexts,"scope":"Controlled check/call, production opponent AI, and production AI with a deterministic varied legal player policy across four venues, four tables and eight opponents. All policies check exact full-state restoration at between-hand saves, per-action table chip conservation, independent run wealth after settlement rewards, and final extraction ledger. Matched policy snapshots exclude varied-player runs and remain strategy-only evidence, not human recognition or AI difficulty evidence."}
+	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed,"ai_actions":ai_actions,"ai_actions_by_actor":ai_actions_by_actor,"ai_table_appearances":ai_table_appearances,"varied_player_actions":varied_player_actions,"varied_seed_samples":varied_seed_samples,"stale_bet_handover_restores":stale_bet_handover_restores,"matched_samples":matched_samples,"matched_samples_by_actor":matched_samples_by_actor,"matched_policy_differences":matched_policy_differences,"matched_contexts":matched_contexts,"scope":"Controlled check/call and production opponent AI each use one baseline seed for each venue/table/opponent combination; production AI against a deterministic varied legal player policy uses three distinct seeds for every venue/table/opponent combination. All policies check exact full-state restoration at between-hand saves, per-action table chip conservation, independent run wealth after settlement rewards, and final extraction ledger. Matched policy snapshots exclude varied-player runs and remain strategy-only evidence, not human recognition or AI difficulty evidence."}
 	FileAccess.open("res://../output/3d/roster-showdown.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("ROSTER_SHOWDOWN ",JSON.stringify({"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed.size()}))
 	quit(0 if failures.is_empty() else 1)
