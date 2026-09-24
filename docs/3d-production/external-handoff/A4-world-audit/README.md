@@ -1,5 +1,7 @@
 # A4 世界交互状态转移取证
 
+> **现行目录对齐（2026-09-25，基线 `4253a9e`）**：复核 `outcomes.csv` 中 15 条旧标注为“有测试但未登记”的记录后，现均对应到正式 `world_coverage_test.gd` 的现有目录 ID；只复用 `world.*` 语义，不新增分母。其中 travel 的简略记录复用完整落点 ID，服务动作记录收窄为已有完整断言的 `intel/cargo-table`；`toggle_pause()` 汇总行映射到五个分派后继 ID，不另建一个汇总转移。当前 A4 CSV 中 41 条为已登记且有后继状态证据、26 条为探针后继证据；`cases=115 fails=0`，CSV 锚点/路径核验通过。该对齐不代表 A4 全部 72 种源码结果已入目录：26 条探针结果及其他未验证/未找到项仍须逐项按可达性和强后继证据审查，`pending_families.world` 保持待完成。日志：`output/external-handoff/A4/a4-world-probe-current.log`。
+
 > **主 Agent 复核补记（2026-09-25）**：CSV 第 8 行原标为“源码未实现”，依据是当时没有静态 anchor 把 `enabled` 设为 false；但 `interactable.gd::prompt()` 与 `player.gd::can_interact()` 的导出属性分支都已实现，不应把“现有场景无此实例”写成“源码未实现”。现已用引擎测试实例设置禁用状态，断言提示原因、拒绝交互及完整世界快照不变，并登记为 `world.interactable_disabled`。随后补上酒保出售贵重物的 `world.services_sell` 后继：现金、物品、行动力、revision 与服务面板刷新均由正式入口断言。截至当前补记，正式世界子图 70/70、全目录 357/357 均有同版本证据；目录仍不完整，不能计算全局覆盖率。下文 2026-09-23 的 72 行盘点保留为当时快照。
 
 日期：2026-09-23。范围：`Godot/three_d/scripts/world.gd`（`request_action`、`travel`、`leave_seat`、`pause_game`、`resume`、`show_run_panel`、`close_run_panel`、`confirm_run_action`、`open_services`、`close_services`、`service_action`）及被它们调用的 `scene_props.gd`、`player.gd` 交互逻辑。**不含** `world.gd::restore_checkpoint` / `save_checkpoint` / `load_checkpoint`（A5 领域），本文件只做对照。

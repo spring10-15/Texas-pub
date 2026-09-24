@@ -1,5 +1,7 @@
 # A5：存档、恢复与 RNG 重放状态转移取证
 
+> **当前源码锚点校订（2026-09-25，基线 `4253a9e`）**：近期 `world.gd` 在存档函数前增加试玩轨迹记录，导致本文件 19 条 `source_line` 偏移 3 行，源码及存档行为未因此变化。已按原内容锚点刷新这些行号；`verify_outcomes.py` 复验通过，49 行、七个 family 齐全、15/15 个既有目录 ID 唯一对应。此修正只更新审计定位，不改变 A5 结论，也不代表所有存档转移族已完成登记。
+
 日期：2026-09-24。执行范围：`Godot/three_d/rules/save_store.gd`、`run_checkpoint.gd`、`table_checkpoint.gd`，
 `Godot/three_d/scripts/world.gd` 的 `checkpoint_state` / `save_checkpoint` / `load_checkpoint` / `restore_checkpoint` 及直接依赖的恢复校验。
 不含普通场景道具交互（归 A4）。本文只做取证，**未改任何生产代码、既有测试、`transitions.json`、覆盖目录、玩家存档**；未 commit / push；未生图 / 建模。
