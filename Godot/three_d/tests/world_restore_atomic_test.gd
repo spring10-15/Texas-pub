@@ -50,7 +50,11 @@ func run_tests() -> void:
 	world.restore_checkpoint(baseline)
 	var legacy: Dictionary = baseline.duplicate(true)
 	legacy.erase("props")
-	record("legacy_props", world.restore_checkpoint(legacy))
+	world.props.restore({"Tavernlight":true})
+	var tavern_light: Dictionary = world.props.entries["Tavernlight"]
+	var legacy_restored: bool = world.props.states["Tavernlight"] and world.restore_checkpoint(legacy)
+	legacy_restored = legacy_restored and world.checkpoint_state() == baseline and is_equal_approx(tavern_light.node.get_indexed(NodePath(tavern_light.property)), tavern_light.closed)
+	record("legacy_props", legacy_restored)
 	var seated_save: Dictionary = baseline.duplicate(true)
 	seated_save.seated = true
 	seated_save["return"] = seated_save.player
