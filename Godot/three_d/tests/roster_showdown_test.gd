@@ -14,6 +14,7 @@ var matched_samples_by_actor := {}
 var matched_policy_differences := {}
 var matched_contexts := []
 var varied_player_actions := {}
+var stale_bet_handover_restores := 0
 func verify(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label); push_error(label)
@@ -42,9 +43,16 @@ func play(content: Dictionary, scene: String, site: String, actor: String, seed_
 		steps += 1
 		if t.state.status == "hand_over":
 			var saved := Checkpoint.capture(r)
+			var saved_table: Dictionary = saved.table.state
+			var highest_current_bet := 0
+			for player in saved_table.players:
+				highest_current_bet = maxi(highest_current_bet, int(player.currentBet))
+			if highest_current_bet != saved_table.currentBet:
+				stale_bet_handover_restores += 1
 			r = Checkpoint.restore(saved,content)
 			verify(r != null,"Between-hand save restores "+key)
 			if r == null: return
+			verify(Checkpoint.capture(r) == saved,"Between-hand save preserves the full snapshot "+key)
 			t = r.table
 			verify(t.next_hand(t.revision),"Next hand accepted "+key)
 		elif t.state.currentActorId.is_empty():
@@ -122,7 +130,8 @@ func _initialize() -> void:
 					if not completed.has(varied_key): play(content,scene,site,actor,seed_value,true,true)
 	verify(completed.size() == 384,"Three policies x four venues x four tables x eight opponents")
 	verify(varied_player_actions.get("raise",0) > 0 and varied_player_actions.get("fold",0) > 0 and varied_player_actions.get("all-in",0) > 0,"Varied player policy reaches raises, folds and all-ins")
-	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed,"ai_actions":ai_actions,"ai_actions_by_actor":ai_actions_by_actor,"ai_table_appearances":ai_table_appearances,"varied_player_actions":varied_player_actions,"matched_samples":matched_samples,"matched_samples_by_actor":matched_samples_by_actor,"matched_policy_differences":matched_policy_differences,"matched_contexts":matched_contexts,"scope":"Controlled check/call, production opponent AI, and production AI with a deterministic varied legal player policy across four venues, four tables and eight opponents. All policies check per-action table chip conservation, independent run wealth after settlement rewards, and final extraction ledger. Matched policy snapshots exclude varied-player runs and remain strategy-only evidence, not human recognition or AI difficulty evidence."}
+	verify(stale_bet_handover_restores > 0,"Fold-ended hand with stale street bet restores exactly")
+	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed,"ai_actions":ai_actions,"ai_actions_by_actor":ai_actions_by_actor,"ai_table_appearances":ai_table_appearances,"varied_player_actions":varied_player_actions,"stale_bet_handover_restores":stale_bet_handover_restores,"matched_samples":matched_samples,"matched_samples_by_actor":matched_samples_by_actor,"matched_policy_differences":matched_policy_differences,"matched_contexts":matched_contexts,"scope":"Controlled check/call, production opponent AI, and production AI with a deterministic varied legal player policy across four venues, four tables and eight opponents. All policies check exact full-state restoration at between-hand saves, per-action table chip conservation, independent run wealth after settlement rewards, and final extraction ledger. Matched policy snapshots exclude varied-player runs and remain strategy-only evidence, not human recognition or AI difficulty evidence."}
 	FileAccess.open("res://../output/3d/roster-showdown.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("ROSTER_SHOWDOWN ",JSON.stringify({"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed.size()}))
 	quit(0 if failures.is_empty() else 1)
