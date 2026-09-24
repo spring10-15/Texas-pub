@@ -1528,6 +1528,18 @@
       "outcome": "rejected"
     },
     {
+      "id": "world.raycast_out_of_reach",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.raycast_occluded",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "rejected"
+    },
+    {
       "id": "world.prop_on",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "request_action",

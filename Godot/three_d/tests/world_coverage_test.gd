@@ -21,9 +21,26 @@ func run() -> void:
 	var anchor: Area3D = lamp.anchor
 	var original: Dictionary = world.checkpoint_state()
 	verify("raycast_unfocused", not world.request_action(anchor) and world.checkpoint_state()==original)
+	var target: Vector3 = anchor.global_position
+	world.player.global_position = Vector3(target.x, 0.02, target.z + 3.0)
+	world.player.camera.look_at(target)
+	for i in range(3): await physics_frame
+	var far: Dictionary = world.checkpoint_state()
+	verify("raycast_out_of_reach", world.player.camera.global_position.distance_to(target)>world.player.REACH and world.player.focused!=anchor and not world.request_action(anchor) and world.checkpoint_state()==far)
 	world.player.position = Vector3(1.6, 0.02, -1.1)
 	world.player.camera.look_at(anchor.global_position)
 	for i in range(3): await physics_frame
+	world.player.update_focus()
+	var reachable: bool = world.player.focused==anchor and world.player.camera.global_position.distance_to(target)<world.player.REACH
+	var middle: Vector3 = (world.player.camera.global_position + target) * 0.5
+	var occluder: Node3D = world.box(world, "CoverageOccluder", Vector3(middle.x,1.5,middle.z), Vector3(0.08,2.2,1.4), "wall")
+	for i in range(3): await physics_frame
+	world.player.update_focus()
+	var occluded: Dictionary = world.checkpoint_state()
+	verify("raycast_occluded", reachable and world.player.focused!=anchor and not world.request_action(anchor) and world.checkpoint_state()==occluded)
+	occluder.queue_free()
+	for i in range(3): await physics_frame
+	world.player.update_focus()
 	var aimed: Dictionary = world.checkpoint_state()
 	verify("prop_on", world.request_action(anchor) and world.props.states.lamp and RunCheckpoint.capture(world.run_game)==aimed.run)
 	var busy: Dictionary = world.checkpoint_state()
