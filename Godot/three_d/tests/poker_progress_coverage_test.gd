@@ -55,6 +55,27 @@ func _initialize() -> void:
 			ok = ok and p.holeCards.size() == 2 and p.handContribution == p.currentBet
 		ok = ok and wealth == int(content.tables[table_id].buyIn)*3 and t.state.pot == int(content.tables[table_id].smallBlind)+int(content.tables[table_id].openBet) and t.state.dealerSeat == 1 and t.state.currentActorId == t.state.players[1].id
 		record("next_hand",ok,table_id)
+		for busted in [1,2]:
+			var duel := Table.new()
+			var definition: Dictionary = content.tables[table_id].duplicate(true)
+			definition.hands = 3
+			duel.start(definition,7)
+			var funded: int = 2 if busted == 1 else 1
+			var buy_in: int = int(definition.buyIn)
+			duel.state.players[0].stack = buy_in
+			duel.state.players[funded].stack = buy_in * 2
+			duel.state.players[busted].stack = 0
+			duel.start_hand()
+			var first_dealer: int = duel.state.dealerSeat
+			var started: bool = first_dealer == 0 and duel.state.smallBlindSeat == 0 and duel.state.bigBlindSeat == funded and duel.state.currentActorId == duel.state.players[0].id
+			duel.act(duel.state.currentActorId,"fold",duel.revision)
+			var duel_before := Checkpoint.capture(duel)
+			var rotated: bool = duel.state.status == "hand_over" and duel.next_hand(duel.revision)
+			rotated = rotated and duel.revision == duel_before.revision + 1 and duel.state.handNumber == 2 and duel.state.dealerSeat == funded and duel.state.smallBlindSeat == funded and duel.state.bigBlindSeat == 0 and duel.state.currentActorId == duel.state.players[funded].id
+			rotated = rotated and duel.state.players[busted].folded and duel.state.players[busted].holeCards.is_empty() and duel.state.players[0].holeCards.size() == 2 and duel.state.players[funded].holeCards.size() == 2 and duel.rng.value != duel_before.rngValue
+			var duel_wealth: int = int(duel.state.pot)
+			for participant in duel.state.players: duel_wealth += int(participant.stack)
+			record("next_hand_heads_up",started and rotated and duel_wealth == buy_in * 3,table_id+"/busted="+str(busted))
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("poker_progress.")).map(func(row): return row.id)
 	for id in hits:
 		if id not in expected: failures.append("Uncatalogued hit: "+id)

@@ -19,6 +19,7 @@ func _initialize() -> void:
 			var actor: String = t.state.currentActorId
 			var player: Dictionary = t.find_player(actor)
 			var before := Checkpoint.capture(t)
+			var discount_available: bool = t.state.firstAggressionDiscountAvailable
 			var own := player.duplicate(true)
 			var action: String = {"fold":"fold","call":"call","check":"check","raise":"raise","open":"raise","custom_raise":"raise","raise_to_all_in":"raise","all_in":"all-in"}[key]
 			var target := -1
@@ -37,6 +38,7 @@ func _initialize() -> void:
 			var ok: bool = accepted and player.stack == own.stack-amount and player.handContribution == own.handContribution+amount and player.currentBet == own.currentBet+amount and t.state.pot == before.state.pot+amount
 			ok = ok and t.state.currentBet == new_bet and t.revision == before.revision+1 and t.state.turnCounter == before.state.turnCounter+1 and t.rng.value == before.rngValue and t.state.deck == before.state.deck and t.state.community == before.state.community
 			ok = ok and player.folded == (key == "fold") and player.lastAction == ("all-in" if key == "raise_to_all_in" else action)
+			ok = ok and t.state.firstAggressionDiscountAvailable == (discount_available and key not in ["raise","open","custom_raise","raise_to_all_in","all_in"])
 			var total: int = t.state.pot
 			for p in t.state.players: total += int(p.stack)
 			ok = ok and total == int(content.tables[table_id].buyIn)*3 and t.state.currentActorId == before.state.players[(int(own.seatIndex)+1)%3].id
