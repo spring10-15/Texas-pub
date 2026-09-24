@@ -1,0 +1,898 @@
+{
+  "checks": [
+    {
+      "id": "B2-1a",
+      "claim": "items.csv 19 行",
+      "ok": true,
+      "detail": "19"
+    },
+    {
+      "id": "B2-1b",
+      "claim": "characters.csv 9 行",
+      "ok": true,
+      "detail": "9"
+    },
+    {
+      "id": "B2-1c",
+      "claim": "items.csv 17 列",
+      "ok": true,
+      "detail": "17"
+    },
+    {
+      "id": "B2-1d",
+      "claim": "characters.csv 22 列",
+      "ok": true,
+      "detail": "22"
+    },
+    {
+      "id": "B2-1e",
+      "claim": "README 声明 items.csv 19×17 / characters.csv 9×22",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-1f:items",
+      "claim": "items.csv 有四列：现有源文件 / 可复用部件 / 运行加载点 / 尚缺表现",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-1g:items",
+      "claim": "items.csv 这四列逐行都非空",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-1f:characters",
+      "claim": "characters.csv 有四列：现有源文件 / 可复用部件 / 运行加载点 / 尚缺表现",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-1g:characters",
+      "claim": "characters.csv 这四列逐行都非空",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-1h",
+      "claim": "人物「现有源文件」列逐行指向 .blend + .glb + manifest.json",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-1i",
+      "claim": "人物「可复用部件」列逐行写明 14 骨 rig + 4 段剪辑 + .blend 可编辑源",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-2a",
+      "claim": "物品-可用 9 行且 == content.json 的 usable",
+      "ok": true,
+      "detail": "csv=['marked-lens', 'signal-lighter', 'player-notes', 'steadying-drink', 'disposable-phone', 'kitchen-pass', 'dock-passkey', 'false-bottom-wallet', 'sleeve-clip']"
+    },
+    {
+      "id": "B2-2b",
+      "claim": "物品-贵重 10 行且 == content.json 的 valuable",
+      "ok": true,
+      "detail": "csv=['old-silver-lighter', 'ivory-chip', 'ruby-cufflink', 'gold-cased-watch', 'antique-coin', 'sealed-bond', 'pearl-necklace', 'emerald-brooch', 'obsidian-idol', 'vault-promissory']"
+    },
+    {
+      "id": "B2-2c",
+      "claim": "items.csv 序号 1..19 连续",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-2d",
+      "claim": "characters.csv 角色id 集合 == 8 对手 + bartender（顺序沿用 build_characters.py 的 CAST）",
+      "ok": true,
+      "detail": "['dock-braggart', 'ledger-clerk', 'river-shark', 'velvet-rook', 'calm-widow', 'smiling-knife', 'house-viper', 'ash-smuggler', 'bartender']"
+    },
+    {
+      "id": "B2-2e",
+      "claim": "characters.csv 行序 == build_characters.py 的 CAST 顺序",
+      "ok": true,
+      "detail": "['dock-braggart', 'ledger-clerk', 'river-shark', 'velvet-rook', 'calm-widow', 'smiling-knife', 'house-viper', 'ash-smuggler', 'bartender']"
+    },
+    {
+      "id": "B2-3a",
+      "claim": "props-export.json 12 键",
+      "ok": true,
+      "detail": "['disposable-phone', 'dock-passkey', 'drawer', 'false-bottom-wallet', 'kitchen-pass', 'loose-card', 'loose-chip', 'marked-lens', 'player-notes', 'signal-lighter', 'sleeve-clip', 'steadying-drink']"
+    },
+    {
+      "id": "B2-3b",
+      "claim": "12 键 = 9 可用道具 + 3 场景件(drawer/loose-card/loose-chip)",
+      "ok": true,
+      "detail": "['drawer', 'loose-card', 'loose-chip']"
+    },
+    {
+      "id": "B2-3c",
+      "claim": "art_integration_test 的 12 个 id 与 props-export 一致",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-3d",
+      "claim": "art_integration_test 断言单件恰好 1 个可移动网格",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-4:disposable-phone",
+      "claim": "build_props.py 存在 group(\"disposable-phone\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=True shared_loop=False"
+    },
+    {
+      "id": "B2-4:dock-passkey",
+      "claim": "build_props.py 存在 group(\"dock-passkey\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=False shared_loop=True"
+    },
+    {
+      "id": "B2-4:drawer",
+      "claim": "build_props.py 存在 group(\"drawer\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=True shared_loop=False"
+    },
+    {
+      "id": "B2-4:false-bottom-wallet",
+      "claim": "build_props.py 存在 group(\"false-bottom-wallet\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=True shared_loop=False"
+    },
+    {
+      "id": "B2-4:kitchen-pass",
+      "claim": "build_props.py 存在 group(\"kitchen-pass\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=False shared_loop=True"
+    },
+    {
+      "id": "B2-4:loose-card",
+      "claim": "build_props.py 存在 group(\"loose-card\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=True shared_loop=False"
+    },
+    {
+      "id": "B2-4:loose-chip",
+      "claim": "build_props.py 存在 group(\"loose-chip\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=True shared_loop=False"
+    },
+    {
+      "id": "B2-4:marked-lens",
+      "claim": "build_props.py 存在 group(\"marked-lens\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=True shared_loop=False"
+    },
+    {
+      "id": "B2-4:player-notes",
+      "claim": "build_props.py 存在 group(\"player-notes\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=True shared_loop=False"
+    },
+    {
+      "id": "B2-4:signal-lighter",
+      "claim": "build_props.py 存在 group(\"signal-lighter\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=True shared_loop=False"
+    },
+    {
+      "id": "B2-4:sleeve-clip",
+      "claim": "build_props.py 存在 group(\"sleeve-clip\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=True shared_loop=False"
+    },
+    {
+      "id": "B2-4:steadying-drink",
+      "claim": "build_props.py 存在 group(\"steadying-drink\")（或共用 for 循环 group(name)）",
+      "ok": true,
+      "detail": "literal=True shared_loop=False"
+    },
+    {
+      "id": "B2-5a",
+      "claim": "bar_display.gd bottom 高度字典 = 9 件可用道具（无贵重物）",
+      "ok": true,
+      "detail": "['disposable-phone', 'dock-passkey', 'false-bottom-wallet', 'kitchen-pass', 'marked-lens', 'player-notes', 'signal-lighter', 'sleeve-clip', 'steadying-drink']"
+    },
+    {
+      "id": "B2-5b",
+      "claim": "run.gd buy 分支限制在 SUPPORTED_ITEMS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-5c",
+      "claim": "SUPPORTED_ITEMS == content.json 的 9 件 usable",
+      "ok": true,
+      "detail": "['disposable-phone', 'dock-passkey', 'false-bottom-wallet', 'kitchen-pass', 'marked-lens', 'player-notes', 'signal-lighter', 'sleeve-clip', 'steadying-drink']"
+    },
+    {
+      "id": "B2-6",
+      "claim": "19+9 行的「证据」列都存在且路径可打开",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-6b",
+      "claim": "「现有源文件」与「参考图」列引用的文件路径都能用仓库根解析打开",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-7a",
+      "claim": "19 行都有「尚缺表现」",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-7b",
+      "claim": "9 行都有「尚缺表现」",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-8a",
+      "claim": "四列交互全部非空",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-8b",
+      "claim": "贵重物「货架实物」全部写「不上架」且说明只是购买入口限制",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-8c",
+      "claim": "可用道具「货架实物」全部写「有」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-8d",
+      "claim": "全部 19 件「背包展示」都标明「仅文字」",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-9:marked-lens",
+      "claim": "marked-lens 基础配置候选位计数 = 8",
+      "ok": true,
+      "detail": "csv=8 实测=8"
+    },
+    {
+      "id": "B2-9:signal-lighter",
+      "claim": "signal-lighter 基础配置候选位计数 = 9",
+      "ok": true,
+      "detail": "csv=9 实测=9"
+    },
+    {
+      "id": "B2-9:player-notes",
+      "claim": "player-notes 基础配置候选位计数 = 20",
+      "ok": true,
+      "detail": "csv=20 实测=20"
+    },
+    {
+      "id": "B2-9:steadying-drink",
+      "claim": "steadying-drink 基础配置候选位计数 = 9",
+      "ok": true,
+      "detail": "csv=9 实测=9"
+    },
+    {
+      "id": "B2-9:disposable-phone",
+      "claim": "disposable-phone 基础配置候选位计数 = 9",
+      "ok": true,
+      "detail": "csv=9 实测=9"
+    },
+    {
+      "id": "B2-9:kitchen-pass",
+      "claim": "kitchen-pass 基础配置候选位计数 = 6",
+      "ok": true,
+      "detail": "csv=6 实测=6"
+    },
+    {
+      "id": "B2-9:dock-passkey",
+      "claim": "dock-passkey 基础配置候选位计数 = 6",
+      "ok": true,
+      "detail": "csv=6 实测=6"
+    },
+    {
+      "id": "B2-9:false-bottom-wallet",
+      "claim": "false-bottom-wallet 基础配置候选位计数 = 4",
+      "ok": true,
+      "detail": "csv=4 实测=4"
+    },
+    {
+      "id": "B2-9:sleeve-clip",
+      "claim": "sleeve-clip 基础配置候选位计数 = 16",
+      "ok": true,
+      "detail": "csv=16 实测=16"
+    },
+    {
+      "id": "B2-10",
+      "claim": "9 件道具的面数与 props-export.json 一致",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-11:marked-lens",
+      "claim": "marked-lens 的消耗/失去声明有代码依据（run.gd:360-362）",
+      "ok": true,
+      "detail": "消耗｜run.gd:360-362 inventory.erase + used_tools.append；run.gd:363 heat+1；run.gd:274-275 每桌一"
+    },
+    {
+      "id": "B2-11:steadying-drink",
+      "claim": "steadying-drink 的消耗/失去声明有代码依据（run.gd:340）",
+      "ok": true,
+      "detail": "消耗｜run.gd:340 drink 时 inventory.erase(\"steadying-drink\")；run.gd:298-299 背包内必须有"
+    },
+    {
+      "id": "B2-11:sleeve-clip",
+      "claim": "sleeve-clip 的消耗/失去声明有代码依据（run.gd:360-362）",
+      "ok": true,
+      "detail": "消耗｜run.gd:360-362 inventory.erase + used_tools；run.gd:363 heat+2（heat 字段同为 2）；run.gd:278-2"
+    },
+    {
+      "id": "B2-11:signal-lighter",
+      "claim": "signal-lighter 的消耗/失去声明有代码依据（advanced_services.gd:75-79）",
+      "ok": true,
+      "detail": "消耗｜advanced_services.gd:75-79 inventory.erase + used_tools；heat 字段为 0（run.gd:9 表内 heat=0）"
+    },
+    {
+      "id": "B2-11:player-notes",
+      "claim": "player-notes 的消耗/失去声明有代码依据（advanced_services.gd:75-79）",
+      "ok": true,
+      "detail": "消耗｜advanced_services.gd:75-79 使用后 inventory.erase + used_tools；同一对手重复记录被拒（:18-19）"
+    },
+    {
+      "id": "B2-11:disposable-phone",
+      "claim": "disposable-phone 的消耗/失去声明有代码依据（advanced_services.gd:75-76）",
+      "ok": true,
+      "detail": "消耗｜advanced_services.gd:75-76 每次使用 inventory.erase（无 used_tools，故可多买多用）"
+    },
+    {
+      "id": "B2-11:kitchen-pass",
+      "claim": "kitchen-pass 的消耗/失去声明有代码依据（advanced_services.gd:52-54）",
+      "ok": true,
+      "detail": "消耗｜advanced_services.gd:52-54,76 揭示 unlockRoute 后 inventory.erase（一次性）"
+    },
+    {
+      "id": "B2-11:dock-passkey",
+      "claim": "dock-passkey 的消耗/失去声明有代码依据（advanced_services.gd:52-54）",
+      "ok": true,
+      "detail": "消耗｜advanced_services.gd:52-54,76 揭示 river-launch 后 inventory.erase（一次性）"
+    },
+    {
+      "id": "B2-11:false-bottom-wallet",
+      "claim": "false-bottom-wallet 的消耗/失去声明有代码依据（run.gd:461）",
+      "ok": true,
+      "detail": "不消耗｜被动效果，全程留在背包；仅 run.gd:461 abandon 时结算 mini(80, cash)，随后随 run.gd:466 inventory.clear() 一"
+    },
+    {
+      "id": "B2-11x",
+      "claim": "false-bottom-wallet 标注为「不消耗」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-11y",
+      "claim": "extract() / abandon() 均清空背包",
+      "ok": true,
+      "detail": "extract=True abandon=True"
+    },
+    {
+      "id": "B2-12a",
+      "claim": "run.gd:198-202 奖励 match 覆盖全部 10 件贵重物（扣除 4 个牌桌 id 后集合相等）",
+      "ok": true,
+      "detail": "多出=[] 缺少=[]"
+    },
+    {
+      "id": "B2-12b",
+      "claim": "每件贵重物的「拿取动作」列都写明自己的代码获得路径",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-12c",
+      "claim": "每件贵重物都有至少一条获得路径（无死道具）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-13a",
+      "claim": "各桌 baseRewardPool 与当前条件结算分支的可能奖励 ID 一致",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-13b",
+      "claim": "README 区分奖励候选展示与本局条件结算",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-13c",
+      "claim": "REWARD 展示确实读 baseRewardPool（run.gd:432）",
+      "ok": true,
+      "detail": "service_view uses baseRewardPool.map=True"
+    },
+    {
+      "id": "B2-14a",
+      "claim": "POSITION 字节 sha256 分出 4 组",
+      "ok": true,
+      "detail": "[\"['ash-smuggler', 'dock-braggart', 'river-shark', 'smiling-knife']\", \"['house-viper', 'ledger-clerk', 'velvet-rook']\", \"['calm-widow']\", \"['bartender']\"]"
+    },
+    {
+      "id": "B2-14b",
+      "claim": "4 组成员与 characters.csv 的几何组标注一致",
+      "ok": true,
+      "detail": "[['ash-smuggler', 'dock-braggart', 'river-shark', 'smiling-knife'], ['bartender'], ['calm-widow'], ['house-viper', 'ledger-clerk', 'velvet-rook']]"
+    },
+    {
+      "id": "B2-14c",
+      "claim": "characters.csv 的分组划分与二进制复算完全一致",
+      "ok": true,
+      "detail": "{'A': ['ash-smuggler', 'dock-braggart', 'river-shark', 'smiling-knife'], 'B': ['house-viper', 'ledger-clerk', 'velvet-rook'], 'D': ['calm-widow'], 'C': ['bartender']}"
+    },
+    {
+      "id": "B2-15a",
+      "claim": "9 行骨骼数/manifest 顶点与 manifest.json 一致",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-15b",
+      "claim": "9 行 GLB_POSITION 总数与实测一致",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-15c",
+      "claim": "README 的 4 组 GLB 顶点数（41463/40617/40617/39708）可复现",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-16a",
+      "claim": "build_characters.py CAST 解析出 9 条",
+      "ok": true,
+      "detail": "9"
+    },
+    {
+      "id": "B2-16b",
+      "claim": "9 行造型开关与 CAST 的 hat/female（+bartender standing）一致",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-16c",
+      "claim": "只有 bartender 有 standing 分支",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-17a",
+      "claim": "四段剪辑名称与帧数定义存在",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-17b",
+      "claim": "README 写的帧数 61/25/31/31 与源码一致",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-17c",
+      "claim": "bet 驱动 forearm.R",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-17d",
+      "claim": "win 驱动 spine",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-17e",
+      "claim": "characters_test 只断言 head 变形 > .02 rad",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-17f",
+      "claim": "characters_test 只断言每段 ≥1 条轨道",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-18a",
+      "claim": "25 个模型文件中无一以 10 件贵重物 id 命名",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-18b",
+      "claim": "模型文件总数 25（13 glb + 12 blend）",
+      "ok": true,
+      "detail": "25"
+    },
+    {
+      "id": "B2-19a",
+      "claim": "装饰层确有 Pearl necklace / Pocket watch",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-19b",
+      "claim": "README 声明只有 2 件在装饰层有同名物件",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-19c",
+      "claim": "装饰组 05 只有三类物件（无其他贵重物同名物）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-20a",
+      "claim": "build_characters.py 里只有 hat / female / standing 三个造型分支",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-20b",
+      "claim": "Skin 是按 idx 派生而非逐人书写",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-20c",
+      "claim": "9 行「个人标识」都写明「无独立视觉标识」",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-20d",
+      "claim": "9 行「可识别性检查项」都带禁用配色的警示",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-20e",
+      "claim": "README 明确「基础几何共享不是自动失败，也不能证明完成」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-21a",
+      "claim": "Phase3 顺序只取 2/3/4（1 与 5 不在逐件范围）",
+      "ok": true,
+      "detail": "['2', '3', '4']"
+    },
+    {
+      "id": "B2-21b",
+      "claim": "贵重物排在 2、可用道具排在 3、人物排在 4",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-21c",
+      "claim": "README 声明顺序只是建议、不代表批准开工",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-22a",
+      "claim": "README 写明边界：不建模、不导出、不生图、不购买素材",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-22b",
+      "claim": "README 写明边界：不改游戏代码、资产、覆盖目录",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-22c",
+      "claim": "README 写明边界：不自行提交、推送",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-22d",
+      "claim": "README 写明未生图/缺参考图需主 Agent 判断",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-22e",
+      "claim": "README 无「已完成 / 已通过」类肯定式结论",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-22f",
+      "claim": "README 显式声明未取得 Phase 2/3 完成资格",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-22g",
+      "claim": "README 声明自查条数不是验收指标（0 条 REFUTE 才是）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-22h",
+      "claim": "README 未写死自查条数（避免随脚本增删漂移）",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-23a",
+      "claim": "README 未重列 56 行内容矩阵（只引用路径）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-23b",
+      "claim": "README 明确「不复制新的资产总数据库」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-24",
+      "claim": "B2 三个文件里的反引号路径全部可打开（两级解析）",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-25a",
+      "claim": "items.csv 有「参考图」列",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-25b",
+      "claim": "characters.csv 有「参考图」列",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-25c",
+      "claim": "items.csv 19 行参考图列都写着「需主 Agent 判断」",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-25d",
+      "claim": "characters.csv 9 行参考图列都写着「需主 Agent 判断」",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-25e",
+      "claim": "9 件可用道具的参考图列引用 tavern-detail/README.md:3",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-25f",
+      "claim": "10 件贵重物的参考图列引用 stash-noir/README.md:3",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-25g",
+      "claim": "9 位人物的参考图列引用 characters/README.md:3",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-25h",
+      "claim": "build_props.py 无 .png / 无「参考」/ 无词边界 reference（脚本不读图）",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-25i",
+      "claim": "assets/scene-plates 下 33 张 png",
+      "ok": true,
+      "detail": "33"
+    },
+    {
+      "id": "B2-25j",
+      "claim": "酒馆酒保交易视角.png 与 德扑酒馆全貌.png 字节相同（sha256 一致）",
+      "ok": true,
+      "detail": "aae6a12f8d272709 / aae6a12f8d272709"
+    },
+    {
+      "id": "B2-25j2",
+      "claim": "这 6 个板去重后是 5 份不同内容（不是「只剩 1 张」）",
+      "ok": true,
+      "detail": "['70019f8fec855562', '84c816736a6df830', 'aae6a12f8d272709', 'b42e0756a20e8875', 'b9a5be21e78f34b2']"
+    },
+    {
+      "id": "B2-25k",
+      "claim": "README 写出该哈希与「去重后是 5 份不同内容」",
+      "ok": true,
+      "detail": "aae6a12f8d272709"
+    },
+    {
+      "id": "B2-25l",
+      "claim": "README 逐字引用 characters/README.md:3 的「未生成新参考图」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-25m",
+      "claim": "README 逐字引用 tavern-detail/README.md:3 的「不使用 image2.5 或新增 AI 参考图」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-25n",
+      "claim": "README 逐字引用 stash-noir/README.md:3 的「皮箱／木桌参考图」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-25o",
+      "claim": "README 有独立的参考图小节（§1.4）且落进文件清单",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-25p",
+      "claim": "交付物无「已生成/已下载参考图」类肯定式表述",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-25q",
+      "claim": "assets/blender/characters/README.md:3 确实含「未生成新参考图」",
+      "ok": true,
+      "detail": "来源：项目现有「酒馆酒保交易视角.png」与「德扑牌桌视角.png」。依据其中的西装、马甲、礼帽、酒保衬衫与坐姿制作，未"
+    },
+    {
+      "id": "B2-25r",
+      "claim": "assets/blender/tavern-detail/README.md:3 确实含「不使用 image2.5 或新增 AI 参考图」",
+      "ok": true,
+      "detail": "2026-09-09。根据现有藏匿点、烟雾酒馆和酒保交易参考图手工编写 Blender 建模脚本，不使用 image2."
+    },
+    {
+      "id": "B2-25s",
+      "claim": "assets/blender/stash-noir/README.md:3 确实含「皮箱／木桌参考图」",
+      "ok": true,
+      "detail": "根据本次提供的皮箱／木桌参考图制作的第一版可编辑 3D 静物场景。单张图不可见的结构与尺寸采用合理补全；纸币为虚构游戏纸"
+    },
+    {
+      "id": "B2-26a",
+      "claim": "build_characters.py 逐角色循环且每轮 read_factory_settings 重建（几何相同源于算法相同）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26b",
+      "claim": "build_characters.py 按角色名分别存 .blend 与 .glb（不是九个文件链接同一网格）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26c",
+      "claim": "characters.csv「可复用部件」不再声称同组网格可直接互相套用，且写明独立可编辑源",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-26d1",
+      "claim": "characters.csv「依赖」不再写「单独改 1 人无法拉开组内区分」",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-26d2",
+      "claim": "同组 7 人（组 A 4 + 组 B 3）的「依赖」把整组一起改写为建议而非前提",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-26d3",
+      "claim": "9 行「依赖」都写明本角色可单独制作",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "id": "B2-26e",
+      "claim": "README 正文写明「几何相同 ≠ 文件联动」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26f",
+      "claim": "README 正文不含「必须整组一起改」「必须 4 人一并改」这类技术前提",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26g",
+      "claim": "README 正文不再断言「现有 3D 参考图去重后只有 1 张」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26h",
+      "claim": "README 未逐图审阅的图片一律写「内容适用性未核验」",
+      "ok": true,
+      "detail": "6"
+    },
+    {
+      "id": "B2-26i",
+      "claim": "README 正文写明「购买入口只支持 9 件」且贵重物仍会入包",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26j",
+      "claim": "items.csv 贵重物「制作起点」互斥三分组且合计 10（A2 / B3 / C5）",
+      "ok": true,
+      "detail": "{'B': 3, 'C': 5, 'A': 2}"
+    },
+    {
+      "id": "B2-26k",
+      "claim": "每件贵重物「制作起点」恰好一个分组字母，分组名与件数可加总",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26l",
+      "claim": "items.csv 不再写「需从零建」这类仅由「无同名物」推出的结论",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26m",
+      "claim": "README 正文区分「无同名物」与「已确认没有别的可借内容」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26n",
+      "claim": "items.csv 货架列不再写「固定上架位」，可用道具改「基础配置候选位」",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26o",
+      "claim": "run_variants.gd 正种子下从非必需候选中删 1 件（ESSENTIALS 除外）",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26p",
+      "claim": "run.gd shop_stock 有 variant_plan 时优先返回 plan.shelves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26q",
+      "claim": "README 正文写明「候选位不是每次必上架」并给出种子计划优先路径",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "B2-26r",
+      "claim": "README 正文不含「固定上架位」旧说法",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}
