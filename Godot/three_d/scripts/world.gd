@@ -908,8 +908,11 @@ func close_services() -> void:
 func service_action(kind: String, item_id: String, revision: int, target_id := "") -> void:
 	if not services_panel.visible or paused:
 		return
+	var available_actions: Array = []
 	var offered := false
 	for action in run_game.service_view(service_mode, product_id).actions:
+		if action.reason.is_empty():
+			available_actions.append({"kind": action.kind, "id": action.id, "target": action.get("target", ""), "label": action.label})
 		if action.kind == kind and action.id == item_id and action.get("target", "") == target_id:
 			offered = true
 	if not offered:
@@ -919,7 +922,7 @@ func service_action(kind: String, item_id: String, revision: int, target_id := "
 		show_run_panel("route:" + item_id, true)
 		return
 	if run_game.service_action(kind, item_id, revision, target_id):
-		trace_playtest("service_action", kind, {"item": item_id, "target": target_id})
+		trace_playtest("service_action", kind, {"item": item_id, "target": target_id, "available_actions": available_actions})
 		refresh_economy()
 		if table_game != null:
 			refresh_table()

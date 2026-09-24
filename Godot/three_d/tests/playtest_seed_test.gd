@@ -33,7 +33,9 @@ func run_tests() -> void:
 	verify(FileAccess.get_file_as_string(trace_path).split("\n", false).size() == 1,"Rejected service action does not enter trace")
 	world.service_action("intel", "cargo-table", world.run_game.revision)
 	var service_trace := FileAccess.get_file_as_string(trace_path).split("\n", false)
-	verify(service_trace.size() == 2 and JSON.parse_string(service_trace[1]).event == "service_action" and JSON.parse_string(service_trace[1]).choice == "intel","Accepted service action appends a trace event")
+	var service_record: Dictionary = JSON.parse_string(service_trace[1]) if service_trace.size() == 2 else {}
+	var available_actions: Array = service_record.get("details", {}).get("available_actions", [])
+	verify(service_trace.size() == 2 and service_record.get("event") == "service_action" and service_record.get("choice") == "intel" and available_actions.size() > 1 and available_actions.any(func(action): return action.kind == "intel" and action.id == "cargo-table"),"Accepted service action records the offered decision set")
 	world.close_services()
 	world.seated = true
 	world.start_table(301)
