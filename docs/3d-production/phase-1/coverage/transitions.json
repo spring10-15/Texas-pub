@@ -1660,6 +1660,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.travel_landing",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "travel",
+      "outcome": "accepted"
+    },
+    {
       "id": "world.room_door_blocked",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "request_action",

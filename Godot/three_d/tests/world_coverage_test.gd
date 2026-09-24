@@ -138,6 +138,17 @@ func run() -> void:
 	var cross_rejected: bool = not world.request_action(window_anchor)
 	verify("cross_prop_busy", lamp_started and world.action_busy and world.player.focused==window_anchor and cross_rejected and not world.props.states.window and world.checkpoint_state()==busy_before)
 	await create_timer(0.5).timeout
+	var travel_destinations := {"stash":"藏匿点", "tavern":world.RunRules.SCENE_NAMES[world.run_game.scene_id], "ledger":"账房地窖", "mirror":"镜厅", "embers":"余烬牌室"}
+	var travel_landing_ok := true
+	for destination in travel_destinations:
+		world.travel(destination)
+		for i in range(2): await physics_frame
+		var expected_position: Vector3 = Vector3(1.95,0.05,1.7) if destination == "stash" else Vector3(world.ROOMS[destination].x-2.0,0.05,1.7)
+		var actual_xz := Vector2(world.player.position.x, world.player.position.z)
+		var expected_xz := Vector2(expected_position.x, expected_position.z)
+		travel_landing_ok = travel_landing_ok and world.current_room==destination and actual_xz.is_equal_approx(expected_xz) and absf(world.player.position.y-expected_position.y)<0.02 and world.title_label.text==travel_destinations[destination]
+	verify("travel_landing", travel_landing_ok)
+	world.travel("stash")
 	var room_prop_results := {"light_on":true, "light_off":true, "cupboard_open":true, "cupboard_close":true}
 	for room_name in ["tavern", "ledger", "mirror", "embers"]:
 		world.travel(room_name)
