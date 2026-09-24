@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A5 收尾自检：按内容锚点重推 source_line，并核对 evidence_path 存在、CSV 可解析、24 条目录 ID 均有映射。
+"""A5 收尾自检：按内容锚点重推 source_line，并核对 evidence_path 存在、CSV 可解析、31 条目录 ID 均有映射。
 
 用法（仓库根）：
     python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_outcomes.py
@@ -26,6 +26,10 @@ CATALOG_IDS = [
     "persistence_restore.locked_room", "persistence_restore.legacy_run_fields",
     "persistence_run.invalid_fields_rejected", "persistence_table.invalid_snapshot_rejected",
     "persistence_restore.save_repaired_from_memory",
+    "persistence_io.write_open_rejected", "persistence_io.write_rename_rejected",
+    "persistence_restore.corrupt_load_preserved", "persistence_restore.unsupported_version_preserved",
+    "persistence_restore.active_in_stash", "persistence_replay.world_rng_resume",
+    "persistence_replay.rng_negative_control",
 ]
 
 problems = []
@@ -75,9 +79,10 @@ def main() -> int:
                         problems.append(f"行 {i}: source_line {n} 越界（{src} 共 {len(text)} 行）")
                     elif anchor not in text[n - 1]:
                         problems.append(f"行 {i}: 锚点在第 {n} 行未命中：{anchor[:60]!r}")
-        cid = str(r.get("existing_catalog_id", "")).strip()
-        if cid:
-            catalog_seen[cid] = catalog_seen.get(cid, 0) + 1
+        for cid in str(r.get("existing_catalog_id", "")).split(";"):
+            cid = cid.strip()
+            if cid:
+                catalog_seen[cid] = catalog_seen.get(cid, 0) + 1
 
     for fid in FAMILIES:
         if fid not in families_seen:
