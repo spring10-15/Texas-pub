@@ -40,7 +40,7 @@ static func restore(snapshot: Dictionary) -> RefCounted:
 			if not valid_card(card,seen): return null
 	for card in state.community + state.deck:
 		if not valid_card(card,seen): return null
-	if seen.size() != 52 or contributions != state.pot or highest_current_bet != state.currentBet or chips + (state.pot if state.status == "playing" else 0) != definition.buyIn * 3:
+	if seen.size() != 52 or contributions != state.pot or (state.status == "playing" and highest_current_bet != state.currentBet) or chips + (state.pot if state.status == "playing" else 0) != definition.buyIn * 3:
 		return null
 	for id in state.toAct:
 		if id not in expected_ids: return null

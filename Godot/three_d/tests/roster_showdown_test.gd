@@ -13,25 +13,29 @@ var matched_samples := 0
 var matched_samples_by_actor := {}
 var matched_policy_differences := {}
 var matched_contexts := []
+var varied_player_actions := {}
 func verify(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label); push_error(label)
-func play(content: Dictionary, scene: String, site: String, actor: String, seed_value: int, live_ai := false) -> void:
-	var key := ("ai:" if live_ai else "controlled:")+scene+":"+site+":"+actor
+func play(content: Dictionary, scene: String, site: String, actor: String, seed_value: int, live_ai := false, varied_player := false) -> void:
+	var key := ("ai-varied:" if live_ai and varied_player else ("ai:" if live_ai else "controlled:"))+scene+":"+site+":"+actor
 	var r := Run.new(content)
 	r.start(r.revision,scene,seed_value)
 	# Prior-room unlock fixture. The table, its hands, settlement and exit use public commands.
 	r.completed.assign(Run.Variants.TABLES.slice(0,Run.Variants.TABLES.find(site)))
+	var wealth_before_table: int = r.vault + r.cash + r.valuable_total()
 	var t: RefCounted = r.enter_table(int(r.variant_plan.table_seeds[site]),r.revision,site)
 	verify(t != null,"Table enters "+key)
 	if t == null: return
 	verify(t.find_player(actor).id == actor,"Target opponent is seated "+key)
-	if live_ai:
+	if live_ai and not varied_player:
 		for player in t.state.players.slice(1):
 			var actor_id: String = player.id
 			ai_table_appearances[actor_id] = int(ai_table_appearances.get(actor_id, 0)) + 1
 	var cash_after_buy: int = r.cash
 	var buy_in: int = t.state.tableDef.buyIn
+	var player_action_rng := RandomNumberGenerator.new()
+	player_action_rng.seed = absi(seed_value * 1009 + scene.hash() + site.hash() + actor.hash()) + 1
 	var showdowns := 0
 	var steps := 0
 	while t.state.status != "finished" and steps < 200:
@@ -52,15 +56,23 @@ func play(content: Dictionary, scene: String, site: String, actor: String, seed_
 			var id: String = t.state.currentActorId
 			var legal: Dictionary = t.legal_actions(id)
 			var decision: String = "check" if legal.get("check",false) else ("call" if legal.get("call",false) else "all-in")
+			if id == "player" and varied_player:
+				var options: Array[String] = []
+				for candidate in ["fold", "check", "call", "raise", "all-in"]:
+					var legal_key: String = "allIn" if candidate == "all-in" else candidate
+					if legal.get(legal_key, false): options.append(candidate)
+				decision = options[player_action_rng.randi_range(0, options.size() - 1)]
+				varied_player_actions[decision] = int(varied_player_actions.get(decision, 0)) + 1
 			if live_ai and id != "player":
 				var player: Dictionary = t.find_player(id)
 				var random_value: float = t.rng.next()
 				decision = Opponent.choose(t.state,player,legal,content.opponents[id],random_value)
-				ai_actions[decision] = int(ai_actions.get(decision,0))+1
-				if not ai_actions_by_actor.has(id): ai_actions_by_actor[id] = {}
-				ai_actions_by_actor[id][decision] = int(ai_actions_by_actor[id].get(decision,0))+1
-				ai_decisions += 1
-				if ai_decisions % 10 == 0:
+				if not varied_player:
+					ai_actions[decision] = int(ai_actions.get(decision,0))+1
+					if not ai_actions_by_actor.has(id): ai_actions_by_actor[id] = {}
+					ai_actions_by_actor[id][decision] = int(ai_actions_by_actor[id].get(decision,0))+1
+					ai_decisions += 1
+				if not varied_player and ai_decisions % 10 == 0:
 					var opponents: int = t.state.players.filter(func(p): return p.id != id and not p.folded).size()
 					var odds: float = Opponent.estimate_odds(player.holeCards,t.state.community,opponents,t.state.seed+t.state.handNumber*137+t.state.turnCounter*19+player.seatIndex*11)
 					var profiles: Array = content.opponents.keys()
@@ -84,12 +96,16 @@ func play(content: Dictionary, scene: String, site: String, actor: String, seed_
 	verify(steps < 200 and t.state.status == "finished" and (live_ai or showdowns == int(t.state.totalHands)),"Table completes "+key)
 	var returned: int = t.state.players[0].stack
 	verify(r.settle_table(r.revision) and r.cash == cash_after_buy+returned,"Settlement returns exactly remaining chips "+key)
+	var reward_value: int = int(content.items[r.last_table_result.reward].value) if r.last_table_result.reward_added else 0
+	var wealth_after_settlement: int = wealth_before_table + returned - buy_in + reward_value
+	verify(r.vault + r.cash + r.valuable_total() == wealth_after_settlement,"Independent vault/cash/valuable ledger balances after reward "+key)
 	var after := Checkpoint.capture(r)
 	verify(not r.settle_table(r.revision) and Checkpoint.capture(r) == after,"No duplicate settlement "+key)
 	r.discover_exit()
 	var quote: Dictionary = r.extraction_quote()
 	var vault: int = r.vault
-	verify(quote.reason.is_empty() and r.extract(r.revision) and r.vault == vault+int(quote.net) and r.cash == 0 and r.inventory.is_empty(),"Ordinary exit banks the quoted amount once "+key)
+	var expected_final_vault: int = wealth_after_settlement - int(quote.fee) - int(quote.lostCash) - int(quote.lostGoods)
+	verify(quote.reason.is_empty() and r.extract(r.revision) and r.vault == vault+int(quote.net) and r.vault == expected_final_vault and r.cash == 0 and r.inventory.is_empty(),"Independent ledger balances after ordinary extraction "+key)
 	completed[key] = {"seed":seed_value,"showdowns":showdowns,"steps":steps,"buyIn":buy_in,"playerChips":returned,"playerNet":returned-buy_in,"targetChips":t.find_player(actor).stack}
 func _initialize() -> void:
 	var content: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
@@ -102,8 +118,11 @@ func _initialize() -> void:
 					for live_ai in [false,true]:
 						var key: String = ("ai:" if live_ai else "controlled:")+scene+":"+site+":"+actor
 						if not completed.has(key): play(content,scene,site,actor,seed_value,live_ai)
-	verify(completed.size() == 256,"Two policies x four venues x four tables x eight opponents")
-	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed,"ai_actions":ai_actions,"ai_actions_by_actor":ai_actions_by_actor,"ai_table_appearances":ai_table_appearances,"matched_samples":matched_samples,"matched_samples_by_actor":matched_samples_by_actor,"matched_policy_differences":matched_policy_differences,"matched_contexts":matched_contexts,"scope":"Controlled check/call and production opponent AI through table completion, save, settlement and extraction. Every tenth live AI decision also compares all profiles on the same sampled cards, legal actions, equity and random value without changing the played action. Sampled states follow one player policy and are not balanced human recognition or AI difficulty evidence."}
+					var varied_key: String = "ai-varied:"+scene+":"+site+":"+actor
+					if not completed.has(varied_key): play(content,scene,site,actor,seed_value,true,true)
+	verify(completed.size() == 384,"Three policies x four venues x four tables x eight opponents")
+	verify(varied_player_actions.get("raise",0) > 0 and varied_player_actions.get("fold",0) > 0 and varied_player_actions.get("all-in",0) > 0,"Varied player policy reaches raises, folds and all-ins")
+	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed,"ai_actions":ai_actions,"ai_actions_by_actor":ai_actions_by_actor,"ai_table_appearances":ai_table_appearances,"varied_player_actions":varied_player_actions,"matched_samples":matched_samples,"matched_samples_by_actor":matched_samples_by_actor,"matched_policy_differences":matched_policy_differences,"matched_contexts":matched_contexts,"scope":"Controlled check/call, production opponent AI, and production AI with a deterministic varied legal player policy across four venues, four tables and eight opponents. All policies check per-action table chip conservation, independent run wealth after settlement rewards, and final extraction ledger. Matched policy snapshots exclude varied-player runs and remain strategy-only evidence, not human recognition or AI difficulty evidence."}
 	FileAccess.open("res://../output/3d/roster-showdown.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("ROSTER_SHOWDOWN ",JSON.stringify({"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed.size()}))
 	quit(0 if failures.is_empty() else 1)
