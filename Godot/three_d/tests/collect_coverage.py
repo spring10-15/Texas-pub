@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[3]
 CATALOG = ROOT / 'docs/3d-production/phase-1/coverage/transitions.json'
 SUITES = {
     'persistence-io': ('save_store_test.gd', {'persistence_io'}),
+    'persistence-capture': ('persistence_capture_coverage_test.gd', {'persistence_capture'}),
     'persistence-restore': ('world_restore_atomic_test.gd', {'persistence_restore'}),
     'persistence-replay': ('world_rng_replay_test.gd', {'persistence_replay'}),
     'signal': ('signal_coverage_test.gd', {'signal'}),
