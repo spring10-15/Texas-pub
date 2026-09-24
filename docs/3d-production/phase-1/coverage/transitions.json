@@ -2281,7 +2281,6 @@
   "pending_families": {
     "poker": [],
     "world": [
-      "seat",
       "leave_seat",
       "physical_raycast",
       "prop_interactions",
