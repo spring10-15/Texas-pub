@@ -1,0 +1,15 @@
+# probe-signage.log
+# cmd: /Applications/Godot.app/Contents/MacOS/Godot --path /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot --script /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/docs/3d-production/external-handoff/V1-extraction-visual/repro/probe_tavern_signage.gd -- --test
+# started: 2026-09-23 17:46:50
+# elapsed_s: 2.4
+# exit_code: 0
+
+--- stdout+stderr ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+SIGNAGE {"known":{"dropbag-cash":true,"fixed":true,"river-launch":false,"service-stairs":false},"route_name_service_stairs":"后厨楼梯","signs":[{"kind":"emergency","text":"检修口 · 紧急撤离"},{"kind":"directions","text":"← 后厨楼梯    库房 ↑    装卸码头 →"},{"kind":"fixed","text":"后厨货梯接应"},{"kind":"service-stairs","text":"后厨楼梯"},{"kind":"river-launch","text":"装卸码头"}],"venue":"smoky-den"}
+SIGNAGE {"known":{"dropbag-cash":true,"fixed":true,"river-launch":false,"service-stairs":false},"route_name_service_stairs":"维修电梯","signs":[{"kind":"emergency","text":"检修口 · 紧急撤离"},{"kind":"directions","text":"← 后厨楼梯    库房 ↑    装卸码头 →"},{"kind":"fixed","text":"贵宾电梯"},{"kind":"service-stairs","text":"后厨楼梯"},{"kind":"river-launch","text":"装卸码头"}],"venue":"high-rise-suite"}
+SIGNAGE {"known":{"dropbag-cash":true,"fixed":true,"river-launch":false,"service-stairs":false},"route_name_service_stairs":"消防楼梯","signs":[{"kind":"emergency","text":"检修口 · 紧急撤离"},{"kind":"directions","text":"← 后厨楼梯    库房 ↑    装卸码头 →"},{"kind":"fixed","text":"员工通道"},{"kind":"service-stairs","text":"后厨楼梯"},{"kind":"river-launch","text":"装卸码头"}],"venue":"rooftop-club"}
+SIGNAGE {"known":{"dropbag-cash":true,"fixed":true,"river-launch":false,"service-stairs":false},"route_name_service_stairs":"传感器盲区走廊","signs":[{"kind":"emergency","text":"检修口 · 紧急撤离"},{"kind":"directions","text":"← 后厨楼梯    库房 ↑    装卸码头 →"},{"kind":"fixed","text":"数据节点闸门"},{"kind":"service-stairs","text":"后厨楼梯"},{"kind":"river-launch","text":"装卸码头"}],"venue":"neon-poker-club"}
+SIGNAGE_DONE

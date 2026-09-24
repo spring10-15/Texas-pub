@@ -1,0 +1,13 @@
+venue,scenario,resolution,screenshot,result,issue_id,notes
+smoky-den,normal,1376x768,smoky-den__normal.png,PASS,none,"标题「普通出口 · 撤离结算」；正文4行，末行「本局净变化 +0」完整；费用60/最终到账300 可读；确认按钮可用（亮色），放弃按钮未显示；四店共用同一 Tavern 房间，本图与同状态其他三店仅店名标签与数值不同"
+smoky-den,short-cash,1376x768,smoky-den__short-cash.png,PASS,none,"标题「普通出口 · 撤离结算」；末行「紧急出口 · 丢现金：费用 10，弃现金 7，弃贵重物 0，预计到账 2」完整；确认按钮禁用（置灰）；「查看主动放弃本局的损失」可见且独立于确认；未出现未获得的 后厨楼梯/河边接驳"
+smoky-den,expired-reservation,1376x768,smoky-den__expired-reservation.png,PASS,none,"最长备选：标题「后厨货梯接应 · 撤离结算」；正文8行，末行「紧急出口 · 丢贵重物：费用 10，弃现金 0，弃贵重物 60，预计到账 290」完整；已知可用路线5条全在画面内；确认按钮禁用；内容最小高528 < 面板高540（余量12px）"
+high-rise-suite,normal,1376x768,high-rise-suite__normal.png,PASS,none,"同 smoky-den 布局；数值为高层套房口径：费用96/最终到账264/净变化-36；末行完整；确认按钮可用"
+high-rise-suite,short-cash,1376x768,high-rise-suite__short-cash.png,PASS,none,"数值为高层套房口径：此路线费用115；末行「紧急出口 · 丢现金…预计到账 2」完整；确认按钮禁用；未出现本店真实路线名「维修电梯/地下车库」"
+high-rise-suite,expired-reservation,1376x768,high-rise-suite__expired-reservation.png,PASS,none,"最长备选：真实路线名「贵宾电梯/维修电梯/地下车库」；正文8行末行完整；确认按钮禁用；内容最小高528 < 540"
+rooftop-club,normal,1376x768,rooftop-club__normal.png,PASS,none,"数值为屋顶会所口径：费用67/最终到账293/净变化-7；末行完整；确认按钮可用"
+rooftop-club,short-cash,1376x768,rooftop-club__short-cash.png,PASS,none,"数值：此路线费用90；末行完整；确认按钮禁用；未出现「消防楼梯/停机坪接应」"
+rooftop-club,expired-reservation,1376x768,rooftop-club__expired-reservation.png,PASS,none,"最长备选：真实路线名「员工通道/消防楼梯/停机坪接应」；正文8行末行完整；确认按钮禁用；内容最小高528 < 540"
+neon-poker-club,normal,1376x768,neon-poker-club__normal.png,PASS,none,"数值为霓虹扑克俱乐部口径：费用76/最终到账284/净变化-16；末行完整；确认按钮可用"
+neon-poker-club,short-cash,1376x768,neon-poker-club__short-cash.png,PASS,none,"数值：此路线费用91；末行完整；确认按钮禁用；未出现「传感器盲区走廊/后台传送门」"
+neon-poker-club,expired-reservation,1376x768,neon-poker-club__expired-reservation.png,PASS,none,"最长备选也是最宽一行：「传感器盲区走廊：费用 20，弃现金 0，弃贵重物 0，预计到账 340」未换行未裁切；末行完整；确认按钮禁用；内容最小高528 < 540"

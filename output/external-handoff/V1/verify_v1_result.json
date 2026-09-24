@@ -1,0 +1,105 @@
+{
+  "script": "verify_visual.py",
+  "counts": {
+    "CONFIRM": 14,
+    "REFUTE": 0
+  },
+  "checks": [
+    {
+      "check": "主矩阵 矩阵列齐全",
+      "verdict": "CONFIRM",
+      "detail": "12 行"
+    },
+    {
+      "check": "主矩阵 行数 == 12",
+      "verdict": "CONFIRM",
+      "detail": "实际 12"
+    },
+    {
+      "check": "主矩阵 截图可解析且与矩阵一致",
+      "verdict": "CONFIRM",
+      "detail": "核对 12 张"
+    },
+    {
+      "check": "主矩阵 同状态四店图不完全相同",
+      "verdict": "CONFIRM",
+      "detail": ""
+    },
+    {
+      "check": "主矩阵覆盖 4 店 × 3 状态且无越界组合",
+      "verdict": "CONFIRM",
+      "detail": "12 格齐全"
+    },
+    {
+      "check": "补充矩阵 矩阵列齐全",
+      "verdict": "CONFIRM",
+      "detail": "4 行"
+    },
+    {
+      "check": "补充矩阵 行数 == 4",
+      "verdict": "CONFIRM",
+      "detail": "实际 4"
+    },
+    {
+      "check": "补充矩阵 截图可解析且与矩阵一致",
+      "verdict": "CONFIRM",
+      "detail": "核对 4 张"
+    },
+    {
+      "check": "原 12 张 PNG 全部实体存在",
+      "verdict": "CONFIRM",
+      "detail": "实际 12 张"
+    },
+    {
+      "check": "补充 4 张 PNG 全部实体存在",
+      "verdict": "CONFIRM",
+      "detail": "实际 4 张"
+    },
+    {
+      "check": "主图与补充图无字节重复",
+      "verdict": "CONFIRM",
+      "detail": ""
+    },
+    {
+      "check": "诊断日志无 SCRIPT ERROR / ERROR 行",
+      "verdict": "CONFIRM",
+      "detail": "核对 8 个日志"
+    },
+    {
+      "check": "非 0 退出码均已显式豁免说明",
+      "verdict": "CONFIRM",
+      "detail": "豁免 1 项: ['capture-extraction-12.log']"
+    },
+    {
+      "check": "豁免表项均真实存在",
+      "verdict": "CONFIRM",
+      "detail": "ok"
+    }
+  ],
+  "png_sha256": {
+    "screenshots": {
+      "smoky-den__normal.png": "08ca48bb59888592f2d77214849351797a954c3fa1275baecae69ac42689a43b",
+      "smoky-den__short-cash.png": "729de3533a782923e23f27c4117419206eb19207bdf934bf34f4b30fa950c8a6",
+      "smoky-den__expired-reservation.png": "b90a306f6a7835b5efef65655cfee8121b854303c2e78b6d438af97d371f129f",
+      "high-rise-suite__normal.png": "96dcdba017cdc610543dc47fc160fbd36a21425f95fad797cba3d9b1bdd6c41d",
+      "high-rise-suite__short-cash.png": "a42e40bf3805453f7961f627630345243ffb4e1567361a1f7c589412bcd902b7",
+      "high-rise-suite__expired-reservation.png": "c2e2ee5cc7147879a87f4aeb88375d7eb8f6e38ee5c579746b5758183789c3ff",
+      "rooftop-club__normal.png": "48ad1fb7cc799cd9e2e3beca9ece217e0f1b9af90fe2a5ae07d2655aa5196c27",
+      "rooftop-club__short-cash.png": "69272531cb486c306d1d1510dd96e3992592ea7c8cd59977a04a0130fd6ea58d",
+      "rooftop-club__expired-reservation.png": "928031e84ebda582789f005fd0eb326872aebd46d6e7cd5d3507ce49e96bf0f3",
+      "neon-poker-club__normal.png": "022f1aa6e5eb1d53eb78fa3d76d6e02fae34a7569ded1a0c6d10cfc98c94b521",
+      "neon-poker-club__short-cash.png": "5e0d809963512e29b1f9e8b2ae46ce788d574eb9fdb0b21cd001a79264b89992",
+      "neon-poker-club__expired-reservation.png": "8f9b5fb4aeae4cd5300740ed8d7f19e6ffd65fb4b8ce25a7c9335243c6ae5530"
+    },
+    "screenshots-supplement": {
+      "smoky-den__bag-expired-routes.png": "10785f474c8fc2ccfd504b77ba801d37ca18ef4ff11861497bf2d55c969aef84",
+      "high-rise-suite__bag-expired-routes.png": "98551d0f808503614a30b52e7f203b06278fc0cb16433f18e6f10bbc7891c6fb",
+      "rooftop-club__bag-expired-routes.png": "4a1d2fddc839252d395ef58408bd3669319101cde4a58b36cc6ffb1092c958d7",
+      "neon-poker-club__bag-expired-routes.png": "58fe579442bf9e3a442911f0d5e6b71798217467ce7b12ccd792b2c039fa0f4c"
+    }
+  },
+  "log_exemptions": {
+    "capture-extraction-12.log": "README 已记录的首次 240s 墙钟超时；同脚本第二次 4.2s 跑完 12 张"
+  },
+  "verdict": "PASS"
+}

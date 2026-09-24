@@ -1,0 +1,46 @@
+{
+  "script": "verify_outcomes.py",
+  "csv": "docs/3d-production/external-handoff/A3-poker-audit/outcomes.csv",
+  "counts": {
+    "CONFIRM": 7,
+    "REFUTE": 0
+  },
+  "checks": [
+    {
+      "check": "C1 CSV 含任务书要求的 12 列",
+      "verdict": "CONFIRM",
+      "detail": "13 行"
+    },
+    {
+      "check": "C2 六个 family 全部出现",
+      "verdict": "CONFIRM",
+      "detail": "出现 6 个"
+    },
+    {
+      "check": "C3 source_line 落在所声称入口的函数体内",
+      "verdict": "CONFIRM",
+      "detail": "核对 13 处引用"
+    },
+    {
+      "check": "C4 existing_catalog_id 均存在于覆盖目录",
+      "verdict": "CONFIRM",
+      "detail": "核对 10 个 ID"
+    },
+    {
+      "check": "C5 引用路径均可从仓库根打开",
+      "verdict": "CONFIRM",
+      "detail": "核对 60 个路径"
+    },
+    {
+      "check": "C6 evidence_status 与 catalog_id/测试列自洽",
+      "verdict": "CONFIRM",
+      "detail": "核对 13 行"
+    },
+    {
+      "check": "C7 accepted_or_rejected ∈ {accepted, rejected}",
+      "verdict": "CONFIRM",
+      "detail": ""
+    }
+  ],
+  "verdict": "PASS"
+}

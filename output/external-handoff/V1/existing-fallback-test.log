@@ -1,0 +1,11 @@
+# existing-fallback-test.log
+# cmd: /Applications/Godot.app/Contents/MacOS/Godot --path /Users/springwater/Desktop/Claude/项目集群/Gen 项目集群/1、德扑酒馆：落袋为安/Godot --script res://three_d/tests/extraction_fallback_ui_test.gd -- --test
+# started: 2026-09-23 16:59:25
+# elapsed_s: 1.5
+# exit_code: 0
+
+--- stdout+stderr ---
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Metal 4.0 - Forward+ - Using Device #0: Apple - Apple M5 (Apple9)
+
+EXTRACTION_FALLBACK_UI {"checks":44,"failed":0,"failures":[]}
