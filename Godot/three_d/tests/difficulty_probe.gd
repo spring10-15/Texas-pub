@@ -42,7 +42,7 @@ func play(content: Dictionary, scene: String, site: String, seed_value: int, pol
 					for profile_id in content.opponents:
 						choices[profile_id] = Opponent.choose_with_odds(table.state, actor, legal, content.opponents[profile_id], random_value, odds)
 					if choices[id] != action: failures.append("counterfactual " + scene + "/" + site + "/" + str(seed_value))
-					repeated_raise_contexts.append({"venue":scene,"table":site,"seed":seed_value,"actor":id,"street":table.state.street,"hand":table.state.handNumber,"playerRaises":table.state.playerPattern.raiseCount,"odds":snappedf(odds,0.01),"bet":table.state.currentBet,"legal":legal.duplicate(),"choices":choices})
+					repeated_raise_contexts.append({"venue":scene,"table":site,"seed":seed_value,"actor":id,"street":table.state.street,"hand":table.state.handNumber,"totalHands":table.state.totalHands,"playerRaises":table.state.playerPattern.raiseCount,"odds":odds,"randomValue":random_value,"bet":table.state.currentBet,"stack":actor.stack,"buyIn":table.state.tableDef.buyIn,"openBet":table.state.tableDef.openBet,"legal":legal.duplicate(),"choices":choices})
 			else:
 				action = "check" if legal.get("check", false) else ("call" if legal.get("call", false) else "all-in")
 				if policy in ["equity-guided", "pressure-raiser"]:

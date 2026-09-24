@@ -1587,6 +1587,7 @@ export function createGame() {
       const reopensAction = targetBet > table.currentBet;
       addCommittedChips(table, participant, cost);
       if (reopensAction) {
+        table.firstAggressionDiscountAvailable = false;
         table.currentBet = targetBet;
         table.raiseUsed = true;
       }

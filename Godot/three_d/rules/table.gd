@@ -112,6 +112,7 @@ func act(id: String, kind: String, expected_revision: int, raise_target := -1) -
 		commit(player, amount)
 		reset_queue = target > state.currentBet
 		if reset_queue:
+			state.firstAggressionDiscountAvailable = false
 			state.currentBet = target
 			state.raiseUsed = true
 	player.lastAction = kind

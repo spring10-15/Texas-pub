@@ -60,8 +60,10 @@ func run() -> void:
 		session.search_index = 2
 		var expired_rows: Array = session.service_view("bag").actions.filter(func(action): return action.kind == "route" and action.id == "fixed")
 		verify(expired_rows.size() == 1 and expired_rows[0].label.contains("暂不可用：预约已过期") and expired_rows[0].reason.is_empty(), scene + " bag explains expired route without hiding its preview")
+		world.close_run_panel()
 		world.open_services()
 		await process_frame
+		verify(world.services_panel.visible and world.services_panel.rows.get_child_count() > 0, scene + " opens populated bag before width check")
 		verify(world.services_panel.rows.get_combined_minimum_size().x <= world.services_panel.size.x - 36, scene + " route comparison fits bag width")
 		world.close_services()
 		world.show_run_panel("route:fixed")
