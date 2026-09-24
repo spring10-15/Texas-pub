@@ -2104,6 +2104,12 @@
       "outcome": "rejected"
     },
     {
+      "id": "persistence_restore.save_repaired_from_memory",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "save_checkpoint",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_restore.seated",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "restore_checkpoint",

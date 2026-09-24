@@ -109,6 +109,24 @@ func run_tests() -> void:
 	legacy_run_restored = legacy_run_restored and DirAccess.remove_absolute(ProjectSettings.globalize_path(legacy_run_path)) == OK
 	world.saving_enabled = false
 	record("legacy_run_fields", legacy_run_restored)
+	var repair_path := "user://repair-world-test-%d.save" % OS.get_process_id()
+	world.save_path = repair_path
+	world.saving_enabled = true
+	var repair_state: Dictionary = world.checkpoint_state()
+	var repair_ok: bool = world.save_checkpoint() and Store.read_checkpoint(repair_path).get("state", {}) == repair_state
+	if repair_ok:
+		repair_ok = DirAccess.remove_absolute(ProjectSettings.globalize_path(repair_path)) == OK
+		repair_ok = repair_ok and world.save_checkpoint() and Store.read_checkpoint(repair_path).get("state", {}) == repair_state
+	var repair_file := FileAccess.open(repair_path, FileAccess.WRITE)
+	if repair_file != null:
+		repair_file.store_string("invalid checkpoint")
+		repair_file.close()
+	else:
+		repair_ok = false
+	repair_ok = repair_ok and world.save_checkpoint() and Store.read_checkpoint(repair_path).get("state", {}) == repair_state and world.checkpoint_state() == repair_state
+	repair_ok = repair_ok and DirAccess.remove_absolute(ProjectSettings.globalize_path(repair_path)) == OK
+	world.saving_enabled = false
+	record("save_repaired_from_memory", repair_ok)
 	var corrupt_path := "user://corrupt-world-test-%d.save" % OS.get_process_id()
 	var corrupt_file := FileAccess.open(corrupt_path, FileAccess.WRITE)
 	corrupt_file.store_string("invalid checkpoint")
