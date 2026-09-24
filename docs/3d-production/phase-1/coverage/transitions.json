@@ -2068,6 +2068,18 @@
       "outcome": "rejected"
     },
     {
+      "id": "persistence_restore.active_table_not_seated",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "rejected"
+    },
+    {
+      "id": "persistence_restore.table_id_mismatch",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "restore_checkpoint",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_restore.locked_room",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "restore_checkpoint",

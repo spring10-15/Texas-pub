@@ -51,6 +51,31 @@ func run_tests() -> void:
 		invalid_groups[group] = invalid_groups[group] and not accepted and unchanged
 		world.restore_checkpoint(baseline)
 	for group in invalid_groups: record(group, invalid_groups[group])
+	var seated_snapshot: Dictionary = baseline.duplicate(true)
+	seated_snapshot.seated = true
+	seated_snapshot["return"] = seated_snapshot.player
+	var seated_setup: bool = world.restore_checkpoint(seated_snapshot)
+	if seated_setup:
+		world.start_table(42)
+	var active_snapshot: Dictionary = world.checkpoint_state()
+	var active_without_seat: Dictionary = active_snapshot.duplicate(true)
+	active_without_seat.seated = false
+	world.restore_checkpoint(baseline)
+	var active_table_not_seated: bool = seated_setup and active_snapshot.run.table is Dictionary and not world.restore_checkpoint(active_without_seat) and world.checkpoint_state() == baseline
+	record("active_table_not_seated", active_table_not_seated)
+	seated_setup = world.restore_checkpoint(seated_snapshot)
+	if seated_setup:
+		world.start_table(42)
+	var table_mismatch: Dictionary = world.checkpoint_state()
+	var table_mismatch_ready: bool = seated_setup and table_mismatch.run.table is Dictionary and str(table_mismatch.run.table.state.tableDef.id) == "cargo-table"
+	if table_mismatch_ready:
+		table_mismatch.room = "ledger"
+		table_mismatch.player.origin = Vector3(world.ROOMS.ledger.x - 2.0, 0.05, 1.7)
+		table_mismatch["return"].origin = table_mismatch.player.origin
+		table_mismatch.run.completed.append("cargo-table")
+	world.restore_checkpoint(baseline)
+	var table_id_mismatch: bool = table_mismatch_ready and not world.restore_checkpoint(table_mismatch) and world.checkpoint_state() == baseline
+	record("table_id_mismatch", table_id_mismatch)
 	record("valid", world.restore_checkpoint(baseline) and world.checkpoint_state() == baseline)
 	for pos in [Vector3(10,0.05,-7),Vector3(7.25,1.2,-12.5),Vector3(12.75,-1.2,-13)]:
 		var valid: Dictionary = baseline.duplicate(true)
