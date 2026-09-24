@@ -18,6 +18,9 @@ func _initialize() -> void:
 	record("write_new", Store.write_checkpoint(path, state) == OK and FileAccess.file_exists(path))
 	var loaded := Store.read_checkpoint(path)
 	record("read_valid", loaded.status == "ok" and loaded.state == state)
+	var readable_bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
+	var unreadable := Store._read_checkpoint(path, func(_file_path: String): return null)
+	record("read_unreadable", unreadable.status == "unreadable" and FileAccess.file_exists(path) and FileAccess.get_file_as_bytes(path) == readable_bytes)
 	state.cash = 180
 	var replaced: bool = Store.write_checkpoint(path, state) == OK
 	loaded = Store.read_checkpoint(path)

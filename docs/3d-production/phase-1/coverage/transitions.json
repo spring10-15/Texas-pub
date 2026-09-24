@@ -2020,6 +2020,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "persistence_io.read_unreadable",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "read_checkpoint",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_io.write_replace",
       "source": "Godot/three_d/rules/save_store.gd",
       "entry": "write_checkpoint",
@@ -2287,8 +2293,6 @@
   "pending_families": {
     "poker": [],
     "world": [],
-    "persistence": [
-      "read_unreadable"
-    ]
+    "persistence": []
   }
 }

@@ -2,7 +2,9 @@
 
 > 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 380，当前登记证据为 380/380；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
 
-2026-09-25 旧格式迁移族收口：A5 `legacy_migration` 的所有可复现运行时结果均映射到现有目录 ID，旧 Run 字段、缺失 props、缺少 search event 的 version 1 磁盘封套，以及 version 2/3 variant plan 均有恢复后具体状态断言；未来 envelope 版本拒绝并保留原文件也有测试。版本 1 磁盘夹具由测试运行时构造，version 2/3 variant plan 通过 RunCheckpoint 恢复测试构造；没有真实历史用户 `.save` 样本，本轮不声称验证过历史玩家档案。该外部样本限制不属于当前可复现转移目录；因此从 `pending_families.persistence` 移除 `legacy_migration`，仅保留当前环境无法可靠模拟的 `read_unreadable`。目录仍为 380 个已登记结果，不代表全局分母或覆盖率；修改后需完整回归刷新同版本证据。
+2026-09-25 旧格式迁移族收口：A5 `legacy_migration` 的所有可复现运行时结果均映射到现有目录 ID，旧 Run 字段、缺失 props、缺少 search event 的 version 1 磁盘封套，以及 version 2/3 variant plan 均有恢复后具体状态断言；未来 envelope 版本拒绝并保留原文件也有测试。版本 1 磁盘夹具由测试运行时构造，version 2/3 variant plan 通过 RunCheckpoint 恢复测试构造；没有真实历史用户 `.save` 样本，本轮不声称验证过历史玩家档案。该外部样本限制不属于当前可复现转移目录，因此从 `pending_families.persistence` 移除 `legacy_migration`。
+
+2026-09-25 不可读存档分支收口：在 `SaveStore.read_checkpoint()` 内部抽出文件打开回调，公开入口仍使用 `FileAccess.open()`；`save_store_test.gd` 对一个确实存在且内容有效的检查点注入拒绝打开结果，断言返回 `unreadable` 且原文件字节未变。新增 `persistence_io.read_unreadable`，从 `pending_families.persistence` 移除此组。该测试稳定覆盖读取拒绝分支，不模拟操作系统权限配置本身。登记数增至 381；全局目录分母与覆盖率仍未封板。
 
 2026-09-25 存档恢复与非法数据复核：A5 `restore` 七行和 `invalid_data` 17 行全部映射到现有目录 ID，当前专项证据分别为 World restore 18/18、Run restore 5/5、Table restore 4/4；三份报告无缺项且目录与相关源码哈希匹配。恢复成功、损坏/缺档处置、试玩存档守卫、World 快照矛盾、Run 字段边界和 Table 快照一致性均有后继状态断言。因此从 `pending_families.persistence` 移除 `restore` 与 `invalid_data`，待审组从 4 减至 2；未新增语义 ID。完整回归 59/59，目录证据 380/380，覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-064158/report.json`。
 

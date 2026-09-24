@@ -200,3 +200,5 @@ if paused or run_panel.visible or services_panel.visible or seated or action_bus
 - 探针在 headless 下运行，未断言 `Input.mouse_mode`（各入口确实设置了它，但 headless 下该属性无显示意义）；`controls_enabled` / `crosshair.visible` / 面板可见性均已断言。
 - 快照比较 `checkpoint_state()==before` 依赖 Godot 4 `Dictionary`/`Array` 的结构化相等；既有测试（`world_coverage_test.gd`）已按同一方式使用，本轮沿用同一假设。
 - 探针里标注为 `A4ISO` 的共 7 条，归纳为 **4 类显式构造的前置条件**（`completed` 注入并有复原步骤、`heat=6`+`ivory-chip` 注入、`controls_enabled` 暂时置真以隔离守卫项、用新 `Run` 替换 `run_game`）。它们只为到达分支，**不作为玩家可达路径证据**。
+
+2026-09-25 主 Agent 复验：当前源码中 `player.gd::update_focus()` 的三个引用行号已随实现更新为 63、65、66；结果和目录映射未变。`python3 docs/3d-production/external-handoff/A4-world-audit/repro/verify_outcomes.py` 通过，72 行、8 个 family 均齐全，源码锚点与 evidence_path 全部有效。

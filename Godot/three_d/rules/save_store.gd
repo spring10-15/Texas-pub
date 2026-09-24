@@ -28,9 +28,12 @@ static func _write_checkpoint(path: String, state: Dictionary, readback: Callabl
 	return rename_error
 
 static func read_checkpoint(path: String) -> Dictionary:
+	return _read_checkpoint(path, func(file_path: String): return FileAccess.open(file_path, FileAccess.READ))
+
+static func _read_checkpoint(path: String, open_file: Callable) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		return {"status": "missing"}
-	var file := FileAccess.open(path, FileAccess.READ)
+	var file: FileAccess = open_file.call(path)
 	if file == null:
 		return {"status": "unreadable"}
 	if file.get_length() < 4 or file.get_32() > file.get_length() - 4:
