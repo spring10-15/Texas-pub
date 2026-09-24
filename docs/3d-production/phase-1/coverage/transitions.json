@@ -1660,6 +1660,30 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.confirm_hidden",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "confirm_run_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.confirm_disabled",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "confirm_run_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.show_run_panel",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "show_run_panel",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.close_run_panel",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "close_run_panel",
+      "outcome": "accepted"
+    },
+    {
       "id": "world.seat",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "request_action",
