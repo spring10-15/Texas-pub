@@ -2288,8 +2288,7 @@
     "poker": [],
     "world": [],
     "persistence": [
-      "read_unreadable",
-      "legacy_migration"
+      "read_unreadable"
     ]
   }
 }

@@ -2,6 +2,8 @@
 
 > 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 380，当前登记证据为 380/380；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
 
+2026-09-25 旧格式迁移族收口：A5 `legacy_migration` 的所有可复现运行时结果均映射到现有目录 ID，旧 Run 字段、缺失 props、缺少 search event 的 version 1 磁盘封套，以及 version 2/3 variant plan 均有恢复后具体状态断言；未来 envelope 版本拒绝并保留原文件也有测试。版本 1 磁盘夹具由测试运行时构造，version 2/3 variant plan 通过 RunCheckpoint 恢复测试构造；没有真实历史用户 `.save` 样本，本轮不声称验证过历史玩家档案。该外部样本限制不属于当前可复现转移目录；因此从 `pending_families.persistence` 移除 `legacy_migration`，仅保留当前环境无法可靠模拟的 `read_unreadable`。目录仍为 380 个已登记结果，不代表全局分母或覆盖率；修改后需完整回归刷新同版本证据。
+
 2026-09-25 存档恢复与非法数据复核：A5 `restore` 七行和 `invalid_data` 17 行全部映射到现有目录 ID，当前专项证据分别为 World restore 18/18、Run restore 5/5、Table restore 4/4；三份报告无缺项且目录与相关源码哈希匹配。恢复成功、损坏/缺档处置、试玩存档守卫、World 快照矛盾、Run 字段边界和 Table 快照一致性均有后继状态断言。因此从 `pending_families.persistence` 移除 `restore` 与 `invalid_data`，待审组从 4 减至 2；未新增语义 ID。完整回归 59/59，目录证据 380/380，覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-064158/report.json`。
 
 2026-09-25 存档写入失败保护：新增 `persistence_io.write_temp_verification_rejected`，通过私有 `_write_checkpoint()` 的读回校验器注入无效结果，验证返回 `ERR_FILE_CORRUPT`、旧存档字节保持不变、临时文件被清理；线上入口仍使用真实 `read_checkpoint()`。A5 同组的新建、覆盖、临时文件复核失败、临时文件打开失败和原子重命名失败现在均有正式后继证据；`checkpoint_state()` 不产生任意 `Object` 引用，因此不把外部手工传入的非游戏状态算作玩家路径。从 `pending_families.persistence` 移除 `write`，待审组从 5 减至 4；完整回归 59/59，目录证据 380/380，覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-063601/report.json`。
