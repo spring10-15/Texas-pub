@@ -1,4 +1,5 @@
 extends SceneTree
+const Store = preload("res://three_d/rules/save_store.gd")
 var failures: Array[String] = []
 var checks := 0
 var hits := {}
@@ -54,6 +55,23 @@ func run_tests() -> void:
 	var tavern_light: Dictionary = world.props.entries["Tavernlight"]
 	var legacy_restored: bool = world.props.states["Tavernlight"] and world.restore_checkpoint(legacy)
 	legacy_restored = legacy_restored and world.checkpoint_state() == baseline and is_equal_approx(tavern_light.node.get_indexed(NodePath(tavern_light.property)), tavern_light.closed)
+	var legacy_path := "user://legacy-world-test-%d.save" % OS.get_process_id()
+	world.save_path = legacy_path
+	var written: bool = Store.write_checkpoint(legacy_path, legacy) == OK
+	var on_disk: Dictionary = Store.read_checkpoint(legacy_path)
+	world.props.restore({"Tavernlight":true})
+	if written and on_disk.status == "ok" and on_disk.state == legacy:
+		world.load_checkpoint()
+		legacy_restored = legacy_restored and world.saving_enabled and world.paused and world.checkpoint_state() == baseline and is_equal_approx(tavern_light.node.get_indexed(NodePath(tavern_light.property)), tavern_light.closed)
+		world.resume()
+		var restored_revision: int = world.run_game.revision
+		var continued: bool = world.run_game.service_action("intel", "cargo-table", restored_revision)
+		legacy_restored = legacy_restored and world.player.controls_enabled and continued and world.run_game.revision == restored_revision + 1 and "cargo-table" in world.run_game.known_rules
+		world.restore_checkpoint(baseline)
+	else:
+		legacy_restored = false
+	legacy_restored = legacy_restored and DirAccess.remove_absolute(ProjectSettings.globalize_path(legacy_path)) == OK
+	world.saving_enabled = false
 	record("legacy_props", legacy_restored)
 	var seated_save: Dictionary = baseline.duplicate(true)
 	seated_save.seated = true
