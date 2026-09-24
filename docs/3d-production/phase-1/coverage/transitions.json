@@ -2218,6 +2218,18 @@
       "outcome": "accepted"
     },
     {
+      "id": "persistence_run.reservation_offer_consistent",
+      "source": "Godot/three_d/rules/run_checkpoint.gd",
+      "entry": "restore",
+      "outcome": "rejected"
+    },
+    {
+      "id": "persistence_run.reservation_restored",
+      "source": "Godot/three_d/rules/run_checkpoint.gd",
+      "entry": "restore",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_table.invalid_snapshot_rejected",
       "source": "Godot/three_d/rules/table_checkpoint.gd",
       "entry": "restore",

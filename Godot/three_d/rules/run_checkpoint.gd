@@ -63,13 +63,20 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		return null
 	if not values.reservation.is_empty():
 		var booking: Dictionary = values.reservation
-		if not booking.get("id") is String or not content.routes[values.scene_id].fixedRoutes.any(func(route): return route.id == booking.id):
+		if not booking.get("id") is String:
 			return null
+		var matching_offers: Array = content.routes[values.scene_id].fixedRoutes.filter(func(route): return route.id == booking.id)
+		if matching_offers.size() != 1:
+			return null
+		var offer: Dictionary = matching_offers[0]
 		for field in ["reserveCost", "finalCost", "maxHeat", "expiresAfterSearch"]:
 			if not (booking.get(field) is int or booking.get(field) is float): return null
 			var amount := float(booking[field])
 			if not is_finite(amount) or amount < 0 or amount != floor(amount): return null
 		if booking.maxHeat > 6 or booking.expiresAfterSearch < 1: return null
+		var expected_reserve_cost: int = maxi(10, int(offer.reserveCost) - int(content.scenes[values.scene_id].fixedRouteReserveDiscount))
+		if int(booking.reserveCost) != expected_reserve_cost or int(booking.finalCost) != int(offer.finalCost) or int(booking.maxHeat) != int(offer.maxHeat):
+			return null
 	if not values.variant_plan.is_empty() and not Run.Variants.valid(values.variant_plan, content, values.scene_id):
 		return null
 	if values.offer_index < 0 or values.offer_index >= content.routes[values.scene_id].fixedRoutes.size():

@@ -7,6 +7,8 @@ var checks := 0
 var invalid_cases := 0
 var legacy_variant_cases := 0
 var legacy_search_event_restored := false
+var reservation_offer_consistent := false
+var reservation_restored := false
 func verify(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label); push_error(label)
@@ -57,6 +59,25 @@ func run_tests() -> void:
 		verify(rejected,"Reject "+key)
 		verify(unchanged,"Rejected input does not mutate live state "+key)
 		invalid_cases += 1 if rejected and unchanged else 0
+	var reserved := Run.new(content)
+	reserved.start(reserved.revision,"smoky-den",2409)
+	reserved.route_flags.fixed = true
+	var reservation_created: bool = reserved.service_action("reserve","",reserved.revision)
+	var valid_reservation: Dictionary = Checkpoint.capture(reserved)
+	reservation_restored = reservation_created and Checkpoint.restore(valid_reservation,content) != null
+	verify(reservation_restored,"Valid reservation restores against its configured route")
+	var reservation_cases := {"advance":"reserveCost", "tail":"finalCost", "heat":"maxHeat", "route":"id"}
+	var reservation_rejections := 0
+	for case_name in reservation_cases:
+		var corrupted_reservation: Dictionary = valid_reservation.duplicate(true)
+		var field: String = reservation_cases[case_name]
+		corrupted_reservation.reservation[field] = "missing-route" if field == "id" else int(corrupted_reservation.reservation[field]) - 1
+		var before_corruption := corrupted_reservation.duplicate(true)
+		var rejected_reservation: bool = Checkpoint.restore(corrupted_reservation,content) == null
+		var reservation_unchanged: bool = corrupted_reservation == before_corruption and Checkpoint.capture(reserved) == valid_reservation
+		verify(rejected_reservation,"Reject reservation offer mismatch: "+case_name)
+		verify(reservation_unchanged,"Rejected reservation does not mutate source: "+case_name)
+		reservation_rejections += 1 if rejected_reservation and reservation_unchanged else 0
 	# Legitimate duplicate valuables are allowed up to capacity.
 	for points in [0,int(content.searchActions)]:
 		var valid := original.duplicate(true)
@@ -150,6 +171,10 @@ func run_tests() -> void:
 	var hits := {}
 	if invalid_cases == cases.size() and failures.is_empty():
 		hits["persistence_run.invalid_fields_rejected"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true}
+	if reservation_restored and failures.is_empty():
+		hits["persistence_run.reservation_restored"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true}
+	if reservation_created and reservation_rejections == reservation_cases.size() and failures.is_empty():
+		hits["persistence_run.reservation_offer_consistent"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true,"mismatches":reservation_rejections}
 	if legacy_variant_cases == 2 and failures.is_empty():
 		hits["persistence_run.legacy_variant_plan_restored"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true,"versions":[2,3]}
 	if legacy_search_event_restored and failures.is_empty():
