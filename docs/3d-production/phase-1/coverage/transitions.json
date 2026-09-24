@@ -2068,6 +2068,24 @@
       "outcome": "accepted"
     },
     {
+      "id": "persistence_capture.run_fields_complete",
+      "source": "Godot/three_d/rules/run_checkpoint.gd",
+      "entry": "capture",
+      "outcome": "accepted"
+    },
+    {
+      "id": "persistence_capture.table_fields_complete",
+      "source": "Godot/three_d/rules/table_checkpoint.gd",
+      "entry": "capture",
+      "outcome": "accepted"
+    },
+    {
+      "id": "persistence_capture.world_fields_complete",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "checkpoint_state",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_restore.invalid_props",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "restore_checkpoint",
@@ -2231,7 +2249,6 @@
       "modal_guards"
     ],
     "persistence": [
-      "capture",
       "write",
       "read",
       "restore",

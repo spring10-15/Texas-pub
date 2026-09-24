@@ -29,6 +29,12 @@ func run_tests() -> void:
 	var captured_run: Dictionary = RunCheckpoint.capture(run)
 	var run_valid: bool = captured_run.cash == run.cash and captured_run.inventory == run.inventory and captured_run.variant_plan == run.variant_plan and captured_run.table == TableCheckpoint.capture(table) and run_before == captured_run
 	verify(run_valid, "Run snapshot captures stable values and active table")
+	var run_fields: Array[String] = ["vault", "active", "cash", "bankroll", "heat", "public_exit", "completed", "last_result", "revision", "inventory", "known_rules", "used_tools", "preview", "preview_hand", "action_points", "search_index", "heat_reduced", "service_message", "last_reward", "route_flags", "reservation", "offer_index", "full_intel", "opponent_notes", "collateral", "last_table_result", "scene_id", "search_results", "run_seed", "variant_plan", "venue_history", "arrival_completed", "transfer_log", "table"]
+	var captured_run_fields_complete: bool = captured_run.size() == run_fields.size()
+	for field in run_fields:
+		captured_run_fields_complete = captured_run_fields_complete and captured_run.has(field) and captured_run[field] == (TableCheckpoint.capture(run.table) if field == "table" else run.get(field))
+	verify(captured_run_fields_complete, "Run snapshot captures every persisted Run field")
+	record("persistence_capture.run_fields_complete", captured_run_fields_complete)
 	var live_stack: int = table.state.players[0].stack
 	captured_run.inventory.append("not-owned")
 	captured_run.variant_plan.room_layout = "not-a-layout"
@@ -43,6 +49,9 @@ func run_tests() -> void:
 	var captured_table: Dictionary = TableCheckpoint.capture(standalone)
 	var table_valid: bool = captured_table.state == standalone.state and captured_table.revision == standalone.revision and captured_table.rngValue == standalone.rng.value
 	verify(table_valid, "Table snapshot captures state revision and RNG")
+	var table_fields_complete: bool = captured_table.size() == 3 and captured_table.has_all(["state", "revision", "rngValue"])
+	verify(table_fields_complete, "Table snapshot captures every persisted Table field")
+	record("persistence_capture.table_fields_complete", table_fields_complete)
 	captured_table.state.players[0].holeCards.clear()
 	captured_table.state.deck.clear()
 	captured_table.state.pot += 1
@@ -56,6 +65,15 @@ func run_tests() -> void:
 	world.run_game.start(world.run_game.revision, "smoky-den", 712)
 	var world_before: Dictionary = world.checkpoint_state()
 	var captured_world: Dictionary = world.checkpoint_state()
+	var world_fields: Array[String] = ["run", "room", "player", "look", "seated", "return", "caseOpen", "props"]
+	var world_fields_complete: bool = captured_world.size() == world_fields.size()
+	for field in world_fields:
+		world_fields_complete = world_fields_complete and captured_world.has(field)
+	var world_expected := {"run": RunCheckpoint.capture(world.run_game), "room": world.current_room, "player": world.player.global_transform, "look": world.player.camera.rotation, "seated": world.seated, "return": world.return_transform, "caseOpen": world.case_open, "props": world.props.states.duplicate()}
+	for field in world_fields:
+		world_fields_complete = world_fields_complete and captured_world[field] == world_expected[field]
+	verify(world_fields_complete, "World snapshot captures every persisted World field")
+	record("persistence_capture.world_fields_complete", world_fields_complete)
 	var lamp_open: bool = not bool(world_before.props.lamp)
 	captured_world.run.inventory.append("not-owned")
 	captured_world.run.cash += 1
