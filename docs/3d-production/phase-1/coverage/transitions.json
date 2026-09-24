@@ -1708,6 +1708,18 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.toggle_pause_run_panel",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "toggle_pause",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.toggle_pause_services",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "toggle_pause",
+      "outcome": "accepted"
+    },
+    {
       "id": "world.seat",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "request_action",
