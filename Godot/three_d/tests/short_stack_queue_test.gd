@@ -89,6 +89,24 @@ func _initialize() -> void:
 	var reopen_ok: bool = reopened and all_in_target > 20 and t.state.currentBet == all_in_target and t.state.toAct == [t.state.players[2].id,"player"] and t.state.raiseUsed
 	verify(reopen_ok,"All-in raise recalls prior caller")
 	if reopen_ok: hits["queue.all_in_raise_reopens_prior_caller"] = {"test":"short_stack_queue_test.gd","postcondition_verified":true}
+	# The documented one-raise-per-street rule recalls callers without reopening raises.
+	var short_raise := Table.new()
+	short_raise.start(content.tables["cargo-table"],7)
+	short_raise.act("player","call",short_raise.revision)
+	short_raise.state.players[1].stack = 15
+	short_raise.state.players[2].stack += 35
+	var target_before: int = short_raise.state.currentBet
+	var short_raise_target: int = int(short_raise.state.players[1].currentBet)+int(short_raise.state.players[1].stack)
+	var short_raise_accepted: bool = short_raise.act(short_raise.state.players[1].id,"all-in",short_raise.revision)
+	var actor_legal: Dictionary = short_raise.legal_actions(short_raise.state.currentActorId)
+	var one_raise_ok: bool = short_raise_accepted and short_raise_target > target_before and short_raise.state.currentBet == short_raise_target and short_raise.state.toAct == [short_raise.state.players[2].id,"player"] and short_raise.state.raiseUsed and not short_raise.state.firstAggressionDiscountAvailable and not actor_legal.raise
+	if one_raise_ok:
+		var unacted_raise_actor: String = short_raise.state.currentActorId
+		short_raise.act(unacted_raise_actor,"call",short_raise.revision)
+		var caller_legal: Dictionary = short_raise.legal_actions("player")
+		one_raise_ok = short_raise.state.currentActorId == "player" and caller_legal.call and not caller_legal.raise
+	verify(one_raise_ok,"Short all-in recalls callers but keeps the street raise locked")
+	if one_raise_ok: hits["queue.short_all_in_raise_one_raise_rule"] = {"test":"short_stack_queue_test.gd","postcondition_verified":true}
 	write_report()
 	print("SHORT_STACK_QUEUE checks=",checks," failures=",failures)
 	quit(0 if failures.is_empty() else 1)
