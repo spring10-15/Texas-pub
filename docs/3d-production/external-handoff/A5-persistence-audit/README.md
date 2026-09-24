@@ -94,8 +94,8 @@ python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_ou
 9. 空档 → `missing`；`persistence_io.read_missing`；`已登记且有后继状态证据`。
 10. 合法 → `ok`+state 全等；`persistence_io.read_valid`；`已登记且有后继状态证据`。
 11. 摘要损坏（payload 改、digest 不重算）→ `invalid`；`persistence_io.read_corrupt`；`已登记且有后继状态证据`（services_save_test 另有下游）。
-12. 版本不支持 → `invalid`；`persistence_io.read_version`；**`证据不足（仅核对返回值）`** —— 见 §6.1，与摘要损坏**同状态、不可区分**。
-13. 截断 / 长度前缀越界 / <4 字节 → `invalid`；`persistence_io.read_truncated`；`证据不足（仅核对返回值）`。
+12. 版本不支持 → `unsupported_version` 并返回存档版本号；`persistence_io.read_version`；**已登记且有后继状态证据**：返回值可与摘要损坏区分，且拒绝后原文件字节不变（`existing-save_store_test.log`）。
+13. 截断 / 长度前缀越界 / <4 字节 → `invalid`；`persistence_io.read_truncated`；**已登记且有后继状态证据**：当前正式测试对短文件、截断文件均断言拒绝后原始字节不变（`existing-save_store_test.log`）。
 14. 存在但不可打开 → `unreadable`；`A5探针新增证据`（chmod 000 实测可达）。
 15. payload 解码为非 Dictionary → `invalid`；`A5探针新增证据`。
 16. payload 含完整序列化对象/资源 → `invalid`（`bytes_to_var` 拒绝，引擎返回 Nil）；`A5探针新增证据`。
@@ -139,7 +139,7 @@ python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_ou
 - **前/后状态断言强度不一**：
   - 有具体后置断言（较强）：`scene_rules_test` 断言 legacy 恢复后 `scene_id == "smoky-den"`；`room_pool_test` 断言 version 3 后 `room_requirements("mirror-hall")==["ledger-cellar"]`；`opponent_pool_test` 断言 version 2 后 `table_definition("cargo-table").opponentIds == content.tables[...]`。
   - **只有“非 null / 返回 true”**（弱，按规则 3 判证据不足）：`run_restore_bounds_test` 的 legacy（删 14 字段）与“search 缺 event”、`venue_transfer_test`、`four_tables_test`、`event_pool_test`。`world_restore_atomic_test` 的 `legacy_props` 已于 2026-09-25 补充完整后继状态核验，不再属于此类。
-- **迁移范围**：仅“VERSION==1 内缺失字段回填”（`run_checkpoint.gd:17-19` + `:51` + `:71`；`world.gd:993`）。**不存在跨版本迁移**——`read_checkpoint` 对 `version != 1` 直接 `invalid`（A5 探针实测：version=99 且 payload/digest 合法仍 `invalid`），随后 `load_checkpoint` 保留原文件、关闭自动存盘。即 **VERSION 一旦升到 2，旧档将整体不可读**。
+- **迁移范围**：仅“VERSION==1 内缺失字段回填”（`run_checkpoint.gd:17-19` + `:51` + `:71`；`world.gd:993`）。**不存在跨版本迁移**——`read_checkpoint` 对 `version != 1` 返回 `unsupported_version`，`load_checkpoint` 保留原文件并关闭自动存盘。即 **VERSION 一旦升到 2，旧档将整体不可读**。A5 探针的 `version=99` 结论是对较早基线的历史记录；当前状态以正式测试 `existing-save_store_test.log` 和后续修复记录为准。
 
 ### 5.2 RNG 重放：依据的是“后续可见结果”，不是比较种子
 
@@ -164,7 +164,7 @@ python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_ou
 
 > **`capture`、`rng_replay` 两组在覆盖目录里根本没有**（0 条 `persistence_*` 登记）。
 > `write`/`read`/`restore`/`invalid_data`/`legacy_migration` 五组已**部分登记**，但：
-> - **缺后继状态证据（只核对了返回值）**：`read_version`、`read_truncated`（`persistence_*` 内）。`persistence_restore.legacy_props` 已于 2026-09-25 在正式测试中补齐并重跑通过。
+> - `read_version`、`read_truncated`、`persistence_restore.legacy_props` 后续均已在正式测试中补齐后继状态断言并重跑通过；不再列为缺证据项。
 > - **有测试但未登记**（目录里没有对应 ID）：牌桌/世界 capture、写盘去重与自愈、`unreadable`/长度前缀/非字典 payload、锁定房拒绝、全部运行态嵌套非法字段、牌桌畸形状态、旧版本 variant_plan 回填、`playtest` 守卫、牌桌层 RNG 重放、services_save 的局部世界重放。
 > - **只有 A5 探针新增证据（无既有 ID、无既有测试）**：`.tmp` 复核失败不替换、写入失败错误码、`unreadable`、payload 非字典、对象/资源 payload、活动局与房间/座位矛盾、活动桌 id 与房间不符、拒绝恢复三向无副作用、损坏 load 保留原文件、空档 load 启用存盘、**跨版本不迁移**、**世界层 RNG/下一手牌/可见结果重放**。
 > - **完全缺证据**：**旧格式迁移无真实可读夹具**（`unverified`，见 §5.1）。
@@ -175,13 +175,11 @@ python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_ou
 
 **未发现使游戏不可玩的缺陷。** 以下为证据层面的缺口/边界，均以「最小复现 + 实际结果 + 证据」给主 Agent 定性（**不自行改规则**）：
 
-1. **「版本不支持」与「摘要损坏」共用同一 `invalid` 状态、不可区分**（`save_store.gd:35-39`）。
-   实际：envelope `{"version":99, digest=合法, payload=合法}` → `invalid`；payload 改一字节（digest 不重算）→ 也是 `invalid`；`load_checkpoint` 对两者给同一句提示。
-   预期（任务书要求分别核对）：需要能区分二者才能说“分别核对”。**判“证据不足/不可区分”**。见 `probe-save_store.log` 的 `version_unsupported.distinguishable_from_digest=false`。
+1. **已修复：版本不支持可与摘要损坏区分**。当前 `read_checkpoint` 对未来版本返回 `unsupported_version` 和版本号；正式测试同时断言未来版本与截断/损坏文件拒绝后原字节不变。`probe-save_store.log` 中的 `version_unsupported.distinguishable_from_digest=false` 是旧基线探针结果，不代表当前行为。
 2. **不存在跨版本迁移**（`read_checkpoint:35`）。若未来 `VERSION` 升为 2，所有旧档变 `invalid` 且自动存盘被关闭，用户将无法读档。当前 `VERSION=1` 未触发。
 3. **写路径静默接受含 Object 引用的 state**（`save_store.gd:6` `var_to_bytes`）。实际：`write_checkpoint(path, {"node":Node})` → 返回 OK，读回 `status=ok`（对象以引用编码）；只有 `var_to_bytes_with_objects` 的**完整**序列化对象才会在读取时被拒。**公开入口不可到达**（`checkpoint_state()` 只含原生类型/Dictionary/Array，无 Object/Resource），故列为“不可达但存在”的边界。
 4. **读取含完整序列化对象的 payload 会向日志打印引擎 `ERROR`**（`decode_variant` `ERR_UNAUTHORIZED`）。不是崩溃，但会让“日志含 ERROR 即失败”的判定在该输入下误报——取证时需知道这是**预期拒绝**（见 `probe-save_store.log`）。
-5. **旧格式迁移无真实磁盘夹具、部分断言过弱**（§5.1）——最需要在主 Agent 侧补的空白。
+5. **旧格式迁移无真实磁盘夹具**（§5.1）仍是主要证据缺口；部分弱断言列表已按当前正式测试更新。
 
 **未验证 / 未做到（如实列出）**：
 - 未制造任何真实存档损坏样本（按要求）。
@@ -213,6 +211,6 @@ python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_ou
 
 主 Agent 在当前工作树重跑自检时发现本 CSV 的 17 个 `source_line` 已随源码演进失配，其中版本判定锚点也已从 envelope 入口调整为 `stored_version` 检查。现按当前源码行与实际条件更新这 17 处定位；49 行、七组内容、15 个既有目录 ID 及原始证据结论不变。`python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_outcomes.py` 复核通过（`catalog_ids_mapped=15/15`）。
 
-在本次定位刷新后，主 Agent 又增强了 `save_store_test.gd`：对摘要损坏、未来版本、短文件及截断文件，测试现在逐字节确认读取拒绝后原文件没有变化。A5 表中 `read_version` 与 `read_truncated` 原为“只核对返回状态”的判断由此被后续回归证据增强；A5 当时的探针结论本身未改。
+在本次定位刷新后，主 Agent 又增强了 `save_store_test.gd`：对摘要损坏、未来版本、短文件及截断文件，测试逐字节确认读取拒绝后原文件没有变化；`read_version` 还断言 `unsupported_version` 与版本号。现按该当前证据更新 outcomes.csv 与 §3、§5、§6、§7；A5 探针原始日志保留为历史基线，不再代表当前状态。
 
 随后 `save_store.gd` 的写失败清理逻辑增加了 4 行，主 Agent 重跑锚点自检并更新受影响的 9 个 `source_line`。当前 A5 自检仍为 `catalog_ids_mapped=15/15` 且通过；本轮另将“创建临时文件失败”与“重命名替换失败并清理 `.tmp`”登记为正式 `persistence_io.*` 回归结果。
