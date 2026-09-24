@@ -2134,6 +2134,12 @@
       "outcome": "rejected"
     },
     {
+      "id": "persistence_table.rng_replay",
+      "source": "Godot/three_d/rules/table_checkpoint.gd",
+      "entry": "restore",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_replay.world_rng_resume",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "load_checkpoint",

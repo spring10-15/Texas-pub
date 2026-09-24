@@ -5,6 +5,8 @@ const Store = preload("res://three_d/rules/save_store.gd")
 var checks := 0
 var failures: Array[String] = []
 var invalid_cases := 0
+var replay_cases := 0
+var replay_ok := true
 func verify(ok: bool, message: String) -> void:
 	checks += 1
 	if not ok:
@@ -31,10 +33,15 @@ func _initialize() -> void:
 				steps += 1
 				verify(Store.write_checkpoint(path, Checkpoint.capture(original)) == OK, "Every action boundary can be saved")
 				var copy := Checkpoint.restore(Store.read_checkpoint(path).state)
-				verify(copy != null and copy.public_state() == original.public_state(), "Restore preserves legal actions and public view")
+				var restored_equal: bool = copy != null and copy.public_state() == original.public_state()
+				verify(restored_equal, "Restore preserves legal actions and public view")
+				replay_ok = replay_ok and restored_equal
 				step(original)
 				step(copy)
-				verify(Checkpoint.capture(copy) == Checkpoint.capture(original), "Continuation preserves deck, next hand RNG and settlement")
+				var continued_equal: bool = Checkpoint.capture(copy) == Checkpoint.capture(original)
+				verify(continued_equal, "Continuation preserves deck, next hand RNG and settlement")
+				replay_ok = replay_ok and continued_equal
+				replay_cases += 1
 			verify(original.state.status == "finished", "Resumed table completes")
 			var copy := Checkpoint.restore(Checkpoint.capture(original))
 			verify(not copy.advance(copy.revision), "Saved terminal table cannot settle twice")
@@ -72,12 +79,14 @@ func _initialize() -> void:
 	var hits := {}
 	if invalid_cases == 11 and failures.is_empty():
 		hits["persistence_table.invalid_snapshot_rejected"] = {"test":"table_checkpoint_test.gd","postcondition_verified":true}
+	if replay_ok and replay_cases > 0 and failures.is_empty():
+		hits["persistence_table.rng_replay"] = {"test":"table_checkpoint_test.gd","postcondition_verified":true,"action_boundaries":replay_cases}
 	var missing: Array = expected.filter(func(id): return not hits.has(id))
 	var hashes := {}
 	for source_file in DirAccess.get_files_at("res://three_d/rules"):
 		if source_file.ends_with(".gd") or source_file.ends_with(".json"):
 			hashes[source_file] = FileAccess.get_file_as_string("res://three_d/rules/" + source_file).sha256_text()
-	var report := {"scope":"Reject malformed table checkpoint state without mutating the live table","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/table_checkpoint_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"failed":failures.size(),"invalid_cases":invalid_cases,"overall_state_transition_coverage":null}
+	var report := {"scope":"Reject malformed table checkpoints and replay legal continuation deterministically","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/table_checkpoint_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"failed":failures.size(),"invalid_cases":invalid_cases,"replay_cases":replay_cases,"overall_state_transition_coverage":null}
 	FileAccess.open("res://../output/3d/persistence-table-coverage.json", FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("TABLE_CHECKPOINT ", JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)
