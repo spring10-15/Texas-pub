@@ -9,8 +9,44 @@ func record(key: String, failure_count: int) -> void:
 func verify(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label); push_error(label)
+func verify_all_in_seat(definition: Dictionary, short_seat: int, exact: bool) -> void:
+	var t := Table.new()
+	t.start(definition,7)
+	if short_seat == 1:
+		verify(t.act(t.state.currentActorId,"call",t.revision),"Seat setup reaches small blind action")
+	elif short_seat == 2:
+		verify(t.act(t.state.currentActorId,"raise",t.revision),"Seat setup reaches a full raise before big blind")
+		verify(t.act(t.state.currentActorId,"call",t.revision),"Seat setup reaches big blind action")
+	var actor: Dictionary = t.state.players[short_seat]
+	var cost: int = int(t.state.currentBet)-int(actor.currentBet)
+	var required_stack: int = cost if exact else cost-1
+	var donor: Dictionary = t.state.players[(short_seat+1)%t.state.players.size()]
+	donor.stack += int(actor.stack)-required_stack
+	actor.stack = required_stack
+	var queue_before: Array = t.state.toAct.duplicate()
+	var remaining: Array = queue_before.slice(1)
+	var target_before: int = t.state.currentBet
+	var pot_before: int = t.state.pot
+	var wealth_before: int = pot_before
+	for player in t.state.players: wealth_before += int(player.stack)
+	var discount_before: bool = t.state.firstAggressionDiscountAvailable
+	var raise_used_before: bool = t.state.raiseUsed
+	var accepted: bool = t.state.currentActorId == actor.id and required_stack > 0 and t.act(actor.id,"all-in",t.revision)
+	var wealth_after: int = int(t.state.pot)
+	for player in t.state.players: wealth_after += int(player.stack)
+	var label: String = definition.id+" seat="+str(short_seat)+" exact="+str(exact)
+	verify(accepted,"Short/exact all-in accepted at each acting seat: "+label)
+	verify(actor.stack == 0 and int(t.state.pot) == pot_before+required_stack,"Contribution enters pot once: "+label)
+	verify(t.state.currentBet == target_before and t.state.raiseUsed == raise_used_before,"Call-sized all-in preserves the target and raise-right state: "+label)
+	verify(t.state.toAct == remaining and t.state.currentActorId == (remaining[0] if not remaining.is_empty() else ""),"Remaining actors retain queue order: "+label)
+	verify(t.state.firstAggressionDiscountAvailable == discount_before,"Call-sized all-in preserves first-aggression discount: "+label)
+	verify(wealth_after == wealth_before,"Seat-variant action conserves table wealth: "+label)
 func _initialize() -> void:
 	var content: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
+	for table_id in content.tables:
+		for short_seat in range(3):
+			for exact in [false,true]:
+				verify_all_in_seat(content.tables[table_id],short_seat,exact)
 	for table_id in content.tables:
 		for exact in [false,true]:
 			var failure_count := failures.size()

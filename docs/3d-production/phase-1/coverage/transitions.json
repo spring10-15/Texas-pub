@@ -2142,8 +2142,6 @@
   ],
   "pending_families": {
     "poker": [
-      "short_all_in_seat_variants",
-      "exact_call_all_in_seat_variants",
       "short_all_in_raise_seat_variants",
       "lone_funded_queue_heads_up_variants"
     ],
