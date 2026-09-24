@@ -1,6 +1,6 @@
 # A5：存档、恢复与 RNG 重放状态转移取证
 
-> **当前源码与目录校订（2026-09-25，基线 `4253a9e`）**：近期 `world.gd` 在存档函数前增加试玩轨迹记录，导致本文件 19 条 `source_line` 偏移 3 行；已按原内容锚点刷新，行为未因此变化。另将 `table_checkpoint_test.gd` 已有的逐动作边界确定性重放证据登记为 `persistence_table.rng_replay`，检查 2 桌×10 种子在恢复后牌局、牌堆与 RNG 延续一致。`verify_outcomes.py` 更新为核对 16 个既有 ID。A5 当前目录状态会在本轮回归与覆盖采集后报告；新增一项不代表所有存档转移族已完成登记。
+> **当前源码与目录校订（2026-09-25，基线 `4253a9e`）**：近期 `world.gd` 在存档函数前增加试玩轨迹记录，导致本文件 19 条 `source_line` 偏移 3 行；已按原内容锚点刷新，行为未因此变化。另将 `table_checkpoint_test.gd` 的 660 个逐动作边界重放结果登记为 `persistence_table.rng_replay`；并将版本 2/3 运行计划的具体回填后继登记为 `persistence_run.legacy_variant_plan_restored`，以 82 项测试核验历史对手阵容与线性房间图。两个兼容性证据都使用明确标注的内存旧格式样本，不声称读取真实历史磁盘存档。`verify_outcomes.py` 当前映射 17 个 ID。新增后全量回归 59/59，目录证据 359/359；其他存档 family 仍待逐项审查。
 
 日期：2026-09-24。执行范围：`Godot/three_d/rules/save_store.gd`、`run_checkpoint.gd`、`table_checkpoint.gd`，
 `Godot/three_d/scripts/world.gd` 的 `checkpoint_state` / `save_checkpoint` / `load_checkpoint` / `restore_checkpoint` 及直接依赖的恢复校验。

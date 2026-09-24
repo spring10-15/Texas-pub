@@ -4,6 +4,7 @@ const Checkpoint = preload("res://three_d/rules/run_checkpoint.gd")
 var failures: Array[String] = []
 var checks := 0
 var invalid_cases := 0
+var legacy_variant_cases := 0
 func verify(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label); push_error(label)
@@ -67,6 +68,21 @@ func _initialize() -> void:
 	verify(informed_run != null and Checkpoint.capture(informed_run) == informed,"Known information restores without changes")
 	if informed_run != null:
 		verify(not informed_run.service_view("bag").text.is_empty(),"Restored information can be displayed")
+	var legacy_v2 := original.duplicate(true)
+	legacy_v2.variant_plan.version = 2
+	legacy_v2.variant_plan.erase("opponents")
+	legacy_v2.variant_plan.erase("room_layout")
+	var restored_v2: RefCounted = Checkpoint.restore(legacy_v2,content)
+	var v2_ok: bool = restored_v2 != null and restored_v2.table_definition("cargo-table").opponentIds == content.tables["cargo-table"].opponentIds and restored_v2.room_requirements("mirror-hall") == ["ledger-cellar"]
+	verify(v2_ok,"Version 2 plan restores historical opponents and linear rooms")
+	legacy_variant_cases += 1 if v2_ok else 0
+	var legacy_v3 := original.duplicate(true)
+	legacy_v3.variant_plan.version = 3
+	legacy_v3.variant_plan.erase("room_layout")
+	var restored_v3: RefCounted = Checkpoint.restore(legacy_v3,content)
+	var v3_ok: bool = restored_v3 != null and restored_v3.table_definition("cargo-table").opponentIds == legacy_v3.variant_plan.opponents["cargo-table"] and restored_v3.room_requirements("mirror-hall") == ["ledger-cellar"]
+	verify(v3_ok,"Version 3 plan retains saved opponents and restores linear rooms")
+	legacy_variant_cases += 1 if v3_ok else 0
 	var searched := Run.new(content)
 	searched.start(searched.revision,"smoky-den",0)
 	verify(searched.service_action("search","cargo-table",searched.revision,"goods"),"Real search succeeds")
@@ -98,12 +114,14 @@ func _initialize() -> void:
 	var hits := {}
 	if invalid_cases == cases.size() and failures.is_empty():
 		hits["persistence_run.invalid_fields_rejected"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true}
+	if legacy_variant_cases == 2 and failures.is_empty():
+		hits["persistence_run.legacy_variant_plan_restored"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true,"versions":[2,3]}
 	var missing: Array = expected.filter(func(id): return not hits.has(id))
 	var hashes := {}
 	for source_file in DirAccess.get_files_at("res://three_d/rules"):
 		if source_file.ends_with(".gd") or source_file.ends_with(".json"):
 			hashes[source_file] = FileAccess.get_file_as_string("res://three_d/rules/" + source_file).sha256_text()
-	var report := {"scope":"Reject malformed run checkpoint fields without mutating input or live state","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/run_restore_bounds_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"failed":failures.size(),"invalid_cases":invalid_cases,"overall_state_transition_coverage":null}
+	var report := {"scope":"Reject malformed run checkpoints and restore legacy variant plans","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/run_restore_bounds_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"failed":failures.size(),"invalid_cases":invalid_cases,"legacy_variant_cases":legacy_variant_cases,"overall_state_transition_coverage":null}
 	FileAccess.open("res://../output/3d/persistence-run-coverage.json", FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("RUN_RESTORE_BOUNDS ", JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)
