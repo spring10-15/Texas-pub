@@ -1660,6 +1660,30 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.room_door_blocked",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.room_door_unlocked",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.room_door_return",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.discover_exit",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "accepted"
+    },
+    {
       "id": "world.confirm_hidden",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "confirm_run_action",

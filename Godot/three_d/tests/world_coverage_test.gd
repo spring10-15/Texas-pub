@@ -153,6 +153,17 @@ func run() -> void:
 	var door: bool = world.request_action(world.door_target)
 	if door: world.confirm_run_action()
 	verify("room_entry", door and world.current_room=="tavern" and world.run_game.active and world.run_game.vault==900 and world.run_game.cash==300)
+	world.player.position = Vector3(11.65, 0.02, 1.65)
+	world.player.camera.look_at(world.ledger_door.global_position)
+	for i in range(5): await physics_frame
+	var locked_room: Dictionary = world.checkpoint_state()
+	var locked_reason: String = world.run_game.room_blocked_reason("ledger-cellar")
+	verify("room_door_blocked", world.player.focused==world.ledger_door and not locked_reason.is_empty() and not world.request_action(world.ledger_door) and world.current_room=="tavern" and world.hint_label.text==locked_reason and world.checkpoint_state()==locked_room)
+	world.player.position = Vector3(8.0, 0.02, 2.55)
+	world.player.camera.look_at(world.exit_notice.global_position)
+	for i in range(5): await physics_frame
+	var exit_revision: int = world.run_game.revision
+	verify("discover_exit", world.player.focused==world.exit_notice and not world.run_game.public_exit and world.request_action(world.exit_notice) and world.run_game.public_exit and world.run_game.route_known("general") and world.run_game.revision==exit_revision+1 and world.exit_notice.title=="出口已确认 · 门口可查看撤离费用" and world.hint_label.text.contains("出口已确认"))
 	world.player.position = Vector3(9.55, 0.02, 1.15)
 	world.player.camera.look_at(world.table_target.global_position)
 	for i in range(5): await physics_frame
@@ -197,6 +208,16 @@ func run() -> void:
 	var settled: Dictionary = world.checkpoint_state()
 	world.leave_seat()
 	verify("leave_unseated", world.checkpoint_state() == settled)
+	world.player.position = Vector3(11.65, 0.02, 1.65)
+	world.player.camera.look_at(world.ledger_door.global_position)
+	for i in range(5): await physics_frame
+	var before_ledger: Dictionary = RunCheckpoint.capture(world.run_game)
+	verify("room_door_unlocked", world.player.focused==world.ledger_door and world.run_game.room_blocked_reason("ledger-cellar").is_empty() and world.request_action(world.ledger_door) and world.current_room=="ledger" and world.title_label.text=="账房地窖" and world.player.position.is_equal_approx(Vector3(world.ROOMS.ledger.x-2.0,0.05,1.7)) and RunCheckpoint.capture(world.run_game)==before_ledger)
+	var back_door: Area3D = world.get_node("LedgerCellar/DoorTarget")
+	world.player.position = Vector3(18.0, 0.02, 1.65)
+	world.player.camera.look_at(back_door.global_position)
+	for i in range(5): await physics_frame
+	verify("room_door_return", world.player.focused==back_door and world.request_action(back_door) and world.current_room=="tavern" and world.title_label.text==world.RunRules.SCENE_NAMES[world.run_game.scene_id] and RunCheckpoint.capture(world.run_game)==before_ledger)
 	world.show_run_panel("transfer")
 	var destination: String = world.scene_choice.get_item_metadata(world.scene_choice.selected)
 	var travel_quote: Dictionary = world.run_game.transfer_quote(destination)
