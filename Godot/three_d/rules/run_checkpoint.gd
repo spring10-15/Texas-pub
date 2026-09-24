@@ -51,6 +51,8 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		var event: Variant = result.get("event", site)
 		if not event is String or not Run.SearchEvents.EVENTS.has(event): return null
 		if not Run.SearchEvents.EVENTS[event].choices.any(func(option): return option.id == result.choice): return null
+		if not result.has("event"):
+			result["event"] = site
 	if not values.last_table_result.is_empty():
 		var summary: Dictionary = values.last_table_result
 		if not summary.get("table") is String or not content.tables.has(summary.table): return null

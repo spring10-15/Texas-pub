@@ -1,14 +1,19 @@
 extends SceneTree
 const Run = preload("res://three_d/rules/run.gd")
 const Checkpoint = preload("res://three_d/rules/run_checkpoint.gd")
+const Store = preload("res://three_d/rules/save_store.gd")
 var failures: Array[String] = []
 var checks := 0
 var invalid_cases := 0
 var legacy_variant_cases := 0
+var legacy_search_event_restored := false
 func verify(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label); push_error(label)
 func _initialize() -> void:
+	call_deferred("run_tests")
+
+func run_tests() -> void:
 	var content: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
 	var r := Run.new(content)
 	r.start(r.revision,"smoky-den",0)
@@ -93,6 +98,37 @@ func _initialize() -> void:
 		verify(not searched_run.service_action("search","cargo-table",searched_run.revision,"goods") and Checkpoint.capture(searched_run) == searched_save,"Restored search cannot award twice")
 	searched_save.search_results["cargo-table"].erase("event")
 	verify(Checkpoint.restore(searched_save,content) != null,"Legacy search without event identity remains accepted")
+	var legacy_world: Node3D = load("res://three_d/scenes/main.tscn").instantiate()
+	root.add_child(legacy_world)
+	await process_frame
+	legacy_world.set_process(false)
+	legacy_world.run_game.start(legacy_world.run_game.revision,"smoky-den",0)
+	legacy_world.travel("tavern")
+	var disk_search := Checkpoint.capture(searched)
+	disk_search.search_results["ledger-cellar"] = {"event":"ledger-cellar","choice":"cash","message":"保留的旧站点结果"}
+	disk_search.search_results["cargo-table"].erase("event")
+	var disk_expected: Dictionary = disk_search.duplicate(true)
+	disk_expected.search_results["cargo-table"]["event"] = "cargo-table"
+	var legacy_world_state: Dictionary = legacy_world.checkpoint_state()
+	legacy_world_state.run = disk_search
+	var legacy_search_path := "user://legacy-search-event-test-%d.save" % OS.get_process_id()
+	legacy_world.save_path = legacy_search_path
+	var legacy_search_written: bool = Store.write_checkpoint(legacy_search_path,legacy_world_state) == OK
+	var disk_before_load: Dictionary = Store.read_checkpoint(legacy_search_path)
+	var disk_before_bytes: PackedByteArray = FileAccess.get_file_as_bytes(legacy_search_path)
+	if legacy_search_written:
+		legacy_world.load_checkpoint()
+	var disk_after_load: Dictionary = Store.read_checkpoint(legacy_search_path)
+	legacy_search_event_restored = legacy_world.checkpoint_state().run.search_results.get("cargo-table",{}).get("event","") == "cargo-table"
+	legacy_search_event_restored = legacy_search_event_restored and legacy_world.checkpoint_state().run.search_results.get("ledger-cellar",{}) == disk_expected.search_results["ledger-cellar"]
+	legacy_search_event_restored = legacy_search_event_restored and legacy_world.checkpoint_state().run == disk_expected
+	legacy_search_event_restored = legacy_search_event_restored and disk_before_load.status == "ok" and disk_before_load.state == legacy_world_state and not disk_before_load.state.run.search_results["cargo-table"].has("event")
+	legacy_search_event_restored = legacy_search_event_restored and disk_after_load.status == "ok" and disk_after_load.state == legacy_world_state and FileAccess.get_file_as_bytes(legacy_search_path) == disk_before_bytes
+	legacy_search_event_restored = legacy_search_event_restored and legacy_world.saving_enabled and legacy_world.paused
+	verify(legacy_search_event_restored,"Version 1 disk checkpoint restores missing search event to site and preserves full state")
+	var legacy_search_cleanup: bool = DirAccess.remove_absolute(ProjectSettings.globalize_path(legacy_search_path)) == OK
+	legacy_search_event_restored = legacy_search_event_restored and legacy_search_cleanup
+	legacy_world.queue_free()
 	var playing := Run.new(content)
 	playing.start(playing.revision,"smoky-den",42)
 	verify(playing.enter_table(113,playing.revision,"cargo-table") != null,"Real table opened for checkpoint validation")
@@ -116,6 +152,8 @@ func _initialize() -> void:
 		hits["persistence_run.invalid_fields_rejected"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true}
 	if legacy_variant_cases == 2 and failures.is_empty():
 		hits["persistence_run.legacy_variant_plan_restored"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true,"versions":[2,3]}
+	if legacy_search_event_restored and failures.is_empty():
+		hits["persistence_run.legacy_search_event_restored"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true,"fixture":"version-1 disk envelope"}
 	var missing: Array = expected.filter(func(id): return not hits.has(id))
 	var hashes := {}
 	for source_file in DirAccess.get_files_at("res://three_d/rules"):
