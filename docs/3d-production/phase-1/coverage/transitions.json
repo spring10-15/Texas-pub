@@ -1720,6 +1720,18 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.toggle_pause_resume",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "toggle_pause",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.toggle_pause_pregame_leave",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "toggle_pause",
+      "outcome": "accepted"
+    },
+    {
       "id": "world.seat",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "request_action",

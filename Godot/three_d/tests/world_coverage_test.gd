@@ -184,8 +184,17 @@ func run() -> void:
 	verify("pause", world.paused and not world.seat_panel.visible and world.pause_panel.visible and not world.player.controls_enabled)
 	world.resume()
 	verify("resume", not world.paused and world.seat_panel.visible and not world.pause_panel.visible and world.seated)
+	world.pause_game()
+	world.toggle_pause()
+	verify("toggle_pause_resume", not world.paused and world.seat_panel.visible and not world.pause_panel.visible and world.seated and not world.player.controls_enabled)
 	world.leave_seat()
 	verify("leave_pregame", not world.seated and world.table_game==null and world.player.controls_enabled and world.player.camera.current and world.player.global_position.is_equal_approx(return_position))
+	world.player.camera.look_at(world.table_target.global_position)
+	for i in range(5): await physics_frame
+	var seated_for_pause_exit: bool = world.request_action(world.table_target)
+	var pause_exit_position: Vector3 = world.player.global_position
+	world.toggle_pause()
+	verify("toggle_pause_pregame_leave", seated_for_pause_exit and not world.seated and world.table_game==null and world.player.controls_enabled and world.player.camera.current and world.player.global_position.is_equal_approx(pause_exit_position))
 	world.player.camera.look_at(world.table_target.global_position)
 	for i in range(5): await physics_frame
 	var seated_again: bool = world.request_action(world.table_target)
