@@ -1558,6 +1558,60 @@
       "outcome": "rejected"
     },
     {
+      "id": "world.services_open_paused",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "open_services",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.services_open_run_panel",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "open_services",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.services_open",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "open_services",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.services_close",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "close_services",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.services_open_seated",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "open_services",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.services_close_seated",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "close_services",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.services_action_hidden",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.services_action_unoffered",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "service_action",
+      "outcome": "rejected"
+    },
+    {
+      "id": "world.services_route_preview",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "service_action",
+      "outcome": "accepted"
+    },
+    {
       "id": "world.prop_restore",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "restore_checkpoint",
