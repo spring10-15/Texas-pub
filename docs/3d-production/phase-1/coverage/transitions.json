@@ -1714,6 +1714,18 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.room_graph_entry",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "accepted"
+    },
+    {
+      "id": "world.room_graph_blocked",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "request_action",
+      "outcome": "rejected"
+    },
+    {
       "id": "world.room_door_blocked",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "request_action",
@@ -2269,7 +2281,6 @@
   "pending_families": {
     "poker": [],
     "world": [
-      "room_entry",
       "seat",
       "leave_seat",
       "physical_raycast",

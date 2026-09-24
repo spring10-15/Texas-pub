@@ -262,6 +262,44 @@ func run() -> void:
 	world.player.camera.look_at(back_door.global_position)
 	for i in range(5): await physics_frame
 	verify("room_door_return", world.player.focused==back_door and world.request_action(back_door) and world.current_room=="tavern" and world.title_label.text==world.RunRules.SCENE_NAMES[world.run_game.scene_id] and RunCheckpoint.capture(world.run_game)==before_ledger)
+	var room_graph_original_layout: String = world.run_game.variant_plan["room_layout"]
+	var room_graph_original_completed: Array = world.run_game.completed.duplicate()
+	world.run_game.variant_plan["room_layout"] = "linear"
+	world.refresh_route_labels()
+	world.travel("ledger")
+	var mirror_door: Area3D = find_action_anchor(world.get_node("LedgerCellar"), &"room:mirror")
+	if not is_instance_valid(mirror_door):
+		push_error("missing room:mirror anchor")
+		quit(1)
+		return
+	var mirror_reason: String = world.run_game.room_blocked_reason(world.ROOMS.mirror.table)
+	var mirror_door_aimed: bool = await aim_room_anchor(world, mirror_door)
+	var mirror_blocked_before: Dictionary = world.checkpoint_state()
+	var mirror_blocked: bool = mirror_door_aimed and not world.request_action(mirror_door) and world.current_room=="ledger" and world.hint_label.text==mirror_reason and world.checkpoint_state()==mirror_blocked_before
+	world.run_game.completed.append("ledger-cellar")
+	mirror_door_aimed = await aim_room_anchor(world, mirror_door)
+	var mirror_run_before: Dictionary = RunCheckpoint.capture(world.run_game)
+	var mirror_entered: bool = mirror_door_aimed and world.request_action(mirror_door) and world.current_room=="mirror" and world.title_label.text=="镜厅" and world.player.position.is_equal_approx(Vector3(world.ROOMS.mirror.x-2.0,0.05,1.7)) and RunCheckpoint.capture(world.run_game)==mirror_run_before
+	var embers_door: Area3D = find_action_anchor(world.get_node("MirrorHall"), &"room:embers")
+	if not is_instance_valid(embers_door):
+		push_error("missing room:embers anchor")
+		quit(1)
+		return
+	var embers_reason: String = world.run_game.room_blocked_reason(world.ROOMS.embers.table)
+	var embers_door_aimed: bool = await aim_room_anchor(world, embers_door)
+	var embers_blocked_before: Dictionary = world.checkpoint_state()
+	var embers_blocked: bool = embers_door_aimed and not world.request_action(embers_door) and world.current_room=="mirror" and world.hint_label.text==embers_reason and world.checkpoint_state()==embers_blocked_before
+	world.run_game.completed.append("mirror-hall")
+	embers_door_aimed = await aim_room_anchor(world, embers_door)
+	var embers_run_before: Dictionary = RunCheckpoint.capture(world.run_game)
+	var embers_entered: bool = embers_door_aimed and world.request_action(embers_door) and world.current_room=="embers" and world.title_label.text=="余烬牌室" and world.player.position.is_equal_approx(Vector3(world.ROOMS.embers.x-2.0,0.05,1.7)) and RunCheckpoint.capture(world.run_game)==embers_run_before
+	verify("room_graph_blocked", mirror_blocked and embers_blocked)
+	verify("room_graph_entry", mirror_entered and embers_entered)
+	world.run_game.completed.clear()
+	world.run_game.completed.append_array(room_graph_original_completed)
+	world.run_game.variant_plan["room_layout"] = room_graph_original_layout
+	world.refresh_route_labels()
+	world.travel("tavern")
 	world.show_run_panel("transfer")
 	var destination: String = world.scene_choice.get_item_metadata(world.scene_choice.selected)
 	var travel_quote: Dictionary = world.run_game.transfer_quote(destination)
@@ -415,6 +453,11 @@ func aim_room_anchor(world: Node3D, anchor: Area3D) -> bool:
 			world.player.update_focus()
 			if world.player.focused == anchor: return true
 	return false
+
+func find_action_anchor(parent: Node, action_id: StringName) -> Area3D:
+	for candidate in parent.find_children("*", "Area3D", true, false):
+		if candidate.get("action_id") == action_id: return candidate as Area3D
+	return null
 
 func use_room_prop(world: Node3D, id: String, opened_key: String, closed_key: String, results: Dictionary) -> void:
 	var entry: Dictionary = world.props.entries[id]

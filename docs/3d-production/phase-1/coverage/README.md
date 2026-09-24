@@ -1,6 +1,8 @@
 # 状态转移覆盖：目录与执行证据
 
-> 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 377，当前登记证据为 377/377；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
+> 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 379，当前登记证据为 379/379；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
+
+2026-09-25 通用房门路由分支：`world_coverage_test.gd` 现在通过 `LedgerCellar` 与 `MirrorHall` 的真实门锚点验证 `room:<dest>` 拒绝和接受路径：前置桌未完成时留在原房间、显示阻塞原因且完整世界快照不变；满足相应前置后分别进入镜厅与余烬牌室，并核对标题、落点与 Run 快照不变。为隔离门路由，测试直接设置完成标记，不声称在该用例内实际打完前置桌；完整桌流程由现有其他套件验证。新增 `world.room_graph_entry` 与 `world.room_graph_blocked`，世界覆盖 74/74；从 `pending_families.world` 移除 `room_entry`，待审组从 6 减至 5。完整回归 59/59，目录证据 379/379，覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-060731/report.json`。测试固定线性布局隔离门路由；房间图种子多样性仍由 `seed_diversity_test.gd` 单独检验。
 
 2026-09-25 世界暂停/恢复分支复核：`world_coverage_test.gd` 和 A4 审计逐项覆盖 `world.pause`、`world.pause_repeated`、`world.pause_guard`、`world.resume`、`world.resume_repeated`、`world.toggle_pause_services`、`world.toggle_pause_run_panel`、`world.toggle_pause_resume`、`world.toggle_pause_pregame_leave` 与 `world.leave_paused_rejected`。这些结果均有正式后继状态断言和当前证据，因此从 `pending_families.world` 移除 `pause`、`resume`，待审组从 8 减至 6；登记数仍为 377。完整回归 59/59、目录证据 377/377、覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-054208/report.json`。全局状态转移分母仍未封板。
 
