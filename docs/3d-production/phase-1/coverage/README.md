@@ -1,6 +1,6 @@
 # 状态转移覆盖：目录与执行证据
 
-> 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 367，当前登记证据为 367/367；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
+> 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 368，当前登记证据为 368/368；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
 
 2026-09-25 存档审计新增七项结果：`persistence_table.rng_replay` 在两桌、10 种子下验证 660 个恢复后动作边界一致；`persistence_run.legacy_variant_plan_restored` 用版本 2/3 内存旧计划验证历史对手阵容与线性房间图；`persistence_restore.save_repaired_from_memory` 验证有效内存状态可修复缺失/损坏的磁盘检查点；`persistence_restore.missing_checkpoint_recovered` 验证首次启动遇到缺档后可重新启用存盘且首次保存写出完整状态；`persistence_restore.playtest_save_blocked` 验证固定种子试玩模式不读写正式存档；`persistence_restore.active_table_not_seated` 与 `persistence_restore.table_id_mismatch` 验证两类矛盾快照被拒绝且不改变完整世界状态。恢复专项 59 项检查通过，恢复子图 18/18；RNG 重放、旧计划、修复专项分别通过 2,031、82、55 项。完整回归 59/59，覆盖汇总 `verified=365 catalogued=365`，汇总器单测 3/3 通过。旧计划使用内存样本，不代表验证过历史磁盘旧档。`pending_families` 仍包含世界交互与存档各阶段，整体覆盖率继续为 unavailable，不能据此宣称 Phase 1 通过。报告：`output/3d/regression/20260925-034925/report.json`。
 
@@ -9,6 +9,8 @@
 2026-09-25 再补 `world.seated_world_action_rejected`：验证已入座时请求台灯交互会被拒绝且完整世界快照不变。此前新增的 `world.leave_forced_pressure_exit` 也已纳入同一世界覆盖套件。静态遮挡焦点清除、暂停时路线确认及暂停时服务动作拒绝同时补上对应后继断言，复用既有语义 ID。`world_coverage_test.gd` 现为 72/72，A4 72 行中 70 行有正式后继证据，2 行正常玩家路径不可达；全量回归 59/59，当前目录证据 `verified=367 catalogued=367`。全局分母仍未封板。报告：`output/3d/regression/20260925-040802/report.json`。
 
 2026-09-25 为 `world.gd::checkpoint_state()` 新增 `persistence_capture.world_snapshot_isolated`：通过修改捕获快照的嵌套 Run 背包/现金和 props，再验证 live 状态不变；随后修改 live Run/props，验证先前快照也不变。该 capture 报告额外记录并校验 `world.gd` 哈希，避免世界层实现变化后误用过期证据。capture 子图 3/3，当前目录证据 `verified=367 catalogued=367`；全局状态转移分母仍未封板。报告：`output/3d/persistence-capture-coverage.json`。
+
+2026-09-25 为存档文件读取新增 `persistence_io.read_non_dictionary`：有效版本与 digest 的 envelope 中包含 Array payload，`read_checkpoint()` 必须返回 `invalid` 且保持原文件字节不变。存档 I/O 子图 10/10，A5 审计映射 37/37；完整回归 59/59，当前登记证据 `verified=368 catalogued=368`，汇总器单测 3/3。全局分母仍未封板，整体覆盖率仍 unavailable。报告：`output/3d/regression/20260925-041659/report.json`。
 
 2026-09-25 补充旧版 v1 运行字段迁移：从完整世界快照中移除 14 个可选运行字段，将该旧形态写入隔离存档并经正式 `world.load_checkpoint()` 恢复；对照 `RunCheckpoint.restore()` 补出的默认值核对完整世界状态，随后继续执行真实情报动作并验证 revision 和已知规则变化。新增 `persistence_restore.legacy_run_fields`，恢复子图 13/13；这只验证 v1 内可选字段回填，不代表跨版本迁移。专项 40 项检查通过；全目录当前登记结果数为 354，完整转移分母仍未封板。
 

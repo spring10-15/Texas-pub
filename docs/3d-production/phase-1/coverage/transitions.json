@@ -2044,6 +2044,12 @@
       "outcome": "rejected"
     },
     {
+      "id": "persistence_io.read_non_dictionary",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "read_checkpoint",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_capture.run_snapshot_isolated",
       "source": "Godot/three_d/rules/run_checkpoint.gd",
       "entry": "capture",
