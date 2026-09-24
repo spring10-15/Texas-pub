@@ -61,6 +61,9 @@ func _initialize() -> void:
 	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["calm-widow"],.5,.65)=="call", "Widow waits without a repeated raise pattern")
 	value_table.playerPattern.raiseCount = 8
 	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["calm-widow"],.5,.65)=="raise", "Widow punishes repeated raises")
+	value_table.playerPattern.raiseCount = 2
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["calm-widow"],.5,.52)=="raise", "Widow counters a repeated raise at marginal equity")
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["house-viper"],.5,.52)=="call", "Viper does not copy the widow's repeated-raise counter")
 	var pairwise_differences := {}
 	var ids: Array = content.opponents.keys()
 	ids.sort()

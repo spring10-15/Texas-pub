@@ -69,6 +69,8 @@ static func choose_with_odds(table: Dictionary, actor: Dictionary, legal: Dictio
 	var value_raise_shift: float = 0.0
 	if profile.has("valueRaiseShift"):
 		value_raise_shift = float(profile.valueRaiseShift) - hand_factor * 0.3 - minf(0.1, table.playerPattern.raiseCount * profile.patternPunish * 0.08)
+	if profile.has("repeatRaiseCounter"):
+		value_raise_shift -= minf(0.32, table.playerPattern.raiseCount * float(profile.repeatRaiseCounter))
 	if table.currentBet == 0:
 		if legal.get("allIn", false) and actor.stack <= table.tableDef.openBet * 2.5 and odds > 0.63 and random_value < 0.18 + all_in_chance:
 			return "all-in"
