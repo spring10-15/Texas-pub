@@ -127,6 +127,21 @@ func run_tests() -> void:
 	repair_ok = repair_ok and DirAccess.remove_absolute(ProjectSettings.globalize_path(repair_path)) == OK
 	world.saving_enabled = false
 	record("save_repaired_from_memory", repair_ok)
+	var missing_path := "user://missing-world-test-%d.save" % OS.get_process_id()
+	world.save_path = missing_path
+	world.saving_enabled = false
+	world.load_checkpoint()
+	var missing_ok: bool = world.saving_enabled and not FileAccess.file_exists(missing_path) and world.save_checkpoint() and Store.read_checkpoint(missing_path).get("state", {}) == world.checkpoint_state()
+	missing_ok = missing_ok and DirAccess.remove_absolute(ProjectSettings.globalize_path(missing_path)) == OK
+	record("missing_checkpoint_recovered", missing_ok)
+	var playtest_path := "user://playtest-save-test-%d.save" % OS.get_process_id()
+	world.save_path = playtest_path
+	world.playtest_seed = 42
+	world.saving_enabled = false
+	world.load_checkpoint()
+	var playtest_blocked: bool = not world.saving_enabled and not world.save_checkpoint() and not FileAccess.file_exists(playtest_path)
+	world.playtest_seed = 0
+	record("playtest_save_blocked", playtest_blocked)
 	var corrupt_path := "user://corrupt-world-test-%d.save" % OS.get_process_id()
 	var corrupt_file := FileAccess.open(corrupt_path, FileAccess.WRITE)
 	corrupt_file.store_string("invalid checkpoint")

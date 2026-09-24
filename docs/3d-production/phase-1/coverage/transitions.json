@@ -2110,6 +2110,18 @@
       "outcome": "accepted"
     },
     {
+      "id": "persistence_restore.missing_checkpoint_recovered",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "load_checkpoint",
+      "outcome": "accepted"
+    },
+    {
+      "id": "persistence_restore.playtest_save_blocked",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "save_checkpoint",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_restore.seated",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "restore_checkpoint",
