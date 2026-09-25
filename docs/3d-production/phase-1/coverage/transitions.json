@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "status": "incomplete_catalog",
-  "counting_rule": "One semantic accepted/rejected outcome per ID. Multiple input cases may exercise one ID. Overall denominator is not finalized while pending families remain.",
+  "counting_rule": "One semantic accepted/rejected outcome per ID. Multiple input cases may exercise one ID. Verified catalog entries are not a complete global denominator until a source-driven audit accounts for every player-reachable state-changing outcome and defensible exclusions.",
   "transitions": [
     {
       "id": "transfer.success",

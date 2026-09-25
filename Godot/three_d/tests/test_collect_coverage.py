@@ -10,7 +10,9 @@ class CoverageEvidenceTests(unittest.TestCase):
     def test_current_evidence_does_not_claim_global_completion(self):
         result = coverage.collect()
         self.assertEqual(result['catalogued_outcomes'], result['verified_outcomes'])
-        self.assertTrue(result['pending_families'])
+        self.assertEqual(result['catalog_status'], 'incomplete_catalog')
+        self.assertEqual(set(result['pending_families']), {'poker', 'world', 'persistence'})
+        self.assertTrue(all(not rows for rows in result['pending_families'].values()))
         self.assertIsNone(result['overall_state_transition_coverage'])
 
     def test_changed_source_catalog_or_test_is_rejected(self):
