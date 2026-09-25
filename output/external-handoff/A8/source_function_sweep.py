@@ -11,7 +11,6 @@ import csv
 import hashlib
 import json
 import re
-import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -150,7 +149,6 @@ def main() -> int:
     report = {
         "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
         "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-        "head": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "branch_inventory_sha256": sha(INVENTORY),
         "source_sha256": {p.relative_to(ROOT).as_posix(): sha(p) for p in files},
         "counts": dict(counts),
