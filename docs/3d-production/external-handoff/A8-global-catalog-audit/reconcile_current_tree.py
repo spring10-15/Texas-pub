@@ -282,6 +282,108 @@ def main() -> int:
         if "20260925-103506" in row["evidence_report"] or "20260925-105659" in row["evidence_report"]:
             row["evidence_report"] = row["evidence_report"].replace("20260925-103506/report.json", LATEST_REPORT).replace("20260925-105659/report.json", LATEST_REPORT)
 
+    # World/table orchestration is a call-site layer over already catalogued
+    # poker and world outcomes. Reuse those IDs; do not expand the catalog for
+    # duplicate wrappers around the same accepted/rejected result.
+    orchestration = {
+        "Godot/three_d/scripts/world.gd:635-636": {
+            "ids": "-",
+            "test": "Godot/three_d/tests/table_integration.gd::Repeated start cannot charge twice",
+            "strength": "none",
+            "outcome": "not_a_transition",
+            "disposition": "unreachable_or_not_transition",
+            "notes": "start_table 的未入座/已有桌局/暂停早退不改变权威状态；只有入座且处于可开局面板时按钮可用，开始后面板刷新，暂停时桌面操作面板隐藏。重复调用的 no-op 有测试，玩家输入不能从这些 UI 状态再次触发该入口，不借用规则层拒绝 ID。",
+        },
+        "Godot/three_d/scripts/world.gd:642-645": {
+            "ids": "entry.success",
+            "test": "Godot/three_d/tests/table_integration.gd::Starting table pays buy-in once",
+            "strength": "strong",
+            "notes": "World.start_table 成功调用 Run.enter_table；复用 entry.success，测试断言只扣一次 buy-in 且创建真实牌桌。",
+        },
+        "Godot/three_d/scripts/world.gd:648-649": {
+            "ids": "-",
+            "test": "Godot/three_d/tests/table_integration.gd::Pause freezes timer and blocks player input;Godot/three_d/tests/services_save_test.gd::Services freeze an AI turn, direct beat advance, and hidden table actions",
+            "strength": "none",
+            "outcome": "not_a_transition",
+            "disposition": "unreachable_or_not_transition",
+            "notes": "play_action 的暂停/服务面板/无桌/节拍锁早退不改变权威状态；控制按钮在暂停、服务面板、无桌及节拍锁状态下隐藏或禁用，测试分别验证这些 no-op。它们是包装层输入被拦截，不借用 request_action 或规则层拒绝 ID。",
+        },
+        "Godot/three_d/scripts/world.gd:653-656": {
+            "ids": "poker_action.fold;poker_action.call;poker_action.check;poker_action.raise;poker_action.all_in",
+            "test": "Godot/three_d/tests/table_integration.gd::HUD button submits exactly one legal action",
+            "strength": "strong",
+            "notes": "World.play_action 只是牌桌动作的世界侧分派；实牌桌 HUD 测试验证接受动作令 revision 恰增 1，动作后继由对应 poker_action ID 承接。",
+        },
+        "Godot/three_d/scripts/world.gd:658-662": {
+            "ids": "poker_progress.next_hand",
+            "test": "Godot/three_d/tests/table_integration.gd::Second hand was played through the HUD",
+            "strength": "strong",
+            "notes": "World.continue_hand 经真实下一手按钮进入规则层 next_hand；牌桌集成验证第二手与终局，后继复用既有牌桌进度/终局结果 ID。",
+        },
+        "Godot/three_d/scripts/world.gd:670-671": {
+            "ids": "-",
+            "test": "Godot/three_d/tests/services_save_test.gd::Services freeze an AI turn, direct beat advance, and hidden table actions",
+            "strength": "strong",
+            "outcome": "not_a_transition",
+            "disposition": "unreachable_or_not_transition",
+            "notes": "AI 行动待执行时打开服务面板，调用 _process 后完整 checkpoint 不变，证明本行为冻结/no-op；面板自身状态另由 world.modal_guard 覆盖，不把定时器早退再算一个转移。",
+        },
+        "Godot/three_d/scripts/world.gd:672-673": {
+            "ids": "-",
+            "test": "Godot/three_d/tests/table_integration.gd::Pause freezes timer and blocks player input",
+            "strength": "strong",
+            "outcome": "not_a_transition",
+            "disposition": "unreachable_or_not_transition",
+            "notes": "无桌/暂停/未入座时 _process 早退，不写 Run/Table/World/存档权威状态；暂停场景有 revision 不变断言，其余状态下 table_game 为空或面板隐藏，属于调度包装层 no-op，不借用其他入口的拒绝 ID。",
+        },
+        "Godot/three_d/scripts/world.gd:681-681": {
+            "ids": "poker_action.fold;poker_action.call;poker_action.check;poker_action.raise;poker_action.all_in;poker_progress.flop;poker_progress.turn;poker_progress.river;poker_progress.showdown;poker_progress.advance_finished_hand",
+            "test": "Godot/three_d/tests/table_integration.gd::World process advances exactly one AI action or street",
+            "strength": "strong",
+            "notes": "本轮牌桌全流程改由 World._process 驱动；每个非玩家节拍都断言 revision 恰增 1 且公开状态变化，后继归属既有 poker_action / poker_progress ID。",
+        },
+        "Godot/three_d/scripts/world.gd:684-685": {
+            "ids": "-",
+            "test": "Godot/three_d/tests/services_save_test.gd::Services freeze an AI turn, direct beat advance, and hidden table actions",
+            "strength": "strong",
+            "outcome": "not_a_transition",
+            "disposition": "unreachable_or_not_transition",
+            "notes": "服务面板打开时直接调用 advance_table_beat 后完整 checkpoint 不变；暂停/无桌/非 playing 状态同属调度早退，均不产生权威状态后继，不把这个 wrapper no-op 复用为新的 guard ID。",
+        },
+        "Godot/three_d/scripts/world.gd:687-688": {
+            "ids": "poker_progress.flop;poker_progress.turn;poker_progress.river;poker_progress.showdown;poker_progress.advance_finished_hand",
+            "test": "Godot/three_d/tests/table_integration.gd::World process advances exactly one AI action or street",
+            "strength": "weak",
+            "notes": "无人行动分支由 World 调用规则层 advance 推进；完整牌局覆盖街道/摊牌流程，但 empty actor 的 world 分派点未单独构造，复用既有 poker_progress 语义并保留弱证据。",
+        },
+        "Godot/three_d/scripts/world.gd:690-692": {
+            "ids": "poker_action.fold;poker_action.call;poker_action.check;poker_action.raise;poker_action.all_in",
+            "test": "Godot/three_d/tests/table_integration.gd::World process advances exactly one AI action or street",
+            "strength": "strong",
+            "notes": "本轮全牌局改由 World._process 驱动真实 AI 行动；逐拍断言 revision 与公开牌桌状态变化，动作语义由既有 poker_action ID 承接。",
+        },
+        "Godot/three_d/scripts/world.gd:1047-1051": {
+            "ids": "world.leave_forced_pressure_exit;world.services_close;world.travel_landing",
+            "test": "Godot/three_d/tests/routes_items_test.gd::Pressure enforcement closes services and forces the player back to stash",
+            "strength": "strong",
+            "notes": "高风声且现金不足时，从实际酒保面板执行有效 intel 服务动作，经 World.service_action→check_pressure 关闭面板并强制回藏匿点；断言强制失败结果、位置及损失提示，复用既有 forced-exit/close/travel ID。",
+        },
+    }
+    for target_rows in (branches, old_gaps):
+        for row in target_rows:
+            mapping = orchestration.get(row["source_line"])
+            if mapping is None:
+                continue
+            row.update({
+                "catalog_id": mapping["ids"],
+                "outcome": mapping.get("outcome", row["outcome"]),
+                "test": mapping["test"],
+                "evidence_report": f"{LATEST_REPORT}",
+                "evidence_strength": mapping["strength"],
+                "disposition": mapping.get("disposition", "catalogued_weak" if mapping["strength"] == "weak" else "catalogued_strong"),
+                "notes": mapping["notes"],
+            })
+
     if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or room_layout_selected != 1 or room_layout_locked != 2 or poker_short_blinds != 1 or poker_seeded_deals != 1 or poker_open_raise_right != 1 or player_pause_input != 1 or player_interaction_signal != 1 or player_look != 1 or player_movement != 1 or player_unfocused_input != 1 or world_search_evidence != 1 or world_product_evidence != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or focus_idempotence != 1 or world_autosave != 1 or world_focus_out != 1 or world_close_request != 1 or reclassified_weak != 1:
         raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, room_layout={room_layout_selected}, layout_locked={room_layout_locked}, poker_short_blinds={poker_short_blinds}, poker_seeded_deals={poker_seeded_deals}, poker_open_raise_right={poker_open_raise_right}, player_pause_input={player_pause_input}, player_interaction_signal={player_interaction_signal}, player_look={player_look}, player_movement={player_movement}, player_unfocused_input={player_unfocused_input}, search_evidence={world_search_evidence}, product_evidence={world_product_evidence}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, focus_idempotence={focus_idempotence}, autosave={world_autosave}, focus_out={world_focus_out}, close_request={world_close_request}, weak={reclassified_weak}")
 
@@ -301,6 +403,8 @@ def main() -> int:
         and not (row["source_file"] == "Godot/three_d/scripts/player.gd" and row["source_line"] in {"Godot/three_d/scripts/player.gd:38-42", "Godot/three_d/scripts/player.gd:45-47", "Godot/three_d/scripts/player.gd:48-51", "Godot/three_d/scripts/player.gd:50-51", "Godot/three_d/scripts/player.gd:56-60"})
         and not (row["source_file"] == "Godot/three_d/scripts/player.gd" and row["source_line"] == "Godot/three_d/scripts/player.gd:67-69")
         and not (row["source_file"] == "Godot/three_d/scripts/world.gd" and row["source_line"] in {"Godot/three_d/scripts/world.gd:482-484", "Godot/three_d/scripts/world.gd:485-487", "Godot/three_d/scripts/world.gd:622-625", "Godot/three_d/scripts/world.gd:626-632", "Godot/three_d/scripts/world.gd:665-669"})
+        and row["catalog_id"] == "-"
+        and row["disposition"] == "reachable_unmapped"
     ]
     weak_evidence = [row.copy() for row in branches if row["disposition"] == "catalogued_weak"]
     for row in current_gaps:
@@ -330,11 +434,11 @@ def main() -> int:
             path = path.strip()
             if path and path != "-" and not (ROOT / path).is_file():
                 raise SystemExit(f"Missing evidence report: {path}")
-    if len(current_gaps) != 12 or any(row["player_reachable"] != "yes" or row["catalog_id"] != "-" for row in current_gaps):
+    if len(current_gaps) != 0 or any(row["player_reachable"] != "yes" or row["catalog_id"] != "-" for row in current_gaps):
         raise SystemExit(f"Current player-path gap set is inconsistent: {len(current_gaps)} rows")
 
     write_csv(AUDIT / "current-tree-branch-inventory.csv", branch_fields, branches)
-    write_csv(AUDIT / "current-tree-player-path-gaps.csv", branch_fields, current_gaps)
+    write_csv(AUDIT / "current-tree-unmapped-player-path-gaps.csv", branch_fields, current_gaps)
     write_csv(AUDIT / "current-tree-weak-evidence.csv", branch_fields, weak_evidence)
     counts = Counter(row["disposition"] for row in branches)
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
@@ -348,7 +452,7 @@ def main() -> int:
 - 回归报告 SHA-256：`{sha256(report)}`
 - lifecycle 覆盖报告 SHA-256：`{sha256(lifecycle_report)}`
 - 当前分支清单 SHA-256：`{sha256(AUDIT / 'current-tree-branch-inventory.csv')}`
-- 当前玩家路径缺口清单 SHA-256：`{sha256(AUDIT / 'current-tree-player-path-gaps.csv')}`
+- 当前玩家路径缺口清单 SHA-256：`{sha256(AUDIT / 'current-tree-unmapped-player-path-gaps.csv')}`
 - 当前弱证据清单 SHA-256：`{sha256(AUDIT / 'current-tree-weak-evidence.csv')}`
 - 对账脚本 SHA-256：`{sha256(AUDIT / 'reconcile_current_tree.py')}`
 - 原始 A8 的 `branch-inventory.csv`、`unmapped-reachable.csv` 和审计 README 保留为 382 项冻结锚点，没有覆盖。
@@ -358,12 +462,12 @@ def main() -> int:
 - 当前目录 ID 已全部映射：{len(mapped_ids)}/{len(catalog_ids)}。
 - `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal`、`world.autosave`、`world.window_focus_out`、`player.look_changed`、`player.movement` 与 `world.window_close_request` 已在对应测试中登记；无目标 E 输入复用 `world.raycast_unfocused`，成功 E 输入由 captured 鼠标模式的窗口测试走完整 Player→World 信号链。
 - 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`；其中 1 条 yes 已有 `world.services_open` ID，但实体入口后置证据偏弱。当前树把 6 条 no 排除出玩家路径缺口，把该 services 行移入弱证据表；另 1 条仅显示试玩存档提示、不改变权威状态，也分类为非状态转移。
-- 当前仍有 {len(current_gaps)} 条标为玩家可达、尚无目录 ID 的候选，详见 `current-tree-player-path-gaps.csv`。这仍需逐条审查后才能新增语义 ID；全局分母尚未冻结。弱证据行见 `current-tree-weak-evidence.csv`。
+- 原 12 条世界/牌桌编排候选逐项复核后，实际状态后继归并到已有规则层 ID；纯 UI/调度包装早退标为 `not_a_transition`，不借用其他入口的 ID。没有新增语义 ID，也没有把 394 项目录宣称为完整分母；当前候选表无未映射行不等于证明不存在其他缺口，全球分母仍未冻结。弱证据行见 `current-tree-weak-evidence.csv`。
 - 分支行 disposition 计数：`{dict(counts)}`。
 
 ## 限制
 
-此对账仅把原 382 项审计映射到当前目录，并补入本金封顶、入座风声封顶、盈利降风声、玩家行为画像、房间图选择、窗口生命周期与玩家输入证据及明确的可达性/展示项分类。当前仍有 12 条候选需逐项审查；对账也没有重新审计全部 16 个源码文件。因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
+此对账仅把原 382 项审计映射到当前目录，并补入本金封顶、入座风声封顶、盈利降风声、玩家行为画像、房间图选择、窗口生命周期、玩家输入和世界/牌桌编排证据及明确的可达性/展示项分类。它没有重新审计全部 16 个源码文件，也没有穷举组合状态空间，因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
 
 ## 重建
 
