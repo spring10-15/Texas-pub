@@ -88,7 +88,7 @@ func play(content: Dictionary, scene: String, site: String, actor: String, seed_
 					var choices := {}
 					for profile_id in profiles:
 						choices[profile_id] = Opponent.choose_with_odds(t.state,player,legal,content.opponents[profile_id],random_value,odds)
-					var context := {"venue":scene,"table":site,"seed":seed_value,"actor":id,"street":t.state.street,"hand":t.state.handNumber,"playerRaises":t.state.playerPattern.raiseCount,"bet":t.state.currentBet,"stack":player.stack,"odds":snappedf(odds,0.01),"randomValue":snappedf(random_value,0.001),"legal":legal.duplicate(),"choices":choices}
+					var context := {"venue":scene,"table":site,"seed":seed_value,"actor":id,"street":t.state.street,"hand":t.state.handNumber,"totalHands":t.state.totalHands,"playerRaises":t.state.playerPattern.raiseCount,"bet":t.state.currentBet,"stack":player.stack,"buyIn":t.state.tableDef.buyIn,"openBet":t.state.tableDef.openBet,"odds":odds,"randomValue":random_value,"legal":legal.duplicate(),"choices":choices}
 					varied_repeated_raise_contexts.append(context)
 					for left in range(profiles.size()):
 						for right in range(left+1,profiles.size()):
