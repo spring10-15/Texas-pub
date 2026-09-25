@@ -81,6 +81,12 @@
 
 该项当前只证明目录分母可能含有一个不可达/错归属结果，不足以计算修正后的全局分母。后续还须以同样方式检查其它固定夹具或人工改状态的测试结果。
 
+## World 物理道具入口初查
+
+`SceneProps.build_stash()` 创建三只抽屉，分别登记为 `drawer0/1/2`，都使用相同 `interact()` 状态翻转逻辑和 `position` 开合属性。覆盖目录只有 `world.prop_drawer0` 与 `world.prop_drawer0_reverse` 两个语义 ID；`world_coverage_test.gd` 对 drawer0 实际调用 World 交互并验证开/关属性，原 `spatial_interaction_test.gd` 则通过焦点射线操作 drawer1。为确认三只实体都接到同一交互路径，主 Agent 将空间测试扩展为实际射线打开 drawer0/1/2；专项测试 47 项全过。它仍只为 drawer0 做关闭的目录后置断言；A8 可按相同通用函数/相同开合状态的归并依据判断是否需要逐只补反向测试，不能仅凭名称缺失增加三条 ID。变更后全量回归 59/59，报告 `output/3d/regression/20260925-095832/report.json`；覆盖汇总与单测仍为 382/382、3/3，没有新增语义 ID。
+
+同场景的台灯、窗、桌面牌和筹码亦通过 `props.interact()`；目录分别有开与反向 ID（灯的开由 `prop_on` 代表，关为 `prop_lamp_reverse`）。四酒馆壁灯/餐具柜复用同一构建函数，覆盖测试在四个实际房间逐个开合，再将相同“开/关”语义归并为 `world.room_light_on/off` 与 `world.room_cupboard_open/close`。这些归并有相同代码路径的证据，但最终审计仍应确认 CSV 记录了四房间逐一执行的测试后置断言。
+
 ## 未完成事项
 
 - 尚未对上述入口逐分支确认源码后继状态与目录 ID 的一一映射。

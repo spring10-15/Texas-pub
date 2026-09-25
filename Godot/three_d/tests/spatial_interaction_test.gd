@@ -41,7 +41,7 @@ func run() -> void:
 	world.open_services()
 	verify(world.services_panel.visible and world.run_game.service_view().actions.is_empty(), "Empty stash bag contains no shop or unknown routes")
 	world.close_services()
-	var positions := {"lamp":Vector3(1.6, 0.02, -1.1), "drawer1":Vector3(-2.1, 0.02, -0.9), "window":Vector3(1.8, 0.02, -0.4), "card":Vector3(0.55, 0.02, 0.5), "chip":Vector3(1.2, 0.02, 0.45)}
+	var positions := {"lamp":Vector3(1.6, 0.02, -1.1), "drawer0":Vector3(-1.8, 0.02, -1.2), "drawer1":Vector3(-2.1, 0.02, -0.9), "drawer2":Vector3(-1.8, 0.02, -1.2), "window":Vector3(1.8, 0.02, -0.4), "card":Vector3(0.55, 0.02, 0.5), "chip":Vector3(1.2, 0.02, 0.45)}
 	for id in positions:
 		var entry: Dictionary = world.props.entries[id]
 		await aim(positions[id], entry.anchor)
