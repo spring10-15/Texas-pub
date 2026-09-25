@@ -1342,6 +1342,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "poker_blind.short_stack_posts",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "start_hand",
+      "outcome": "accepted"
+    },
+    {
       "id": "poker_discount.next_hand_resets",
       "source": "Godot/three_d/rules/table.gd",
       "entry": "start_hand",

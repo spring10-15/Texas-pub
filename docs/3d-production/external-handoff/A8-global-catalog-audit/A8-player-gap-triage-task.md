@@ -1,6 +1,6 @@
 # 执行任务：A8 当前树可达缺口逐行核验
 
-> 状态：已完成。审计开始时核验输入 30 行；其中房间图生成现映射到 `run_variant.room_layout_selected`，房间图的两个锁门拒绝路径以完整 Run 快照不变断言补强既有 `entry.locked`；玩家画像映射到 `poker.player_raise_pattern`；搜索与货架入口已补强既有 `world.services_open` 的测试证据，不新增目录 ID。当前树对账剩 24 条可达无 ID 候选、18 条弱证据项。历史 30 行逐条结果保留在 `current-tree-gap-triage.csv` / `.md`，当前基线见 `current-tree-reconciliation.md`。
+> 状态：已完成。审计开始时核验输入 30 行；其中房间图生成现映射到 `run_variant.room_layout_selected`，房间图的两个锁门拒绝路径以完整 Run 快照不变断言补强既有 `entry.locked`；短筹码盲注新增独立 `poker_blind.short_stack_posts`；玩家画像映射到 `poker.player_raise_pattern`；搜索与货架入口已补强既有 `world.services_open` 的测试证据，不新增目录 ID。当前树对账剩 23 条可达无 ID 候选、18 条弱证据项。历史 30 行逐条结果保留在 `current-tree-gap-triage.csv` / `.md`，当前基线见 `current-tree-reconciliation.md`。
 
 ## 目标
 

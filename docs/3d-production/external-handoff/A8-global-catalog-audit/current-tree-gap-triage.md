@@ -20,7 +20,7 @@
 
 **后续状态补记（2026-09-25）**：主线为搜索锚点与货架锚点补充了真实射线交互测试，两个模式复用 `world.services_open`，不新增目录 ID；测试和完整回归通过。当前目录为 386 项，当前树对账仍有 27 条可达无 ID 候选、18 条弱证据项。此补记更新现况，不改写本表在原始 30 行输入上的逐行审计结论。
 
-**2026-09-25 房间图补记**：Row 3（`run_variants.gd:36`）经独立测试登记为 `run_variant.room_layout_selected`：四家酒馆均从真实 Run.start 种子生成 linear/fork，区别对应不同房间解锁条件，且快照恢复保留所选图。随后补充公开 `enter_table()` 的锁门拒绝测试：linear/fork 对应的镜厅或余烬桌仍锁定时，尝试均被拒绝且完整 Run checkpoint 不变；两条分支归并到既有 `entry.locked`，不新增 ID。目录证据为 387/387，完整回归 60/60（`output/3d/regression/20260925-123042/report.json`），当前树对账剩 24 条可达无 ID 候选与 18 条弱证据项。下表和第 2 节仍记录独立核验交付时的 386 项历史基线，不改写原始逐行判定。
+**2026-09-25 房间图补记**：Row 3（`run_variants.gd:36`）经独立测试登记为 `run_variant.room_layout_selected`：四家酒馆均从真实 Run.start 种子生成 linear/fork，区别对应不同房间解锁条件，且快照恢复保留所选图。随后补充公开 `enter_table()` 的锁门拒绝测试：linear/fork 对应的镜厅或余烬桌仍锁定时，尝试均被拒绝且完整 Run checkpoint 不变；两条分支归并到既有 `entry.locked`，不新增 ID。Row 4 的短筹码盲注也已在四桌配置中验证，登记为 `poker_blind.short_stack_posts`，精确检查封顶金额、底牌发放、弃牌状态、行动位与总筹码守恒。最新目录证据为 388/388，完整回归 61/61（`output/3d/regression/20260925-124058/report.json`），当前树对账剩 23 条可达无 ID 候选与 18 条弱证据项。下表和第 2 节仍记录独立核验交付时的 386 项历史基线，不改写原始逐行判定。
 
 - 输入行数：**30**（以核验期间实际 CSV 为准；任务书第 10 行亦已同步为 30 行）
 - 输入 CSV SHA-256：`f6afc40dbc586e78fbbcdf6d57cb027f843ef61642d90dac27fd2c8f6822d0f1`
