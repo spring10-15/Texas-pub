@@ -54,9 +54,9 @@ Phase 1 补充产物：[难度曲线](difficulty-curve.md)、[八对手条件策
 
 ### 2026-09-25 最新复验（覆盖上述历史计数）
 
-- `python3 Godot/three_d/tests/run_regression.py`：64/64 全通过，报告 `output/3d/regression/20260925-145158/report.json`；运行环境是当前开发机的 Godot 4.7.2，不等于干净机器交付验收。
+- `python3 Godot/three_d/tests/run_regression.py`：64/64 全通过，最新报告 `output/3d/regression/20260925-151839/report.json`；牌桌集成现在分别断言真实 AI 回合和 `currentActorId` 为空时的街道推进。运行环境是当前开发机 Godot 4.7.2，不等于干净机器交付验收。
 - `collect_coverage.py`：394/394 个已登记 ID 有当前证据，`overall_state_transition_coverage=null`。这表示登记结果都有证据，不证明状态转移分母完整。
-- A8 世界/牌桌后继取证已覆盖 `World._process` AI/街道推进、服务面板冻结及恢复、有效酒保动作触发的强制风声撤离。原列 12 条编排候选中，实际状态后继复用既有 poker/world ID，纯包装早退归为 `not_a_transition`；当前树候选输出为 0 行，另有 19 行弱证据。完整审计仍非源头枚举证明：冻结的 A8 报告仍保留 40 条历史未登记候选和回填式归因局限，目录 `status` 仍为 `incomplete_catalog`，所以 0 行只描述已审查候选，不代表没有其它分支。
+- A8 世界/牌桌后继取证已覆盖 `World._process` AI/街道推进、服务面板冻结及恢复、有效酒保动作触发的强制风声撤离。原列 12 条编排候选中，实际状态后继复用既有 poker/world ID，纯包装早退归为 `not_a_transition`；无人行动者街道推进现有独立计数断言。当前树候选输出为 0 行，另有 18 行弱证据。完整审计仍非源头枚举证明：冻结的 A8 报告仍保留 40 条历史未登记候选和回填式归因局限，目录 `status` 仍为 `incomplete_catalog`，所以 0 行只描述已审查候选，不代表没有其它分支。
 - A4 核验通过：72 行中 70 行有正式后继证据、2 行标为正常玩家路径不可达。A5 核验通过：50 行、7 个族、40/40 目录 ID 映射。A7 独立复核 24 项确认、0 项反证，读取本次 64/64 回归；人工新手/高手对照、真实设备输入与完整局计时仍缺。
 - B2 奖励规则复核已修正并通过：149 项确认、0 项反证；奖励结算与情报展示都从当前 `rewardRules` 路径验证。这是 Phase 2 内容资料的源码一致性证据，不代表 Phase 2 全量矩阵通过。
 

@@ -352,9 +352,9 @@ def main() -> int:
         },
         "Godot/three_d/scripts/world.gd:687-688": {
             "ids": "poker_progress.flop;poker_progress.turn;poker_progress.river;poker_progress.showdown;poker_progress.advance_finished_hand",
-            "test": "Godot/three_d/tests/table_integration.gd::World process advances exactly one AI action or street",
-            "strength": "weak",
-            "notes": "无人行动分支由 World 调用规则层 advance 推进；完整牌局覆盖街道/摊牌流程，但 empty actor 的 world 分派点未单独构造，复用既有 poker_progress 语义并保留弱证据。",
+            "test": "Godot/three_d/tests/table_integration.gd::World scheduler advances a street when no actor is pending",
+            "strength": "strong",
+            "notes": "固定种子完整牌局中统计 currentActorId 为空的真实调度拍；测试断言至少一次抵达该分支，且每次 World._process 后 revision 恰增 1、公开牌桌状态变化，复用既有 poker_progress 街道推进 ID。",
         },
         "Godot/three_d/scripts/world.gd:690-692": {
             "ids": "poker_action.fold;poker_action.call;poker_action.check;poker_action.raise;poker_action.all_in",

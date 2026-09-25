@@ -13,10 +13,10 @@
 | `world.gd:672-673` 无桌/暂停/未入座早退 | `not_a_transition` | — | 暂停时牌桌 revision 不变；其余状态不产生权威状态后继 |
 | `world.gd:681` `_process` 节拍派发 | 规则层结果 | `poker_action.*` / `poker_progress.*` | 牌桌完整流程改由 `World._process` 驱动；每个 AI/街道节拍都断言 revision +1 且公开状态变化 |
 | `world.gd:684-685` `advance_table_beat` 守卫 | `not_a_transition` | — | 服务面板打开时直接调用后完整 checkpoint 不变 |
-| `world.gd:687-688` 空行动者调用 `advance` | 规则层结果，证据弱 | `poker_progress.*` | 完整牌局观察到 World 调度状态后继；尚未单独构造 empty-actor 调用点断言 |
+| `world.gd:687-688` 空行动者调用 `advance` | 规则层结果 | `poker_progress.*` | 固定种子真实牌局独立计数 `currentActorId` 为空的节拍，断言至少触发一次；每拍 `World._process` 后 revision 恰增一次且公开状态改变 |
 | `world.gd:690-692` AI 策略行动 | 规则层结果 | `poker_action.*` | 固定牌桌 seed 下由 World 节拍执行真实 AI 行动并逐拍验证状态变化 |
 | `world.gd:1047-1051` 强制风声回撤 | 复用已有组合结果 | `world.leave_forced_pressure_exit`、`world.services_close`、`world.travel_landing` | 酒保面板执行有效情报服务动作后，服务面板关闭、玩家回到藏匿点并显示强制失败与损失 |
 
-本轮三个定向 Godot 测试及全量回归通过。全量报告为 `output/3d/regression/20260925-145158/report.json`（64/64）；覆盖汇总器仍为 394/394，语义目录没有新增 ID。A4 为 70/72 有后继证据、2 条不可达；A5 为 50 行、40/40 目录 ID 映射；A7 独立核验 24 项确认、0 反证。
+本轮三个定向 Godot 测试及全量回归通过。全量报告为 `output/3d/regression/20260925-151839/report.json`（64/64）；牌桌测试分别断言至少一次真实 AI 行动和至少一次空行动者街道推进，覆盖汇总器仍为 394/394，语义目录没有新增 ID。A4 为 70/72 有后继证据、2 条不可达；A5 为 50 行、40/40 目录 ID 映射；A7 独立核验 24 项确认、0 反证。
 
 这些结果只处理已列候选，不能证明全部源码状态转移已被枚举。目录仍为 `incomplete_catalog`，没有整体覆盖率或 Phase 1 通过结论。
