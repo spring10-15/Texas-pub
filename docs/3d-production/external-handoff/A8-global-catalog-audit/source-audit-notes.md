@@ -117,6 +117,6 @@
 
 ### 当前工作区复核（2026-09-25）
 
-后续登记了 `start.partial_bankroll`，当前目录为 383 个 ID；新增 `lifecycle_coverage_test.gd` 用 vault=120 验证金库归零、现金/本金=120、财富守恒、Run 激活及 revision 增加。`world_coverage_test.gd` 的 `room_entry` 也新增了正种子与完整 `variant_plan` 一致性断言。当前全量回归 59/59，报告 `output/3d/regression/20260925-105659/report.json`；覆盖汇总为 `verified=383 catalogued=383 global_coverage=unavailable`，汇总器单测 3/3。
+后续登记了 `start.partial_bankroll`，并新增 `entry.heat_cap`；当前目录为 384 个 ID。`lifecycle_coverage_test.gd` 用 vault=120 验证金库归零、现金/本金=120、财富守恒、Run 激活及 revision 增加；`entry_coverage_test.gd` 从屋顶会所风声 5 入座，验证加成后封顶为 6、买入扣款、金库不变及 revision 前进。`world_coverage_test.gd` 的 `room_entry` 也新增了正种子与完整 `variant_plan` 一致性断言。当前全量回归 59/59，报告 `output/3d/regression/20260925-111306/report.json`；覆盖汇总为 `verified=384 catalogued=384 global_coverage=unavailable`，汇总器单测 3/3。
 
-外部 A8 的 `README.md`、CSV 与 `build_a8.py --check` 对应冻结目录哈希 `087971c9…`（382 项），因此仍是有效的历史审计快照，不能直接报告为当前树的缺口数。审计表的 40 条 `reachable_unmapped` 中有 6 条 `player_reachable=no`（5 条畸形恢复拒绝、1 条存档写入失败防御路径）；它们应从“玩家可达缺口”汇总中剔出或单独列作非玩家路径候选。冻结表中的 `run.gd:61-62` 部分本金分支已由 `start.partial_bankroll` 补录，当前应标为已登记，剩余缺口须基于当前目录重建映射。具体执行要求见同目录 `A8-current-tree-reconciliation-task.md`。
+外部 A8 的 `README.md`、CSV 与 `build_a8.py --check` 对应冻结目录哈希 `087971c9…`（382 项），因此仍是有效的历史审计快照，不能直接报告为当前树的缺口数。当前对账产物见 `current-tree-reconciliation.md` 与三份 `current-tree-*.csv`：384/384 个当前目录 ID 均有归因；冻结表的 40 行中，6 条 `player_reachable=no` 已从玩家路径缺口剔出，1 条已有 `world.services_open` ID 的吧台入口改列弱证据，1 条纯试玩存档提示改列非状态转移；`start.partial_bankroll` 与 `entry.heat_cap` 已登记。当前仍有 31 条玩家可达且未映射 ID 的候选、18 条弱证据分支，尚未逐条完成新一轮源代码审查；不得声称全局分母完整或 Phase 1 通过。

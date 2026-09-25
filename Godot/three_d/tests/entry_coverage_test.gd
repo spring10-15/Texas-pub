@@ -6,9 +6,10 @@ var hits := {}
 func _initialize() -> void:
 	var content: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json"))
-	for key in ["success", "collateral", "stale_revision", "unknown_table", "inactive", "table_active", "completed", "locked", "insufficient_cash", "collateral_disallowed", "collateral_unowned", "collateral_not_valuable"]:
+	for key in ["success", "collateral", "heat_cap", "stale_revision", "unknown_table", "inactive", "table_active", "completed", "locked", "insufficient_cash", "collateral_disallowed", "collateral_unowned", "collateral_not_valuable"]:
 		var r := Run.new(content)
-		r.start(r.revision,"smoky-den",0)
+		r.start(r.revision,"rooftop-club" if key == "heat_cap" else "smoky-den",123)
+		if key == "heat_cap": r.heat = 5
 		var id := "cargo-table"
 		var pledge := ""
 		match key:
@@ -27,13 +28,16 @@ func _initialize() -> void:
 		var before := Checkpoint.capture(r)
 		var result: RefCounted = r.enter_table(7,r.revision-1 if key == "stale_revision" else r.revision,id,pledge)
 		var ok: bool
-		if key in ["success", "collateral"]:
+		if key == "heat_cap":
+			var definition: Dictionary = content.tables[id]
+			ok = result != null and r.cash == before.cash-int(definition.buyIn) and r.heat == 6 and r.heat <= 6 and r.vault == before.vault and r.revision == before.revision+1 and r.table.state.tableDef.id == id
+		elif key in ["success", "collateral"]:
 			var definition: Dictionary = content.tables[id]
 			ok = result != null and r.cash == before.cash-int(definition.buyIn) and r.heat == before.heat+int(definition.heatGain) and r.vault == before.vault and r.revision == before.revision+1 and r.collateral == pledge and r.inventory.is_empty() and r.completed == before.completed and r.action_points == before.action_points
 			ok = ok and r.table.state.tableDef.id == id and r.table.state.players.size() == 3
 		else:
 			ok = result == null and Checkpoint.capture(r) == before
-		var outcome: String = "entry."+key
+		var outcome: String = "entry.heat_cap" if key == "heat_cap" else "entry."+key
 		if ok: hits[outcome] = {"test":"entry_coverage_test.gd","postcondition_verified":true}
 		else: failures.append(outcome); push_error(outcome)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("entry.")).map(func(row): return row.id)

@@ -1,5 +1,7 @@
 # 执行任务：A8 当前目录归因复核
 
+> 状态：主 Agent 已完成 384 项当前树对账，产物见 [current-tree-reconciliation.md](current-tree-reconciliation.md) 与三份 `current-tree-*.csv`。本任务书保留为验收范围记录，无需再分派。
+
 ## 目标
 
 在 A8 原报告冻结的 382 项目录基础上，生成一份可独立复验的**当前工作区归因增量**。当前 `transitions.json` 有 383 个 ID，原报告里的部分本金分支已登记为 `start.partial_bankroll`；原报告仍作为 382 项锚点快照保留，不覆盖、不重写。

@@ -544,6 +544,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "entry.heat_cap",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "enter_table",
+      "outcome": "accepted with heat capped at 6"
+    },
+    {
       "id": "entry.stale_revision",
       "source": "Godot/three_d/rules/run.gd",
       "entry": "enter_table",
