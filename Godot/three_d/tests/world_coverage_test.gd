@@ -13,12 +13,34 @@ func verify(id: String, ok: bool) -> void:
 	else:
 		failures.append(id)
 		push_error(id)
+func verify_extra(label: String, ok: bool) -> void:
+	checks += 1
+	if not ok:
+		failures.append(label)
+		push_error(label)
 func press_key(world: Node, key_code: Key) -> void:
 	var event := InputEventKey.new()
 	event.physical_keycode = key_code
 	event.keycode = key_code
 	event.pressed = true
 	world.player._unhandled_input(event)
+func interact_key(world: Node) -> bool:
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	var event := InputEventKey.new()
+	event.physical_keycode = KEY_E
+	event.keycode = KEY_E
+	event.pressed = true
+	var mapped: bool = InputMap.event_is_action(event, "interact")
+	world.player._unhandled_input(event)
+	return mapped
+func inventory_key(world: Node) -> bool:
+	var event := InputEventKey.new()
+	event.physical_keycode = KEY_B
+	event.keycode = KEY_B
+	event.pressed = true
+	var mapped: bool = InputMap.event_is_action(event, "inventory")
+	world._unhandled_input(event)
+	return mapped
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
 	var world: Node3D = load("res://three_d/scenes/main.tscn").instantiate()
@@ -214,7 +236,17 @@ func run() -> void:
 	for i in range(5): await physics_frame
 	var locked_room: Dictionary = world.checkpoint_state()
 	var locked_reason: String = world.run_game.room_blocked_reason("ledger-cellar")
-	verify("room_door_blocked", world.player.focused==world.ledger_door and not locked_reason.is_empty() and not world.request_action(world.ledger_door) and world.current_room=="tavern" and world.hint_label.text==locked_reason and world.checkpoint_state()==locked_room)
+	var blocked_input_mapped: bool = interact_key(world)
+	verify("room_door_blocked", world.player.focused==world.ledger_door and blocked_input_mapped and not locked_reason.is_empty() and world.current_room=="tavern" and world.hint_label.text==locked_reason and world.checkpoint_state()==locked_room)
+	world.player.position = Vector3(8.0, 0.02, 2.55)
+	world.player.camera.look_at(world.exit_notice.global_position)
+	for i in range(5): await physics_frame
+	var stash_door: Area3D = find_action_anchor(world.get_node("Tavern"), &"enter_stash")
+	var stash_aimed: bool = await aim_room_anchor(world, stash_door)
+	var stash_preview_before: Dictionary = world.checkpoint_state()
+	var stash_input_mapped: bool = interact_key(world)
+	verify_extra("physical_stash_exit_preview", stash_aimed and stash_input_mapped and world.player.focused == stash_door and world.run_panel.visible and world.run_action == "extract" and world.run_confirm.disabled and not world.run_body.text.is_empty() and world.checkpoint_state() == stash_preview_before)
+	world.close_run_panel()
 	world.player.position = Vector3(8.0, 0.02, 2.55)
 	world.player.camera.look_at(world.exit_notice.global_position)
 	for i in range(5): await physics_frame
@@ -376,6 +408,17 @@ func run() -> void:
 	world.service_action("intel", "cargo-table", world.run_game.revision)
 	verify("services_intel", services_run_started and world.services_panel.visible and world.run_game.known_rules == ["cargo-table"] and world.run_game.action_points == intel_before.action_points - 1 and world.run_game.revision == intel_before.revision + 1 and world.run_game.cash == intel_before.cash and world.run_game.service_view("bar").revision == world.run_game.revision)
 	world.close_services()
+	var bar_anchor: Area3D = world.get_node("Tavern/BarService")
+	var bar_before: Dictionary = RunCheckpoint.capture(world.run_game)
+	var bar_aimed: bool = await aim_room_anchor(world, bar_anchor)
+	var bar_input_mapped: bool = interact_key(world)
+	verify_extra("physical_bar_services_open", bar_aimed and bar_input_mapped and world.player.focused == bar_anchor and world.services_panel.visible and world.service_mode == "bar" and not world.player.controls_enabled and not world.crosshair.visible and RunCheckpoint.capture(world.run_game) == bar_before)
+	world.close_services()
+	var bag_before_b: Dictionary = RunCheckpoint.capture(world.run_game)
+	var inventory_mapped: bool = inventory_key(world)
+	var bag_opened_by_b: bool = inventory_mapped and world.services_panel.visible and world.service_mode == "bag" and not world.player.controls_enabled and RunCheckpoint.capture(world.run_game) == bag_before_b
+	var bag_closed_by_b: bool = inventory_key(world) and not world.services_panel.visible and world.player.controls_enabled and RunCheckpoint.capture(world.run_game) == bag_before_b
+	verify_extra("inventory_key_services_toggle", bag_opened_by_b and bag_closed_by_b)
 	var search_anchor: Area3D = world.get_node("Tavern/SearchSite")
 	var search_before: Dictionary = RunCheckpoint.capture(world.run_game)
 	var search_aimed: bool = await aim_room_anchor(world, search_anchor)

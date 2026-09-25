@@ -303,6 +303,59 @@ def main() -> int:
                 "notes": run_restore_evidence[row["source_line"]],
             })
 
+    interaction_evidence = {
+        ("Godot/three_d/scripts/player.gd", "Godot/three_d/scripts/player.gd:43-44", "world.focus_controls_disabled"): {
+            "test": "Godot/three_d/tests/player_input_coverage_test.gd::world.focus_controls_disabled",
+            "evidence_report": "output/3d/player-input-coverage.json",
+            "notes": "窗口输入套件在 captured 模式下向 controls_enabled=false 的 Player 投递鼠标移动与映射 E 键，断言 Transform、相机、完整 checkpoint 和交互信号均不变。",
+        },
+        ("Godot/three_d/scripts/world.gd", "Godot/three_d/scripts/world.gd:511-512", "world.services_open"): {
+            "test": "Godot/three_d/tests/world_coverage_test.gd::physical_bar_services_open",
+            "evidence_report": "output/3d/world-coverage.json",
+            "notes": "窗口输入套件从 Tavern/BarService 实体锚点射线命中后经映射 E 键信号链打开 bar 面板；核对模式、控件锁、准星隐藏且完整 Run capture 不变。",
+        },
+        ("Godot/three_d/scripts/world.gd", "Godot/three_d/scripts/world.gd:515-516", "world.show_run_panel"): {
+            "test": "Godot/three_d/tests/world_coverage_test.gd::physical_stash_exit_preview",
+            "evidence_report": "output/3d/world-coverage.json",
+            "notes": "窗口输入套件从烟雾酒馆实体撤离门经映射 E 键信号链打开 extract 面板；核对当前出口不可用提示、按钮禁用、面板和完整 checkpoint 不变。",
+        },
+        ("Godot/three_d/scripts/world.gd", "Godot/three_d/scripts/world.gd:515-516", "world.extract_confirm"): {
+            "test": "Godot/three_d/tests/world_coverage_test.gd::physical_stash_exit_preview + extract_confirm",
+            "evidence_report": "output/3d/world-coverage.json",
+            "notes": "实体门的 E 键打开撤离预览并与实际确认分开断言；同套件随后通过 extract 按钮核对成功后的位置、金库到账、随身清空和面板关闭。",
+        },
+        ("Godot/three_d/scripts/world.gd", "Godot/three_d/scripts/world.gd:518-520", "world.room_door_blocked"): {
+            "test": "Godot/three_d/tests/world_coverage_test.gd::room_door_blocked",
+            "evidence_report": "output/3d/world-coverage.json",
+            "notes": "窗口输入套件在未完成货运桌时从真实账房门锚点按映射 E，核对留在原房、阻挡提示及完整 checkpoint 不变。",
+        },
+        ("Godot/three_d/scripts/world.gd", "Godot/three_d/scripts/world.gd:879-885", "world.services_open"): {
+            "test": "Godot/three_d/tests/world_coverage_test.gd::inventory_key_services_toggle",
+            "evidence_report": "output/3d/world-coverage.json",
+            "notes": "窗口输入套件确认物理 B 键映射到 inventory；真实调用 World 输入处理后分别打开和关闭背包服务面板，Run capture 不变。",
+        },
+        ("Godot/three_d/scripts/world.gd", "Godot/three_d/scripts/world.gd:879-885", "world.services_close"): {
+            "test": "Godot/three_d/tests/world_coverage_test.gd::inventory_key_services_toggle",
+            "evidence_report": "output/3d/world-coverage.json",
+            "notes": "窗口输入套件以第二次映射 B 键关闭服务面板，核对控制恢复、面板隐藏且 Run capture 不变。",
+        },
+        ("Godot/three_d/scripts/world.gd", "Godot/three_d/scripts/world.gd:951-951", "persistence_restore.playtest_save_blocked"): {
+            "test": "Godot/three_d/tests/playtest_seed_test.gd::blocked_save_preserved",
+            "evidence_report": "output/3d/playtest-seed-coverage.json",
+            "notes": "playtest 模式预置隔离有效存档后调用直接保存；核对返回拒绝、磁盘原字节/哈希不变且完整内存 checkpoint 不变。",
+        },
+        ("Godot/three_d/scripts/world.gd", "Godot/three_d/scripts/world.gd:967-967", "persistence_restore.playtest_save_blocked"): {
+            "test": "Godot/three_d/tests/playtest_seed_test.gd::blocked_load_preserved",
+            "evidence_report": "output/3d/playtest-seed-coverage.json",
+            "notes": "playtest 模式预置与当前内存不同的有效隔离存档后调用加载；核对完整内存 checkpoint、saving_enabled 和原存档字节/哈希均不变。",
+        },
+    }
+    for row in branches:
+        key = (row["source_file"], row["source_line"], row["catalog_id"])
+        if key in interaction_evidence:
+            row.update(interaction_evidence[key])
+            row.update({"evidence_strength": "strong", "disposition": "catalogued_strong"})
+
     # World/table orchestration is a call-site layer over already catalogued
     # poker and world outcomes. Reuse those IDs; do not expand the catalog for
     # duplicate wrappers around the same accepted/rejected result.

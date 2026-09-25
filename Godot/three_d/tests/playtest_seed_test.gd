@@ -1,4 +1,5 @@
 extends SceneTree
+const SaveStore = preload("res://three_d/rules/save_store.gd")
 var failures: Array[String] = []
 var checks := 0
 func verify(ok: bool, label: String) -> void:
@@ -20,9 +21,15 @@ func run_tests() -> void:
 	world.playtest_trace_path = trace_path
 	var before: Dictionary = world.checkpoint_state()
 	world.save_path = "user://playtest-isolation-%d.save" % OS.get_process_id()
+	var on_disk_state: Dictionary = before.duplicate(true)
+	on_disk_state.run.vault += 51
+	var seeded_save_ok: bool = SaveStore.write_checkpoint(world.save_path, on_disk_state) == OK
+	var bytes_before_guards: PackedByteArray = FileAccess.get_file_as_bytes(world.save_path)
 	world.load_checkpoint()
-	verify(not world.saving_enabled and world.checkpoint_state() == before,"Playtest does not load or enable persistence")
-	verify(not world.save_checkpoint() and not FileAccess.file_exists(world.save_path),"Even direct save writes no file")
+	var blocked_load_preserved: bool = seeded_save_ok and not world.saving_enabled and world.checkpoint_state() == before and FileAccess.get_file_as_bytes(world.save_path) == bytes_before_guards
+	verify(blocked_load_preserved,"Playtest load guard preserves memory and pre-existing save bytes")
+	var blocked_save_preserved: bool = not world.save_checkpoint() and world.checkpoint_state() == before and FileAccess.get_file_as_bytes(world.save_path) == bytes_before_guards
+	verify(blocked_save_preserved,"Even direct save guard preserves memory and pre-existing save bytes")
 	world.show_run_panel("enter")
 	world.confirm_run_action()
 	verify(world.run_game.run_seed == 20260922 and world.run_game.bankroll == 300 and world.run_game.vault == 900,"UI departure uses fixed seed and fresh bankroll")
@@ -55,5 +62,19 @@ func run_tests() -> void:
 	verify(world.run_game.variant_plan == plan,"Same initial conditions reproduce plan")
 	verify(FileAccess.get_file_as_string(trace_path).split("\n", false).size() == 5,"Repeated fresh departure appends instead of replacing trace")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(trace_path))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(world.save_path))
+	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
+	var catalog: Dictionary = JSON.parse_string(catalog_text)
+	var expected: Array = catalog.transitions.filter(func(row): return row.id == "persistence_restore.playtest_save_blocked").map(func(row): return row.id)
+	var hits := {}
+	if blocked_load_preserved and blocked_save_preserved and failures.is_empty():
+		hits["persistence_restore.playtest_save_blocked"] = {"test":"playtest_seed_test.gd", "postcondition_verified":true, "checks":["blocked_load_preserved", "blocked_save_preserved"]}
+	var hashes := {}
+	for source in ["world.gd", "player.gd", "content.json"]:
+		hashes[source] = FileAccess.get_file_as_string("res://three_d/" + ("scripts/" if source.ends_with(".gd") else "rules/") + source).sha256_text()
+	var missing: Array = expected.filter(func(id): return not hits.has(id))
+	var report := {"scope":"Playtest seed mode cannot read or write the real save slot", "source_sha256":hashes, "test_sha256":FileAccess.get_file_as_string("res://three_d/tests/playtest_seed_test.gd").sha256_text(), "catalog_sha256":catalog_text.sha256_text(), "numerator":hits.size(), "denominator":expected.size(), "checks":checks, "hits":hits, "missing":missing, "failures":failures, "overall_state_transition_coverage":null}
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://../output/3d"))
+	FileAccess.open("res://../output/3d/playtest-seed-coverage.json", FileAccess.WRITE).store_string(JSON.stringify(report, "  "))
 	print("PLAYTEST_SEED checks=",checks," failures=",failures)
-	quit(0 if failures.is_empty() else 1)
+	quit(0 if failures.is_empty() and missing.is_empty() else 1)

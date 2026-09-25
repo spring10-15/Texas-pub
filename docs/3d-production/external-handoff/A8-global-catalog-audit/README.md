@@ -9,7 +9,7 @@
 
 > **读这句话必须先看锚点**：`382/382` 与 `40 条未登记` 都是 **HEAD `8d8464e1` / 目录 `087971c9…` / 382 个 ID** 这一组基线上的结论。交付后工作区已增至 **383** 个 ID（未提交），详见 §2.1 —— 那 40 条里已有一条被主线采纳。
 
-**当前树复核**：后续新增了 `entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal`、`world.autosave`、`world.window_focus_out`、`player.look_changed`、`player.movement` 与 `world.window_close_request`；目录现为 394 个 ID。搜索与货架入口证据归入既有 `world.services_open`，房间图锁门拒绝证据归入既有 `entry.locked`，开注加注权检查归入既有 `poker_action.open`，无目标时按 E 复用 `world.raycast_unfocused`；未增加重复 ID。焦点幂等分支归类为非状态转移。当前树对账仍有 12 条可达候选和 18 条弱证据，见 [当前树对账记录](current-tree-reconciliation.md) 与 `current-tree-branch-inventory.csv`。Player→World E 交互在带窗口且 captured 模式的测试中已验证；冻结的 `build_a8.py --check` 仍只复现原 382 项锚点，不代表当前分母闭合。
+**当前树复核（2026-09-25 最新）**：后续新增了 `entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal`、`world.autosave`、`world.window_focus_out`、`player.look_changed`、`player.movement` 与 `world.window_close_request`；目录现为 394 个 ID。搜索与货架入口、禁用控制时的输入拒绝、存档保护等新证据映射至既有 ID；未增加重复 ID。当前 overlay 将 667 条分支归为 521 条强证据、146 条不可达或非状态转移；394/394 个登记 ID 均有归因，已审候选中未映射为 0、弱证据为 0。独立对账 23 项确认、0 项漂移、0 项反证。完整回归为 64/64，详见 [当前树对账记录](current-tree-reconciliation.md)。这仍只证明当前已登记 ID 及已审分支的归因；冻结 A8 仍是 382 项历史锚点，源码驱动的全局分母未闭合，不能据此声称目录完整或 Phase 1 通过。
 
 ## 1. 与主 Agent 底稿的关系
 

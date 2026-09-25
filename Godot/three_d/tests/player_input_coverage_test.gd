@@ -1,6 +1,6 @@
 extends SceneTree
 
-const IDS := ["player.look_changed", "player.movement", "world.prop_on", "world.raycast_unfocused"]
+const IDS := ["player.look_changed", "player.movement", "world.prop_on", "world.raycast_unfocused", "world.focus_controls_disabled"]
 var hits := {}
 var failures: Array[String] = []
 var checks := 0
@@ -53,6 +53,18 @@ func run() -> void:
 	interact.pressed = true
 	player._unhandled_input(interact)
 	verify("world.prop_on", player.focused == lamp and requested == [lamp] and world.props.states.lamp != lamp_before)
+	var disabled_requests: Array[Area3D] = []
+	player.interaction_requested.connect(func(target): disabled_requests.append(target))
+	var before_disabled: Dictionary = world.checkpoint_state()
+	var disabled_transform: Transform3D = player.global_transform
+	var disabled_camera: Vector3 = player.camera.rotation
+	player.controls_enabled = false
+	var disabled_motion := InputEventMouseMotion.new()
+	disabled_motion.relative = Vector2(400, -300)
+	player._unhandled_input(disabled_motion)
+	player._unhandled_input(interact)
+	verify("world.focus_controls_disabled", InputMap.event_is_action(interact, "interact") and player.global_transform.is_equal_approx(disabled_transform) and player.camera.rotation.is_equal_approx(disabled_camera) and disabled_requests.is_empty() and world.checkpoint_state() == before_disabled)
+	player.controls_enabled = true
 
 	player.position = Vector3(0, 0.05, 100)
 	player.velocity = Vector3.ZERO

@@ -61,7 +61,7 @@ def collect():
         if name == 'player-input' and report.get('player_source_sha256') != digest(ROOT / 'Godot/three_d/scripts/player.gd'):
             raise ValueError('player-input: stale player script evidence; rerun the suite')
         if name == 'player-input':
-            expected.update({'world.prop_on', 'world.raycast_unfocused'})
+            expected.update({'world.prop_on', 'world.raycast_unfocused', 'world.focus_controls_disabled'})
         if name == 'poker_action':
             expected.update(i for i in ids if i == 'poker.player_raise_pattern')
         if report['catalog_sha256'] != digest(CATALOG) or report['source_sha256'] != hashes or report['test_sha256'] != digest(Path(__file__).parent / test):
