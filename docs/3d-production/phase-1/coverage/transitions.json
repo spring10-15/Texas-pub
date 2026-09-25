@@ -1846,6 +1846,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "world.autosave",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "_process",
+      "outcome": "accepted saves the current checkpoint when the autosave timer reaches its interval"
+    },
+    {
       "id": "world.pause_repeated",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "pause_game",

@@ -1,6 +1,7 @@
 extends SceneTree
 const RunCheckpoint = preload("res://three_d/rules/run_checkpoint.gd")
 const RunVariants = preload("res://three_d/rules/run_variants.gd")
+const SaveStore = preload("res://three_d/rules/save_store.gd")
 const WORLD_SOURCES := ["world.gd", "player.gd", "scene_props.gd", "interactable.gd"]
 var hits := {}
 var failures: Array[String] = []
@@ -24,6 +25,15 @@ func run() -> void:
 	root.add_child(world)
 	for i in range(3): await physics_frame
 	world.set_process(false)
+	var autosave_path := "user://world-autosave-%d.save" % OS.get_process_id()
+	world.save_path = autosave_path
+	world.saving_enabled = true
+	var autosave_expected: Dictionary = world.checkpoint_state()
+	world._process(0.6)
+	var autosave_result: Dictionary = SaveStore.read_checkpoint(autosave_path)
+	verify("autosave", world.save_clock==0.0 and autosave_result.get("status")=="ok" and autosave_result.get("state",{})==autosave_expected and world.save_notice.text=="已自动保存")
+	world.saving_enabled = false
+	if FileAccess.file_exists(autosave_path): DirAccess.remove_absolute(ProjectSettings.globalize_path(autosave_path))
 	var lamp: Dictionary = world.props.entries.lamp
 	var anchor: Area3D = lamp.anchor
 	var original: Dictionary = world.checkpoint_state()

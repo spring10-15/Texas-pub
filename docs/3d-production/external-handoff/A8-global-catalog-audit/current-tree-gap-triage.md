@@ -24,6 +24,8 @@
 
 **2026-09-25 焦点幂等分支补记**：Row 13 的 `player.gd:67-69` 已在 `world_coverage_test.gd` 增加重复 `update_focus()` 后的信号计数断言。该分支只阻止重复发送展示用 `focus_changed` 信号，不改权威 Run/World/存档状态，因此在当前树对账中归类为 `not_a_transition`，不新增目录 ID。当前重跑后 A8 overlay 为 18 条可达无 ID 候选、19 条弱证据项；全量回归为 61/61（`output/3d/regression/20260925-132741/report.json`）。
 
+**2026-09-25 自动存档补记**：A8 Row 23（`world.gd:665-669`）现通过隔离磁盘路径的正式世界测试确认：`_process(0.6)` 达到周期后写入的存档与完整内存 checkpoint 一致，时钟归零且保存提示更新；新增 `world.autosave`。当前树对账更新为 390 个登记 ID、17 条可达无 ID 候选及 19 条弱证据项，全量回归 61/61（`output/3d/regression/20260925-134024/report.json`）。
+
 - 输入行数：**30**（以核验期间实际 CSV 为准；任务书第 10 行亦已同步为 30 行）
 - 输入 CSV SHA-256：`f6afc40dbc586e78fbbcdf6d57cb027f843ef61642d90dac27fd2c8f6822d0f1`
 - 目录（独立核验交付基线）：386 个唯一 ID，SHA-256 `5a87300ddea8a3ecb03a883e7973bcf930b87312cfc124faa71a08d83b2d5187`；后续当前状态见上方补记。
