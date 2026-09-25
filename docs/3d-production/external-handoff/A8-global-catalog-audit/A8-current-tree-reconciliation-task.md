@@ -1,10 +1,10 @@
 # 执行任务：A8 当前目录归因复核
 
-> 状态：主 Agent 已完成当前树对账（386 个 ID 全映射；27 条可达无 ID 候选、18 条弱证据项继续待核）。产物见 [current-tree-reconciliation.md](current-tree-reconciliation.md) 与三份 `current-tree-*.csv`。本任务书保留为验收范围记录，无需再分派。
+> 状态：主 Agent 已完成当前树对账（387 个 ID 全映射；26 条可达无 ID 候选、18 条弱证据项继续待核）。产物见 [current-tree-reconciliation.md](current-tree-reconciliation.md) 与三份 `current-tree-*.csv`。本任务书保留为验收范围记录，无需再分派。
 
 ## 目标
 
-在 A8 原报告冻结的 382 项目录基础上，生成一份可独立复验的**当前工作区归因增量**。当前 `transitions.json` 有 386 个 ID，已登记 `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief` 与 `poker.player_raise_pattern`；搜索点和货架入口证据归入已有 `world.services_open`。原报告仍作为 382 项锚点快照保留，不覆盖、不重写。
+在 A8 原报告冻结的 382 项目录基础上，生成一份可独立复验的**当前工作区归因增量**。当前 `transitions.json` 有 387 个 ID，已登记 `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern` 与 `run_variant.room_layout_selected`；搜索点和货架入口证据归入已有 `world.services_open`。原报告仍作为 382 项锚点快照保留，不覆盖、不重写。
 
 ## 操作步骤
 

@@ -2260,6 +2260,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "run_variant.room_layout_selected",
+      "source": "Godot/three_d/rules/run_variants.gd",
+      "entry": "generate",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_run.legacy_search_event_restored",
       "source": "Godot/three_d/rules/run_checkpoint.gd",
       "entry": "restore",

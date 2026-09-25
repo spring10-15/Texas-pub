@@ -42,6 +42,7 @@ def main() -> int:
     entry_heat_cap = 0
     settlement_heat_relief = 0
     player_raise_pattern = 0
+    room_layout_selected = 0
     world_search_evidence = 0
     world_product_evidence = 0
     reclassified_nonplayer = 0
@@ -90,6 +91,16 @@ def main() -> int:
                 "notes": "入口测试分别执行玩家 raise、玩家 all-in 与对手 raise；玩家两种侵略动作将 playerPattern.raiseCount 加一，而对手动作保持为零，验证画像只统计玩家行为。",
             })
             player_raise_pattern += 1
+        if row["source_file"] == "Godot/three_d/rules/run_variants.gd" and row["source_line"] == "Godot/three_d/rules/run_variants.gd:36" and "room_layout" in row["branch_or_guard"]:
+            row.update({
+                "catalog_id": "run_variant.room_layout_selected",
+                "test": "Godot/three_d/tests/run_variant_coverage_test.gd::run_variant.room_layout_selected",
+                "evidence_report": f"output/3d/run-variant-coverage.json;{LATEST_REPORT}",
+                "evidence_strength": "strong",
+                "disposition": "catalogued_strong",
+                "notes": "正式 Run.start 对四家酒馆均提交 linear/fork 计划；测试验证两图解锁拓扑不同且 checkpoint 恢复后保持一致。",
+            })
+            room_layout_selected += 1
         if row["source_file"] == "Godot/three_d/scripts/world.gd" and row["source_line"] == "Godot/three_d/scripts/world.gd:482-484" and row["catalog_id"] == "-":
             row.update({
                 "catalog_id": "world.services_open",
@@ -128,8 +139,8 @@ def main() -> int:
         if "20260925-103506" in row["evidence_report"] or "20260925-105659" in row["evidence_report"]:
             row["evidence_report"] = row["evidence_report"].replace("20260925-103506/report.json", LATEST_REPORT).replace("20260925-105659/report.json", LATEST_REPORT)
 
-    if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or world_search_evidence != 1 or world_product_evidence != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or reclassified_weak != 1:
-        raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, search_evidence={world_search_evidence}, product_evidence={world_product_evidence}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, weak={reclassified_weak}")
+    if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or room_layout_selected != 1 or world_search_evidence != 1 or world_product_evidence != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or reclassified_weak != 1:
+        raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, room_layout={room_layout_selected}, search_evidence={world_search_evidence}, product_evidence={world_product_evidence}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, weak={reclassified_weak}")
 
     current_gaps = [
         row.copy() for row in old_gaps
@@ -139,6 +150,7 @@ def main() -> int:
         and not (row["source_file"] == "Godot/three_d/rules/run.gd" and row["source_line"] == "Godot/three_d/rules/run.gd:175")
         and not (row["source_file"] == "Godot/three_d/rules/run.gd" and row["source_line"] == "Godot/three_d/rules/run.gd:205")
         and not (row["source_file"] == "Godot/three_d/rules/table.gd" and row["source_line"] == "Godot/three_d/rules/table.gd:119-120")
+        and not (row["source_file"] == "Godot/three_d/rules/run_variants.gd" and row["source_line"] == "Godot/three_d/rules/run_variants.gd:36")
         and not (row["source_file"] == "Godot/three_d/scripts/world.gd" and row["source_line"] in {"Godot/three_d/scripts/world.gd:482-484", "Godot/three_d/scripts/world.gd:485-487"})
     ]
     weak_evidence = [row.copy() for row in branches if row["disposition"] == "catalogued_weak"]
@@ -169,7 +181,7 @@ def main() -> int:
             path = path.strip()
             if path and path != "-" and not (ROOT / path).is_file():
                 raise SystemExit(f"Missing evidence report: {path}")
-    if len(current_gaps) != 27 or any(row["player_reachable"] != "yes" or row["catalog_id"] != "-" for row in current_gaps):
+    if len(current_gaps) != 26 or any(row["player_reachable"] != "yes" or row["catalog_id"] != "-" for row in current_gaps):
         raise SystemExit("Current player-path gap set is inconsistent")
 
     write_csv(AUDIT / "current-tree-branch-inventory.csv", branch_fields, branches)
@@ -195,14 +207,14 @@ def main() -> int:
 ## 当前映射和缺口
 
 - 当前目录 ID 已全部映射：{len(mapped_ids)}/{len(catalog_ids)}。
-- `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief` 与 `poker.player_raise_pattern` 已在对应测试中登记；搜索点与货架入口复用既有 `world.services_open` ID，并由真实锚点射线测试补强。
+- `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern` 与 `run_variant.room_layout_selected` 已在对应测试中登记；搜索点与货架入口复用既有 `world.services_open` ID，并由真实锚点射线测试补强。
 - 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`；其中 1 条 yes 已有 `world.services_open` ID，但实体入口后置证据偏弱。当前树把 6 条 no 排除出玩家路径缺口，把该 services 行移入弱证据表；另 1 条仅显示试玩存档提示、不改变权威状态，也分类为非状态转移。
 - 当前仍有 {len(current_gaps)} 条标为玩家可达、尚无目录 ID 的候选，详见 `current-tree-player-path-gaps.csv`。这仍需逐条审查后才能新增语义 ID；全局分母尚未冻结。弱证据行见 `current-tree-weak-evidence.csv`。
 - 分支行 disposition 计数：`{dict(counts)}`。
 
 ## 限制
 
-此对账仅把原 382 项审计映射到当前目录，并补入已验证的本金封顶、入座风声封顶、盈利降风声、玩家行为画像、搜索/货架入口证据及明确的可达性/展示项分类。它没有重新逐行审计全部 16 个源码文件，也没有证明剩余候选均是独立状态转移。因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
+此对账仅把原 382 项审计映射到当前目录，并补入已验证的本金封顶、入座风声封顶、盈利降风声、玩家行为画像、房间图选择、搜索/货架入口证据及明确的可达性/展示项分类。它没有重新逐行审计全部 16 个源码文件，也没有证明剩余候选均是独立状态转移。因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
 
 ## 重建
 

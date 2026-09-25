@@ -12,6 +12,7 @@ SUITES = {
     'persistence-run': ('run_restore_bounds_test.gd', {'persistence_run'}),
     'persistence-table': ('table_checkpoint_test.gd', {'persistence_table'}),
     'persistence-replay': ('world_rng_replay_test.gd', {'persistence_replay'}),
+    'run-variant': ('run_variant_coverage_test.gd', {'run_variant'}),
     'signal': ('signal_coverage_test.gd', {'signal'}),
     'world': ('world_coverage_test.gd', {'world'}),
     'queue': ('short_stack_queue_test.gd', {'queue'}),
