@@ -9,7 +9,7 @@
 
 > **读这句话必须先看锚点**：`382/382` 与 `40 条未登记` 都是 **HEAD `8d8464e1` / 目录 `087971c9…` / 382 个 ID** 这一组基线上的结论。交付后工作区已增至 **383** 个 ID（未提交），详见 §2.1 —— 那 40 条里已有一条被主线采纳。
 
-**当前树复核**：后续又登记了 `entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts` 与 `poker_progress.seeded_deal`，目录现为 389 个 ID；搜索与货架入口证据归入既有 `world.services_open`，房间图锁门拒绝证据归入既有 `entry.locked`，均未新增 ID。请使用 [当前树对账记录](current-tree-reconciliation.md) 与 `current-tree-branch-inventory.csv`；当前 389/389 个 ID 均可归因，另有 22 条可达无 ID 候选和 18 条弱证据项尚待逐条审查。下文的原始报告、CSV 与 `build_a8.py --check` 仍用于复现 382 项冻结锚点，不代表当前分母闭合。
+**当前树复核**：后续又登记了 `entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts` 与 `poker_progress.seeded_deal`，目录现为 389 个 ID；搜索与货架入口证据归入既有 `world.services_open`，房间图锁门拒绝证据归入既有 `entry.locked`，开注加注权检查归入既有 `poker_action.open`，均未新增 ID。请使用 [当前树对账记录](current-tree-reconciliation.md) 与 `current-tree-branch-inventory.csv`；当前 389/389 个 ID 均可归因，另有 21 条可达无 ID 候选和 18 条弱证据项尚待逐条审查。下文的原始报告、CSV 与 `build_a8.py --check` 仍用于复现 382 项冻结锚点，不代表当前分母闭合。
 
 ## 1. 与主 Agent 底稿的关系
 

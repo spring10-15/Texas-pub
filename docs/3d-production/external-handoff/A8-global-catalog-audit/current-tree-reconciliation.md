@@ -1,14 +1,14 @@
 # A8 当前树对账记录
 
-- 当前 HEAD：`4a45a9286b745c82c49dea154240ade7b70f6e44`
+- 当前 HEAD：`4a271283bcd73547b04808c15211072c444402f3`
 - 当前目录：389 个唯一 ID，SHA-256 `effd1c79cc02772b317e8b1ba67013c569ec02c99c729e6b65a973d7c1164002`
-- 采用的全量回归：`output/3d/regression/20260925-125049/report.json`（必须由当前源码/测试重跑后更新本记录）
-- 回归报告 SHA-256：`270617b47d30551d26ec02c96557204dc3a87cc3e2ce876fc124c7c006278104`
+- 采用的全量回归：`output/3d/regression/20260925-130005/report.json`（必须由当前源码/测试重跑后更新本记录）
+- 回归报告 SHA-256：`48c157323c1a9ac67cf56c68833f2f50b91289343d8b6a70acce9eceb3e2f1d7`
 - lifecycle 覆盖报告 SHA-256：`6bfe43fd4543b54570553708ff53df97cbaa9b8d8b9513ddc3e559d100bd08dc`
-- 当前分支清单 SHA-256：`4752b10cc3baedfc91f36510be3d5961c7ed638b43d06fbc3572baf52ae31ed3`
-- 当前玩家路径缺口清单 SHA-256：`49603ff3404ec935029b310edf5e51a53f2ce9b4d89ca46c297b764d0ef4b772`
+- 当前分支清单 SHA-256：`7cbcdad5e6910f868f197d7be9d0167a9a125050f5cbcc98071af63f5e1a9990`
+- 当前玩家路径缺口清单 SHA-256：`96c81b3cf9e1ebbce7a58101c653aa1884e69fa942a44aacd1b51efdde9c0207`
 - 当前弱证据清单 SHA-256：`0e041b2f1e3bea08849e6ec08243ef4552f6fdb7943adc04994f64f0156a1214`
-- 对账脚本 SHA-256：`60b485b402f072791e871da69fbbdbf0036e5023ddc9acf7f118e6daabf67308`
+- 对账脚本 SHA-256：`5aed760590f6ae4541890e1f9fc61b2de6678d973393a7e44aee1c15c53d3674`
 - 原始 A8 的 `branch-inventory.csv`、`unmapped-reachable.csv` 和审计 README 保留为 382 项冻结锚点，没有覆盖。
 
 ## 当前映射和缺口
@@ -16,8 +16,8 @@
 - 当前目录 ID 已全部映射：389/389。
 - `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern` 与 `run_variant.room_layout_selected` 已在对应测试中登记；搜索点与货架入口复用既有 `world.services_open` ID，并由真实锚点射线测试补强。
 - 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`；其中 1 条 yes 已有 `world.services_open` ID，但实体入口后置证据偏弱。当前树把 6 条 no 排除出玩家路径缺口，把该 services 行移入弱证据表；另 1 条仅显示试玩存档提示、不改变权威状态，也分类为非状态转移。
-- 当前仍有 22 条标为玩家可达、尚无目录 ID 的候选，详见 `current-tree-player-path-gaps.csv`。这仍需逐条审查后才能新增语义 ID；全局分母尚未冻结。弱证据行见 `current-tree-weak-evidence.csv`。
-- 分支行 disposition 计数：`{'unreachable_or_not_transition': 140, 'catalogued_strong': 487, 'reachable_unmapped': 22, 'catalogued_weak': 18}`。
+- 当前仍有 21 条标为玩家可达、尚无目录 ID 的候选，详见 `current-tree-player-path-gaps.csv`。这仍需逐条审查后才能新增语义 ID；全局分母尚未冻结。弱证据行见 `current-tree-weak-evidence.csv`。
+- 分支行 disposition 计数：`{'unreachable_or_not_transition': 140, 'catalogued_strong': 488, 'reachable_unmapped': 21, 'catalogued_weak': 18}`。
 
 ## 限制
 

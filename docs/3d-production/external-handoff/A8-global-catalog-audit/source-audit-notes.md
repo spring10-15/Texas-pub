@@ -117,6 +117,6 @@
 
 ### 当前工作区复核（2026-09-25）
 
-后续登记了 `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts` 与 `poker_progress.seeded_deal`；当前目录为 389 个 ID。部分本金、屋顶会所风声封顶、盈利余烬桌降风声、玩家加注画像、房间图选择、短筹码盲注与固定种子发牌都有具体后继断言；搜索/货架入口测试复用 `world.services_open` ID。房间图锁门路径另调用公开 `Run.enter_table()`，核对拒绝时完整快照不变，将两个拓扑特有候选归并至 `entry.locked`。最新完整回归 61/61，报告 `output/3d/regression/20260925-125049/report.json`；当前树剩 22 条可达无 ID 候选、18 条弱证据项；全局分母仍未冻结。
+后续登记了 `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts` 与 `poker_progress.seeded_deal`；当前目录为 389 个 ID。部分本金、屋顶会所风声封顶、盈利余烬桌降风声、玩家加注画像、房间图选择、短筹码盲注与固定种子发牌都有具体后继断言；搜索/货架入口测试复用 `world.services_open` ID；开注分支的 raiseUsed 后置也归入既有 `poker_action.open`。房间图锁门路径另调用公开 `Run.enter_table()`，核对拒绝时完整快照不变，将两个拓扑特有候选归并至 `entry.locked`。最新完整回归 61/61，报告 `output/3d/regression/20260925-130005/report.json`；当前树剩 21 条可达无 ID 候选、18 条弱证据项；全局分母仍未冻结。
 
 外部 A8 的 `README.md`、CSV 与 `build_a8.py --check` 对应冻结目录哈希 `087971c9…`（382 项），因此仍是有效的历史审计快照，不能直接报告为当前树的缺口数。当前对账产物见 `current-tree-reconciliation.md` 与三份 `current-tree-*.csv`：现有 ID 全部有归因；冻结表的 40 行中，6 条 `player_reachable=no` 已从玩家路径缺口剔出，1 条已有 `world.services_open` ID 的吧台入口改列弱证据，1 条纯试玩存档提示改列非状态转移；后续新增 ID 的归因见当前树对账记录。剩余候选仍未全部完成独立判断；不得声称全局分母完整或 Phase 1 通过。
