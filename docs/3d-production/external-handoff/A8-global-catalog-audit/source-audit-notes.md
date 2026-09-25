@@ -77,7 +77,7 @@
 
 | ID | 初步判定 | 证据 | A8 处理建议 |
 |---|---|---|---|
-| `world.interactable_disabled` | 当前没有证据证明是玩家可达分支；较可能是测试专用防御状态 | 目录把来源记为 `interactable.gd::prompt`，但该方法只返回字符串。`world_coverage_test.gd:39-48` 手动设置 `anchor.enabled = false` 和 `disabled_reason`，断言提示文案及 `request_action` 拒绝。对 `Godot/three_d` 全目录检索，生产源码没有 `.enabled = false` 或 `disabled_reason` 赋值；`Interactable.enabled` 默认 `true`。 | 归入 `unverified-or-unreachable.csv` 并注明仅测试夹具可达；复核是否应作为目录外的 UI guard 记录，而非玩家状态转移。不要在 A8 结束前直接删除 ID。若保留，源入口应指向实际拒绝命令/守卫，不应指向纯 `prompt()` 格式化函数。 |
+| `world.interactable_disabled` | 当前没有证据证明是玩家可达分支；较可能是测试专用防御状态 | 目录来源已纠正为 `player.gd::can_interact`：`interactable.gd::prompt()` 只生成提示字符串，禁用时拒绝实际发生在 `target.enabled` 守卫。`world_coverage_test.gd:39-48` 手动设置 `anchor.enabled = false` 和 `disabled_reason`，断言提示文案及 `request_action` 拒绝。对 `Godot/three_d` 全目录检索，生产源码没有 `.enabled = false` 或 `disabled_reason` 赋值；`Interactable.enabled` 默认 `true`。 | 归入 `unverified-or-unreachable.csv` 并注明仅测试夹具可达；复核是否应作为目录外的 UI guard 记录，而非玩家状态转移。不要在 A8 结束前直接删除 ID。 |
 
 该项当前只证明目录分母可能含有一个不可达/错归属结果，不足以计算修正后的全局分母。后续还须以同样方式检查其它固定夹具或人工改状态的测试结果。
 

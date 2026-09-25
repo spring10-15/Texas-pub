@@ -1595,8 +1595,8 @@
     },
     {
       "id": "world.interactable_disabled",
-      "source": "Godot/three_d/scripts/interactable.gd",
-      "entry": "prompt",
+      "source": "Godot/three_d/scripts/player.gd",
+      "entry": "can_interact",
       "outcome": "disabled target displays reason and rejects action"
     },
     {
