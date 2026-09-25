@@ -2,6 +2,8 @@
 
 > 阅读口径（2026-09-25）：下文按实现批次保留历史快照，226、232、239、247、252 等数字各对应当时状态。最新登记数为 381，当前登记证据为 381/381；全局目录仍未完成，整体覆盖率为空。胜者与边池分配已有下文 payout 六种结果的独立金额测试；这不代表穷尽所有牌型和下注路径。
 
+2026-09-25 手间快照下注额边界：多种子随机玩家回归在 640 组组合中产生 13 个合法的手间快照，其 `status` 已为 `hand_over`，但上一街的 `currentBet` 与玩家 `currentBet` 最大值不同。`TableCheckpoint.restore()` 现仅在 `playing` 状态要求二者相等；`roster_showdown_test.gd` 验证完整 Run 快照恢复前后相等，并继续完成整桌结算与撤离。专项 37,766 项检查通过；全回归 59/59，报告 `output/3d/regression/20260925-081126/report.json`。这次没有新增目录 ID，381/381 仍只说明已登记结果均有证据；A8 全局分支审计仍需判断是否存在尚未枚举的独立语义结果。
+
 2026-09-25 旧格式迁移族收口：A5 `legacy_migration` 的所有可复现运行时结果均映射到现有目录 ID，旧 Run 字段、缺失 props、缺少 search event 的 version 1 磁盘封套，以及 version 2/3 variant plan 均有恢复后具体状态断言；未来 envelope 版本拒绝并保留原文件也有测试。版本 1 磁盘夹具由测试运行时构造，version 2/3 variant plan 通过 RunCheckpoint 恢复测试构造；没有真实历史用户 `.save` 样本，本轮不声称验证过历史玩家档案。该外部样本限制不属于当前可复现转移目录，因此从 `pending_families.persistence` 移除 `legacy_migration`。
 
 2026-09-25 不可读存档分支收口：在 `SaveStore.read_checkpoint()` 内部抽出文件打开回调，公开入口仍使用 `FileAccess.open()`；`save_store_test.gd` 对一个确实存在且内容有效的检查点注入拒绝打开结果，断言返回 `unreadable` 且原文件字节未变。新增 `persistence_io.read_unreadable`，从 `pending_families.persistence` 移除此组。该测试稳定覆盖读取拒绝分支，不模拟操作系统权限配置本身。登记数增至 381；全局目录分母与覆盖率仍未封板。
