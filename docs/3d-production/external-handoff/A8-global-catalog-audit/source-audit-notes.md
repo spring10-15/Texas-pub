@@ -51,10 +51,21 @@
 
 结构性观察（待后继断言核验）：`act()` 的 stale revision、非法动作/行动者/筹码与下注边界拒绝均映射到 `poker_guard.*`；已接受动作映射到 `poker_action.*`、`poker_discount.*`、`queue.*` 或 `ending.*`；街道推进、摊牌和下一手映射到 `poker_progress.*`、`queue.*`、`ending.*`。当前目录按 `source + entry` 分组对应到 55 个 ID（34 + 7 + 10 + 1 + 1 + 2）；此数量是现有映射数，不是分支完备性证明。
 
+## 服务、搜索、路线与变体初查
+
+| 源模块 / 状态入口 | 当前目录 entry 与数量 | 当前测试候选 | 初步性质 |
+|---|---|---|---|
+| `Advanced.reason/apply`，由 `Run.service_action` 调用 | `service_action` 26 个 `advanced.*`；`service_action(reserve/phone-route)` 11 个 `reservation.*`；`apply(signal)` 5 个 `signal.*` | `advanced_coverage_test.gd`、`reservation_coverage_test.gd`、`signal_coverage_test.gd` | helper 本身不应按函数数目计数；预约、手机、通行证、笔记和信号动作由 Run 命令进入并递增 Run revision，牌桌信号/笔记还递增 Table revision。须逐项核对分支及状态后置条件。 |
+| `Routes.quote`，由 `Run.extraction_quote/extract` 调用 | `Run.extract -> Routes.quote` 24 个 `route_guard.*` | `route_guard_coverage_test.gd`、`lifecycle_coverage_test.gd` | 报价查询本身为计算；抽取成功才写 Run 状态。需要区别路线资格拒绝、现金不足与成功结算，不能把 24 个 quote 案例自动等同于 24 个状态转移。 |
+| `SearchEvents.choice/reason/apply`，由 `Run.service_action(search)` 调用 | `Run.service_action(search)` 20 个 `search.*`；搜索 helper 本身没有单独 source 行 | `search_coverage_test.gd`、`event_pool_test.gd` | `choice/reason` 是查询；`apply` 通过统一入口改现金、物品、路线情报、风声、行动力与一次性搜索记录。目录目前按 Run 公开命令归属，A8 要追踪到 helper 里的每个具体结果。 |
+| `RunVariants.generate/valid/shuffled` | 无直接目录 entry | `run_variants_test.gd`、`run_restore_bounds_test.gd` | 初查是计划生成/验证 helper，不直接写 Run/Table/World 权威状态；`Run.start/transfer_venue` 提交生成计划，存档恢复校验计划。审计要检查每个变体维度是否由上游状态入口和已有结果覆盖，而不是把计划字段本身计作转移。 |
+
+本组目录核数：`advanced_services.gd` 42 个（26 + 11 + 5），`routes.gd` 24 个；`search_events.gd` 与 `run_variants.gd` 无独立 source entry。以上只核对当前归属关系，没有核定每个接受/拒绝分支的独立性、玩家可达性或证据强度。
+
 ## 未完成事项
 
 - 尚未对上述入口逐分支确认源码后继状态与目录 ID 的一一映射。
 - 尚未核验候选测试是否对每条结果断言权威 Run 状态及拒绝原子性。
 - 尚未为这些分支填写当前源码行、测试、报告、证据强度和可达性 CSV。
-- 尚未逐分支完成 Table、扑克/对手、服务 helper、路线/事件/变体、存档及 World 物理入口审计。
+- 尚未逐分支完成 Table、扑克/对手、服务 helper、路线/事件/变体、存档及 World 物理入口审计；本节仅完成服务/路线/事件/变体的初步模块归属核对。
 - 尚未分析目录外的可达结果；不能据本底稿推导覆盖百分比或 Phase 1 通过。
