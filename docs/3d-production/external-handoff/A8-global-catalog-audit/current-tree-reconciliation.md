@@ -1,6 +1,6 @@
 # A8 当前树对账记录
 
-- 当前 HEAD：`b686911d4d738ba51f0f0588ca43d04f463d0b7b`
+- 当前 HEAD：`1a6218f47fee4c3a335d7bab9c154ff68903f079`
 - 当前目录：387 个唯一 ID，SHA-256 `c27c5fa39ef8424b989937d7ff2e4cbe1c032a70b5a1269a9346fa9c27836b67`
 - 采用的全量回归：`output/3d/regression/20260925-121929/report.json`（必须由当前源码/测试重跑后更新本记录）
 - 回归报告 SHA-256：`14fff115d023fa8cdaae624e1769fccbf0d7c61c7298d480ac5821fe22f1253c`
