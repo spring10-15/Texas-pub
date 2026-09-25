@@ -33,6 +33,16 @@ func _initialize() -> void:
 			var embers_requirements: Array = run.room_requirements("embers-table")
 			var expected_mirror := ["cargo-table"] if layout == "fork" else ["ledger-cellar"]
 			var expected_embers := ["ledger-cellar", "mirror-hall"] if layout == "fork" else ["mirror-hall"]
+			var locked_before := Checkpoint.capture(run)
+			verify(run.enter_table(17, run.revision, "mirror-hall") == null and Checkpoint.capture(run) == locked_before, "Locked mirror entry preserves the full run snapshot: " + str(scene_id) + "/" + layout)
+			run.completed.append("cargo-table")
+			if layout == "fork":
+				var fork_locked_before := Checkpoint.capture(run)
+				verify(run.enter_table(17, run.revision, "embers-table") == null and Checkpoint.capture(run) == fork_locked_before, "Fork final-room entry preserves the full run snapshot until both middle rooms are complete: " + str(scene_id))
+			else:
+				var linear_locked_before := Checkpoint.capture(run)
+				verify(run.enter_table(17, run.revision, "mirror-hall") == null and Checkpoint.capture(run) == linear_locked_before, "Linear mirror entry preserves the full run snapshot until ledger is complete: " + str(scene_id))
+			run.completed.clear()
 			var restored: RefCounted = Checkpoint.restore(Checkpoint.capture(run), content)
 			verify(started and run.variant_plan.room_layout == layout and mirror_requirements == expected_mirror and embers_requirements == expected_embers and restored != null and restored.variant_plan.room_layout == layout and restored.room_requirements("mirror-hall") == expected_mirror and restored.room_requirements("embers-table") == expected_embers, "Committed room layout affects access and survives restore: " + str(scene_id) + "/" + layout)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("run_variant.")).map(func(row): return row.id)
