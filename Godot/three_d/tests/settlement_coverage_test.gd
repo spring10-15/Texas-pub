@@ -68,6 +68,38 @@ func _initialize() -> void:
 		var before := Checkpoint.capture(r)
 		var accepted: bool = r.settle_table(r.revision-1 if key == "stale_revision" else r.revision)
 		record(key,not accepted and Checkpoint.capture(r) == before)
+	var signature_cases := [
+		["cargo-table", 61, "pearl-necklace", ""],
+		["ledger-cellar", 130, "ivory-chip", ""],
+		["mirror-hall", 121, "vault-promissory", "ivory-chip"],
+		["embers-table", 220, "gold-cased-watch", ""]
+	]
+	var signature_results := {}
+	for row in signature_cases:
+		var table_id: String = row[0]
+		var stack: int = row[1]
+		var configured_reward: String = row[2]
+		var pledged_item: String = row[3]
+		var configured_content: Dictionary = content.duplicate(true)
+		configured_content.tables[table_id].signatureReward = configured_reward
+		var run := Run.new(configured_content)
+		run.start(run.revision, "smoky-den", 0)
+		run.completed.assign(Run.Variants.TABLES.slice(0, Run.Variants.TABLES.find(table_id)))
+		if not pledged_item.is_empty(): run.inventory.append(pledged_item)
+		var table: RefCounted = run.enter_table(7, run.revision, table_id, pledged_item)
+		if table == null:
+			failures.append("Configured signature reward could not enter " + table_id)
+			push_error("Configured signature reward could not enter " + table_id)
+			continue
+		run.table.state.status = "finished"
+		run.table.state.players[0].stack = stack
+		run.table.state.summary = {"pots":[{"winnerIds":["player"]}]}
+		var accepted: bool = run.settle_table(run.revision)
+		var ok: bool = accepted and run.last_table_result.reward == configured_reward and configured_reward in run.inventory
+		if not ok:
+			failures.append("Configured signature reward not paid for " + table_id)
+			push_error("Configured signature reward not paid for " + table_id)
+		signature_results[table_id] = {"configured_reward":configured_reward,"paid":accepted and run.last_table_result.reward == configured_reward}
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("settlement.")).map(func(row): return row.id)
 	for id in hits:
 		if id not in expected: failures.append("Uncatalogued hit: "+id)
@@ -76,7 +108,7 @@ func _initialize() -> void:
 	for file in DirAccess.get_files_at("res://three_d/rules"):
 		if not (file.ends_with(".gd") or file.ends_with(".json")): continue
 		hashes[file] = FileAccess.get_file_as_string("res://three_d/rules/"+file).sha256_text()
-	var report := {"scope":"settlement subgraph only","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/settlement_coverage_test.gd").sha256_text(),"catalog_sha256":FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json").sha256_text(),"denominator":expected.size(),"numerator":hits.size(),"missing":missing,"failures":failures,"hits":hits,"overall_state_transition_coverage":null,"overall_status":"Other families not yet enumerated; no global percentage claimed."}
+	var report := {"scope":"settlement subgraph only; configured signature reward overrides verified for all four tables","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/settlement_coverage_test.gd").sha256_text(),"catalog_sha256":FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json").sha256_text(),"denominator":expected.size(),"numerator":hits.size(),"missing":missing,"failures":failures,"hits":hits,"signature_reward_cases":signature_results,"overall_state_transition_coverage":null,"overall_status":"Other families not yet enumerated; no global percentage claimed."}
 	FileAccess.open("res://../output/3d/settlement-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("SETTLEMENT_COVERAGE covered=",hits.size()," total=",expected.size()," missing=",missing," failures=",failures)
 	quit(0 if failures.is_empty() and missing.is_empty() else 1)

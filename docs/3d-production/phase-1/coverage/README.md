@@ -6,6 +6,8 @@
 
 2026-09-25 贵重物出售范围补测：`service_coverage_test.gd` 现在为 `content.json` 中全部 10 件贵重物分别走公开 `service_action("sell")`，断言对应价值到账、物品移除、行动力和 revision 正确变化，以及金库+现金+剩余贵重物总值不变。10/10 售卖案例通过；沿用既有 `service.sell` 语义 ID，没有扩大目录分母。服务子图 21/21、覆盖汇总器当前证据 381/381；全局目录仍为 `incomplete_catalog`，不据此推断全局覆盖率。
 
+2026-09-25 签名奖励配置接线：`Run.settle_table()` 在四桌各自的既有奖励条件成立时改读 `tableDef.signatureReward`，次级奖励与现金阈值保持原样。`settlement_coverage_test.gd` 除 17 个独立结算场景外，还将四桌配置的签名奖励分别替换为另一件有效贵重物，确认实际结算跟随配置。结算子图 21/21、四项配置敏感性案例 4/4、全量回归 59/59；未新增状态转移 ID，目录仍为 381/381 且全局状态 `incomplete_catalog`。
+
 2026-09-25 旧格式迁移族收口：A5 `legacy_migration` 的所有可复现运行时结果均映射到现有目录 ID，旧 Run 字段、缺失 props、缺少 search event 的 version 1 磁盘封套，以及 version 2/3 variant plan 均有恢复后具体状态断言；未来 envelope 版本拒绝并保留原文件也有测试。版本 1 磁盘夹具由测试运行时构造，version 2/3 variant plan 通过 RunCheckpoint 恢复测试构造；没有真实历史用户 `.save` 样本，本轮不声称验证过历史玩家档案。该外部样本限制不属于当前可复现转移目录，因此从 `pending_families.persistence` 移除 `legacy_migration`。
 
 2026-09-25 不可读存档分支收口：在 `SaveStore.read_checkpoint()` 内部抽出文件打开回调，公开入口仍使用 `FileAccess.open()`；`save_store_test.gd` 对一个确实存在且内容有效的检查点注入拒绝打开结果，断言返回 `unreadable` 且原文件字节未变。新增 `persistence_io.read_unreadable`，从 `pending_families.persistence` 移除此组。该测试稳定覆盖读取拒绝分支，不模拟操作系统权限配置本身。登记数增至 381；全局目录分母与覆盖率仍未封板。

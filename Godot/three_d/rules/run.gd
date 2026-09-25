@@ -196,10 +196,10 @@ func settle_table(expected_revision: int) -> bool:
 	var reward_added := false
 	if stack > int(definition.buyIn):
 		match definition.id:
-			"cargo-table": reward = "ivory-chip" if "ivory-chip" not in inventory else ("ruby-cufflink" if stack >= 90 else "old-silver-lighter")
-			"ledger-cellar": reward = "pearl-necklace" if stack >= 130 else "emerald-brooch"
-			"mirror-hall": reward = "antique-coin" if returned else ("sealed-bond" if stack >= 170 else "gold-cased-watch")
-			"embers-table": reward = "vault-promissory" if stack >= 220 else "obsidian-idol"
+			"cargo-table": reward = str(definition.signatureReward) if "ivory-chip" not in inventory else ("ruby-cufflink" if stack >= 90 else "old-silver-lighter")
+			"ledger-cellar": reward = str(definition.signatureReward) if stack >= 130 else "emerald-brooch"
+			"mirror-hall": reward = str(definition.signatureReward) if returned else ("sealed-bond" if stack >= 170 else "gold-cased-watch")
+			"embers-table": reward = str(definition.signatureReward) if stack >= 220 else "obsidian-idol"
 		if slots_used() + int(content.items[reward].slots) <= int(content.inventorySlots):
 			inventory.append(reward)
 			reward_added = true
