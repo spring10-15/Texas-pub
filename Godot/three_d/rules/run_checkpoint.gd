@@ -11,6 +11,14 @@ static func capture(run: RefCounted) -> Dictionary:
 	values["table"] = TableCheckpoint.capture(run.table) if run.table != null else {}
 	return values
 
+static func table_definitions_compatible(stored: Dictionary, current: Dictionary) -> bool:
+	var stored_rules := stored.duplicate(true)
+	var current_rules := current.duplicate(true)
+	for field in ["name", "role", "risk", "publicInfo", "hiddenInfo", "baseRewardPool", "signatureReward", "rewardRules"]:
+		stored_rules.erase(field)
+		current_rules.erase(field)
+	return stored_rules == current_rules
+
 static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 	var run := Run.new(content)
 	values = values.duplicate(true)
@@ -117,8 +125,15 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 		if not stored_state is Dictionary or not stored_state.get("tableDef") is Dictionary:
 			return null
 		var id: Variant = stored_state.tableDef.get("id")
-		if not id is String or not content.tables.has(id) or stored_state.tableDef != run.table_definition(id):
+		if not id is String or not content.tables.has(id):
 			return null
+		var current_definition: Dictionary = run.table_definition(id)
+		if not table_definitions_compatible(stored_state.tableDef, current_definition):
+			return null
+		stored_state = stored_state.duplicate(true)
+		stored_state.tableDef = current_definition
+		values.table = values.table.duplicate(true)
+		values.table.state = stored_state
 		run.table = TableCheckpoint.restore(values.table)
 		if run.table == null or not run.active:
 			return null

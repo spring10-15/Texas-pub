@@ -195,11 +195,7 @@ func settle_table(expected_revision: int) -> bool:
 	var reward := ""
 	var reward_added := false
 	if stack > int(definition.buyIn):
-		match definition.id:
-			"cargo-table": reward = str(definition.signatureReward) if "ivory-chip" not in inventory else ("ruby-cufflink" if stack >= 90 else "old-silver-lighter")
-			"ledger-cellar": reward = str(definition.signatureReward) if stack >= 130 else "emerald-brooch"
-			"mirror-hall": reward = str(definition.signatureReward) if returned else ("sealed-bond" if stack >= 170 else "gold-cased-watch")
-			"embers-table": reward = str(definition.signatureReward) if stack >= 220 else "obsidian-idol"
+		reward = reward_for_table(definition, stack, returned)
 		if slots_used() + int(content.items[reward].slots) <= int(content.inventorySlots):
 			inventory.append(reward)
 			reward_added = true
@@ -435,7 +431,8 @@ func service_view(mode := "bag", product := "") -> Dictionary:
 	if not reservation.is_empty():
 		text += "\n%s：当前第 %d 轮，第 %d 轮结束前有效，尾款 %d" % [offer_name(reservation.id), search_index, reservation.expiresAfterSearch, reservation.finalCost]
 	for table_id in full_intel:
-		text += "\n%s：对手 %s；奖励 %s" % [table_name(table_id), "、".join(table_definition(table_id).opponentIds.map(func(id): return actor_name(id))), "、".join(content.tables[table_id].baseRewardPool.map(func(id): return item_name(id)))]
+		var table_definition_value: Dictionary = table_definition(table_id)
+		text += "\n%s：对手 %s；奖励 %s" % [table_name(table_id), "、".join(table_definition_value.opponentIds.map(func(id): return actor_name(id))), "、".join(table_reward_pool(table_definition_value).map(func(id): return item_name(id)))]
 	for actor in opponent_notes:
 		text += "\n%s 风格：%s" % [actor_name(actor), archetype_name(opponent_notes[actor])]
 	for table_id in known_rules:
@@ -460,6 +457,22 @@ func valuable_total() -> int:
 		if content.items[id].kind == "valuable":
 			total += int(content.items[id].value)
 	return total
+
+func reward_for_table(definition: Dictionary, stack: int, collateral_returned: bool) -> String:
+	for rule in definition.get("rewardRules", []):
+		if rule.has("minStack") and stack < int(rule.minStack): continue
+		if rule.has("inventoryHas") and rule.inventoryHas not in inventory: continue
+		if rule.has("inventoryMissing") and rule.inventoryMissing in inventory: continue
+		if rule.has("collateralReturned") and bool(rule.collateralReturned) != collateral_returned: continue
+		return str(rule.get("item", ""))
+	return ""
+
+func table_reward_pool(definition: Dictionary) -> Array:
+	var pool: Array = []
+	for rule in definition.get("rewardRules", []):
+		var item: String = str(rule.get("item", ""))
+		if not item.is_empty() and item not in pool: pool.append(item)
+	return pool
 
 func abandon_quote() -> Dictionary:
 	var salvaged := mini(80, cash) if "false-bottom-wallet" in inventory else 0

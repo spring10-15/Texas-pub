@@ -2242,6 +2242,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "persistence_run.active_table_definition_migrated",
+      "source": "Godot/three_d/rules/run_checkpoint.gd",
+      "entry": "restore",
+      "outcome": "accepted"
+    },
+    {
       "id": "persistence_run.reservation_offer_consistent",
       "source": "Godot/three_d/rules/run_checkpoint.gd",
       "entry": "restore",

@@ -50,7 +50,9 @@ func _initialize() -> void:
 		ok = ok and not r.settle_table(r.revision) and Checkpoint.capture(r) == settled
 		record(key,ok)
 	for id in content.tables:
-		var listed: Array = content.tables[id].baseRewardPool.duplicate()
+		var listed: Array = []
+		for rule in content.tables[id].rewardRules:
+			if rule.item not in listed: listed.append(rule.item)
 		var observed: Array = observed_rewards.get(id, []).duplicate()
 		listed.sort()
 		observed.sort()
@@ -81,7 +83,7 @@ func _initialize() -> void:
 		var configured_reward: String = row[2]
 		var pledged_item: String = row[3]
 		var configured_content: Dictionary = content.duplicate(true)
-		configured_content.tables[table_id].signatureReward = configured_reward
+		configured_content.tables[table_id].rewardRules[0].item = configured_reward
 		var run := Run.new(configured_content)
 		run.start(run.revision, "smoky-den", 0)
 		run.completed.assign(Run.Variants.TABLES.slice(0, Run.Variants.TABLES.find(table_id)))

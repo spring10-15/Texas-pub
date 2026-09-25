@@ -26,12 +26,11 @@
         "reward": "Positive results can yield low or mid-tier valuables. First clears strongly bias toward the Ivory Chip."
       },
       "firstAggressionDiscount": 10,
-      "baseRewardPool": [
-        "old-silver-lighter",
-        "ivory-chip",
-        "ruby-cufflink"
-      ],
-      "signatureReward": "ivory-chip"
+      "rewardRules": [
+        {"item":"ivory-chip", "inventoryMissing":"ivory-chip"},
+        {"item":"ruby-cufflink", "inventoryHas":"ivory-chip", "minStack":90},
+        {"item":"old-silver-lighter", "inventoryHas":"ivory-chip"}
+      ]
     },
     "ledger-cellar": {
       "id": "ledger-cellar",
@@ -59,11 +58,10 @@
         "reward": "Positive results tend to pay out layered valuables that bridge the run into Mirror Hall."
       },
       "tableToolHeatBonus": 1,
-      "baseRewardPool": [
-        "pearl-necklace",
-        "emerald-brooch"
-      ],
-      "signatureReward": "pearl-necklace"
+      "rewardRules": [
+        {"item":"pearl-necklace", "minStack":130},
+        {"item":"emerald-brooch"}
+      ]
     },
     "mirror-hall": {
       "id": "mirror-hall",
@@ -91,12 +89,11 @@
         "reward": "Positive results grant high-tier valuables. The collateral line can pay out the Antique Commemorative Coin."
       },
       "allowCollateral": true,
-      "baseRewardPool": [
-        "gold-cased-watch",
-        "antique-coin",
-        "sealed-bond"
-      ],
-      "signatureReward": "antique-coin"
+      "rewardRules": [
+        {"item":"antique-coin", "collateralReturned":true},
+        {"item":"sealed-bond", "minStack":170},
+        {"item":"gold-cased-watch"}
+      ]
     },
     "embers-table": {
       "id": "embers-table",
@@ -125,11 +122,10 @@
       },
       "allowCollateral": true,
       "winHeatRelief": 1,
-      "baseRewardPool": [
-        "obsidian-idol",
-        "vault-promissory"
-      ],
-      "signatureReward": "vault-promissory"
+      "rewardRules": [
+        {"item":"vault-promissory", "minStack":220},
+        {"item":"obsidian-idol"}
+      ]
     }
   },
   "opponents": {

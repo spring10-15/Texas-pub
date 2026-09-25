@@ -9,6 +9,7 @@ var legacy_variant_cases := 0
 var legacy_search_event_restored := false
 var reservation_offer_consistent := false
 var reservation_restored := false
+var active_table_definition_migrated := false
 func verify(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label); push_error(label)
@@ -155,6 +156,17 @@ func run_tests() -> void:
 	verify(playing.enter_table(113,playing.revision,"cargo-table") != null,"Real table opened for checkpoint validation")
 	var table_save := Checkpoint.capture(playing)
 	verify(Checkpoint.restore(table_save,content) != null,"Canonical table definition restores")
+	var legacy_table_save: Dictionary = table_save.duplicate(true)
+	var legacy_table_definition: Dictionary = legacy_table_save.table.state.tableDef
+	legacy_table_definition.erase("rewardRules")
+	legacy_table_definition.baseRewardPool = ["old-silver-lighter", "ivory-chip", "ruby-cufflink"]
+	legacy_table_definition.signatureReward = "ivory-chip"
+	legacy_table_definition.hiddenInfo.rule = "The first aggressive action of each hand costs 10 less for the acting player."
+	legacy_table_save.table.state.tableDef = legacy_table_definition
+	var legacy_table_run: RefCounted = Checkpoint.restore(legacy_table_save,content)
+	active_table_definition_migrated = legacy_table_run != null and legacy_table_run.table.state.tableDef == legacy_table_run.table_definition("cargo-table")
+	active_table_definition_migrated = active_table_definition_migrated and legacy_table_run.table.state.currentActorId == table_save.table.state.currentActorId and legacy_table_run.table.state.pot == table_save.table.state.pot and legacy_table_run.table.state.players == table_save.table.state.players
+	verify(active_table_definition_migrated,"Legacy active table saves migrate content-only table fields and preserve play state")
 	for label in ["changed_buyin","changed_hands","unknown_table"]:
 		var broken := table_save.duplicate(true)
 		match label:
@@ -179,6 +191,8 @@ func run_tests() -> void:
 		hits["persistence_run.legacy_variant_plan_restored"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true,"versions":[2,3]}
 	if legacy_search_event_restored and failures.is_empty():
 		hits["persistence_run.legacy_search_event_restored"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true,"fixture":"version-1 disk envelope"}
+	if active_table_definition_migrated and failures.is_empty():
+		hits["persistence_run.active_table_definition_migrated"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true,"preserved":["actor", "pot", "players"]}
 	var missing: Array = expected.filter(func(id): return not hits.has(id))
 	var hashes := {}
 	for source_file in DirAccess.get_files_at("res://three_d/rules"):
