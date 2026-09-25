@@ -1852,6 +1852,12 @@
       "outcome": "accepted saves the current checkpoint when the autosave timer reaches its interval"
     },
     {
+      "id": "world.window_focus_out",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "_notification",
+      "outcome": "accepted saves the checkpoint, closes services, and pauses when window focus is lost"
+    },
+    {
       "id": "world.pause_repeated",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "pause_game",

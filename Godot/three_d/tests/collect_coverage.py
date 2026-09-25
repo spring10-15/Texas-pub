@@ -16,6 +16,7 @@ SUITES = {
     'run-variant': ('run_variant_coverage_test.gd', {'run_variant'}),
     'signal': ('signal_coverage_test.gd', {'signal'}),
     'world': ('world_coverage_test.gd', {'world'}),
+    'world-focus-out': ('world_focus_out_test.gd', {'world'}),
     'queue': ('short_stack_queue_test.gd', {'queue'}),
     'ending': ('table_endings_test.gd', {'ending'}),
     'payout': ('payout_coverage_test.gd', {'payout'}),
@@ -48,12 +49,16 @@ def collect():
     for name, (test, prefixes) in SUITES.items():
         report = json.loads((ROOT / f'output/3d/{name}-coverage.json').read_text())
         expected = {i for i in ids if i.split('.')[0] in prefixes}
+        if name == 'world':
+            expected.discard('world.window_focus_out')
+        if name == 'world-focus-out':
+            expected = {'world.window_focus_out'}
         if name == 'poker_action':
             expected.update(i for i in ids if i == 'poker.player_raise_pattern')
         if report['catalog_sha256'] != digest(CATALOG) or report['source_sha256'] != hashes or report['test_sha256'] != digest(Path(__file__).parent / test):
             raise ValueError(f'{name}: stale source/catalog/test evidence; rerun the suite')
-        if name in ('world', 'persistence-restore', 'persistence-capture'):
-            source_names = ('world.gd', 'player.gd', 'scene_props.gd', 'interactable.gd') if name == 'world' else (('world.gd',) if name == 'persistence-capture' else ('world.gd', 'player.gd', 'scene_props.gd'))
+        if name in ('world', 'world-focus-out', 'persistence-restore', 'persistence-capture'):
+            source_names = ('world.gd', 'player.gd', 'scene_props.gd', 'interactable.gd') if name in ('world', 'world-focus-out') else (('world.gd',) if name == 'persistence-capture' else ('world.gd', 'player.gd', 'scene_props.gd'))
             world_sources = {name: digest(ROOT / 'Godot/three_d/scripts' / name) for name in source_names}
             if report.get('world_source_sha256') != world_sources:
                 raise ValueError('world: stale world script evidence; rerun the suite')

@@ -55,6 +55,7 @@ def main() -> int:
     presentation_only = 0
     focus_idempotence = 0
     world_autosave = 0
+    world_focus_out = 0
     reclassified_weak = 0
     for row in branches:
         if (row["source_file"] == "Godot/three_d/rules/run.gd"
@@ -221,6 +222,16 @@ def main() -> int:
                 "notes": "测试态直接执行 World._process(0.6)，验证达到自动保存间隔后 save_clock 清零、隔离磁盘 envelope 状态与完整内存 checkpoint 一致、保存提示更新，并删除临时文件。目录新增 world.autosave 对应玩家离散写盘结果。",
             })
             world_autosave += 1
+        if row["source_file"] == "Godot/three_d/scripts/world.gd" and row["source_line"] == "Godot/three_d/scripts/world.gd:626-632" and row["catalog_id"] == "-":
+            row.update({
+                "catalog_id": "world.window_focus_out",
+                "test": "Godot/three_d/tests/world_focus_out_test.gd::world.window_focus_out",
+                "evidence_report": f"output/3d/world-focus-out-coverage.json;{LATEST_REPORT}",
+                "evidence_strength": "strong",
+                "disposition": "catalogued_strong",
+                "notes": "独立非 --test Godot 套件在回归专用 HOME 下直接注入 WINDOW_FOCUS_OUT 通知，验证服务面板关闭、暂停与玩家控制禁用，且隔离磁盘快照等于完整内存 checkpoint；正式存档不会被触碰。",
+            })
+            world_focus_out += 1
         if row["source_file"] == "Godot/three_d/scripts/world.gd" and row["source_line"] == "Godot/three_d/scripts/world.gd:511-512" and row["catalog_id"] == "world.services_open":
             row["disposition"] = "catalogued_weak"
             row["notes"] += " 当前树归因：已有 world.services_open ID；吧台实体锚点的射线/输入到打开面板仍缺独立集成后置断言，列为弱证据，不计未登记 ID。"
@@ -228,8 +239,8 @@ def main() -> int:
         if "20260925-103506" in row["evidence_report"] or "20260925-105659" in row["evidence_report"]:
             row["evidence_report"] = row["evidence_report"].replace("20260925-103506/report.json", LATEST_REPORT).replace("20260925-105659/report.json", LATEST_REPORT)
 
-    if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or room_layout_selected != 1 or room_layout_locked != 2 or poker_short_blinds != 1 or poker_seeded_deals != 1 or poker_open_raise_right != 1 or player_pause_input != 1 or player_interaction_signal != 1 or world_search_evidence != 1 or world_product_evidence != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or focus_idempotence != 1 or world_autosave != 1 or reclassified_weak != 2:
-        raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, room_layout={room_layout_selected}, layout_locked={room_layout_locked}, poker_short_blinds={poker_short_blinds}, poker_seeded_deals={poker_seeded_deals}, poker_open_raise_right={poker_open_raise_right}, player_pause_input={player_pause_input}, player_interaction_signal={player_interaction_signal}, search_evidence={world_search_evidence}, product_evidence={world_product_evidence}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, focus_idempotence={focus_idempotence}, autosave={world_autosave}, weak={reclassified_weak}")
+    if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or room_layout_selected != 1 or room_layout_locked != 2 or poker_short_blinds != 1 or poker_seeded_deals != 1 or poker_open_raise_right != 1 or player_pause_input != 1 or player_interaction_signal != 1 or world_search_evidence != 1 or world_product_evidence != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or focus_idempotence != 1 or world_autosave != 1 or world_focus_out != 1 or reclassified_weak != 2:
+        raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, room_layout={room_layout_selected}, layout_locked={room_layout_locked}, poker_short_blinds={poker_short_blinds}, poker_seeded_deals={poker_seeded_deals}, poker_open_raise_right={poker_open_raise_right}, player_pause_input={player_pause_input}, player_interaction_signal={player_interaction_signal}, search_evidence={world_search_evidence}, product_evidence={world_product_evidence}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, focus_idempotence={focus_idempotence}, autosave={world_autosave}, focus_out={world_focus_out}, weak={reclassified_weak}")
 
     current_gaps = [
         row.copy() for row in old_gaps
@@ -246,7 +257,7 @@ def main() -> int:
         and not (row["source_file"] == "Godot/three_d/rules/table.gd" and row["source_line"] == "Godot/three_d/rules/table.gd:102-102")
         and not (row["source_file"] == "Godot/three_d/scripts/player.gd" and row["source_line"] in {"Godot/three_d/scripts/player.gd:38-42", "Godot/three_d/scripts/player.gd:48-51"})
         and not (row["source_file"] == "Godot/three_d/scripts/player.gd" and row["source_line"] == "Godot/three_d/scripts/player.gd:67-69")
-        and not (row["source_file"] == "Godot/three_d/scripts/world.gd" and row["source_line"] in {"Godot/three_d/scripts/world.gd:482-484", "Godot/three_d/scripts/world.gd:485-487", "Godot/three_d/scripts/world.gd:665-669"})
+        and not (row["source_file"] == "Godot/three_d/scripts/world.gd" and row["source_line"] in {"Godot/three_d/scripts/world.gd:482-484", "Godot/three_d/scripts/world.gd:485-487", "Godot/three_d/scripts/world.gd:626-632", "Godot/three_d/scripts/world.gd:665-669"})
     ]
     weak_evidence = [row.copy() for row in branches if row["disposition"] == "catalogued_weak"]
     for row in current_gaps:
@@ -276,7 +287,7 @@ def main() -> int:
             path = path.strip()
             if path and path != "-" and not (ROOT / path).is_file():
                 raise SystemExit(f"Missing evidence report: {path}")
-    if len(current_gaps) != 17 or any(row["player_reachable"] != "yes" or row["catalog_id"] != "-" for row in current_gaps):
+    if len(current_gaps) != 16 or any(row["player_reachable"] != "yes" or row["catalog_id"] != "-" for row in current_gaps):
         raise SystemExit("Current player-path gap set is inconsistent")
 
     write_csv(AUDIT / "current-tree-branch-inventory.csv", branch_fields, branches)
@@ -302,7 +313,7 @@ def main() -> int:
 ## 当前映射和缺口
 
 - 当前目录 ID 已全部映射：{len(mapped_ids)}/{len(catalog_ids)}。
-- `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal` 与 `world.autosave` 已在对应测试中登记；搜索点与货架入口复用既有 `world.services_open` ID，并由真实锚点射线测试补强。
+- `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal`、`world.autosave` 与 `world.window_focus_out` 已在对应测试中登记；搜索点与货架入口复用既有 `world.services_open` ID，并由真实锚点射线测试补强。
 - 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`；其中 1 条 yes 已有 `world.services_open` ID，但实体入口后置证据偏弱。当前树把 6 条 no 排除出玩家路径缺口，把该 services 行移入弱证据表；另 1 条仅显示试玩存档提示、不改变权威状态，也分类为非状态转移。
 - 当前仍有 {len(current_gaps)} 条标为玩家可达、尚无目录 ID 的候选，详见 `current-tree-player-path-gaps.csv`。这仍需逐条审查后才能新增语义 ID；全局分母尚未冻结。弱证据行见 `current-tree-weak-evidence.csv`。
 - 分支行 disposition 计数：`{dict(counts)}`。

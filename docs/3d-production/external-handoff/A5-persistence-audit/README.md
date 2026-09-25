@@ -224,3 +224,5 @@ python3 docs/3d-production/external-handoff/A5-persistence-audit/repro/verify_ou
 2026-09-25 补充：旧 search_results 缺 event 的验证此前只确认 `RunCheckpoint.restore()` 非空。现已发现并修复迁移没有把 fallback 写入恢复态的问题；正式测试以 version 1 磁盘 envelope 走 `world.load_checkpoint()`，确认 `event==site`、其他站点记录不变、完整 Run/世界快照符合迁移后基线，且原磁盘文件仍保持旧格式。新增 ID `persistence_run.legacy_search_event_restored`；夹具由测试运行时构造，不代表读取真实历史用户存档。专项检查 83 项通过，A5 ID 映射 38/38；全量回归 59/59、目录证据 369/369。报告见 `output/3d/regression/20260925-044032/report.json`。
 
 2026-09-25 主 Agent 复验：按当前源码刷新 21 个 source_line 锚点，未改变各审计行的状态结论。原 `read_unreadable` 候选现由 `persistence_io.read_unreadable` 登记，`save_store_test.gd` 注入拒绝打开并断言存在文件字节不变；这稳定验证代码拒绝分支，不等同于 OS 权限集成测试。当前 A5 自检映射 40/40 个目录 ID。
+
+2026-09-25 本轮交付复核：A5 自检再次发现 12 条 `source_line` 因近期源码插入而偏移，已按当前内容锚点刷新；`verify_outcomes.py` 通过，50 行、七组齐全、40/40 个目录 ID 映射、证据路径存在。该修正只更新审计定位，不改变任何结果判定。

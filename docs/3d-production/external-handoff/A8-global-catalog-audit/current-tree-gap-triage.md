@@ -26,6 +26,8 @@
 
 **2026-09-25 自动存档补记**：A8 Row 23（`world.gd:665-669`）现通过隔离磁盘路径的正式世界测试确认：`_process(0.6)` 达到周期后写入的存档与完整内存 checkpoint 一致，时钟归零且保存提示更新；新增 `world.autosave`。当前树对账更新为 390 个登记 ID、17 条可达无 ID 候选及 19 条弱证据项，全量回归 61/61（`output/3d/regression/20260925-134024/report.json`）。
 
+**2026-09-25 窗口失焦补记**：A8 Row 17 现由 `world_focus_out_test.gd` 在无 `--test` 启动且隔离 HOME 的环境中投递 `NOTIFICATION_WM_WINDOW_FOCUS_OUT`，断言存盘快照与通知前状态相等、服务面板关闭、探索暂停且控制关闭；新增 `world.window_focus_out`。该套件验证通知处理结果，仍不声称实际操作系统 Alt-Tab 的窗口集成已手测。
+
 - 输入行数：**30**（以核验期间实际 CSV 为准；任务书第 10 行亦已同步为 30 行）
 - 输入 CSV SHA-256：`f6afc40dbc586e78fbbcdf6d57cb027f843ef61642d90dac27fd2c8f6822d0f1`
 - 目录（独立核验交付基线）：386 个唯一 ID，SHA-256 `5a87300ddea8a3ecb03a883e7973bcf930b87312cfc124faa71a08d83b2d5187`；后续当前状态见上方补记。

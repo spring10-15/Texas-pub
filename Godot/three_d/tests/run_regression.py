@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -53,10 +54,18 @@ def main():
     results = []
     for script in scripts:
         command = [args.godot, '--headless', '--path', str(ROOT / 'Godot'), '--script',
-                   'res://three_d/tests/' + script.name, '--', '--test']
+                   'res://three_d/tests/' + script.name]
+        environment = None
+        if script.name == 'world_focus_out_test.gd':
+            isolated_home = output / 'world-focus-out-home'
+            isolated_home.mkdir()
+            environment = os.environ.copy()
+            environment['HOME'] = str(isolated_home)
+        else:
+            command += ['--', '--test']
         start = time.monotonic()
         try:
-            process = subprocess.run(command, capture_output=True, text=True, timeout=args.timeout)
+            process = subprocess.run(command, capture_output=True, text=True, timeout=args.timeout, env=environment)
             code, log = process.returncode, process.stdout + process.stderr
             status = 'PASS' if passed(code, log) else 'FAIL'
         except subprocess.TimeoutExpired as error:
