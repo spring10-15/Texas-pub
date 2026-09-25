@@ -22,6 +22,8 @@
 
 **2026-09-25 房间图、发牌、开注与输入补记**：Row 3（`run_variants.gd:36`）经独立测试登记为 `run_variant.room_layout_selected`：四家酒馆均从真实 Run.start 种子生成 linear/fork，区别对应不同房间解锁条件，且快照恢复保留所选图。随后补充公开 `enter_table()` 的锁门拒绝测试：linear/fork 对应的镜厅或余烬桌仍锁定时，尝试均被拒绝且完整 Run checkpoint 不变；两条分支归并到既有 `entry.locked`，不新增 ID。Row 4 的短筹码盲注也已在四桌配置中验证，登记为 `poker_blind.short_stack_posts`，精确检查封顶金额、底牌发放、弃牌状态、行动位与总筹码守恒；起手发牌则新增 `poker_progress.seeded_deal`，四桌逐座对照固定 seed 独立重算的两轮私牌、余牌堆和 RNG 状态。开注候选补充检查 `raiseUsed` 保持 false，归入既有 `poker_action.open`。输入测试通过真实 Esc KeyEvent 验证暂停信号链；E 交互的映射与 Player→World 信号下游也有台灯状态后置，但 headless 无法启用 captured 鼠标模式，故列为弱证据。最新目录证据为 389/389，完整回归 61/61（`output/3d/regression/20260925-131428/report.json`），当前树对账剩 19 条可达无 ID 候选与 19 条弱证据项。下表和第 2 节仍记录独立核验交付时的 386 项历史基线，不改写原始逐行判定。
 
+**2026-09-25 焦点幂等分支补记**：Row 13 的 `player.gd:67-69` 已在 `world_coverage_test.gd` 增加重复 `update_focus()` 后的信号计数断言。该分支只阻止重复发送展示用 `focus_changed` 信号，不改权威 Run/World/存档状态，因此在当前树对账中归类为 `not_a_transition`，不新增目录 ID。当前重跑后 A8 overlay 为 18 条可达无 ID 候选、19 条弱证据项；全量回归为 61/61（`output/3d/regression/20260925-132741/report.json`）。
+
 - 输入行数：**30**（以核验期间实际 CSV 为准；任务书第 10 行亦已同步为 30 行）
 - 输入 CSV SHA-256：`f6afc40dbc586e78fbbcdf6d57cb027f843ef61642d90dac27fd2c8f6822d0f1`
 - 目录（独立核验交付基线）：386 个唯一 ID，SHA-256 `5a87300ddea8a3ecb03a883e7973bcf930b87312cfc124faa71a08d83b2d5187`；后续当前状态见上方补记。

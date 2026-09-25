@@ -41,7 +41,7 @@ def fingerprint():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--godot', default=shutil.which('godot') or '/Applications/Godot.app/Contents/MacOS/Godot')
-    parser.add_argument('--timeout', type=int, default=90, help='Timeout per Godot suite in seconds')
+    parser.add_argument('--timeout', type=int, default=180, help='Timeout per Godot suite in seconds')
     args = parser.parse_args()
     scripts = sorted(p for p in TESTS.glob('*.gd') if p.name.endswith('_test.gd') or p.name in EXTRA)
     unknown = {p.name for p in TESTS.glob('*.gd')} - {p.name for p in scripts} - EXCLUDED

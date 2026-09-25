@@ -35,6 +35,12 @@ func run() -> void:
 	for i in range(3): await physics_frame
 	world.player.update_focus()
 	verify("focus_acquired", world.player.focused==anchor and not focus_events.is_empty() and focus_events.back()==anchor and world.hint_label.text.contains(anchor.title))
+	var focus_events_after_acquire: int = focus_events.size()
+	world.player.update_focus()
+	checks += 1
+	if world.player.focused != anchor or focus_events.size() != focus_events_after_acquire:
+		failures.append("focus_repeat_idempotent")
+		push_error("focus_repeat_idempotent")
 	var target: Vector3 = anchor.global_position
 	world.player.global_position = Vector3(target.x, 0.02, target.z + 3.0)
 	world.player.camera.look_at(target)

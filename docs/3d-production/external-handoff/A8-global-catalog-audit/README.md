@@ -9,7 +9,7 @@
 
 > **读这句话必须先看锚点**：`382/382` 与 `40 条未登记` 都是 **HEAD `8d8464e1` / 目录 `087971c9…` / 382 个 ID** 这一组基线上的结论。交付后工作区已增至 **383** 个 ID（未提交），详见 §2.1 —— 那 40 条里已有一条被主线采纳。
 
-**当前树复核**：后续又登记了 `entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts` 与 `poker_progress.seeded_deal`，目录现为 389 个 ID；搜索与货架入口证据归入既有 `world.services_open`，房间图锁门拒绝证据归入既有 `entry.locked`，开注加注权检查归入既有 `poker_action.open`，暂停输入归入 `world.pause`；上述均未新增 ID。请使用 [当前树对账记录](current-tree-reconciliation.md) 与 `current-tree-branch-inventory.csv`；当前 389/389 个 ID 均可归因，另有 19 条可达无 ID 候选和 19 条弱证据项尚待逐条审查。Player→World E 交互连接暂列弱证据，因为 headless 测试不能进入 captured 鼠标模式。下文的原始报告、CSV 与 `build_a8.py --check` 仍用于复现 382 项冻结锚点，不代表当前分母闭合。
+**当前树复核**：后续又登记了 `entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts` 与 `poker_progress.seeded_deal`，目录现为 389 个 ID；搜索与货架入口证据归入既有 `world.services_open`，房间图锁门拒绝证据归入既有 `entry.locked`，开注加注权检查归入既有 `poker_action.open`，暂停输入归入 `world.pause`；上述均未新增 ID。当前焦点幂等分支已增加重复调用信号计数断言，并归类为非状态转移。请使用 [当前树对账记录](current-tree-reconciliation.md) 与 `current-tree-branch-inventory.csv`；当前 389/389 个 ID 均可归因，另有 18 条可达无 ID 候选和 19 条弱证据项尚待逐条审查。Player→World E 交互连接暂列弱证据，因为 headless 测试不能进入 captured 鼠标模式。下文的原始报告、CSV 与 `build_a8.py --check` 仍用于复现 382 项冻结锚点，不代表当前分母闭合。
 
 ## 1. 与主 Agent 底稿的关系
 
@@ -201,7 +201,7 @@ git diff --numstat 5178244..8d8464e -- Godot/three_d/rules/{run,table,poker,oppo
 
 ### 9.2 其他
 
-- `output/3d/regression/` 下有 7 份非全绿的历史回归报告，其中两份是 `roster_showdown_test.gd` 因**每套件超时不足**（`run_regression.py` 默认 90 秒 < 该套件常态 135～144 秒）而 TIMEOUT。详见 A7 复核报告的 §4。
+- `output/3d/regression/` 下有 7 份非全绿的历史回归报告，其中两份是 `roster_showdown_test.gd` 因**当时每套件超时不足**（`run_regression.py` 原默认 90 秒 < 该套件常态 135～144 秒）而 TIMEOUT。主线已把默认值提高至 180 秒并以 `20260925-132741` 回归复验通过；历史失败记录保留。详见 A7 复核报告的 §4。
 - 审计期间观察到同一工作树上**并发运行着多份 `run_regression.py` 与散装 Godot 进程**，它们会写同一批 `output/3d/*-coverage.json`；并发写同一批证据文件存在互相覆盖的风险。
 - 审计结束时仍有 4 个无父进程的 Godot 残留进程（`save_store_test.gd`、`persistence_capture_coverage_test.gd`、`table_checkpoint_test.gd`、`services_save_test.gd`）。**不是本审计启动的，本审计也未终止它们。**
 
