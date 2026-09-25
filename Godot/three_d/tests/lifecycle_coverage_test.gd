@@ -13,13 +13,20 @@ func fresh() -> RefCounted:
 	return r
 func _initialize() -> void:
 	content = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
-	for case in ["success","stale","active","low_vault","unknown_venue"]:
+	for case in ["success","partial_bankroll","stale","active","low_vault","unknown_venue"]:
 		var r := Run.new(content)
 		if case=="active": r.start(r.revision)
 		if case=="low_vault": r.vault = 119
+		if case=="partial_bankroll": r.vault = 120
 		var before := Checkpoint.capture(r)
 		var accepted: bool = r.start(r.revision-1 if case=="stale" else r.revision,"unknown" if case=="unknown_venue" else "smoky-den")
-		var ok: bool = accepted and r.vault+r.cash==before.vault and r.cash==300 and r.bankroll==300 and r.active and r.revision==before.revision+1 if case=="success" else not accepted and Checkpoint.capture(r)==before
+		var ok: bool
+		if case=="success":
+			ok = accepted and r.vault+r.cash==before.vault and r.cash==300 and r.bankroll==300 and r.active and r.revision==before.revision+1
+		elif case=="partial_bankroll":
+			ok = accepted and r.vault==0 and r.cash==120 and r.bankroll==120 and r.cash+r.vault==before.vault and r.active and r.revision==before.revision+1
+		else:
+			ok = not accepted and Checkpoint.capture(r)==before
 		record("start."+case,ok)
 	for case in ["success","stale","active","sufficient_funds"]:
 		var r := Run.new(content)

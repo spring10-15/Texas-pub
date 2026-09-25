@@ -82,6 +82,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "start.partial_bankroll",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "start",
+      "outcome": "accepted with bankroll capped by available vault"
+    },
+    {
       "id": "start.stale",
       "source": "Godot/three_d/rules/run.gd",
       "entry": "start",

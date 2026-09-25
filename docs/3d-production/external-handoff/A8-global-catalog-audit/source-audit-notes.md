@@ -1,10 +1,10 @@
-# A8 工作底稿：Run 入口映射（未完成审计）
+# A8 工作底稿：源码入口与分支映射（未完成审计）
 
-本文件仅记录主 Agent 对 `Run` 模块公开入口的初步盘点，供后续完整审计复用。它不是 A8 最终报告，也不证明 382 个目录 ID 是全局分母。
+本文件记录主 Agent 对 `Run` 模块公开入口的初步盘点，以及 `World` 模块已逐分支复核的增量，供后续完整审计复用。它不是 A8 最终报告，也不证明 382 个目录 ID 是全局分母。
 
 ## 基线
 
-- 审计基线：`b97c3b7`（World 会话入口审计基线；目录与生产源码自 `2e2f697` 起未变化）
+- 审计基线：`8d8464e`（本轮 Run 面板/确认入口审计基线）
 - Godot：`4.7.2.stable.official.ed1daf0bf`
 - 跟踪文件状态：干净；工作区存在多份未跟踪的外部协作交付，审计期间未修改或清理。
 - 目录：382 个已登记 ID，状态 `incomplete_catalog`；当前三个 `pending_families` 数组为空。全局分母仍需源码驱动审计确认。
@@ -99,12 +99,24 @@
 
 可达性方面，暂停后直接离座、未入座时直接离座、牌局未结束时直接离座、重复直接调用 pause/resume 都是防御性直接方法调用，正常 UI 不提供这些动作；离开预备座位、Esc 关闭弹窗、暂停进行中的牌局及结算完成后的离座有实际 UI 流程证据。强制撤离行的后继结算断言充分，但夹具直接把风声设为 6，正常玩法自然达到该阈值的完整路径仍未在该测试中演示。`settle_table()` 失败防御分支则已由 A4 审计 `outcomes.csv` 第 36 行判为正常玩家路径不可达：`start_table()` 绑定同一 Table 对象，恢复也会将 `table_game` 重新绑定 `run_game.table`，且入口使用当前 Run revision；该分支没有独立目录 ID。
 
+### Run 面板确认入口映射增量
+
+`world-run-confirm-review.csv` 将 `confirm_run_action()` 的七个现有目录 ID 与 `show_run_panel()` 的 UI 门控、实际 Run 命令及后继状态对应；另列出五种底层命令拒绝返回。隐藏面板/暂停、禁用按钮两种前置拒绝都有完整世界快照不变断言，但分别由直接调用测试，不是玩家可点到的确认动作。五个底层拒绝分支均受当前 revision 或已禁用的报价状态保护；未找到玩家能在模态框保持开启时改变 Run revision 的路径，暂列未映射的防御分支，不计作可达状态转移。
+
+`world.room_entry` 的测试此前只检查了资金和房间状态。本轮为同一 ID 增加 RNG 集成后置断言：实际运行种子必须在有效正整数范围内，且 `variant_plan` 必须与该种子重新生成的完整计划一致。定向 World 报告仍为 74/74，完整回归 59/59，覆盖汇总器单测 3/3；未新增语义 ID。试玩资金重置测试仍直接将金库设为 119，故低于重置阈值的自然耗尽路径尚未在该夹具中证明。
+
 ## 未完成事项
 
 - 尚未对上述入口逐分支确认源码后继状态与目录 ID 的一一映射。
 - 尚未核验候选测试是否对每条结果断言权威 Run 状态及拒绝原子性。
-- 尚未为除 `World.request_action()` 与离座/暂停/恢复外的分支填写当前源码行、测试、报告、证据强度和可达性 CSV。
+- 尚未为除 `World.request_action()`、离座/暂停/恢复、Run 面板确认入口外的分支填写当前源码行、测试、报告、证据强度和可达性 CSV。
 - 尚未逐分支完成 Table、扑克/对手、服务 helper、路线/事件/变体、存档及 World 物理入口审计；本节已对这些模块做部分入口归属初查，但仍未逐行核对接受/拒绝语义、玩家可达性及后继断言。
 - 尚未分析目录外的可达结果；不能据本底稿推导覆盖百分比或 Phase 1 通过。
 
-本增量后的复验基线为 `2e2f6970043c3e0ab92ebd632238f66addb43f36`，Godot `4.7.2.stable.official.ed1daf0bf`。使用 `python3 Godot/three_d/tests/run_regression.py --timeout 240` 得 59/59；`python3 Godot/three_d/tests/collect_coverage.py` 显示 `verified=382 catalogued=382 global_coverage=unavailable`；`python3 Godot/three_d/tests/test_collect_coverage.py` 为 3/3。报告：`output/3d/regression/20260925-101457/report.json`。加长单测超时是因为 `roster_showdown_test.gd` 单项 640 组、37,766 检查，单独实测约 167 秒通过；默认 90 秒会将它误报为 TIMEOUT。
+本增量复验时目录为 382 项，基线为 `8d8464e`，Godot `4.7.2.stable.official.ed1daf0bf`。使用 `python3 Godot/three_d/tests/run_regression.py --timeout 240` 得 59/59；`python3 Godot/three_d/tests/collect_coverage.py` 显示 `verified=382 catalogued=382 global_coverage=unavailable`；`python3 Godot/three_d/tests/test_collect_coverage.py` 为 3/3。该历史报告：`output/3d/regression/20260925-103506/report.json`。加长单测超时是因为 `roster_showdown_test.gd` 单项 640 组、37,766 检查，单独实测约 167 秒通过；默认 90 秒会将它误报为 TIMEOUT。
+
+### 当前工作区复核（2026-09-25）
+
+后续登记了 `start.partial_bankroll`，当前目录为 383 个 ID；新增 `lifecycle_coverage_test.gd` 用 vault=120 验证金库归零、现金/本金=120、财富守恒、Run 激活及 revision 增加。`world_coverage_test.gd` 的 `room_entry` 也新增了正种子与完整 `variant_plan` 一致性断言。当前全量回归 59/59，报告 `output/3d/regression/20260925-105659/report.json`；覆盖汇总为 `verified=383 catalogued=383 global_coverage=unavailable`，汇总器单测 3/3。
+
+外部 A8 的 `README.md`、CSV 与 `build_a8.py --check` 对应冻结目录哈希 `087971c9…`（382 项），因此仍是有效的历史审计快照，不能直接报告为当前树的缺口数。审计表的 40 条 `reachable_unmapped` 中有 6 条 `player_reachable=no`（5 条畸形恢复拒绝、1 条存档写入失败防御路径）；它们应从“玩家可达缺口”汇总中剔出或单独列作非玩家路径候选。冻结表中的 `run.gd:61-62` 部分本金分支已由 `start.partial_bankroll` 补录，当前应标为已登记，剩余缺口须基于当前目录重建映射。具体执行要求见同目录 `A8-current-tree-reconciliation-task.md`。

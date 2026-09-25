@@ -1,5 +1,6 @@
 extends SceneTree
 const RunCheckpoint = preload("res://three_d/rules/run_checkpoint.gd")
+const RunVariants = preload("res://three_d/rules/run_variants.gd")
 const WORLD_SOURCES := ["world.gd", "player.gd", "scene_props.gd", "interactable.gd"]
 var hits := {}
 var failures: Array[String] = []
@@ -176,7 +177,9 @@ func run() -> void:
 	for i in range(3): await physics_frame
 	var door: bool = world.request_action(world.door_target)
 	if door: world.confirm_run_action()
-	verify("room_entry", door and world.current_room=="tavern" and world.run_game.active and world.run_game.vault==900 and world.run_game.cash==300)
+	var run_seed: int = world.run_game.run_seed
+	var run_plan_matches_seed: bool = run_seed > 0 and run_seed <= 2147483646 and world.run_game.variant_plan == RunVariants.generate(world.table_content, world.run_game.scene_id, run_seed)
+	verify("room_entry", door and world.current_room=="tavern" and world.run_game.active and world.run_game.vault==900 and world.run_game.cash==300 and run_plan_matches_seed)
 	world.player.position = Vector3(11.65, 0.02, 1.65)
 	world.player.camera.look_at(world.ledger_door.global_position)
 	for i in range(5): await physics_frame
