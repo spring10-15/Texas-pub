@@ -43,6 +43,8 @@ func run() -> void:
 	var output := ProjectSettings.globalize_path("res://../output/3d")
 	DirAccess.make_dir_recursive_absolute(output)
 	var frames := 0
+	var world_ai_beats := 0
+	var world_empty_actor_beats := 0
 	while world.table_game.state.status != "finished" and frames < 150:
 		frames += 1
 		world.table_delay = 0
@@ -59,6 +61,10 @@ func run() -> void:
 			world.play_action(kind, prior)
 			verify(world.table_game.revision == prior + 1, "Double click during beat is ignored")
 		else:
+			if state.currentActorId.is_empty():
+				world_empty_actor_beats += 1
+			else:
+				world_ai_beats += 1
 			var prior: int = world.table_game.revision
 			var before_beat: Dictionary = world.table_game.public_state()
 			world._process(0.01)
@@ -68,6 +74,8 @@ func run() -> void:
 			verify(view.players[1].holeCards.is_empty() and view.players[2].holeCards.is_empty(), "HUD receives no private opponent cards during play")
 		await process_frame
 	verify(world.table_game.state.status == "finished", "A whole table ends via UI and AI controller")
+	verify(world_ai_beats > 0, "World scheduler exercised at least one opponent decision")
+	verify(world_empty_actor_beats > 0, "World scheduler advances a street when no actor is pending")
 	verify(world.table_game.state.handNumber == 2, "Second hand was played through the HUD")
 	verify(world.seat_panel.leave_button.visible, "Terminal table exposes leave button")
 	var bankroll := 0
