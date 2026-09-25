@@ -48,7 +48,25 @@ func _initialize() -> void:
 			var id: String = "poker_action."+key
 			if ok: hits[id] = {"test":"poker_action_coverage_test.gd","postcondition_verified":true}
 			else: failures.append(id+"/"+table_id); push_error(failures.back())
-	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("poker_action.")).map(func(row): return row.id)
+	var profile_raise := Table.new()
+	profile_raise.start(content.tables["cargo-table"],17)
+	var raised: bool = profile_raise.act("player", "raise", profile_raise.revision)
+	var player_raise_recorded: bool = raised and profile_raise.state.playerPattern.raiseCount == 1 and profile_raise.revision == 2
+	var profile_all_in := Table.new()
+	profile_all_in.start(content.tables["cargo-table"],17)
+	var all_in: bool = profile_all_in.act("player", "all-in", profile_all_in.revision)
+	var player_all_in_recorded: bool = all_in and profile_all_in.state.playerPattern.raiseCount == 1 and profile_all_in.revision == 2
+	var profile_opponent := Table.new()
+	profile_opponent.start(content.tables["cargo-table"],17)
+	var called: bool = profile_opponent.act("player", "call", profile_opponent.revision)
+	var opponent: String = profile_opponent.state.currentActorId
+	var opponent_raised: bool = called and opponent != "player" and profile_opponent.legal_actions(opponent).get("raise", false) and profile_opponent.act(opponent, "raise", profile_opponent.revision)
+	var opponent_not_recorded: bool = opponent_raised and profile_opponent.state.playerPattern.raiseCount == 0
+	if player_raise_recorded and player_all_in_recorded and opponent_not_recorded:
+		hits["poker.player_raise_pattern"] = {"test":"poker_action_coverage_test.gd", "postcondition_verified":true}
+	else:
+		failures.append("poker.player_raise_pattern"); push_error(failures.back())
+	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("poker_action.") or row.id == "poker.player_raise_pattern").map(func(row): return row.id)
 	for id in hits:
 		if id not in expected: failures.append("Uncatalogued hit: "+id)
 	var missing: Array = expected.filter(func(id): return not hits.has(id))

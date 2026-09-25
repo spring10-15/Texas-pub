@@ -46,6 +46,8 @@ def collect():
     for name, (test, prefixes) in SUITES.items():
         report = json.loads((ROOT / f'output/3d/{name}-coverage.json').read_text())
         expected = {i for i in ids if i.split('.')[0] in prefixes}
+        if name == 'poker_action':
+            expected.update(i for i in ids if i == 'poker.player_raise_pattern')
         if report['catalog_sha256'] != digest(CATALOG) or report['source_sha256'] != hashes or report['test_sha256'] != digest(Path(__file__).parent / test):
             raise ValueError(f'{name}: stale source/catalog/test evidence; rerun the suite')
         if name in ('world', 'persistence-restore', 'persistence-capture'):

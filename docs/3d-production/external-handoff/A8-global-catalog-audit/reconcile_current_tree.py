@@ -40,6 +40,8 @@ def main() -> int:
 
     partial_bankroll = 0
     entry_heat_cap = 0
+    settlement_heat_relief = 0
+    player_raise_pattern = 0
     reclassified_nonplayer = 0
     presentation_only = 0
     reclassified_weak = 0
@@ -66,6 +68,26 @@ def main() -> int:
                 "notes": "rooftop-club 入场加成为 1；从风声 5 通过公开 enter_table 成功入座后验证风声封顶 6、现金支付、vault 不变、revision 前进且实际桌型正确。",
             })
             entry_heat_cap += 1
+        if row["source_file"] == "Godot/three_d/rules/run.gd" and row["source_line"] == "Godot/three_d/rules/run.gd:205" and "winHeatRelief" in row["branch_or_guard"]:
+            row.update({
+                "catalog_id": "settlement.heat_relief",
+                "test": "Godot/three_d/tests/settlement_coverage_test.gd::settlement.heat_relief",
+                "evidence_report": f"output/3d/settlement-coverage.json;{LATEST_REPORT}",
+                "evidence_strength": "strong",
+                "disposition": "catalogued_strong",
+                "notes": "盈利结算余烬桌时，测试验证 cash 回收、桌面清理、完成标记与 revision 前进，并精确断言 heat 按 winHeatRelief 从 2 降至 1。",
+            })
+            settlement_heat_relief += 1
+        if row["source_file"] == "Godot/three_d/rules/table.gd" and row["source_line"] == "Godot/three_d/rules/table.gd:119-120" and "playerPattern.raiseCount" in row["branch_or_guard"]:
+            row.update({
+                "catalog_id": "poker.player_raise_pattern",
+                "test": "Godot/three_d/tests/poker_action_coverage_test.gd::poker.player_raise_pattern",
+                "evidence_report": f"output/3d/poker_action-coverage.json;{LATEST_REPORT}",
+                "evidence_strength": "strong",
+                "disposition": "catalogued_strong",
+                "notes": "入口测试分别执行玩家 raise、玩家 all-in 与对手 raise；玩家两种侵略动作将 playerPattern.raiseCount 加一，而对手动作保持为零，验证画像只统计玩家行为。",
+            })
+            player_raise_pattern += 1
         if row["player_reachable"] == "no" and row["disposition"] == "reachable_unmapped":
             row["disposition"] = "unreachable_or_not_transition"
             row["notes"] += " 当前树归因：损坏/篡改存档恢复拒绝或底层写盘失败，不计入正常玩家可达缺口；保留为系统防御分支记录。"
@@ -84,8 +106,8 @@ def main() -> int:
         if "20260925-103506" in row["evidence_report"] or "20260925-105659" in row["evidence_report"]:
             row["evidence_report"] = row["evidence_report"].replace("20260925-103506/report.json", LATEST_REPORT).replace("20260925-105659/report.json", LATEST_REPORT)
 
-    if partial_bankroll != 1 or entry_heat_cap != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or reclassified_weak != 1:
-        raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, weak={reclassified_weak}")
+    if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or reclassified_weak != 1:
+        raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, weak={reclassified_weak}")
 
     current_gaps = [
         row.copy() for row in old_gaps
@@ -93,6 +115,8 @@ def main() -> int:
         and row["catalog_id"] == "-"
         and not (row["source_file"] == "Godot/three_d/rules/run.gd" and row["source_line"] == "Godot/three_d/rules/run.gd:61-62")
         and not (row["source_file"] == "Godot/three_d/rules/run.gd" and row["source_line"] == "Godot/three_d/rules/run.gd:175")
+        and not (row["source_file"] == "Godot/three_d/rules/run.gd" and row["source_line"] == "Godot/three_d/rules/run.gd:205")
+        and not (row["source_file"] == "Godot/three_d/rules/table.gd" and row["source_line"] == "Godot/three_d/rules/table.gd:119-120")
     ]
     weak_evidence = [row.copy() for row in branches if row["disposition"] == "catalogued_weak"]
     for row in current_gaps:
@@ -122,7 +146,7 @@ def main() -> int:
             path = path.strip()
             if path and path != "-" and not (ROOT / path).is_file():
                 raise SystemExit(f"Missing evidence report: {path}")
-    if len(current_gaps) != 31 or any(row["player_reachable"] != "yes" or row["catalog_id"] != "-" for row in current_gaps):
+    if len(current_gaps) != 29 or any(row["player_reachable"] != "yes" or row["catalog_id"] != "-" for row in current_gaps):
         raise SystemExit("Current player-path gap set is inconsistent")
 
     write_csv(AUDIT / "current-tree-branch-inventory.csv", branch_fields, branches)
@@ -142,19 +166,20 @@ def main() -> int:
 - 当前分支清单 SHA-256：`{sha256(AUDIT / 'current-tree-branch-inventory.csv')}`
 - 当前玩家路径缺口清单 SHA-256：`{sha256(AUDIT / 'current-tree-player-path-gaps.csv')}`
 - 当前弱证据清单 SHA-256：`{sha256(AUDIT / 'current-tree-weak-evidence.csv')}`
+- 对账脚本 SHA-256：`{sha256(AUDIT / 'reconcile_current_tree.py')}`
 - 原始 A8 的 `branch-inventory.csv`、`unmapped-reachable.csv` 和审计 README 保留为 382 项冻结锚点，没有覆盖。
 
 ## 当前映射和缺口
 
 - 当前目录 ID 已全部映射：{len(mapped_ids)}/{len(catalog_ids)}。
-- `start.partial_bankroll` 与 `entry.heat_cap` 已在 `lifecycle_coverage_test.gd` / `entry_coverage_test.gd` 中验证并从旧候选表归因到正式 ID。
+- `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief` 与 `poker.player_raise_pattern` 已在对应 lifecycle、entry、settlement 和 poker 覆盖测试中验证并从旧候选表归因到正式 ID。
 - 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`；其中 1 条 yes 已有 `world.services_open` ID，但实体入口后置证据偏弱。当前树把 6 条 no 排除出玩家路径缺口，把该 services 行移入弱证据表；另 1 条仅显示试玩存档提示、不改变权威状态，也分类为非状态转移。
 - 当前仍有 {len(current_gaps)} 条标为玩家可达、尚无目录 ID 的候选，详见 `current-tree-player-path-gaps.csv`。这仍需逐条审查后才能新增语义 ID；全局分母尚未冻结。弱证据行见 `current-tree-weak-evidence.csv`。
 - 分支行 disposition 计数：`{dict(counts)}`。
 
 ## 限制
 
-此对账仅把原 382 项审计映射到当前目录，并补入已验证的高风声入座封顶结果、修正明确的可达性/展示项分类。它没有重新逐行审计全部 16 个源码文件，也没有证明剩余候选均是独立状态转移。因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
+此对账仅把原 382 项审计映射到当前目录，并补入已验证的本金封顶、入座风声封顶、盈利降风声、玩家行为画像结果及明确的可达性/展示项分类。它没有重新逐行审计全部 16 个源码文件，也没有证明剩余候选均是独立状态转移。因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
 
 ## 重建
 
@@ -164,6 +189,8 @@ def main() -> int:
 python3 docs/3d-production/external-handoff/A8-global-catalog-audit/reconcile_current_tree.py
 python3 output/external-handoff/A8/build_a8.py --check
 ```
+
+第二条命令只校验原始 382 项冻结锚点；它会把新增 ID 报作锚点漂移提示，这是预期行为。当前树归因以本脚本生成的 385 项 overlay 为准。
 """
     (AUDIT / "current-tree-reconciliation.md").write_text(text, encoding="utf-8")
     print(f"CURRENT_TREE ids={len(catalog_ids)}/{len(mapped_ids)} rows={len(branches)} gaps={len(current_gaps)} weak={len(weak_evidence)} disposition={dict(counts)}")

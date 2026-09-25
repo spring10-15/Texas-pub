@@ -66,10 +66,10 @@
 
 | 源入口 | 当前目录 entry 与数量 | 当前测试/报告候选 | 初步证据边界 |
 |---|---|---|---|
-| `RunCheckpoint.capture/restore` | `capture` 2；`restore` 7 | `persistence_capture_coverage_test.gd`、`run_restore_bounds_test.gd`、`world_restore_atomic_test.gd`；`persistence-capture/run/restore-coverage.json` | capture 测完整字段与深拷贝隔离；restore 涵盖缺省迁移、字段/预约/桌定义校验与失败输入不变。没有真实历史用户存档样本，旧版恢复只证明当前合成兼容夹具。 |
-| `TableCheckpoint.capture/restore` | `capture` 2；`restore` 4 | `persistence_capture_coverage_test.gd`、`table_checkpoint_test.gd`；`persistence-capture/table-coverage.json` | 捕获字段、隔离、非法快照拒绝、贡献/下注额一致性与 RNG 连续恢复有断言；需继续核对每条拒绝分支是否映射同一合法结果或独立结果。 |
+| `RunCheckpoint.capture/restore` | `capture` 2；`restore` 7 | `persistence_capture_coverage_test.gd`、`run_restore_bounds_test.gd`、`world_restore_atomic_test.gd`；`output/3d/persistence-capture-coverage.json`、`output/3d/persistence-run-coverage.json`、`output/3d/persistence-restore-coverage.json` | capture 测完整字段与深拷贝隔离；restore 涵盖缺省迁移、字段/预约/桌定义校验与失败输入不变。没有真实历史用户存档样本，旧版恢复只证明当前合成兼容夹具。 |
+| `TableCheckpoint.capture/restore` | `capture` 2；`restore` 4 | `persistence_capture_coverage_test.gd`、`table_checkpoint_test.gd`；`output/3d/persistence-capture-coverage.json`、`output/3d/persistence-table-coverage.json` | 捕获字段、隔离、非法快照拒绝、贡献/下注额一致性与 RNG 连续恢复有断言；需继续核对每条拒绝分支是否映射同一合法结果或独立结果。 |
 | `SaveStore.read_checkpoint/write_checkpoint` | `read_checkpoint` 8；`write_checkpoint` 5 | `save_store_test.gd`；`persistence-io-coverage.json` | 读错/不支持版本保持文件字节，临时文件写回验证失败与原子替换失败受测；不可读分支用打开回调拒绝模拟，不等于 OS 权限实测。 |
-| World `checkpoint_state/load_checkpoint/restore_checkpoint/save_checkpoint` | 合计 22 个目录 entry 结果 | `persistence_capture_coverage_test.gd`、`world_restore_atomic_test.gd`、`world_rng_replay_test.gd`；`persistence-capture/restore/replay-coverage.json` | 失败恢复的 World 全快照不变、读档损坏/未来版本处理、桌中 RNG 重放有报告；只覆盖当前列举的错误输入与 160 步重放样本，不证明任意无效数据穷尽。 |
+| World `checkpoint_state/load_checkpoint/restore_checkpoint/save_checkpoint` | 合计 22 个目录 entry 结果 | `persistence_capture_coverage_test.gd`、`world_restore_atomic_test.gd`、`world_rng_replay_test.gd`；`output/3d/persistence-capture-coverage.json`、`output/3d/persistence-restore-coverage.json`、`output/3d/persistence-replay-coverage.json` | 失败恢复的 World 全快照不变、读档损坏/未来版本处理、桌中 RNG 重放有报告；只覆盖当前列举的错误输入与 160 步重放样本，不证明任意无效数据穷尽。 |
 
 本组当前映射核数为 50 个目录结果（Run capture/restore 9、Table capture/restore 6、SaveStore 13、World capture/load/restore/save 22）。现有 `output/3d` 报告最新快照分别显示：persistence capture 6/6、Run restore 6/6、Table restore 4/4、I/O 13/13、World restore 18/18、RNG replay 2/2，均无 missing/failure；这只证明登记结果报告可命中，不等于源码入口已穷举，也不等于真实历史存档样本覆盖。
 
@@ -117,6 +117,6 @@
 
 ### 当前工作区复核（2026-09-25）
 
-后续登记了 `start.partial_bankroll`，并新增 `entry.heat_cap`；当前目录为 384 个 ID。`lifecycle_coverage_test.gd` 用 vault=120 验证金库归零、现金/本金=120、财富守恒、Run 激活及 revision 增加；`entry_coverage_test.gd` 从屋顶会所风声 5 入座，验证加成后封顶为 6、买入扣款、金库不变及 revision 前进。`world_coverage_test.gd` 的 `room_entry` 也新增了正种子与完整 `variant_plan` 一致性断言。当前全量回归 59/59，报告 `output/3d/regression/20260925-111306/report.json`；覆盖汇总为 `verified=384 catalogued=384 global_coverage=unavailable`，汇总器单测 3/3。
+后续登记了 `start.partial_bankroll`、`entry.heat_cap` 和 `settlement.heat_relief`；当前目录为 385 个 ID。部分本金、屋顶会所风声封顶和盈利余烬桌降风声都有完整后置断言，结算专项为 22/22。`world_coverage_test.gd` 的 `room_entry` 也新增了正种子与完整 `variant_plan` 一致性断言。当前全量回归 59/59，报告 `output/3d/regression/20260925-112613/report.json`；覆盖汇总为 `verified=385 catalogued=385 global_coverage=unavailable`，汇总器单测 3/3。
 
-外部 A8 的 `README.md`、CSV 与 `build_a8.py --check` 对应冻结目录哈希 `087971c9…`（382 项），因此仍是有效的历史审计快照，不能直接报告为当前树的缺口数。当前对账产物见 `current-tree-reconciliation.md` 与三份 `current-tree-*.csv`：384/384 个当前目录 ID 均有归因；冻结表的 40 行中，6 条 `player_reachable=no` 已从玩家路径缺口剔出，1 条已有 `world.services_open` ID 的吧台入口改列弱证据，1 条纯试玩存档提示改列非状态转移；`start.partial_bankroll` 与 `entry.heat_cap` 已登记。当前仍有 31 条玩家可达且未映射 ID 的候选、18 条弱证据分支，尚未逐条完成新一轮源代码审查；不得声称全局分母完整或 Phase 1 通过。
+外部 A8 的 `README.md`、CSV 与 `build_a8.py --check` 对应冻结目录哈希 `087971c9…`（382 项），因此仍是有效的历史审计快照，不能直接报告为当前树的缺口数。当前对账产物见 `current-tree-reconciliation.md` 与三份 `current-tree-*.csv`：385/385 个当前目录 ID 均有归因；冻结表的 40 行中，6 条 `player_reachable=no` 已从玩家路径缺口剔出，1 条已有 `world.services_open` ID 的吧台入口改列弱证据，1 条纯试玩存档提示改列非状态转移；`start.partial_bankroll`、`entry.heat_cap` 与 `settlement.heat_relief` 已登记。当前仍有 30 条玩家可达且未映射 ID 的候选、18 条弱证据分支，尚未逐条完成新一轮源代码审查；不得声称全局分母完整或 Phase 1 通过。

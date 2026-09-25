@@ -9,7 +9,7 @@
 
 > **读这句话必须先看锚点**：`382/382` 与 `40 条未登记` 都是 **HEAD `8d8464e1` / 目录 `087971c9…` / 382 个 ID** 这一组基线上的结论。交付后工作区已增至 **383** 个 ID（未提交），详见 §2.1 —— 那 40 条里已有一条被主线采纳。
 
-**当前树复核**：后续又登记了 `entry.heat_cap`，目录现为 384 个 ID。请使用 [当前树对账记录](current-tree-reconciliation.md) 与 `current-tree-branch-inventory.csv`；当前 384/384 个 ID 均可归因，另有 31 条可达无 ID 候选和 18 条弱证据项尚待逐条审查。下文的原始报告、CSV 与 `build_a8.py --check` 仍用于复现 382 项冻结锚点，不代表当前分母闭合。
+**当前树复核**：后续又登记了 `entry.heat_cap`、`settlement.heat_relief` 与 `poker.player_raise_pattern`，目录现为 386 个 ID。请使用 [当前树对账记录](current-tree-reconciliation.md) 与 `current-tree-branch-inventory.csv`；当前 386/386 个 ID 均可归因，另有 29 条可达无 ID 候选和 18 条弱证据项尚待逐条审查。下文的原始报告、CSV 与 `build_a8.py --check` 仍用于复现 382 项冻结锚点，不代表当前分母闭合。
 
 ## 1. 与主 Agent 底稿的关系
 
@@ -183,9 +183,9 @@ git diff --numstat 5178244..8d8464e -- Godot/three_d/rules/{run,table,poker,oppo
 
 ## 9. 附带发现（超出本任务范围，仅记录）
 
-### 9.1 本目录内仍有 3 条断链，全部在主 Agent 的底稿里
+### 9.1 本目录曾有 3 条断链，已于 2026-09-25 修复
 
-`python3 output/external-handoff/C1/verify_links.py` 当前退出码为 1，报出 3 条**两级解析都失败**的引用，全部位于 `source-audit-notes.md`（**主 Agent 的文件，本审计不改动它**）：
+早期 `python3 output/external-handoff/C1/verify_links.py` 曾在 `source-audit-notes.md` 报出 3 条**两级解析都失败**的引用：
 
 | 位置 | 引用 | 问题 |
 |---|---|---|
@@ -193,11 +193,11 @@ git diff --numstat 5178244..8d8464e -- Godot/three_d/rules/{run,table,poker,oppo
 | `source-audit-notes.md:70` | 「persistence-capture/table-coverage.json」 | 同上 |
 | `source-audit-notes.md:72` | 「persistence-capture/restore/replay-coverage.json」 | 同上 |
 
-实际的报告名形如 output/3d/persistence-capture-coverage.json 一类（**此处故意不加反引号**，因为被压缩的那个串本身不存在）。修法是拆成各自的真实路径，或在正文里去掉反引号改成普通文字说明。
+原因是把多份报告压成斜杠串。主 Agent 已将其改为各自真实的 `output/3d/*.json` 路径；本次重跑 `verify_links.py` 后，Markdown 链接不可解析数与两级解析失败数均为 0。
 
 > **本报告自身的纠错记录（2026-09-25 复核）：** 本表初版把上面三个坏引用写成了反引号路径。按本项目惯例反引号 = 「可打开的引用」，那等于把主 Agent 的 3 条断链复制成了本报告的 3 条，且与本表上文"故意不加反引号"的说法自相矛盾。现已改为「」引用。修前 `verify_links.py` 退出码 1（本目录合计 6 条断链：主 Agent 底稿 3 条 + 本报告误加 3 条），修后本报告贡献 0 条。
 
-**本报告与 A7 复核报告对链接核验是干净的**：新增的 `README.md`（本目录）与 A7 目录的 `README.md` 贡献 0 条断链（修上述反引号之后复验）。
+本报告与 A7 复核报告此前各自的链接检查结论保留为历史记录；当前全目录链接检查结果为 0 条断链。
 
 ### 9.2 其他
 
@@ -224,7 +224,7 @@ python3 output/external-handoff/A8/build_a8.py --check   # 只核验，不重写
 当前结果：**退出码 0，`REFUTE=0`**。
 
 - 在**交付锚点**（382 个 ID）上：`CONFIRM=25`，且明确输出「目录与冻结锚点 `8d8464e1` 逐字一致（未漂移）」。
-- 在**当前工作区**（383 个 ID，未提交）上：`CONFIRM=22`，退出码仍为 0，漂移以 note 明确报出。
+- 在**首次交付后复核的工作区**（383 个 ID，未提交）上：`CONFIRM=22`，退出码仍为 0，漂移以 note 明确报出。后续 385 项当前树对账不使用此锚点核验结果，见 [当前树对账记录](current-tree-reconciliation.md)。
 
 核验器会重新推导、不采信分片里的任何结论性数字，具体检查：
 

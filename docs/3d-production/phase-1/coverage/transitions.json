@@ -1318,6 +1318,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "poker.player_raise_pattern",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "act",
+      "outcome": "accepted updates player raise profile for raise/all-in, not opponent actions"
+    },
+    {
       "id": "poker_discount.passive_action_preserves",
       "source": "Godot/three_d/rules/table.gd",
       "entry": "act",
