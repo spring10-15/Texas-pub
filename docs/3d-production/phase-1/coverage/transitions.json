@@ -670,6 +670,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "settlement.heat_relief",
+      "source": "Godot/three_d/rules/run.gd",
+      "entry": "settle_table",
+      "outcome": "profitable embers-table settlement reduces heat by configured relief"
+    },
+    {
       "id": "settlement.break_even",
       "source": "Godot/three_d/rules/run.gd",
       "entry": "settle_table",
