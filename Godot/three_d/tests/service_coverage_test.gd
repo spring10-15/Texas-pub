@@ -45,6 +45,26 @@ func _initialize() -> void:
 		var id: String = "service."+key
 		if ok: hits[id] = {"test":"service_coverage_test.gd","postcondition_verified":true}
 		else: failures.append(id); push_error(id)
+	var valuable_sales := {}
+	for item_id in content.items:
+		if content.items[item_id].kind != "valuable": continue
+		var run := Run.new(content)
+		run.start(run.revision,"smoky-den",0)
+		run.inventory.append(item_id)
+		var cash_before: int = run.cash
+		var wealth_before: int = run.vault + run.cash + run.valuable_total()
+		var action_points_before: int = run.action_points
+		var revision_before: int = run.revision
+		var amount: int = int(content.items[item_id].value)
+		var accepted: bool = run.service_reason("sell",item_id).is_empty() and run.service_action("sell",item_id,run.revision)
+		var balanced: bool = run.cash == cash_before + amount and item_id not in run.inventory and run.action_points == action_points_before - 1 and run.revision == revision_before + 1 and run.vault + run.cash + run.valuable_total() == wealth_before
+		valuable_sales[item_id] = {"value":amount,"sold":accepted,"postcondition_verified":accepted and balanced}
+		if not accepted or not balanced:
+			failures.append("service.sell_valuable."+item_id)
+			push_error("service.sell_valuable."+item_id)
+	if valuable_sales.size() != 10:
+		failures.append("Expected 10 valuable sale cases")
+		push_error("Expected 10 valuable sale cases")
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("service.")).map(func(row): return row.id)
 	for id in hits:
 		if id not in expected: failures.append("Uncatalogued hit: "+id)
@@ -53,7 +73,7 @@ func _initialize() -> void:
 	for file in DirAccess.get_files_at("res://three_d/rules"):
 		if not (file.ends_with(".gd") or file.ends_with(".json")): continue
 		hashes[file] = FileAccess.get_file_as_string("res://three_d/rules/"+file).sha256_text()
-	var report := {"scope":"service subgraph only","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/service_coverage_test.gd").sha256_text(),"catalog_sha256":FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json").sha256_text(),"denominator":expected.size(),"numerator":hits.size(),"missing":missing,"failures":failures,"hits":hits,"overall_state_transition_coverage":null,"overall_status":"Other families not yet enumerated; no global percentage claimed."}
+	var report := {"scope":"service subgraph only; includes the sale postcondition for all 10 valuable item definitions","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/service_coverage_test.gd").sha256_text(),"catalog_sha256":FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json").sha256_text(),"denominator":expected.size(),"numerator":hits.size(),"missing":missing,"failures":failures,"hits":hits,"valuable_sales":valuable_sales,"overall_state_transition_coverage":null,"overall_status":"Other families not yet enumerated; no global percentage claimed."}
 	FileAccess.open("res://../output/3d/service-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("SERVICE_COVERAGE covered=",hits.size()," total=",expected.size()," missing=",missing," failures=",failures)
 	quit(0 if failures.is_empty() and missing.is_empty() else 1)
