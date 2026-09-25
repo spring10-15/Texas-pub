@@ -12,9 +12,12 @@ func run_tests() -> void:
 	var content: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
 	var hud := HUD.new()
 	root.add_child(hud)
+	var risk_labels := {"Low":"低", "Medium":"中", "Medium-High":"中高", "High":"高"}
 	for table_id in content.tables:
 		var t := Table.new()
 		t.start(content.tables[table_id],7)
+		hud.pregame(300, content.tables[table_id])
+		verify(hud.status.text.contains("风险：" + risk_labels[content.tables[table_id].publicInfo.risk]), "Configured risk is visible before buy-in " + table_id)
 		hud.refresh(t.public_state())
 		var due: int = maxi(0, int(t.state.currentBet)-int(t.state.players[0].currentBet))
 		verify(hud.status.text.contains("跟注实付 %d" % due) and hud.status.text.contains("跟注后底池 %d" % (int(t.state.pot)+due)), "Call cost and resulting pot visible "+table_id)
