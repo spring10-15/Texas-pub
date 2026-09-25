@@ -1,10 +1,10 @@
 # 执行任务：A8 当前目录归因复核
 
-> 状态：主 Agent 已完成当前树对账（386 个 ID 全映射；29 条可达无 ID 候选、18 条弱证据项继续待核）。产物见 [current-tree-reconciliation.md](current-tree-reconciliation.md) 与三份 `current-tree-*.csv`。本任务书保留为验收范围记录，无需再分派。
+> 状态：主 Agent 已完成当前树对账（388 个 ID 全映射；27 条可达无 ID 候选、18 条弱证据项继续待核）。产物见 [current-tree-reconciliation.md](current-tree-reconciliation.md) 与三份 `current-tree-*.csv`。本任务书保留为验收范围记录，无需再分派。
 
 ## 目标
 
-在 A8 原报告冻结的 382 项目录基础上，生成一份可独立复验的**当前工作区归因增量**。当前 `transitions.json` 有 386 个 ID，已登记 `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief` 与 `poker.player_raise_pattern`；原报告仍作为 382 项锚点快照保留，不覆盖、不重写。
+在 A8 原报告冻结的 382 项目录基础上，生成一份可独立复验的**当前工作区归因增量**。当前 `transitions.json` 有 388 个 ID，已登记 `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`world.search_open` 与 `world.product_open`；原报告仍作为 382 项锚点快照保留，不覆盖、不重写。
 
 ## 操作步骤
 
@@ -26,7 +26,7 @@
 
 ## 完成标准
 
-- 385 个当前目录 ID 全部且仅按有效行映射；没有旧 `382/382` 被误称为当前结论。
+- 当前目录 ID 全部且仅按有效行映射；没有旧 `382/382` 被误称为当前结论。
 - 所有“未映射可达”行均有 `player_reachable=yes` 或逐条解释为何属游戏调度可达；不可达/未知项不计入可达缺口总数。
 - `start.partial_bankroll`、`entry.heat_cap` 与 `settlement.heat_relief` 有当前强证据归因。
 - 任何当前源码/目录变化都能被哈希和校验器识别；旧锚点报告仍可原样复验。

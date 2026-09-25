@@ -1,6 +1,6 @@
 # 执行任务：A8 当前树可达缺口逐行核验
 
-> 状态：已完成。审计开始时核验输入 30 行；其中 1 行现映射到 `poker.player_raise_pattern`，当前树对账剩 29 条可达无 ID 候选、18 条弱证据项。历史 30 行逐条结果保留在 `current-tree-gap-triage.csv` / `.md`，当前基线见 `current-tree-reconciliation.md`。
+> 状态：已完成。审计开始时核验输入 30 行；其中 1 行映射到 `poker.player_raise_pattern`，另有搜索入口与货架入口现由 `world.search_open`、`world.product_open` 覆盖。当前树对账剩 27 条可达无 ID 候选、18 条弱证据项。历史 30 行逐条结果保留在 `current-tree-gap-triage.csv` / `.md`，当前基线见 `current-tree-reconciliation.md`。
 
 ## 目标
 

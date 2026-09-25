@@ -347,6 +347,25 @@ func run() -> void:
 	world.service_action("intel", "cargo-table", world.run_game.revision)
 	verify("services_intel", services_run_started and world.services_panel.visible and world.run_game.known_rules == ["cargo-table"] and world.run_game.action_points == intel_before.action_points - 1 and world.run_game.revision == intel_before.revision + 1 and world.run_game.cash == intel_before.cash and world.run_game.service_view("bar").revision == world.run_game.revision)
 	world.close_services()
+	var search_anchor: Area3D = world.get_node("Tavern/SearchSite")
+	var search_before: Dictionary = RunCheckpoint.capture(world.run_game)
+	var search_aimed: bool = await aim_room_anchor(world, search_anchor)
+	var search_opened: bool = search_aimed and world.request_action(search_anchor)
+	verify("search_open", search_opened and world.services_panel.visible and world.service_mode == "search" and world.product_id == "cargo-table" and not world.player.controls_enabled and RunCheckpoint.capture(world.run_game) == search_before)
+	world.close_services()
+	var shop_anchor: Area3D
+	for node in world.get_node("Tavern/ShopObjects").get_children():
+		if node is Area3D and str(node.action_id).begins_with("shop:"):
+			shop_anchor = node
+			break
+	var product_opened := false
+	if shop_anchor != null:
+		var shop_item: String = str(shop_anchor.action_id).trim_prefix("shop:")
+		var product_before: Dictionary = RunCheckpoint.capture(world.run_game)
+		var shop_aimed: bool = await aim_room_anchor(world, shop_anchor)
+		product_opened = shop_aimed and world.request_action(shop_anchor) and world.services_panel.visible and world.service_mode == "product" and world.product_id == shop_item and not world.player.controls_enabled and RunCheckpoint.capture(world.run_game) == product_before
+		world.close_services()
+	verify("product_open", product_opened)
 	var product_id := ""
 	for stocked_id in world.run_game.shop_stock():
 		if world.run_game.service_reason("buy", stocked_id).is_empty():

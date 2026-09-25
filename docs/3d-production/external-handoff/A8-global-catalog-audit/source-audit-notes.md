@@ -117,6 +117,6 @@
 
 ### 当前工作区复核（2026-09-25）
 
-后续登记了 `start.partial_bankroll`、`entry.heat_cap` 和 `settlement.heat_relief`；当前目录为 385 个 ID。部分本金、屋顶会所风声封顶和盈利余烬桌降风声都有完整后置断言，结算专项为 22/22。`world_coverage_test.gd` 的 `room_entry` 也新增了正种子与完整 `variant_plan` 一致性断言。当前全量回归 59/59，报告 `output/3d/regression/20260925-112613/report.json`；覆盖汇总为 `verified=385 catalogued=385 global_coverage=unavailable`，汇总器单测 3/3。
+后续登记了 `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`world.search_open` 与 `world.product_open`；当前目录为 388 个 ID。部分本金、屋顶会所风声封顶、盈利余烬桌降风声、玩家加注画像与搜索/货架服务入口都有具体后继断言。此段证据状态随最新回归报告刷新；全局分母仍未冻结。
 
-外部 A8 的 `README.md`、CSV 与 `build_a8.py --check` 对应冻结目录哈希 `087971c9…`（382 项），因此仍是有效的历史审计快照，不能直接报告为当前树的缺口数。当前对账产物见 `current-tree-reconciliation.md` 与三份 `current-tree-*.csv`：385/385 个当前目录 ID 均有归因；冻结表的 40 行中，6 条 `player_reachable=no` 已从玩家路径缺口剔出，1 条已有 `world.services_open` ID 的吧台入口改列弱证据，1 条纯试玩存档提示改列非状态转移；`start.partial_bankroll`、`entry.heat_cap` 与 `settlement.heat_relief` 已登记。当前仍有 30 条玩家可达且未映射 ID 的候选、18 条弱证据分支，尚未逐条完成新一轮源代码审查；不得声称全局分母完整或 Phase 1 通过。
+外部 A8 的 `README.md`、CSV 与 `build_a8.py --check` 对应冻结目录哈希 `087971c9…`（382 项），因此仍是有效的历史审计快照，不能直接报告为当前树的缺口数。当前对账产物见 `current-tree-reconciliation.md` 与三份 `current-tree-*.csv`：现有 ID 全部有归因；冻结表的 40 行中，6 条 `player_reachable=no` 已从玩家路径缺口剔出，1 条已有 `world.services_open` ID 的吧台入口改列弱证据，1 条纯试玩存档提示改列非状态转移；后续新增 ID 的归因见当前树对账记录。剩余候选仍未全部完成独立判断；不得声称全局分母完整或 Phase 1 通过。
