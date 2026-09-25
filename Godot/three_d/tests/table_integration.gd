@@ -59,7 +59,10 @@ func run() -> void:
 			world.play_action(kind, prior)
 			verify(world.table_game.revision == prior + 1, "Double click during beat is ignored")
 		else:
-			world.advance_table_beat()
+			var prior: int = world.table_game.revision
+			var before_beat: Dictionary = world.table_game.public_state()
+			world._process(0.01)
+			verify(world.table_game.revision == prior + 1 and world.table_game.public_state() != before_beat, "World process advances exactly one AI action or street")
 		var view: Dictionary = world.table_game.public_state()
 		if view.status == "playing":
 			verify(view.players[1].holeCards.is_empty() and view.players[2].holeCards.is_empty(), "HUD receives no private opponent cards during play")

@@ -91,12 +91,27 @@ func run_tests() -> void:
 		await physics_frame
 	world.request_action(world.table_target)
 	world.start_table(301)
+	world.table_delay = 0
 	world.open_services()
-	var turn: int = world.table_game.revision
-	world._process(10)
-	world.play_action("fold", turn)
-	verify(world.table_game.revision == turn, "Services freeze table progression and hidden buttons")
 	world.service_action("lens", "marked-lens", world.run_game.revision)
+	world.close_services()
+	if world.table_game.state.currentActorId == "player":
+		var legal: Dictionary = world.table_game.legal_actions("player")
+		var action: String = "check" if legal.get("check", false) else "call"
+		world.play_action(action, world.table_game.revision)
+	world.table_delay = 0
+	var opponent_turn: bool = world.table_game.state.status == "playing" and world.table_game.state.currentActorId != "player" and not world.table_game.state.currentActorId.is_empty()
+	world.open_services()
+	var service_frozen: Dictionary = world.checkpoint_state()
+	world._process(10)
+	world.advance_table_beat()
+	world.play_action("fold", world.table_game.revision)
+	verify(opponent_turn and world.checkpoint_state() == service_frozen, "Services freeze an AI turn, direct beat advance, and hidden table actions")
+	world.close_services()
+	var before_ai_beat: Dictionary = world.checkpoint_state()
+	var ai_revision: int = world.table_game.revision
+	world._process(0.01)
+	verify(world.table_game.revision == ai_revision + 1 and world.checkpoint_state() != before_ai_beat, "Closing services resumes one AI action through World._process")
 	if OS.get_cmdline_user_args().has("--capture"):
 		for i in range(12):
 			await process_frame
@@ -131,7 +146,10 @@ func run_tests() -> void:
 	verify(fresh.run_game.cash == 200 and fresh.run_game.used_tools == ["marked-lens"], "Reload does not charge buy-in or undo item usage")
 	verify(fresh.table_game.state.deck == world.table_game.state.deck, "Private deck preserved in real scene")
 	fresh.table_delay = 0
-	fresh.play_action("fold", fresh.table_game.revision)
+	if fresh.table_game.state.currentActorId == "player":
+		fresh.play_action("fold", fresh.table_game.revision)
+	else:
+		fresh.advance_table_beat()
 	verify(fresh.table_game.revision == world.table_game.revision + 1, "Restored HUD can continue legally")
 	fresh.saving_enabled = false
 	DirAccess.remove_absolute(path)

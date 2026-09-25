@@ -163,8 +163,11 @@ func run_tests() -> void:
 	world.travel("tavern")
 	world.run_game.cash = 9
 	world.run_game.heat = 6
-	world.check_pressure()
-	verify(world.current_room == "stash" and world.run_game.last_result.abandoned and world.run_game.last_result.forced and world.economy_label.text.contains("风声封锁") and world.economy_label.text.contains("被迫放弃本局") and world.economy_label.text.contains("损失现金 9"), "Forced loss explains why no exit was available")
+	world.open_services("bar")
+	var pressure_action: bool = world.services_panel.visible and world.run_game.service_view("bar").actions.any(func(action): return action.kind == "intel" and action.id == "cargo-table" and action.reason.is_empty())
+	if pressure_action:
+		world.service_action("intel", "cargo-table", world.run_game.revision)
+	verify(pressure_action and world.current_room == "stash" and not world.services_panel.visible and world.run_game.last_result.abandoned and world.run_game.last_result.forced and world.economy_label.text.contains("风声封锁") and world.economy_label.text.contains("被迫放弃本局") and world.economy_label.text.contains("损失现金 9"), "Pressure enforcement closes services and forces the player back to stash")
 	var report := {"checks":checks, "failed":failures.size(), "failures":failures}
 	print("ROUTES_ITEMS ", JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)
