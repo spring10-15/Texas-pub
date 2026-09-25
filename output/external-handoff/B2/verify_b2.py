@@ -10,6 +10,7 @@
 """
 import csv
 import json
+import itertools
 import pathlib
 import re
 import struct
@@ -64,6 +65,7 @@ BUILD_CHARS = read(ROOT / 'assets/blender/characters/build_characters.py')
 ART_TEST = read(GODOT / 'tests/art_integration_test.gd')
 CHAR_TEST = read(GODOT / 'tests/characters_test.gd')
 CHARS_GD = read(GODOT / 'scripts/characters.gd')
+SEARCH_EVENTS = read(GODOT / 'rules/search_events.gd')
 
 ITEM_ROWS = rows('items.csv')
 CHAR_ROWS = rows('characters.csv')
@@ -261,36 +263,117 @@ chk('B2-11y', 'extract() / abandon() 均清空背包',
     'inventory.clear()' in gd_function(RUN, 'extract') and 'inventory.clear()' in gd_function(RUN, 'abandon'),
     'extract=%s abandon=%s' % ('inventory.clear()' in gd_function(RUN, 'extract'), 'inventory.clear()' in gd_function(RUN, 'abandon')))
 
-# ---------------- 12. 10 件贵重物获得路径与 run.gd match 一致 ----------------
-# 注意：match 块里还含 4 个牌桌 id（"cargo-table" 等），必须扣掉才是「发放的道具集合」。
-TABLE_IDS = set(CONTENT['tables'])
-match_block = '\n'.join(RUN_LINES[197:202])
-granted = set(re.findall(r'"([a-z\-]+)"', match_block)) - TABLE_IDS
-chk('B2-12a', 'run.gd:198-202 奖励 match 覆盖全部 10 件贵重物（扣除 4 个牌桌 id 后集合相等）',
-    granted == set(valuable),
-    '多出=%s 缺少=%s' % (sorted(granted - set(valuable)), sorted(set(valuable) - granted)))
+# ---------------- 12. 10 件贵重物获得路径与当前 rewardRules 一致 ----------------
+def reward_rule_matches(rule, stack, inventory, collateral_returned):
+    if rule.get('minStack') is not None and stack < int(rule['minStack']):
+        return False
+    if rule.get('inventoryHas') is not None and rule['inventoryHas'] not in inventory:
+        return False
+    if rule.get('inventoryMissing') is not None and rule['inventoryMissing'] in inventory:
+        return False
+    if rule.get('collateralReturned') is not None and bool(rule['collateralReturned']) != collateral_returned:
+        return False
+    return True
+
+
+def reward_outcomes(table_id, definition):
+    rules = definition.get('rewardRules', [])
+    supported_keys = {'item', 'minStack', 'inventoryHas', 'inventoryMissing', 'collateralReturned'}
+    if any(set(rule) - supported_keys for rule in rules):
+        return set(), {'unsupported_rule_keys': sorted(set().union(*(set(rule) for rule in rules)) - supported_keys)}
+    buy_in = int(definition['buyIn'])
+    max_stack = buy_in * (1 + len(definition['opponentIds']))
+    stacks = {buy_in + 1, max_stack}
+    for rule in rules:
+        threshold = int(rule.get('minStack', buy_in + 1))
+        stacks.add(max(buy_in + 1, min(max_stack, threshold)))
+        if threshold > buy_in + 1:
+            stacks.add(min(max_stack, threshold - 1))
+    item_ids = set(valuable)
+    for rule in rules:
+        for key in ('inventoryHas', 'inventoryMissing'):
+            if rule.get(key):
+                item_ids.add(str(rule[key]))
+    item_ids = sorted(item for item in item_ids if item in CONTENT['items']
+                      and int(CONTENT['items'][item].get('slots', 1)) <= int(CONTENT['inventorySlots']))
+    inventories = []
+    for size in range(len(item_ids) + 1):
+        for combo in itertools.combinations(item_ids, size):
+            if sum(int(CONTENT['items'][item].get('slots', 1)) for item in combo) <= int(CONTENT['inventorySlots']):
+                inventories.append(set(combo))
+    returned_values = [False, True] if definition.get('allowCollateral', False) else [False]
+    reached = set()
+    witnesses = {}
+    for stack, inventory, returned in itertools.product(sorted(stacks), inventories, returned_values):
+        if returned and not inventory:
+            continue
+        for rule in rules:
+            if not reward_rule_matches(rule, stack, inventory, returned):
+                continue
+            item = str(rule.get('item', ''))
+            if item and item in CONTENT['items']:
+                used_slots = sum(int(CONTENT['items'][owned].get('slots', 1)) for owned in inventory)
+                if used_slots + int(CONTENT['items'][item].get('slots', 1)) <= int(CONTENT['inventorySlots']):
+                    reached.add(item)
+                    witnesses.setdefault(item, {'table': table_id, 'stack': stack, 'inventory': sorted(inventory), 'collateral_returned': returned})
+            break
+    return reached, witnesses
+
+
+reward_rule_ids = set()
+granted = set()
+reward_witnesses = {}
+reward_mismatches = []
+reached_by_table = {}
+for tid, table in CONTENT['tables'].items():
+    rules = table.get('rewardRules', [])
+    rule_ids = {str(rule.get('item', '')) for rule in rules if rule.get('item')}
+    reward_rule_ids |= rule_ids
+    reached, witnesses = reward_outcomes(tid, table)
+    reached_by_table[tid] = reached
+    granted |= reached
+    reward_witnesses.update(witnesses)
+    impossible = sorted(rule_ids - reached)
+    if impossible:
+        reward_mismatches.append({'table': tid, 'unreachable_rewards': impossible})
+chk('B2-12a', '四桌 rewardRules 的奖励项覆盖全部 10 件贵重物，且每件至少有可达条件',
+    granted == set(valuable) and not reward_mismatches,
+    {'多出': sorted(granted - set(valuable)), '缺少': sorted(set(valuable) - granted), '不可达规则': reward_mismatches, '样例条件': reward_witnesses})
 bad = [r['item_id'] for r in ITEM_ROWS
        if r['类别'] == '物品-贵重'
        and not re.search(r'(run\.gd:|search_events\.gd:)', r['拿取动作'])]
 chk('B2-12b', '每件贵重物的「拿取动作」列都写明自己的代码获得路径', not bad, bad)
 chk('B2-12c', '每件贵重物都有至少一条获得路径（无死道具）',
-    len(granted) == 10 and set(granted) == set(valuable))
+    len(granted) == len(valuable) and set(granted) == set(valuable)
+    and all(item in reward_witnesses or re.search(r'"item"\s*:\s*"' + re.escape(item) + r'"', SEARCH_EVENTS) for item in valuable),
+    {'通过桌奖规则': sorted(granted), '额外搜索物品': sorted(item for item in valuable if re.search(r'"item"\s*:\s*"' + re.escape(item) + r'"', SEARCH_EVENTS))})
 
 # ---------------- 13. 奖励候选展示与条件结算（B2 README 的关键结论） ----------------
 reward_mismatches = []
-settle_body = gd_function(RUN, 'settle_table')
+reward_body = gd_function(RUN, 'reward_for_table')
+pool_body = gd_function(RUN, 'table_reward_pool')
+service_body = gd_function(RUN, 'service_view')
+source_is_current = all(token in reward_body for token in [
+    'definition.get("rewardRules", [])', 'rule.has("minStack")', 'rule.has("inventoryHas")',
+    'rule.has("inventoryMissing")', 'rule.has("collateralReturned")', 'return str(rule.get("item", ""))'])
+pool_is_rule_based = all(token in pool_body for token in [
+    'definition.get("rewardRules", [])', 'rule.get("item", "")',
+    'item not in pool', 'pool.append(item)', 'return pool'])
+view_uses_pool = 'table_reward_pool(table_definition_value)' in service_body
 for tid, tb in CONTENT['tables'].items():
-    pool = set(tb.get('baseRewardPool', []))
-    branch = re.search(r'(?m)^\s*"' + re.escape(tid) + r'": reward = ([^\n]+)', settle_body)
-    payout_ids = set(re.findall(r'"([a-z\-]+)"', branch.group(1))) if branch else set()
-    if pool != payout_ids:
-        reward_mismatches.append({'table': tid, 'pool_only': sorted(pool - payout_ids), 'settlement_only': sorted(payout_ids - pool)})
-chk('B2-13a', '各桌 baseRewardPool 与当前条件结算分支的可能奖励 ID 一致', not reward_mismatches, reward_mismatches)
+    pool_ids = {str(rule.get('item', '')) for rule in tb.get('rewardRules', []) if rule.get('item')}
+    if pool_ids != reached_by_table.get(tid, set()):
+        reward_mismatches.append({'table': tid, 'candidate_only': sorted(pool_ids - reached_by_table.get(tid, set())),
+                                  'reachable_only': sorted(reached_by_table.get(tid, set()) - pool_ids)})
+chk('B2-13a', '各桌展示候选来自 rewardRules，且与条件结算可达奖励 ID 一致',
+    source_is_current and pool_is_rule_based and view_uses_pool and not reward_mismatches,
+    {'rewardRules 与可达奖励核对': reward_mismatches, 'reward_for_table_conditions': source_is_current, 'table_reward_pool_reads_rules': pool_is_rule_based, 'service_view_uses_pool': view_uses_pool})
 chk('B2-13b', 'README 区分奖励候选展示与本局条件结算',
-    '`baseRewardPool` 是完整情报中的奖励候选展示清单' in README and '本局到账仍应以结算结果为准' in README)
-chk('B2-13c', 'REWARD 展示确实读 baseRewardPool（run.gd:432）',
-    'baseRewardPool.map' in gd_function(RUN, 'service_view'),
-    'service_view uses baseRewardPool.map=%s' % ('baseRewardPool.map' in gd_function(RUN, 'service_view')))
+    '每桌 `rewardRules` 同时定义结算选择条件和情报中的奖励候选' in README
+    and '`table_reward_pool()`' in README and '本局到账仍应以结算结果为准' in README)
+chk('B2-13c', '完整情报中的奖励候选由 table_reward_pool() 汇总并由 service_view 展示',
+    pool_is_rule_based and view_uses_pool,
+    'table_reward_pool reads rewardRules=%s; service_view calls table_reward_pool=%s' % (pool_is_rule_based, view_uses_pool))
 
 # ---------------- 14. 人物几何分组（二进制 sha256 复算） ----------------
 import hashlib
