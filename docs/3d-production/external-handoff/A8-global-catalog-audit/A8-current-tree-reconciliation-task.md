@@ -1,6 +1,6 @@
 # 执行任务：A8 当前目录归因复核
 
-> 状态：主 Agent 已完成当前树对账（389 个 ID 全映射；最新复核为 21 条可达无 ID 候选、18 条弱证据项继续待核）。产物见 [current-tree-reconciliation.md](current-tree-reconciliation.md) 与三份 `current-tree-*.csv`。本任务书保留为验收范围记录，无需再分派。
+> 状态：主 Agent 已完成当前树对账（389 个 ID 全映射；最新复核为 19 条可达无 ID 候选、19 条弱证据项继续待核）。产物见 [current-tree-reconciliation.md](current-tree-reconciliation.md) 与三份 `current-tree-*.csv`。本任务书保留为验收范围记录，无需再分派。
 
 ## 目标
 

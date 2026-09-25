@@ -12,6 +12,12 @@ func verify(id: String, ok: bool) -> void:
 	else:
 		failures.append(id)
 		push_error(id)
+func press_key(world: Node, key_code: Key) -> void:
+	var event := InputEventKey.new()
+	event.physical_keycode = key_code
+	event.keycode = key_code
+	event.pressed = true
+	world.player._unhandled_input(event)
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
 	var world: Node3D = load("res://three_d/scenes/main.tscn").instantiate()
@@ -59,19 +65,26 @@ func run() -> void:
 	for i in range(3): await physics_frame
 	world.player.update_focus()
 	var aimed: Dictionary = world.checkpoint_state()
-	verify("prop_on", world.request_action(anchor) and world.props.states.lamp and RunCheckpoint.capture(world.run_game)==aimed.run)
+	var interact_key := InputEventKey.new()
+	interact_key.physical_keycode = KEY_E
+	interact_key.keycode = KEY_E
+	interact_key.pressed = true
+	var interact_mapped: bool = InputMap.event_is_action(interact_key, "interact")
+	world.player.interaction_requested.emit(anchor)
+	verify("prop_on", interact_mapped and world.props.states.lamp and RunCheckpoint.capture(world.run_game)==aimed.run)
 	var busy: Dictionary = world.checkpoint_state()
 	verify("busy_guard", not world.request_action(anchor) and world.checkpoint_state()==busy)
 	await create_timer(0.5).timeout
 	verify("prop_visual", is_equal_approx(float(lamp.node.light_energy),0.0) and world.props.states.lamp)
-	world.pause_game()
+	press_key(world, KEY_ESCAPE)
 	for i in range(2): await physics_frame
-	verify("focus_controls_disabled", not world.player.controls_enabled and world.player.focused==null and not focus_events.is_empty() and focus_events.back()==null and world.hint_label.text.is_empty())
+	verify("pause", world.paused and world.pause_panel.visible and not world.player.controls_enabled)
+	verify("focus_controls_disabled", world.paused and world.pause_panel.visible and not world.player.controls_enabled and world.player.focused==null and not focus_events.is_empty() and focus_events.back()==null and world.hint_label.text.is_empty())
 	var paused: Dictionary = world.checkpoint_state()
 	verify("pause_guard", not world.request_action(anchor) and world.checkpoint_state()==paused)
 	world.open_services()
 	verify("services_open_paused", world.paused and not world.services_panel.visible and world.pause_panel.visible and world.checkpoint_state()==paused)
-	world.resume()
+	press_key(world, KEY_ESCAPE)
 	var hidden_panel: Dictionary = world.checkpoint_state()
 	world.confirm_run_action()
 	verify("confirm_hidden", not world.run_panel.visible and world.checkpoint_state()==hidden_panel)
