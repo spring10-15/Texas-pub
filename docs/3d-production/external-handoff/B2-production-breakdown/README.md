@@ -58,7 +58,7 @@
 
 1. **背包展示是 19 件共同的缺口，且是依赖最少的一项。** 现在「背包展示 = 一行文字」，9 件可用道具和 10 件贵重物在背包里长得一模一样（都是名字）。**事实依据**：`services_hud.gd` 全文件只有 `Label` / `Button`，没有任何 `TextureRect`/`Sprite`；`run.gd:440-442` 的 `bag` 是 `item_name()` 拼出的字符串。**为什么说依赖最少**：HUD 只消费 `service_view()` 的返回值、自身不写规则状态（`services_hud.gd:54` 只 `emit`），改展示层不动 `run.gd`。本项只说「覆盖全、改动面小」，**不声明它是收益最高的一项**——收益排序属产品判断。
 2. **10 件贵重物没有独立模型，但它们不是「一样地缺」**（详见 §2.3）：按可复用起点分**三组互斥**——装饰层有同名物件 **2** 件、无同名但有同族基底 **3** 件、两者都没有 **5** 件。**「没有同名文件」不等于「没有可复用内容」**——材质库与三个同族物件（打火机、筹码 ×2）仍可借形制。
-3. **`baseRewardPool` 是完整情报中的奖励候选展示清单，不编码本局的条件选择。** `service_view()` 用该清单展示一桌可能获得的奖励；当前四桌清单 ID 与 `settle_table()` 的条件奖励分支一致。比如货运桌会按背包内容与筹码量在象牙筹码、红宝石袖扣、旧银打火机之间选择；本局到账仍应以结算结果为准。
+3. **每桌 `rewardRules` 同时定义结算选择条件和情报中的奖励候选。** `reward_for_table()` 按规则顺序检查筹码量、背包内容与抵押归还状态，选出本局至多一件桌奖；`table_reward_pool()` 汇总这些规则里的候选 item，`service_view()` 在完整情报中展示候选。桌奖只在盈利结算时判定，满包时也可能无法带走；展示候选不代表本局必得，本局到账仍应以结算结果为准。比如货运桌先检查象牙筹码缺失，其次检查持有象牙且 stack ≥ 90，否则在持有象牙时给旧银打火机。
 4. **货架有一个隐式耦合点。** `bar_display.gd:27` 用字典按 id 取展示高度 `bottom`，且**只登记了 9 件可用道具**。将来往 `shop_stock()` 里加任何新道具，必须同步补这个字典，否则 `bar_display.gd:27` 取值失败——这是加道具时的必查项（不评价它是不是「最容易」踩的坑）。
 
 ### 1.4 参考图基线（任务书第 4 条：缺参考图只标记，不自行生图）
@@ -174,16 +174,18 @@
 
 | item_id | 获得路径 | 证据 |
 |---|---|---|
-| `old-silver-lighter` | 货运桌奖励（低档）+ 货运桌搜索事件 | `run.gd:199`；`search_events.gd:4` |
-| `ivory-chip` | 货运桌奖励（首选档） | `run.gd:199`；`signatureReward` |
-| `ruby-cufflink` | 货运桌奖励（stack ≥ 90 且已持 ivory-chip） | `run.gd:199` |
-| `gold-cased-watch` | 镜厅奖励（未归还抵押且 stack < 170） | `run.gd:201` |
-| `antique-coin` | 镜厅奖励（抵押物归还线） | `run.gd:201`；`signatureReward` |
-| `sealed-bond` | 镜厅奖励（未归还抵押且 stack ≥ 170） | `run.gd:201` |
-| `pearl-necklace` | 账房地窖奖励（stack ≥ 130） | `run.gd:200`；`signatureReward` |
-| `emerald-brooch` | 账房地窖奖励（stack < 130）+ 镜厅搜索事件 | `run.gd:200`；`search_events.gd:6` |
-| `obsidian-idol` | 余烬桌奖励（stack < 220） | `run.gd:202` |
-| `vault-promissory` | 余烬桌奖励（stack ≥ 220） | `run.gd:202`；`signatureReward` |
+| `old-silver-lighter` | 货运桌持有象牙筹码且 stack < 90 时的奖励；也可由货运桌搜索事件取得 | `content.json` `cargo-table.rewardRules[2]`；`search_events.gd` `EVENTS.cargo-table.choices.goods` |
+| `ivory-chip` | 货运桌未持有象牙筹码时的奖励 | `content.json` `cargo-table.rewardRules[0]` |
+| `ruby-cufflink` | 货运桌持有象牙筹码且 stack ≥ 90 时的奖励 | `content.json` `cargo-table.rewardRules[1]` |
+| `gold-cased-watch` | 镜厅未触发抵押归还或高额封口信条件时的默认奖励（stack < 170 且未归还抵押） | `content.json` `mirror-hall.rewardRules[2]` |
+| `antique-coin` | 镜厅抵押物归还时的奖励 | `content.json` `mirror-hall.rewardRules[0]` |
+| `sealed-bond` | 镜厅未归还抵押且 stack ≥ 170 时的奖励 | `content.json` `mirror-hall.rewardRules[1]` |
+| `pearl-necklace` | 账房地窖 stack ≥ 130 时的奖励 | `content.json` `ledger-cellar.rewardRules[0]` |
+| `emerald-brooch` | 账房地窖 stack < 130 时的默认奖励；也可由镜厅搜索事件取得 | `content.json` `ledger-cellar.rewardRules[1]`；`search_events.gd` `EVENTS.mirror-hall.choices.goods` |
+| `obsidian-idol` | 余烬桌 stack < 220 时的默认奖励 | `content.json` `embers-table.rewardRules[1]` |
+| `vault-promissory` | 余烬桌 stack ≥ 220 时的奖励 | `content.json` `embers-table.rewardRules[0]` |
+
+桌奖规则都通过 `run.gd::reward_for_table()` 求值；能否实际加入背包还受盈利结算与背包容量条件约束。`run.gd::table_reward_pool()` 根据相同的 `rewardRules` 汇总完整情报中的候选展示，`service_view()` 调用该汇总函数。这里列的是每项至少一条规则或搜索事件路径，不代表每种条件组合都已由运行时测试穷举。
 
 ---
 
@@ -368,9 +370,9 @@ python3 output/external-handoff/B2/verify_b2.py
 
 ## 主 Agent 当前版本复核（2026-09-25）
 
-原核验脚本的三个反证中，`B2-11y` 与 `B2-13c` 是固定行号在后续源码变更后漂移；`B2-13a` 和本节旧说法把当前并不存在的两个奖励池差异写成事实。现已将背包清空检查改为按 `extract()` / `abandon()` 函数体查找，将奖励清单与 `settle_table()` 对应桌的可达奖励 ID 作集合比较，并从 `service_view()` 函数体核对情报展示来源。核验器的结论不依赖源码行号。
+原核验脚本曾依赖固定源码行号和已删除的 `baseRewardPool` / 奖励 `match` 表达。现已将背包清空检查改为按 `extract()` / `abandon()` 函数体查找；奖励核验按当前 `rewardRules`、`reward_for_table()` 的规则顺序与条件计算可达奖励，并确认 `table_reward_pool()` 从同一规则汇总候选、`service_view()` 使用该汇总结果。检查不依赖绝对源码行号，也不把候选展示误写成单局必得。
 
-当前代码基线 `971405e` 下复验：`python3 output/external-handoff/B2/verify_b2.py` 退出码 0，`REFUTE = 0`；`python3 output/external-handoff/C1/verify_links.py` 通过。该复核只检查文档与引用的源码事实，不证明模型观感或 Phase 2/3 完成。
+当前基线 `0168bd2` 下复验：`python3 output/external-handoff/B2/verify_b2.py` 退出码 0，`CONFIRM = 149 / REFUTE = 0`；`python3 output/external-handoff/C1/verify_links.py` 通过。149 是当前核验项数，会随核验器调整而变化，不是额外验收门槛。复核只检查文档与引用的源码事实，不证明模型观感或 Phase 2/3 完成。
 
 配套（不属本目录，B2 引用而不复制的上游事实）：
 - `docs/3d-production/external-handoff/B-content-assets/content-matrix.csv`（56 行内容矩阵）

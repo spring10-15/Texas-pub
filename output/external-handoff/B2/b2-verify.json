@@ -386,9 +386,9 @@
     },
     {
       "id": "B2-12a",
-      "claim": "run.gd:198-202 奖励 match 覆盖全部 10 件贵重物（扣除 4 个牌桌 id 后集合相等）",
+      "claim": "四桌 rewardRules 的奖励项覆盖全部 10 件贵重物，且每件至少有可达条件",
       "ok": true,
-      "detail": "多出=[] 缺少=[]"
+      "detail": "{'多出': [], '缺少': [], '不可达规则': [], '样例条件': {'ivory-chip': {'table': 'cargo-table', 'stack': 61, 'inventory': [], 'collateral_returned': False}, 'old-silver-lighter': {'table': 'cargo-table', 'stack': 61, 'inventory': ['ivory-chip'], 'collateral_returned': False}, 'ruby-cufflink': {'table': 'cargo-tab"
     },
     {
       "id": "B2-12b",
@@ -400,13 +400,13 @@
       "id": "B2-12c",
       "claim": "每件贵重物都有至少一条获得路径（无死道具）",
       "ok": true,
-      "detail": ""
+      "detail": "{'通过桌奖规则': ['antique-coin', 'emerald-brooch', 'gold-cased-watch', 'ivory-chip', 'obsidian-idol', 'old-silver-lighter', 'pearl-necklace', 'ruby-cufflink', 'sealed-bond', 'vault-promissory'], '额外搜索物品': ['emerald-brooch', 'old-silver-lighter']}"
     },
     {
       "id": "B2-13a",
-      "claim": "各桌 baseRewardPool 与当前条件结算分支的可能奖励 ID 一致",
+      "claim": "各桌展示候选来自 rewardRules，且与条件结算可达奖励 ID 一致",
       "ok": true,
-      "detail": "[]"
+      "detail": "{'rewardRules 与可达奖励核对': [], 'reward_for_table_conditions': True, 'table_reward_pool_reads_rules': True, 'service_view_uses_pool': True}"
     },
     {
       "id": "B2-13b",
@@ -416,9 +416,9 @@
     },
     {
       "id": "B2-13c",
-      "claim": "REWARD 展示确实读 baseRewardPool（run.gd:432）",
+      "claim": "完整情报中的奖励候选由 table_reward_pool() 汇总并由 service_view 展示",
       "ok": true,
-      "detail": "service_view uses baseRewardPool.map=True"
+      "detail": "table_reward_pool reads rewardRules=True; service_view calls table_reward_pool=True"
     },
     {
       "id": "B2-14a",
