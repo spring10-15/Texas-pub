@@ -4,7 +4,7 @@
 
 ## 基线
 
-- 审计基线：`74128bf0ceca97b1eeeeff1389f609d1b8e40a42`
+- 审计基线：`2e2f6970043c3e0ab92ebd632238f66addb43f36`
 - Godot：`4.7.2.stable.official.ed1daf0bf`
 - 跟踪文件状态：干净；工作区存在多份未跟踪的外部协作交付，审计期间未修改或清理。
 - 目录：382 个已登记 ID，状态 `incomplete_catalog`；当前三个 `pending_families` 数组为空。全局分母仍需源码驱动审计确认。
@@ -87,10 +87,18 @@
 
 同场景的台灯、窗、桌面牌和筹码亦通过 `props.interact()`；目录分别有开与反向 ID（灯的开由 `prop_on` 代表，关为 `prop_lamp_reverse`）。四酒馆壁灯/餐具柜复用同一构建函数，覆盖测试在四个实际房间逐个开合，再将相同“开/关”语义归并为 `world.room_light_on/off` 与 `world.room_cupboard_open/close`。这些归并有相同代码路径的证据，但最终审计仍应确认 CSV 记录了四房间逐一执行的测试后置断言。
 
+### `World.request_action()` 分支映射增量
+
+`world-request-action-review.csv` 按 `request_action()` 当前 19 个目录 ID 记录分支/守卫、源码区间、测试行和 `output/3d/world-coverage.json` 证据。CSV 校验器逐行确认目录 ID、source/entry、测试路径与报告命中均存在；报告中的目录 SHA-256 和 `world.gd` SHA-256 与当前文件一致。World 覆盖报告为 74/74，但此数字只表示已有 World ID 均命中。
+
+可达性单独判断后，12 行有正常游戏流程证据，6 行目前仅证明防御守卫后置状态：焦点缺失、超距、被遮挡、暂停、模态框打开、入座后直接调用 `request_action()`。正常玩家输入会被 `Player._unhandled_input()` 的焦点/控件门控挡在这些调用之前；因此这些行的测试可证明拒绝原子性，但不能单独证明玩家可达。`world.room_graph_entry` 的接受分支后置断言成立，不过测试手动向 `completed` 加入解锁条件，只证明已解锁状态下的入口结果，真实逐桌解锁路径仍需独立复核。该 CSV 是 A8 的 World 单入口增量，不是完整 `branch-inventory.csv`，也不封闭 World 或全局分母。
+
 ## 未完成事项
 
 - 尚未对上述入口逐分支确认源码后继状态与目录 ID 的一一映射。
 - 尚未核验候选测试是否对每条结果断言权威 Run 状态及拒绝原子性。
-- 尚未为这些分支填写当前源码行、测试、报告、证据强度和可达性 CSV。
+- 尚未为除 `World.request_action()` 外的分支填写当前源码行、测试、报告、证据强度和可达性 CSV。
 - 尚未逐分支完成 Table、扑克/对手、服务 helper、路线/事件/变体、存档及 World 物理入口审计；本节已对这些模块做部分入口归属初查，但仍未逐行核对接受/拒绝语义、玩家可达性及后继断言。
 - 尚未分析目录外的可达结果；不能据本底稿推导覆盖百分比或 Phase 1 通过。
+
+本增量后的复验基线为 `2e2f6970043c3e0ab92ebd632238f66addb43f36`，Godot `4.7.2.stable.official.ed1daf0bf`。使用 `python3 Godot/three_d/tests/run_regression.py --timeout 240` 得 59/59；`python3 Godot/three_d/tests/collect_coverage.py` 显示 `verified=382 catalogued=382 global_coverage=unavailable`；`python3 Godot/three_d/tests/test_collect_coverage.py` 为 3/3。报告：`output/3d/regression/20260925-101457/report.json`。加长单测超时是因为 `roster_showdown_test.gd` 单项 640 组、37,766 检查，单独实测约 167 秒通过；默认 90 秒会将它误报为 TIMEOUT。
