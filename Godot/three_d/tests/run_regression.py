@@ -53,15 +53,18 @@ def main():
     before = fingerprint()
     results = []
     for script in scripts:
-        command = [args.godot, '--headless', '--path', str(ROOT / 'Godot'), '--script',
-                   'res://three_d/tests/' + script.name]
+        command = [args.godot]
+        if script.name != 'player_input_coverage_test.gd':
+            command.append('--headless')
+        command += ['--path', str(ROOT / 'Godot'), '--script',
+                    'res://three_d/tests/' + script.name]
         environment = None
-        if script.name == 'world_focus_out_test.gd':
-            isolated_home = output / 'world-focus-out-home'
+        if script.name in ('world_focus_out_test.gd', 'world_close_request_test.gd', 'player_input_coverage_test.gd'):
+            isolated_home = output / (script.stem + '-home')
             isolated_home.mkdir()
             environment = os.environ.copy()
             environment['HOME'] = str(isolated_home)
-        else:
+        if script.name != 'world_focus_out_test.gd':
             command += ['--', '--test']
         start = time.monotonic()
         try:

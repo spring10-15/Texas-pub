@@ -445,7 +445,7 @@ func run() -> void:
 	pressure_world.queue_free()
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
-	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("world.") and row.id != "world.window_focus_out").map(func(row): return row.id)
+	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("world.") and row.id not in ["world.window_focus_out", "world.window_close_request"]).map(func(row): return row.id)
 	var missing: Array = expected.filter(func(id): return not hits.has(id))
 	for id in hits:
 		if id not in expected: failures.append("Uncatalogued "+id)

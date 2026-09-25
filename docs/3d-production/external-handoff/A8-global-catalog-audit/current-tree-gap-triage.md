@@ -28,6 +28,8 @@
 
 **2026-09-25 窗口失焦补记**：A8 Row 17 现由 `world_focus_out_test.gd` 在无 `--test` 启动且隔离 HOME 的环境中投递 `NOTIFICATION_WM_WINDOW_FOCUS_OUT`，断言存盘快照与通知前状态相等、服务面板关闭、探索暂停且控制关闭；新增 `world.window_focus_out`。该套件验证通知处理结果，仍不声称实际操作系统 Alt-Tab 的窗口集成已手测。
 
+**2026-09-25 玩家输入与关窗候选复核**：鼠标视角（Row 1）新增 `player.look_changed`，在带窗口的 Godot 进程中设置 captured 模式并投递 `InputEventMouseMotion`，断言 yaw 改变、pitch 被限制在 ±1.25，且 checkpoint 的 player/look 字段发生变化；移动（Row 3）新增 `player.movement`，用真实 `move_forward` 输入验证位移并确认角色未穿墙。无准星目标时按 E（Row 2）复用 `world.raycast_unfocused`，新增输入链断言无交互信号且完整 checkpoint 不变。直接按 E 命中台灯的 Player→World 连接现以 captured 模式走完整输入链，原弱证据升级为强证据。窗口关闭通知（Row 4）新增 `world.window_close_request`，验证写盘状态等于关闭前完整 checkpoint；这是通知处理函数注入测试，不声称原生窗口关闭按钮已手动集成验证。目录新增 3 个 ID，当前树剩 12 条可达候选、18 条弱证据；完整回归 64/64，报告 `output/3d/regression/20260925-143046/report.json`，覆盖证据 394/394。
+
 - 输入行数：**30**（以核验期间实际 CSV 为准；任务书第 10 行亦已同步为 30 行）
 - 输入 CSV SHA-256：`f6afc40dbc586e78fbbcdf6d57cb027f843ef61642d90dac27fd2c8f6822d0f1`
 - 目录（独立核验交付基线）：386 个唯一 ID，SHA-256 `5a87300ddea8a3ecb03a883e7973bcf930b87312cfc124faa71a08d83b2d5187`；后续当前状态见上方补记。

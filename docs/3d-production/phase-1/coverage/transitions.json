@@ -1594,6 +1594,18 @@
       "outcome": "accepted"
     },
     {
+      "id": "player.look_changed",
+      "source": "Godot/three_d/scripts/player.gd",
+      "entry": "_unhandled_input",
+      "outcome": "accepted updates player yaw and clamps camera pitch from captured mouse motion"
+    },
+    {
+      "id": "player.movement",
+      "source": "Godot/three_d/scripts/player.gd",
+      "entry": "_physics_process",
+      "outcome": "accepted moves the player from directional input while respecting collision"
+    },
+    {
       "id": "world.raycast_unfocused",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "request_action",
@@ -1856,6 +1868,12 @@
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "_notification",
       "outcome": "accepted saves the checkpoint, closes services, and pauses when window focus is lost"
+    },
+    {
+      "id": "world.window_close_request",
+      "source": "Godot/three_d/scripts/world.gd",
+      "entry": "_notification",
+      "outcome": "accepted saves the checkpoint before the application exits on a close request"
     },
     {
       "id": "world.pause_repeated",
