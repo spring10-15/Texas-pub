@@ -290,6 +290,7 @@ def main() -> int:
         "Godot/three_d/rules/run_checkpoint.gd:97-101": "venue_history 的非字符串、未知场景、重复场景及末项与 scene_id 不符分别由合法快照单字段构造，均拒绝且不变更状态。",
         "Godot/three_d/rules/run_checkpoint.gd:102": "通过真实 Run.start/enter_table/settle_table/transfer_venue 生成合法转场快照，再单独清空 transfer_log，命中历史长度拒绝且两份基线不变。",
         "Godot/three_d/rules/run_checkpoint.gd:103-109": "真实转场快照逐项篡改 hop 的 from/to、fee 类型/下界、after_tables 类型/递增/范围，并单独错置 arrival_completed；每个负例只改一个字段并拒绝。",
+        "Godot/three_d/rules/run_checkpoint.gd:109": "通过真实转场 API 生成合法快照后单独错置 arrival_completed，断言拒绝、输入快照不变且活体 Run 不变。",
         "Godot/three_d/rules/run_checkpoint.gd:116-117": "分别构造未知抵押物、非贵重道具抵押、无活动牌桌留抵押物三种单字段快照，均被拒绝且输入及活体 Run 不变。",
     }
     for row in branches:
