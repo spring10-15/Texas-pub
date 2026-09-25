@@ -532,7 +532,8 @@ func item_description(id: String) -> String:
 	return {"marked-lens":"牌局中提前看下一张公共牌；本桌限一次，增加风声。", "steadying-drink":"离桌后使用，降低 1 风声；每轮只能降一次。", "sleeve-clip":"翻牌前第一次行动前更换第二张手牌，增加风声。", "signal-lighter":"牌局中选择对手，判断其牌力强弱；不揭示底牌，增加风声。", "player-notes":"牌局中记录一位对手的风格，增加风声。", "disposable-phone":"离桌后查明一桌情报，或更新接应方案；二选一。", "kitchen-pass":"离桌后使用，揭示后厨楼梯出口。", "dock-passkey":"离桌后使用，揭示河边接驳出口。", "false-bottom-wallet":"随身携带，失败时自动保留至多 80 现金。"}.get(id, "")
 
 func rule_text(id: String) -> String:
-	return {"cargo-table":"每手首次加注少付 10", "ledger-cellar":"每次桌面道具额外增加 1 风声", "mirror-hall":"可押一件贵重物；最后一手获胜归还，且盈利时获得纪念币", "embers-table":"可押一件贵重物；最后一手获胜归还，整桌盈利降低 1 风声"}.get(id, "")
+	var hidden_info: Dictionary = table_definition(id).get("hiddenInfo", {})
+	return str(hidden_info.get("rule", ""))
 
 func scene_definition() -> Dictionary:
 	return content.scenes[scene_id]

@@ -1,5 +1,6 @@
 extends SceneTree
 const Table = preload("res://three_d/rules/table.gd")
+const Run = preload("res://three_d/rules/run.gd")
 const HUD = preload("res://three_d/scripts/table_hud.gd")
 var failures: Array[String] = []
 var checks := 0
@@ -16,8 +17,14 @@ func run_tests() -> void:
 	for table_id in content.tables:
 		var t := Table.new()
 		t.start(content.tables[table_id],7)
-		hud.pregame(300, content.tables[table_id])
+		var configured_content: Dictionary = content.duplicate(true)
+		var configured_rule: String = "配置桌规测试：" + table_id
+		configured_content.tables[table_id].hiddenInfo.rule = configured_rule
+		var run := Run.new(configured_content)
+		run.start(run.revision, "smoky-den", 7)
+		hud.pregame(300, configured_content.tables[table_id], [], run)
 		verify(hud.status.text.contains("风险：" + risk_labels[content.tables[table_id].publicInfo.risk]), "Configured risk is visible before buy-in " + table_id)
+		verify(hud.status.text.contains(configured_rule), "Configured hidden table rule is visible before buy-in " + table_id)
 		hud.refresh(t.public_state())
 		var due: int = maxi(0, int(t.state.currentBet)-int(t.state.players[0].currentBet))
 		verify(hud.status.text.contains("跟注实付 %d" % due) and hud.status.text.contains("跟注后底池 %d" % (int(t.state.pot)+due)), "Call cost and resulting pot visible "+table_id)

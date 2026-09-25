@@ -10,6 +10,8 @@
 
 2026-09-25 桌前风险信息显示：牌桌入座面板现在读取公开配置中的 `publicInfo.risk`，显示对应中文风险等级；四桌 HUD 回归均确认风险等级在买入前可见。未知等级使用“未评估”作为显式回退。此为信息呈现改进，不新增状态转移 ID，也不代替真实玩家对风险是否可理解的验证。
 
+2026-09-25 桌规情报配置接线：入座面板和 `Run.rule_text()` 现读取每桌 `hiddenInfo.rule`，四条配置说明已改为中文。HUD 回归分别替换四桌的规则文本并确认面板显示替换值，证明展示随内容配置变化；全量回归 59/59，未新增转移目录 ID。真实玩家是否读懂规则仍待试玩。
+
 2026-09-25 旧格式迁移族收口：A5 `legacy_migration` 的所有可复现运行时结果均映射到现有目录 ID，旧 Run 字段、缺失 props、缺少 search event 的 version 1 磁盘封套，以及 version 2/3 variant plan 均有恢复后具体状态断言；未来 envelope 版本拒绝并保留原文件也有测试。版本 1 磁盘夹具由测试运行时构造，version 2/3 variant plan 通过 RunCheckpoint 恢复测试构造；没有真实历史用户 `.save` 样本，本轮不声称验证过历史玩家档案。该外部样本限制不属于当前可复现转移目录，因此从 `pending_families.persistence` 移除 `legacy_migration`。
 
 2026-09-25 不可读存档分支收口：在 `SaveStore.read_checkpoint()` 内部抽出文件打开回调，公开入口仍使用 `FileAccess.open()`；`save_store_test.gd` 对一个确实存在且内容有效的检查点注入拒绝打开结果，断言返回 `unreadable` 且原文件字节未变。新增 `persistence_io.read_unreadable`，从 `pending_families.persistence` 移除此组。该测试稳定覆盖读取拒绝分支，不模拟操作系统权限配置本身。登记数增至 381；全局目录分母与覆盖率仍未封板。

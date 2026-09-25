@@ -21,7 +21,7 @@
         "risk": "Low"
       },
       "hiddenInfo": {
-        "rule": "The first aggressive action of each hand costs 10 less for the acting player.",
+        "rule": "每手首次加注少付 10。",
         "opponents": "Dock Braggart and Ledger Clerk",
         "reward": "Positive results can yield low or mid-tier valuables. First clears strongly bias toward the Ivory Chip."
       },
@@ -54,7 +54,7 @@
         "risk": "Medium"
       },
       "hiddenInfo": {
-        "rule": "The room is quieter, but every table tool use raises 1 extra heat. Soft reads matter more than brute pressure.",
+        "rule": "每次在牌桌使用道具额外增加 1 点风声。",
         "opponents": "River Shark and Velvet Rook",
         "reward": "Positive results tend to pay out layered valuables that bridge the run into Mirror Hall."
       },
@@ -86,7 +86,7 @@
         "risk": "Medium-High"
       },
       "hiddenInfo": {
-        "rule": "You may bring at most one valuable as collateral. Winning the final hand with collateral unlocks the best reward.",
+        "rule": "可抵押一件贵重物；最后一手获胜时归还，盈利后获得纪念币。",
         "opponents": "Calm Widow and Smiling Knife",
         "reward": "Positive results grant high-tier valuables. The collateral line can pay out the Antique Commemorative Coin."
       },
@@ -119,7 +119,7 @@
         "risk": "High"
       },
       "hiddenInfo": {
-        "rule": "Luxury collateral is live here. If you close the room in profit, the room cools 1 heat before extraction math.",
+        "rule": "可抵押一件贵重物；整桌盈利时降低 1 点风声。",
         "opponents": "House Viper and Ash Smuggler",
         "reward": "The final room pays the heaviest luxury pieces, but it punishes weak exits harder than the others."
       },
