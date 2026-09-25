@@ -1,23 +1,23 @@
 # A8 当前树对账记录
 
-- 当前 HEAD：`c6cfefb366240f67f3ceb205be3ebd3cce1a82b2`
-- 当前目录：389 个唯一 ID，SHA-256 `effd1c79cc02772b317e8b1ba67013c569ec02c99c729e6b65a973d7c1164002`
-- 采用的全量回归：`output/3d/regression/20260925-132741/report.json`（必须由当前源码/测试重跑后更新本记录）
-- 回归报告 SHA-256：`cc6efe7a53203db08c7429d9beb9e7440b11fdff1529903b0453f3cc9f7a2977`
-- lifecycle 覆盖报告 SHA-256：`6bfe43fd4543b54570553708ff53df97cbaa9b8d8b9513ddc3e559d100bd08dc`
-- 当前分支清单 SHA-256：`2a4feae28bcb2087bf3c1dad14917c5f14e365255e1433a5d0d086d46686a322`
-- 当前玩家路径缺口清单 SHA-256：`cef7d1e310c2d93b996b5bb83d79d2ddce7c21dadd08549d25bf4bed3b9ed16b`
-- 当前弱证据清单 SHA-256：`f4b5f4cc264b50809d533fe93b70cc8b98c3228118f7a810d60810811949598c`
-- 对账脚本 SHA-256：`f7b2dba77ea764166b6dce434ef62bbbb105f7b14feeec15922e7a4c228e5189`
+- 当前 HEAD：`a310617854a9fe34259d47552686e6e1e78445fd`
+- 当前目录：390 个唯一 ID，SHA-256 `4a44d69efe231b63ffd45814a7b5cc11d11a732acded093cbe985e1d8d685f51`
+- 采用的全量回归：`output/3d/regression/20260925-134024/report.json`（必须由当前源码/测试重跑后更新本记录）
+- 回归报告 SHA-256：`69a503dda9e17ab3261d7d3456ccbb2419139ebce88338d231334ac6bdd69ccc`
+- lifecycle 覆盖报告 SHA-256：`272a67808f2ad4a5aacd44fce3258679361bff869065a5c782ce4be67a62ab1b`
+- 当前分支清单 SHA-256：`190012684658f1f4c8ed1099eb3e2def1f2d8b593e3bcde6b2f5009b0569e792`
+- 当前玩家路径缺口清单 SHA-256：`54a6b41455249ecb9341283c820b944189665e98bd307081a12368b5c6edef07`
+- 当前弱证据清单 SHA-256：`6613f15d10e3df83d1ce539185644b94d00f3a8b5b276a2ab5c9346e8a5e4259`
+- 对账脚本 SHA-256：`66423fdcb7b57b9c058e60df09262a22a10706862042b273f260f7e29d70ee01`
 - 原始 A8 的 `branch-inventory.csv`、`unmapped-reachable.csv` 和审计 README 保留为 382 项冻结锚点，没有覆盖。
 
 ## 当前映射和缺口
 
-- 当前目录 ID 已全部映射：389/389。
-- `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern` 与 `run_variant.room_layout_selected` 已在对应测试中登记；搜索点与货架入口复用既有 `world.services_open` ID，并由真实锚点射线测试补强。
+- 当前目录 ID 已全部映射：390/390。
+- `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal` 与 `world.autosave` 已在对应测试中登记；搜索点与货架入口复用既有 `world.services_open` ID，并由真实锚点射线测试补强。
 - 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`；其中 1 条 yes 已有 `world.services_open` ID，但实体入口后置证据偏弱。当前树把 6 条 no 排除出玩家路径缺口，把该 services 行移入弱证据表；另 1 条仅显示试玩存档提示、不改变权威状态，也分类为非状态转移。
-- 当前仍有 18 条标为玩家可达、尚无目录 ID 的候选，详见 `current-tree-player-path-gaps.csv`。这仍需逐条审查后才能新增语义 ID；全局分母尚未冻结。弱证据行见 `current-tree-weak-evidence.csv`。
-- 分支行 disposition 计数：`{'unreachable_or_not_transition': 141, 'catalogued_strong': 489, 'catalogued_weak': 19, 'reachable_unmapped': 18}`。
+- 当前仍有 17 条标为玩家可达、尚无目录 ID 的候选，详见 `current-tree-player-path-gaps.csv`。这仍需逐条审查后才能新增语义 ID；全局分母尚未冻结。弱证据行见 `current-tree-weak-evidence.csv`。
+- 分支行 disposition 计数：`{'unreachable_or_not_transition': 141, 'catalogued_strong': 490, 'catalogued_weak': 19, 'reachable_unmapped': 17}`。
 
 ## 限制
 
