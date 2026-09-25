@@ -17,11 +17,25 @@ func fresh(scene: String) -> RefCounted:
 	return r
 func run() -> void:
 	content = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
+	var legacy_fields_absent := true
+	for scene_id in content.scenes:
+		legacy_fields_absent = legacy_fields_absent and not content.scenes[scene_id].has("intelBonus") and not content.scenes[scene_id].has("forcedExitLossFactor")
+	for table_id in content.tables:
+		var definition: Dictionary = content.tables[table_id]
+		legacy_fields_absent = legacy_fields_absent and not definition.has("risk") and not definition.publicInfo.has("buyIn") and not definition.hiddenInfo.has("opponents") and not definition.hiddenInfo.has("reward")
+	for scene_routes in content.routes.values():
+		for route in scene_routes.specialRoutes.values():
+			legacy_fields_absent = legacy_fields_absent and not route.has("revealFlag")
+	verify(legacy_fields_absent, "Godot content omits unused web-only and duplicate display fields")
 	var quotes := {"smoky-den":60, "high-rise-suite":96, "rooftop-club":67, "neon-poker-club":76}
 	var prepay := {"smoky-den":[40,40], "high-rise-suite":[60,55], "rooftop-club":[40,50], "neon-poker-club":[50,60]}
 	var grace := {"smoky-den":2, "high-rise-suite":3, "rooftop-club":1, "neon-poker-club":2}
 	for scene in Run.SCENE_NAMES:
 		var r: RefCounted = fresh(scene)
+		for offer in content.routes[scene].fixedRoutes:
+			verify(r.offer_name(str(offer.id)) == str(offer.name), "Fixed route display name comes from scene config " + scene + "/" + str(offer.id))
+		for route_key in content.routes[scene].specialRoutes:
+			verify(r.route_name(route_key) == str(content.routes[scene].specialRoutes[route_key].name), "Special route display name comes from scene config " + scene + "/" + route_key)
 		r.discover_exit()
 		verify(r.extraction_quote().fee == quotes[scene], "Scene-specific public fee " + scene)
 		verify(r.shop_stock() == content.shops[scene]["1"], "Scene-specific opening shelf " + scene)

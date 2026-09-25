@@ -5,7 +5,6 @@
       "name": "Cargo Table",
       "role": "Onboarding, first profit, first meaningful read",
       "buyIn": 60,
-      "risk": "Low",
       "heatGain": 1,
       "smallBlind": 10,
       "openBet": 20,
@@ -17,13 +16,10 @@
         "ledger-clerk"
       ],
       "publicInfo": {
-        "buyIn": 60,
         "risk": "Low"
       },
       "hiddenInfo": {
-        "rule": "每手首次加注少付 10。",
-        "opponents": "Dock Braggart and Ledger Clerk",
-        "reward": "Positive results can yield low or mid-tier valuables. First clears strongly bias toward the Ivory Chip."
+        "rule": "每手首次加注少付 10。"
       },
       "firstAggressionDiscount": 10,
       "rewardRules": [
@@ -37,7 +33,6 @@
       "name": "Ledger Cellar",
       "role": "Mid-stakes pressure room with quieter opponents and tighter reads",
       "buyIn": 90,
-      "risk": "Medium",
       "heatGain": 1,
       "smallBlind": 15,
       "openBet": 30,
@@ -49,13 +44,10 @@
         "velvet-rook"
       ],
       "publicInfo": {
-        "buyIn": 90,
         "risk": "Medium"
       },
       "hiddenInfo": {
-        "rule": "每次在牌桌使用道具额外增加 1 点风声。",
-        "opponents": "River Shark and Velvet Rook",
-        "reward": "Positive results tend to pay out layered valuables that bridge the run into Mirror Hall."
+        "rule": "每次在牌桌使用道具额外增加 1 点风声。"
       },
       "tableToolHeatBonus": 1,
       "rewardRules": [
@@ -68,7 +60,6 @@
       "name": "Mirror Hall",
       "role": "Main risk-reward table for the slice",
       "buyIn": 120,
-      "risk": "Medium-High",
       "heatGain": 2,
       "smallBlind": 20,
       "openBet": 40,
@@ -80,13 +71,10 @@
         "smiling-knife"
       ],
       "publicInfo": {
-        "buyIn": 120,
         "risk": "Medium-High"
       },
       "hiddenInfo": {
-        "rule": "可抵押一件贵重物；最后一手获胜时归还，盈利后获得纪念币。",
-        "opponents": "Calm Widow and Smiling Knife",
-        "reward": "Positive results grant high-tier valuables. The collateral line can pay out the Antique Commemorative Coin."
+        "rule": "可抵押一件贵重物；最后一手获胜时归还，盈利后获得纪念币。"
       },
       "allowCollateral": true,
       "rewardRules": [
@@ -100,7 +88,6 @@
       "name": "Embers Table",
       "role": "Late-run high stakes room where collateral and exposed goods both matter",
       "buyIn": 160,
-      "risk": "High",
       "heatGain": 2,
       "smallBlind": 25,
       "openBet": 50,
@@ -112,13 +99,10 @@
         "ash-smuggler"
       ],
       "publicInfo": {
-        "buyIn": 160,
         "risk": "High"
       },
       "hiddenInfo": {
-        "rule": "可抵押一件贵重物；整桌盈利时降低 1 点风声。",
-        "opponents": "House Viper and Ash Smuggler",
-        "reward": "The final room pays the heaviest luxury pieces, but it punishes weak exits harder than the others."
+        "rule": "可抵押一件贵重物；整桌盈利时降低 1 点风声。"
       },
       "allowCollateral": true,
       "winHeatRelief": 1,
@@ -263,8 +247,6 @@
       "fixedRouteReserveDiscount": 10,
       "fixedRouteGraceSearches": 2,
       "entryHeatBonus": 0,
-      "intelBonus": 0,
-      "forcedExitLossFactor": 0.75,
       "hiddenRouteRevealDiscount": 0
     },
     "high-rise-suite": {
@@ -281,8 +263,6 @@
       "fixedRouteReserveDiscount": 0,
       "fixedRouteGraceSearches": 3,
       "entryHeatBonus": 0,
-      "intelBonus": 0,
-      "forcedExitLossFactor": 0.88,
       "hiddenRouteRevealDiscount": 0
     },
     "rooftop-club": {
@@ -299,8 +279,6 @@
       "fixedRouteReserveDiscount": 5,
       "fixedRouteGraceSearches": 1,
       "entryHeatBonus": 1,
-      "intelBonus": 0,
-      "forcedExitLossFactor": 0.68,
       "hiddenRouteRevealDiscount": 5
     },
     "neon-poker-club": {
@@ -317,8 +295,6 @@
       "fixedRouteReserveDiscount": 0,
       "fixedRouteGraceSearches": 2,
       "entryHeatBonus": 0,
-      "intelBonus": 1,
-      "forcedExitLossFactor": 0.72,
       "hiddenRouteRevealDiscount": 10
     }
   },
@@ -661,7 +637,7 @@
       "fixedRoutes": [
         {
           "id": "kitchen-backlift",
-          "name": "Kitchen Backlift",
+          "name": "后厨货梯接应",
           "reserveCost": 50,
           "finalCost": 10,
           "maxHeat": 4,
@@ -669,7 +645,7 @@
         },
         {
           "id": "linen-cart",
-          "name": "Linen Cart",
+          "name": "布草车接应",
           "reserveCost": 50,
           "finalCost": 10,
           "maxHeat": 4,
@@ -679,16 +655,14 @@
       "specialRoutes": {
         "service-stairs": {
           "id": "service-stairs",
-          "name": "Service Stairs",
-          "revealFlag": "serviceStairs",
+          "name": "后厨楼梯",
           "finalCost": 25,
           "maxHeat": 5,
           "flavor": "A kitchen runner holds the stairwell open long enough for a clean exit if you move quickly."
         },
         "river-launch": {
           "id": "river-launch",
-          "name": "River Launch",
-          "revealFlag": "riverLaunch",
+          "name": "河边接驳",
           "finalCost": 40,
           "maxHeat": 4,
           "flavor": "A silent launch waits below the loading docks, but only for someone already holding the right key."
@@ -699,7 +673,7 @@
       "fixedRoutes": [
         {
           "id": "vip-elevator",
-          "name": "VIP Elevator",
+          "name": "贵宾电梯",
           "reserveCost": 60,
           "finalCost": 20,
           "maxHeat": 4,
@@ -707,7 +681,7 @@
         },
         {
           "id": "laundry-trolley",
-          "name": "Laundry Trolley",
+          "name": "洗衣推车",
           "reserveCost": 55,
           "finalCost": 15,
           "maxHeat": 4,
@@ -717,16 +691,14 @@
       "specialRoutes": {
         "service-stairs": {
           "id": "service-elevator",
-          "name": "Service Elevator",
-          "revealFlag": "serviceStairs",
+          "name": "维修电梯",
           "finalCost": 30,
           "maxHeat": 5,
           "flavor": "The maintenance shaft only stays open if the kitchen stamp is real."
         },
         "river-launch": {
           "id": "basement-garage",
-          "name": "Basement Garage",
-          "revealFlag": "riverLaunch",
+          "name": "地下车库",
           "finalCost": 45,
           "maxHeat": 4,
           "flavor": "A quiet car waits under the tower, but only for someone carrying the right coded key."
@@ -737,7 +709,7 @@
       "fixedRoutes": [
         {
           "id": "staff-door",
-          "name": "Staff Door",
+          "name": "员工通道",
           "reserveCost": 45,
           "finalCost": 15,
           "maxHeat": 4,
@@ -745,7 +717,7 @@
         },
         {
           "id": "valet-loop",
-          "name": "Valet Loop",
+          "name": "代客泊车接应",
           "reserveCost": 55,
           "finalCost": 20,
           "maxHeat": 4,
@@ -755,16 +727,14 @@
       "specialRoutes": {
         "service-stairs": {
           "id": "emergency-exit",
-          "name": "Emergency Exit",
-          "revealFlag": "serviceStairs",
+          "name": "消防楼梯",
           "finalCost": 20,
           "maxHeat": 5,
           "flavor": "A fire stair hidden behind the bottle wall opens only if the stamped pass checks out."
         },
         "river-launch": {
           "id": "helipad-drop",
-          "name": "Helipad Drop",
-          "revealFlag": "riverLaunch",
+          "name": "停机坪接应",
           "finalCost": 50,
           "maxHeat": 4,
           "flavor": "A charter pilot takes you off the roof if the access chip still reads green."
@@ -775,7 +745,7 @@
       "fixedRoutes": [
         {
           "id": "data-node-gate",
-          "name": "Data Node Gate",
+          "name": "数据节点闸门",
           "reserveCost": 50,
           "finalCost": 20,
           "maxHeat": 4,
@@ -783,7 +753,7 @@
         },
         {
           "id": "hack-door",
-          "name": "Hack Door",
+          "name": "伪装员工门禁",
           "reserveCost": 60,
           "finalCost": 25,
           "maxHeat": 4,
@@ -793,16 +763,14 @@
       "specialRoutes": {
         "service-stairs": {
           "id": "neural-jammer",
-          "name": "Neural Jammer Corridor",
-          "revealFlag": "serviceStairs",
+          "name": "传感器盲区走廊",
           "finalCost": 30,
           "maxHeat": 5,
           "flavor": "A dead sensor lane appears only when the right utility token trips the jammer."
         },
         "river-launch": {
           "id": "quantum-portal",
-          "name": "Quantum Portal",
-          "revealFlag": "riverLaunch",
+          "name": "后台传送门",
           "finalCost": 55,
           "maxHeat": 4,
           "flavor": "The back-end portal only resolves for runners carrying a synced dock key."

@@ -527,7 +527,10 @@ func enforce_pressure() -> bool:
 	return true
 
 func offer_name(id: String) -> String:
-	return {"kitchen-backlift":"后厨货梯接应", "linen-cart":"布草车接应", "vip-elevator":"贵宾电梯", "laundry-trolley":"洗衣推车", "staff-door":"员工通道", "valet-loop":"代客泊车接应", "data-node-gate":"数据节点闸门", "hack-door":"伪装员工门禁"}.get(id, id)
+	for offer in content.routes[scene_id].fixedRoutes:
+		if str(offer.id) == id:
+			return str(offer.name)
+	return id
 
 func route_known(kind: String) -> bool:
 	if not active:
@@ -558,6 +561,5 @@ func route_name(kind: String) -> String:
 	if kind == "fixed":
 		return offer_name(reservation.id if not reservation.is_empty() else route_offer().id)
 	if kind in ["service-stairs", "river-launch"]:
-		var id: String = content.routes[scene_id].specialRoutes[kind].id
-		return {"service-stairs":"后厨楼梯", "river-launch":"河边接驳", "service-elevator":"维修电梯", "basement-garage":"地下车库", "emergency-exit":"消防楼梯", "helipad-drop":"停机坪接应", "neural-jammer":"传感器盲区走廊", "quantum-portal":"后台传送门"}[id]
+		return str(content.routes[scene_id].specialRoutes[kind].name)
 	return Routes.NAMES.get(kind, kind)

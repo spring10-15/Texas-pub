@@ -135,7 +135,7 @@ func pregame(cash := 0, definition: Dictionary = {}, inventory: Array = [], run:
 	result_banner.hide()
 	header.text = "%s · 本桌 %d 手" % [TABLE_NAMES[definition.id], definition.hands]
 	var public_info: Dictionary = definition.get("publicInfo", {})
-	var risk_label: String = {"Low":"低", "Medium":"中", "Medium-High":"中高", "High":"高"}.get(str(public_info.get("risk", definition.get("risk", ""))), "未评估")
+	var risk_label: String = {"Low":"低", "Medium":"中", "Medium-High":"中高", "High":"高"}.get(str(public_info.get("risk", "")), "未评估")
 	status.text = "风险：%s · 每席 %d 筹码 · 小盲 %d / 大盲 %d" % [risk_label, definition.buyIn, definition.smallBlind, definition.openBet]
 	if run != null:
 		status.text += " · " + run.rule_text(definition.id)
