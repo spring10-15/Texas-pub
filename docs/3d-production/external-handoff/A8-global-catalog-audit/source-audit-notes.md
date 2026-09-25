@@ -34,10 +34,27 @@
 
 以下方法在本轮初查中属于查询、预览或展示，不作为独立权威状态转移入口：`transfer_quote`、`table_blocked_reason`、`room_requirements`、`room_blocked_reason`、`table_definition`、`extraction_quote`、`slots_used`、`service_reason`、`shop_stock`、`service_view`、`sale_value`、`valuable_total`、`reward_for_table`、`table_reward_pool`、`abandon_quote`、`route_offer`、名称/描述读取方法、`route_known` 与 `reserve_fee`。A8 最终审计仍需检查这些 helper 是否有隐含副作用，以及 UI/游戏调度入口是否都回到被列入的公开命令。
 
+## Table/扑克进度入口初查
+
+源码入口与当前目录的对应关系：
+
+| Table 入口 / helper | 源码行 | 登记 entry | 目录 ID 数 | 当前测试候选 |
+|---|---:|---|---:|---|
+| `act` | 77 | `act` | 34 | `poker_guard_coverage_test.gd`、`poker_action_coverage_test.gd`、`poker_discount_coverage_test.gd`、`short_stack_queue_test.gd` |
+| `act` 的终手结果 | 77–135 | `act/advance/next_hand` | 7 | `table_endings_test.gd` |
+| `advance` / `next_hand` | 146 / 185 | `advance/next_hand` | 10 | `poker_progress_coverage_test.gd` |
+| `next_hand` 的单挑轮转 | 185 | `next_hand` | 1 | `table_endings_test.gd` |
+| `start_hand` 的折扣重置 | 24 | `start_hand` | 1 | `poker_discount_coverage_test.gd` |
+| `advance` 的单人有筹码 runout | 146 | `advance` | 2 | `short_stack_queue_test.gd` |
+
+`commit`、`set_queue`、`finish_hand`、`log_event` 是 Table 内部的变更 helper；`Poker.shuffle_deck()` 会推进 RNG，由 `start_hand()` 调用；`Poker.settle_pots()` 计算结算结果，由 `advance()` 调用。它们要沿调用链检查，不能按 helper 数量增加分母。`Poker` 的牌型比较/评估及 `Opponent.choose()` 初查属于计算或选择逻辑；若实际入口改变 RNG 或权威状态，最终审计仍须纳入对应调用链。
+
+结构性观察（待后继断言核验）：`act()` 的 stale revision、非法动作/行动者/筹码与下注边界拒绝均映射到 `poker_guard.*`；已接受动作映射到 `poker_action.*`、`poker_discount.*`、`queue.*` 或 `ending.*`；街道推进、摊牌和下一手映射到 `poker_progress.*`、`queue.*`、`ending.*`。当前目录按 `source + entry` 分组对应到 55 个 ID（34 + 7 + 10 + 1 + 1 + 2）；此数量是现有映射数，不是分支完备性证明。
+
 ## 未完成事项
 
 - 尚未对上述入口逐分支确认源码后继状态与目录 ID 的一一映射。
 - 尚未核验候选测试是否对每条结果断言权威 Run 状态及拒绝原子性。
 - 尚未为这些分支填写当前源码行、测试、报告、证据强度和可达性 CSV。
-- 尚未审计 Table、扑克/对手、服务 helper、路线/事件/变体、存档及 World 物理入口。
+- 尚未逐分支完成 Table、扑克/对手、服务 helper、路线/事件/变体、存档及 World 物理入口审计。
 - 尚未分析目录外的可达结果；不能据本底稿推导覆盖百分比或 Phase 1 通过。
