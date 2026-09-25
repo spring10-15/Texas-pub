@@ -45,6 +45,7 @@ def main() -> int:
     room_layout_selected = 0
     room_layout_locked = 0
     poker_short_blinds = 0
+    poker_seeded_deals = 0
     world_search_evidence = 0
     world_product_evidence = 0
     reclassified_nonplayer = 0
@@ -123,6 +124,16 @@ def main() -> int:
                 "notes": "全部四桌均以短于小盲/大盲的筹码进入下一手；精确断言实际封顶金额、两名短筹码仍获底牌且未弃牌、行动位、revision 与整桌财富守恒。",
             })
             poker_short_blinds += 1
+        if row["source_file"] == "Godot/three_d/rules/table.gd" and row["source_line"] == "Godot/three_d/rules/table.gd:47-50" and "洗牌并两轮各发一张底牌" in row["branch_or_guard"]:
+            row.update({
+                "catalog_id": "poker_progress.seeded_deal",
+                "test": "Godot/three_d/tests/poker_progress_coverage_test.gd::poker_progress.seeded_deal",
+                "evidence_report": f"output/3d/poker_progress-coverage.json;{LATEST_REPORT}",
+                "evidence_strength": "strong",
+                "disposition": "catalogued_strong",
+                "notes": "四桌都使用固定种子独立重算完整洗牌；逐座断言两轮私牌、余下牌堆、RNG 最终态与初始 revision，确认相同种子得到可重放的起手牌分发。",
+            })
+            poker_seeded_deals += 1
         if row["source_file"] == "Godot/three_d/scripts/world.gd" and row["source_line"] == "Godot/three_d/scripts/world.gd:482-484" and row["catalog_id"] == "-":
             row.update({
                 "catalog_id": "world.services_open",
@@ -161,8 +172,8 @@ def main() -> int:
         if "20260925-103506" in row["evidence_report"] or "20260925-105659" in row["evidence_report"]:
             row["evidence_report"] = row["evidence_report"].replace("20260925-103506/report.json", LATEST_REPORT).replace("20260925-105659/report.json", LATEST_REPORT)
 
-    if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or room_layout_selected != 1 or room_layout_locked != 2 or poker_short_blinds != 1 or world_search_evidence != 1 or world_product_evidence != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or reclassified_weak != 1:
-        raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, room_layout={room_layout_selected}, layout_locked={room_layout_locked}, poker_short_blinds={poker_short_blinds}, search_evidence={world_search_evidence}, product_evidence={world_product_evidence}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, weak={reclassified_weak}")
+    if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or room_layout_selected != 1 or room_layout_locked != 2 or poker_short_blinds != 1 or poker_seeded_deals != 1 or world_search_evidence != 1 or world_product_evidence != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or reclassified_weak != 1:
+        raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, room_layout={room_layout_selected}, layout_locked={room_layout_locked}, poker_short_blinds={poker_short_blinds}, poker_seeded_deals={poker_seeded_deals}, search_evidence={world_search_evidence}, product_evidence={world_product_evidence}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, weak={reclassified_weak}")
 
     current_gaps = [
         row.copy() for row in old_gaps
@@ -175,6 +186,7 @@ def main() -> int:
         and not (row["source_file"] == "Godot/three_d/rules/run_variants.gd" and row["source_line"] == "Godot/three_d/rules/run_variants.gd:36")
         and not (row["source_file"] == "Godot/three_d/rules/run.gd" and row["source_line"] in {"Godot/three_d/rules/run.gd:147-148", "Godot/three_d/rules/run.gd:149"})
         and not (row["source_file"] == "Godot/three_d/rules/table.gd" and row["source_line"] == "Godot/three_d/rules/table.gd:44-46")
+        and not (row["source_file"] == "Godot/three_d/rules/table.gd" and row["source_line"] == "Godot/three_d/rules/table.gd:47-50")
         and not (row["source_file"] == "Godot/three_d/scripts/world.gd" and row["source_line"] in {"Godot/three_d/scripts/world.gd:482-484", "Godot/three_d/scripts/world.gd:485-487"})
     ]
     weak_evidence = [row.copy() for row in branches if row["disposition"] == "catalogued_weak"]
@@ -205,7 +217,7 @@ def main() -> int:
             path = path.strip()
             if path and path != "-" and not (ROOT / path).is_file():
                 raise SystemExit(f"Missing evidence report: {path}")
-    if len(current_gaps) != 23 or any(row["player_reachable"] != "yes" or row["catalog_id"] != "-" for row in current_gaps):
+    if len(current_gaps) != 22 or any(row["player_reachable"] != "yes" or row["catalog_id"] != "-" for row in current_gaps):
         raise SystemExit("Current player-path gap set is inconsistent")
 
     write_csv(AUDIT / "current-tree-branch-inventory.csv", branch_fields, branches)

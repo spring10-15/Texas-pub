@@ -1,6 +1,7 @@
 extends SceneTree
 const Table = preload("res://three_d/rules/table.gd")
 const Checkpoint = preload("res://three_d/rules/table_checkpoint.gd")
+const Poker = preload("res://three_d/rules/poker.gd")
 var failures: Array[String] = []
 var hits := {}
 func round_actions(t: RefCounted) -> void:
@@ -20,6 +21,14 @@ func _initialize() -> void:
 	for table_id in content.tables:
 		var t := Table.new()
 		t.start(content.tables[table_id],7)
+		var expected_rng := Poker.DeterministicRng.new(7)
+		var expected_deck: Array = Poker.shuffle_deck(Poker.create_deck(), expected_rng)
+		var expected_holes := [[], [], []]
+		for deal_round in range(2):
+			for seat in [1, 2, 0]: expected_holes[seat].append(expected_deck.pop_back())
+		var dealt_exactly: bool = t.state.deck == expected_deck and t.rng.value == expected_rng.value and t.revision == 1 and t.state.players.size() == 3
+		for seat in range(3): dealt_exactly = dealt_exactly and t.state.players[seat].holeCards == expected_holes[seat]
+		record("seeded_deal",dealt_exactly,table_id)
 		var before := Checkpoint.capture(t)
 		record("actor_pending",not t.advance(t.revision) and Checkpoint.capture(t) == before,table_id)
 		record("next_while_playing",not t.next_hand(t.revision) and Checkpoint.capture(t) == before,table_id)

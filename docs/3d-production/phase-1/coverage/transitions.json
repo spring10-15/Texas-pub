@@ -1354,6 +1354,12 @@
       "outcome": "accepted"
     },
     {
+      "id": "poker_progress.seeded_deal",
+      "source": "Godot/three_d/rules/table.gd",
+      "entry": "start_hand",
+      "outcome": "accepted"
+    },
+    {
       "id": "poker_progress.actor_pending",
       "source": "Godot/three_d/rules/table.gd",
       "entry": "advance/next_hand",
