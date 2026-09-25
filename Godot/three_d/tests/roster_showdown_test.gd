@@ -13,6 +13,8 @@ var matched_samples := 0
 var matched_samples_by_actor := {}
 var matched_policy_differences := {}
 var matched_contexts := []
+var varied_repeated_raise_differences := {}
+var varied_repeated_raise_contexts := []
 var varied_player_actions := {}
 var stale_bet_handover_restores := 0
 var varied_seed_samples := {}
@@ -40,6 +42,7 @@ func play(content: Dictionary, scene: String, site: String, actor: String, seed_
 	player_action_rng.seed = absi(seed_value * 1009 + scene.hash() + site.hash() + actor.hash()) + 1
 	var showdowns := 0
 	var steps := 0
+	var sampled_varied_raise_context := false
 	while t.state.status != "finished" and steps < 200:
 		steps += 1
 		if t.state.status == "hand_over":
@@ -76,6 +79,22 @@ func play(content: Dictionary, scene: String, site: String, actor: String, seed_
 				var player: Dictionary = t.find_player(id)
 				var random_value: float = t.rng.next()
 				decision = Opponent.choose(t.state,player,legal,content.opponents[id],random_value)
+				if varied_player and not sampled_varied_raise_context and t.state.playerPattern.raiseCount >= 2:
+					sampled_varied_raise_context = true
+					var active_opponents: int = t.state.players.filter(func(p): return p.id != id and not p.folded).size()
+					var odds: float = Opponent.estimate_odds(player.holeCards,t.state.community,active_opponents,t.state.seed+t.state.handNumber*137+t.state.turnCounter*19+player.seatIndex*11)
+					var profiles: Array = content.opponents.keys()
+					profiles.sort()
+					var choices := {}
+					for profile_id in profiles:
+						choices[profile_id] = Opponent.choose_with_odds(t.state,player,legal,content.opponents[profile_id],random_value,odds)
+					var context := {"venue":scene,"table":site,"seed":seed_value,"actor":id,"street":t.state.street,"hand":t.state.handNumber,"playerRaises":t.state.playerPattern.raiseCount,"bet":t.state.currentBet,"stack":player.stack,"odds":snappedf(odds,0.01),"randomValue":snappedf(random_value,0.001),"legal":legal.duplicate(),"choices":choices}
+					varied_repeated_raise_contexts.append(context)
+					for left in range(profiles.size()):
+						for right in range(left+1,profiles.size()):
+							var pair: String = profiles[left]+"/"+profiles[right]
+							if choices[profiles[left]] != choices[profiles[right]]:
+								varied_repeated_raise_differences[pair] = int(varied_repeated_raise_differences.get(pair,0))+1
 				if not varied_player:
 					ai_actions[decision] = int(ai_actions.get(decision,0))+1
 					if not ai_actions_by_actor.has(id): ai_actions_by_actor[id] = {}
@@ -136,7 +155,7 @@ func _initialize() -> void:
 	verify(completed.size() == 640 and varied_seed_samples.size() == 128 and varied_seed_samples.values().all(func(count): return count == 3),"Two baseline policies plus three varied-player seeds for each venue/table/opponent combination")
 	verify(varied_player_actions.get("raise",0) > 0 and varied_player_actions.get("fold",0) > 0 and varied_player_actions.get("all-in",0) > 0,"Varied player policy reaches raises, folds and all-ins")
 	verify(stale_bet_handover_restores > 0,"Fold-ended hand with stale street bet restores exactly")
-	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed,"ai_actions":ai_actions,"ai_actions_by_actor":ai_actions_by_actor,"ai_table_appearances":ai_table_appearances,"varied_player_actions":varied_player_actions,"varied_seed_samples":varied_seed_samples,"stale_bet_handover_restores":stale_bet_handover_restores,"matched_samples":matched_samples,"matched_samples_by_actor":matched_samples_by_actor,"matched_policy_differences":matched_policy_differences,"matched_contexts":matched_contexts,"scope":"Controlled check/call and production opponent AI each use one baseline seed for each venue/table/opponent combination; production AI against a deterministic varied legal player policy uses three distinct seeds for every venue/table/opponent combination. All policies check exact full-state restoration at between-hand saves, per-action table chip conservation, independent run wealth after settlement rewards, and final extraction ledger. Matched policy snapshots exclude varied-player runs and remain strategy-only evidence, not human recognition or AI difficulty evidence."}
+	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed,"ai_actions":ai_actions,"ai_actions_by_actor":ai_actions_by_actor,"ai_table_appearances":ai_table_appearances,"varied_player_actions":varied_player_actions,"varied_seed_samples":varied_seed_samples,"stale_bet_handover_restores":stale_bet_handover_restores,"matched_samples":matched_samples,"matched_samples_by_actor":matched_samples_by_actor,"matched_policy_differences":matched_policy_differences,"matched_contexts":matched_contexts,"varied_repeated_raise_contexts":varied_repeated_raise_contexts,"varied_repeated_raise_differences":varied_repeated_raise_differences,"scope":"Controlled check/call and production opponent AI each use one baseline seed for each venue/table/opponent combination; production AI against a deterministic varied legal player policy uses three distinct seeds for every venue/table/opponent combination. All policies check exact full-state restoration at between-hand saves, per-action table chip conservation, independent run wealth after settlement rewards, and final extraction ledger. Varied-player runs record the first real AI response after at least two player raises and compare all profiles on identical state and randomness. These strategy comparisons do not establish human recognition or balanced difficulty."}
 	FileAccess.open("res://../output/3d/roster-showdown.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("ROSTER_SHOWDOWN ",JSON.stringify({"checks":checks,"failed":failures.size(),"failures":failures,"combinations":completed.size()}))
 	quit(0 if failures.is_empty() else 1)
