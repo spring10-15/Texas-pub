@@ -5,6 +5,7 @@ const Store = preload("res://three_d/rules/save_store.gd")
 var failures: Array[String] = []
 var checks := 0
 var invalid_cases := 0
+var invalid_case_targets := 0
 var legacy_variant_cases := 0
 var legacy_search_event_restored := false
 var reservation_offer_consistent := false
@@ -60,6 +61,64 @@ func run_tests() -> void:
 		verify(rejected,"Reject "+key)
 		verify(unchanged,"Rejected input does not mutate live state "+key)
 		invalid_cases += 1 if rejected and unchanged else 0
+	var route_count: int = content.routes[original.scene_id].fixedRoutes.size()
+	for entry in [
+		{"name":"negative_vault","field":"vault","value":-1},
+		{"name":"negative_cash","field":"cash","value":-1},
+		{"name":"negative_heat","field":"heat","value":-1},
+		{"name":"heat_above_cap","field":"heat","value":7},
+		{"name":"table_not_dictionary","field":"table","value":[]},
+		{"name":"unknown_scene","field":"scene_id","value":"unknown-venue"},
+		{"name":"negative_offer_index","field":"offer_index","value":-1},
+		{"name":"offer_index_at_end","field":"offer_index","value":route_count},
+		{"name":"arrival_exceeds_completed","field":"arrival_completed","value":1},
+		{"name":"venue_history_non_string","field":"venue_history","value":[42]},
+		{"name":"venue_history_unknown_scene","field":"venue_history","value":["missing-venue"]},
+		{"name":"venue_history_duplicate","field":"venue_history","value":["smoky-den","smoky-den"]},
+		{"name":"venue_history_wrong_tail","field":"venue_history","value":["rooftop-club"]},
+	]:
+		invalid_case_targets += 1
+		invalid_cases += 1 if check_invalid_case(entry.name, original, entry.field, entry.value, content, r, original) else 0
+	var invalid_collateral_run := Run.new(content)
+	invalid_collateral_run.start(invalid_collateral_run.revision,"smoky-den",0)
+	var collateral_base: Dictionary = Checkpoint.capture(invalid_collateral_run)
+	for entry in [
+		{"name":"collateral_unknown_item","value":"missing-item"},
+		{"name":"collateral_not_valuable","value":"kitchen-pass"},
+		{"name":"collateral_without_active_table","value":"old-silver-lighter"},
+	]:
+		var collateral_case := collateral_base.duplicate(true)
+		collateral_case.collateral = entry.value
+		invalid_case_targets += 1
+		invalid_cases += 1 if check_invalid_snapshot(entry.name, collateral_case, content, invalid_collateral_run, collateral_base) else 0
+	var transfer_run := Run.new(content)
+	transfer_run.start(transfer_run.revision,"smoky-den",82)
+	var transfer_table: RefCounted = transfer_run.enter_table(113,transfer_run.revision,"cargo-table")
+	if transfer_table != null:
+		finish_table(transfer_table)
+		verify(transfer_run.settle_table(transfer_run.revision),"Settle a played table for a real transfer checkpoint")
+	var transfer_valid: bool = transfer_table != null and transfer_run.completed.has("cargo-table") and transfer_run.transfer_venue("rooftop-club",transfer_run.revision)
+	verify(transfer_valid,"Construct valid transfer checkpoint through Run APIs")
+	if transfer_valid:
+		var transfer_base: Dictionary = Checkpoint.capture(transfer_run)
+		for entry in [
+			{"name":"transfer_log_count_mismatch","field":"transfer_log","value":[]},
+			{"name":"hop_from_mismatch","field":"from","value":"neon-poker-club"},
+			{"name":"hop_to_mismatch","field":"to","value":"high-rise-suite"},
+			{"name":"hop_fee_not_integer","field":"fee","value":"15"},
+			{"name":"hop_fee_below_minimum","field":"fee","value":14},
+			{"name":"hop_after_tables_not_integer","field":"after_tables","value":"1"},
+			{"name":"hop_after_tables_not_increasing","field":"after_tables","value":0},
+			{"name":"hop_after_tables_out_of_range","field":"after_tables","value":4},
+			{"name":"arrival_differs_from_hop","field":"arrival_completed","value":0},
+		]:
+			var transfer_case: Dictionary = transfer_base.duplicate(true)
+			if entry.has("field") and entry.field in ["from","to","fee","after_tables"]:
+				transfer_case.transfer_log[0][entry.field] = entry.value
+			else:
+				transfer_case[entry.field] = entry.value
+			invalid_case_targets += 1
+			invalid_cases += 1 if check_invalid_snapshot(entry.name, transfer_case, content, transfer_run, transfer_base) else 0
 	var reserved := Run.new(content)
 	reserved.start(reserved.revision,"smoky-den",2409)
 	reserved.route_flags.fixed = true
@@ -181,7 +240,7 @@ func run_tests() -> void:
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("persistence_run.")).map(func(row): return row.id)
 	var hits := {}
-	if invalid_cases == cases.size() and failures.is_empty():
+	if invalid_cases == cases.size() + invalid_case_targets and failures.is_empty():
 		hits["persistence_run.invalid_fields_rejected"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true}
 	if reservation_restored and failures.is_empty():
 		hits["persistence_run.reservation_restored"] = {"test":"run_restore_bounds_test.gd","postcondition_verified":true}
@@ -202,3 +261,30 @@ func run_tests() -> void:
 	FileAccess.open("res://../output/3d/persistence-run-coverage.json", FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("RUN_RESTORE_BOUNDS ", JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)
+
+func check_invalid_case(label: String, base: Dictionary, field: String, value: Variant, content: Dictionary, live_run: RefCounted, live_before: Dictionary) -> bool:
+	var broken := base.duplicate(true)
+	broken[field] = value
+	return check_invalid_snapshot(label, broken, content, live_run, live_before)
+
+func check_invalid_snapshot(label: String, broken: Dictionary, content: Dictionary, live_run: RefCounted, live_before: Dictionary) -> bool:
+	var before := broken.duplicate(true)
+	var rejected: bool = Checkpoint.restore(broken,content) == null
+	var unchanged: bool = broken == before and Checkpoint.capture(live_run) == live_before
+	verify(rejected,"Reject Run checkpoint at expected guard: "+label)
+	verify(unchanged,"Rejected Run checkpoint and live state remain unchanged: "+label)
+	return rejected and unchanged
+
+func finish_table(table: RefCounted) -> void:
+	var steps := 0
+	while table.state.status != "finished" and steps < 200:
+		steps += 1
+		if table.state.status == "hand_over":
+			table.next_hand(table.revision)
+		elif table.state.currentActorId.is_empty():
+			table.advance(table.revision)
+		else:
+			var actor: String = table.state.currentActorId
+			var legal: Dictionary = table.legal_actions(actor)
+			table.act(actor,"fold" if actor != "player" else ("check" if legal.check else "call"),table.revision)
+	verify(table.state.status == "finished","Checkpoint fixture table finishes")

@@ -282,6 +282,26 @@ def main() -> int:
         if "20260925-103506" in row["evidence_report"] or "20260925-105659" in row["evidence_report"]:
             row["evidence_report"] = row["evidence_report"].replace("20260925-103506/report.json", LATEST_REPORT).replace("20260925-105659/report.json", LATEST_REPORT)
 
+    run_restore_evidence = {
+        "Godot/three_d/rules/run_checkpoint.gd:33-34": "独立单字段非法样例分别触发资金/风声边界和非 Dictionary 桌面守卫；每例都断言 restore 返回 null、输入快照不变且基准 Run capture 不变。",
+        "Godot/three_d/rules/run_checkpoint.gd:70-71": "未知 scene_id 单字段样例从合法 Run 快照构造，确认命中场景存在性拒绝且不改输入或活体 Run。",
+        "Godot/three_d/rules/run_checkpoint.gd:90-91": "offer_index=-1 与等于 fixedRoutes.size() 分别单字段拒绝，输入快照和活体 Run 均保持不变。",
+        "Godot/three_d/rules/run_checkpoint.gd:96": "arrival_completed 大于 completed.size() 的单字段样例被拒绝，且输入快照及活体 Run 不变。",
+        "Godot/three_d/rules/run_checkpoint.gd:97-101": "venue_history 的非字符串、未知场景、重复场景及末项与 scene_id 不符分别由合法快照单字段构造，均拒绝且不变更状态。",
+        "Godot/three_d/rules/run_checkpoint.gd:102": "通过真实 Run.start/enter_table/settle_table/transfer_venue 生成合法转场快照，再单独清空 transfer_log，命中历史长度拒绝且两份基线不变。",
+        "Godot/three_d/rules/run_checkpoint.gd:103-109": "真实转场快照逐项篡改 hop 的 from/to、fee 类型/下界、after_tables 类型/递增/范围，并单独错置 arrival_completed；每个负例只改一个字段并拒绝。",
+        "Godot/three_d/rules/run_checkpoint.gd:116-117": "分别构造未知抵押物、非贵重道具抵押、无活动牌桌留抵押物三种单字段快照，均被拒绝且输入及活体 Run 不变。",
+    }
+    for row in branches:
+        if row["source_file"] == "Godot/three_d/rules/run_checkpoint.gd" and row["source_line"] in run_restore_evidence:
+            row.update({
+                "test": "Godot/three_d/tests/run_restore_bounds_test.gd::invalid_fields_rejected",
+                "evidence_report": f"output/3d/persistence-run-coverage.json;{LATEST_REPORT}",
+                "evidence_strength": "strong",
+                "disposition": "catalogued_strong",
+                "notes": run_restore_evidence[row["source_line"]],
+            })
+
     # World/table orchestration is a call-site layer over already catalogued
     # poker and world outcomes. Reuse those IDs; do not expand the catalog for
     # duplicate wrappers around the same accepted/rejected result.
