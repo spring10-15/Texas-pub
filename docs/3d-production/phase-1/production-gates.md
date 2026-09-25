@@ -75,3 +75,4 @@ Phase 1 补充产物：[难度曲线](difficulty-curve.md)、[八对手条件策
 - 完整回归 64/64 通过：`output/3d/regression/20260925-160511/report.json`；Python 单测 6/6；登记目录证据 394/394，`overall_state_transition_coverage=null`。
 - A8 当前树 overlay 为 667 条归类：521 条强证据、146 条不可达或非状态转移、0 条弱证据、0 条已审玩家路径未映射；394/394 个登记 ID 均有归因。独立核验 `output/external-handoff/A8/verify_reconciliation.py` 为 23 项确认、0 项漂移、0 项反证。`build_a8.py --check` 仍验证旧 382 项冻结锚点。
 - A5 存档审计 50 行/40 个目录 ID 映射通过；C1 链接检查通过。以上更新不闭合源码驱动的全局分母，故全局覆盖率仍不可用，≥95% 门槛和 Phase 1 整体验收仍未通过。
+- 后续源码入口普查扫描 rules/scripts 的 20 个运行时脚本，共 177 个方法：120 个已有 A8 方法入口记录，57 个方法逐项归入只读/展示/构造辅助，未分类 0。普查为入口边界建立了可重复校验；守卫成功/失败后继尚未完成全量枚举，不能据此改变目录 `incomplete_catalog` 状态。

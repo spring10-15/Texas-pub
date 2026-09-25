@@ -515,12 +515,15 @@ def main() -> int:
     write_csv(AUDIT / "current-tree-unmapped-player-path-gaps.csv", branch_fields, current_gaps)
     write_csv(AUDIT / "current-tree-weak-evidence.csv", branch_fields, weak_evidence)
     counts = Counter(row["disposition"] for row in branches)
+    # This is the source revision used by the regression and overlay. Later
+    # documentation-only commits are allowed; verify_reconciliation.py checks
+    # that game rules, runtime scripts, tests, and catalog stayed unchanged.
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     report = ROOT / LATEST_REPORT
     lifecycle_report = ROOT / "output/3d/lifecycle-coverage.json"
     text = f"""# A8 当前树对账记录
 
-- 当前 HEAD：`{head}`
+- 证据源码基线 HEAD：`{head}`
 - 当前目录：{len(catalog_ids)} 个唯一 ID，SHA-256 `{sha256(CATALOG)}`
 - 采用的全量回归：`{LATEST_REPORT}`（必须由当前源码/测试重跑后更新本记录）
 - 回归报告 SHA-256：`{sha256(report)}`

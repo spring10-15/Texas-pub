@@ -11,6 +11,8 @@
 
 **当前树复核（2026-09-25 最新）**：后续新增了 `entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal`、`world.autosave`、`world.window_focus_out`、`player.look_changed`、`player.movement` 与 `world.window_close_request`；目录现为 394 个 ID。搜索与货架入口、禁用控制时的输入拒绝、存档保护等新证据映射至既有 ID；未增加重复 ID。当前 overlay 将 667 条分支归为 521 条强证据、146 条不可达或非状态转移；394/394 个登记 ID 均有归因，已审候选中未映射为 0、弱证据为 0。独立对账 23 项确认、0 项漂移、0 项反证。完整回归为 64/64，详见 [当前树对账记录](current-tree-reconciliation.md)。这仍只证明当前已登记 ID 及已审分支的归因；冻结 A8 仍是 382 项历史锚点，源码驱动的全局分母未闭合，不能据此声称目录完整或 Phase 1 通过。
 
+**源码入口普查（2026-09-25）**：新增[函数入口普查记录](source-function-sweep.md)，静态索引 rules/scripts 下 20 个运行时 GDScript 的 177 个方法；120 个对应 A8 当前树入口，57 个为逐方法注明理由的非独立转移方法，未分类 0。该检查限定了后续分支审计的入口范围，不代表守卫枚举闭合或全局目录完整。
+
 ## 1. 与主 Agent 底稿的关系
 
 同目录下的 `source-audit-notes.md` 是**主 Agent 的入场初查底稿**，它自己声明「它不是 A8 最终报告」且「供后续完整审计复用」。本轮把它当作**输入线索**，所有结论都回到当前源码重新推导。

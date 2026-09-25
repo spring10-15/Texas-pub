@@ -1,0 +1,1451 @@
+{
+  "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
+  "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
+  "head": "683f3203cd093ce4ee0ea1c590c0283ad186e339",
+  "branch_inventory_sha256": "72c4b1f4d660786954e2dcb8c88b1349caffd3e26d96f979ba188026d94f4a82",
+  "source_sha256": {
+    "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
+    "Godot/three_d/rules/opponent.gd": "b7f629124fb987550a958769933ddc97dd76be718326f1c1e7a6ae2b6dd04e94",
+    "Godot/three_d/rules/poker.gd": "81c89274bf62e2e8cda03f4b2daddf3e187ff7af75e6b094660c890a6d441c38",
+    "Godot/three_d/rules/routes.gd": "29c015a2fe729d224653061a1f12cf49ad7c2db486b821d30d44bdc997b5ef76",
+    "Godot/three_d/rules/run.gd": "f6d61934d399eea05728c7f81780744ae8594a23afed8ca4e31a64cb8ffd0308",
+    "Godot/three_d/rules/run_checkpoint.gd": "3ff358a7bdeb8c08921e3a962b02da5074c052826caedde4111d7eaa62798354",
+    "Godot/three_d/rules/run_variants.gd": "a65634653c6c59dd29d85721408af477f5d0958990948d616ec7303bc4cae623",
+    "Godot/three_d/rules/save_store.gd": "0c1765b68e0faae1a076903024b6fb6ce54e92e4f81d227223411bba3a91aade",
+    "Godot/three_d/rules/search_events.gd": "cd183477b4de961161153cc7742f9b8ef83ebcb1c6700f93b35e537beab079e3",
+    "Godot/three_d/rules/table.gd": "d248b457389321750dab5366c13da7b6ce346f933516ea2fd0dd6b3aed56217e",
+    "Godot/three_d/rules/table_checkpoint.gd": "f5ea07438d5ecef97fe7db3d31d7cb8da14582729582d1ecba1504898e69a27b",
+    "Godot/three_d/scripts/bar_display.gd": "f1fcc1666a2dc565b8de0076b8775e73ef02f1c93b548af8a494625c59dc157f",
+    "Godot/three_d/scripts/characters.gd": "1319eb5d19c833d71fcb2c1df88f292888acaac24eb577fc192ec6735c5f39a9",
+    "Godot/three_d/scripts/interactable.gd": "02903564281ff42f000c224aaae9d602b5f889bc5406c772e0094eaa3e590003",
+    "Godot/three_d/scripts/player.gd": "59c5b988f3305adeac4c90c52ab4311182b760407b1b78422f1a17302dff2882",
+    "Godot/three_d/scripts/scene_props.gd": "c0a32396ac4b4238bd56c1e9b995a088260e6ec4a3280584602d212bea5e1276",
+    "Godot/three_d/scripts/services_hud.gd": "b0468c79b57fd9b309354b65c1cfdc1b9a55d3ffc8d9834d3eb907fef40ff14c",
+    "Godot/three_d/scripts/table_hud.gd": "346e562d2480c9fa03ae7c324c6420e3348a0104281a56640fb1dedfa56e8746",
+    "Godot/three_d/scripts/tavern_layout.gd": "1c58b44faba59fe84ed8623a32b30c85f82e0996e1771b76bed2555ea8727d45",
+    "Godot/three_d/scripts/world.gd": "c033e6ea27543499fb2b06a50534dd89f97f457e10178e09763774d0a639265c"
+  },
+  "counts": {
+    "audit_inventory": 120,
+    "explicit_exclusion": 57
+  },
+  "functions": [
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 4,
+      "name": "reason",
+      "signature": "static func reason(run: RefCounted, kind: String, item: String, target: String) -> String:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 44,
+      "name": "apply",
+      "signature": "static func apply(run: RefCounted, kind: String, item: String, target: String) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 4,
+      "name": "estimate_odds",
+      "signature": "static func estimate_odds(hole: Array, board: Array, opponents: int, seed_value: int, trials := 85) -> float:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 27,
+      "name": "choose",
+      "signature": "static func choose(table: Dictionary, actor: Dictionary, legal: Dictionary, definition: Dictionary, random_value: float) -> String:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 33,
+      "name": "choose_with_odds",
+      "signature": "static func choose_with_odds(table: Dictionary, actor: Dictionary, legal: Dictionary, definition: Dictionary, random_value: float, odds: float) -> String:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 8,
+      "name": "_init",
+      "signature": "func _init(seed_value: int) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "initializes the deterministic RNG state; state consumption is represented by next"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 10,
+      "name": "multiply32",
+      "signature": "func multiply32(a: int, b: int) -> int:",
+      "status": "explicit_exclusion",
+      "reason": "pure 32-bit arithmetic helper used by the deterministic RNG"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 12,
+      "name": "next",
+      "signature": "func next() -> float:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 18,
+      "name": "create_deck",
+      "signature": "static func create_deck() -> Array:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 25,
+      "name": "shuffle_deck",
+      "signature": "static func shuffle_deck(deck: Array, rng: DeterministicRng) -> Array:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 34,
+      "name": "compare_hands",
+      "signature": "static func compare_hands(a: Dictionary, b: Dictionary) -> int:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 44,
+      "name": "evaluate_best_hand",
+      "signature": "static func evaluate_best_hand(cards: Array) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 59,
+      "name": "evaluate_five",
+      "signature": "static func evaluate_five(cards: Array) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 105,
+      "name": "make_hand",
+      "signature": "static func make_hand(rank: int, values: Array, cards: Array) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 110,
+      "name": "build_pots",
+      "signature": "static func build_pots(players: Array) -> Array:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 131,
+      "name": "settle_pots",
+      "signature": "static func settle_pots(players: Array, board: Array) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 3,
+      "name": "quote",
+      "signature": "static func quote(run: RefCounted, kind: String) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 47,
+      "name": "_init",
+      "signature": "func _init(definitions: Dictionary) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "constructs the initial in-memory Run object; new-run effects are owned by start"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 51,
+      "name": "start",
+      "signature": "func start(expected_revision: int, destination := \"smoky-den\", seed_value := 0) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 88,
+      "name": "transfer_quote",
+      "signature": "func transfer_quote(destination: String) -> Dictionary:",
+      "status": "explicit_exclusion",
+      "reason": "read-only preview; transfer_venue owns accepted/rejected results"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 100,
+      "name": "transfer_venue",
+      "signature": "func transfer_venue(destination: String, expected_revision: int) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 130,
+      "name": "table_blocked_reason",
+      "signature": "func table_blocked_reason(table_id := \"cargo-table\") -> String:",
+      "status": "explicit_exclusion",
+      "reason": "read-only gate query; enter_table owns the rejected result"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 146,
+      "name": "room_requirements",
+      "signature": "func room_requirements(table_id: String) -> Array:",
+      "status": "explicit_exclusion",
+      "reason": "read-only dependency query used by room_blocked_reason"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 153,
+      "name": "room_blocked_reason",
+      "signature": "func room_blocked_reason(table_id: String) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "read-only gate query; request_action/enter_table own the result"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 157,
+      "name": "table_definition",
+      "signature": "func table_definition(table_id: String) -> Dictionary:",
+      "status": "explicit_exclusion",
+      "reason": "returns a defensive content copy with the selected opponent roster"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 165,
+      "name": "enter_table",
+      "signature": "func enter_table(seed_value: int, expected_revision: int, table_id := \"cargo-table\", pledged_item := \"\") -> RefCounted:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 183,
+      "name": "settle_table",
+      "signature": "func settle_table(expected_revision: int) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 219,
+      "name": "discover_exit",
+      "signature": "func discover_exit() -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 226,
+      "name": "extraction_quote",
+      "signature": "func extraction_quote(kind := \"general\") -> Dictionary:",
+      "status": "explicit_exclusion",
+      "reason": "read-only quote; extract/enforce_pressure own resulting actions"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 229,
+      "name": "extract",
+      "signature": "func extract(expected_revision: int, kind := \"general\") -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 242,
+      "name": "reset_demo",
+      "signature": "func reset_demo(expected_revision: int) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 250,
+      "name": "slots_used",
+      "signature": "func slots_used() -> int:",
+      "status": "explicit_exclusion",
+      "reason": "read-only inventory capacity calculation"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 256,
+      "name": "service_reason",
+      "signature": "func service_reason(kind: String, item_id: String, target_id := \"\") -> String:",
+      "status": "explicit_exclusion",
+      "reason": "read-only validation dispatcher; service_action owns the result"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 305,
+      "name": "shop_stock",
+      "signature": "func shop_stock() -> Array:",
+      "status": "explicit_exclusion",
+      "reason": "read-only deterministic stock lookup; purchase outcome belongs to service_action"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 315,
+      "name": "service_action",
+      "signature": "func service_action(kind: String, item_id: String, expected_revision: int, target_id := \"\") -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 366,
+      "name": "service_view",
+      "signature": "func service_view(mode := \"bag\", product := \"\") -> Dictionary:",
+      "status": "explicit_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 447,
+      "name": "item_name",
+      "signature": "func item_name(id: String) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "presentation label lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 450,
+      "name": "sale_value",
+      "signature": "func sale_value(id: String) -> int:",
+      "status": "explicit_exclusion",
+      "reason": "read-only content lookup used by sale validation and accounting"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 454,
+      "name": "valuable_total",
+      "signature": "func valuable_total() -> int:",
+      "status": "explicit_exclusion",
+      "reason": "read-only inventory valuation"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 461,
+      "name": "reward_for_table",
+      "signature": "func reward_for_table(definition: Dictionary, stack: int, collateral_returned: bool) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "read-only reward-rule selection; settle_table owns reward application"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 470,
+      "name": "table_reward_pool",
+      "signature": "func table_reward_pool(definition: Dictionary) -> Array:",
+      "status": "explicit_exclusion",
+      "reason": "read-only reward-intel projection"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 477,
+      "name": "abandon_quote",
+      "signature": "func abandon_quote() -> Dictionary:",
+      "status": "explicit_exclusion",
+      "reason": "read-only preview; abandon owns accepted/rejected results"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 481,
+      "name": "abandon",
+      "signature": "func abandon(expected_revision: int) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 494,
+      "name": "route_offer",
+      "signature": "func route_offer() -> Dictionary:",
+      "status": "explicit_exclusion",
+      "reason": "read-only deterministic route lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 497,
+      "name": "fixed_known",
+      "signature": "func fixed_known() -> bool:",
+      "status": "explicit_exclusion",
+      "reason": "read-only route visibility predicate"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 500,
+      "name": "emergency_known",
+      "signature": "func emergency_known() -> bool:",
+      "status": "explicit_exclusion",
+      "reason": "read-only emergency-route visibility predicate"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 503,
+      "name": "actor_name",
+      "signature": "func actor_name(id: String) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "presentation label lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 506,
+      "name": "table_name",
+      "signature": "func table_name(id: String) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "presentation label lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 509,
+      "name": "archetype_name",
+      "signature": "func archetype_name(value: String) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "presentation label lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 512,
+      "name": "enforce_pressure",
+      "signature": "func enforce_pressure() -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 529,
+      "name": "offer_name",
+      "signature": "func offer_name(id: String) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "presentation label lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 535,
+      "name": "route_known",
+      "signature": "func route_known(kind: String) -> bool:",
+      "status": "explicit_exclusion",
+      "reason": "read-only route visibility predicate"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 545,
+      "name": "item_description",
+      "signature": "func item_description(id: String) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "presentation description lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 550,
+      "name": "rule_text",
+      "signature": "func rule_text(id: String) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "read-only content display lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 554,
+      "name": "scene_definition",
+      "signature": "func scene_definition() -> Dictionary:",
+      "status": "explicit_exclusion",
+      "reason": "read-only current-scene content lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 557,
+      "name": "reserve_fee",
+      "signature": "func reserve_fee() -> int:",
+      "status": "explicit_exclusion",
+      "reason": "read-only price calculation; service_action owns payment"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 560,
+      "name": "route_name",
+      "signature": "func route_name(kind: String) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "presentation label lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 6,
+      "name": "capture",
+      "signature": "static func capture(run: RefCounted) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 14,
+      "name": "table_definitions_compatible",
+      "signature": "static func table_definitions_compatible(stored: Dictionary, current: Dictionary) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 22,
+      "name": "restore",
+      "signature": "static func restore(values: Dictionary, content: Dictionary) -> RefCounted:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 9,
+      "name": "generate",
+      "signature": "static func generate(content: Dictionary, scene: String, seed_value: int) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 38,
+      "name": "valid",
+      "signature": "static func valid(plan: Dictionary, content: Dictionary, scene: String) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 80,
+      "name": "shuffled",
+      "signature": "static func shuffled(pool: Array, rng: Poker.DeterministicRng) -> Array:",
+      "status": "explicit_exclusion",
+      "reason": "local seeded generation helper; generate owns the resulting stored plan"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 5,
+      "name": "write_checkpoint",
+      "signature": "static func write_checkpoint(path: String, state: Dictionary) -> Error:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 8,
+      "name": "_write_checkpoint",
+      "signature": "static func _write_checkpoint(path: String, state: Dictionary, readback: Callable) -> Error:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 30,
+      "name": "read_checkpoint",
+      "signature": "static func read_checkpoint(path: String) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 33,
+      "name": "_read_checkpoint",
+      "signature": "static func _read_checkpoint(path: String, open_file: Callable) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 10,
+      "name": "event_id",
+      "signature": "static func event_id(run: RefCounted, site: String) -> String:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 12,
+      "name": "event_for",
+      "signature": "static func event_for(run: RefCounted, site: String) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 19,
+      "name": "choice",
+      "signature": "static func choice(run: RefCounted, site: String, id: String) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 23,
+      "name": "reason",
+      "signature": "static func reason(run: RefCounted, site: String, id: String) -> String:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 37,
+      "name": "apply",
+      "signature": "static func apply(run: RefCounted, site: String, id: String) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 8,
+      "name": "start",
+      "signature": "func start(definition: Dictionary, seed_value: int) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 16,
+      "name": "ordered_after",
+      "signature": "func ordered_after(pivot: int, include_pivot := true, require_chips := true) -> Array:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 24,
+      "name": "start_hand",
+      "signature": "func start_hand(rotate_dealer := false) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 54,
+      "name": "commit",
+      "signature": "func commit(player: Dictionary, amount: int) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 60,
+      "name": "legal_actions",
+      "signature": "func legal_actions(id: String) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 77,
+      "name": "act",
+      "signature": "func act(id: String, kind: String, expected_revision: int, raise_target := -1) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 137,
+      "name": "set_queue",
+      "signature": "func set_queue(ordered: Array) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 146,
+      "name": "advance",
+      "signature": "func advance(expected_revision: int) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 174,
+      "name": "finish_hand",
+      "signature": "func finish_hand() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 185,
+      "name": "next_hand",
+      "signature": "func next_hand(expected_revision: int) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 192,
+      "name": "find_player",
+      "signature": "func find_player(id: String) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 198,
+      "name": "log_event",
+      "signature": "func log_event(kind: String, actor: String, amount: int) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 203,
+      "name": "public_state",
+      "signature": "func public_state() -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 5,
+      "name": "capture",
+      "signature": "static func capture(table: RefCounted) -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 8,
+      "name": "restore",
+      "signature": "static func restore(snapshot: Dictionary) -> RefCounted:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 56,
+      "name": "valid_card",
+      "signature": "static func valid_card(card: Variant, seen: Dictionary) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/bar_display.gd",
+      "line": 5,
+      "name": "_init",
+      "signature": "func _init(owner: Node3D) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "scene presentation helper setup"
+    },
+    {
+      "file": "Godot/three_d/scripts/bar_display.gd",
+      "line": 7,
+      "name": "build",
+      "signature": "func build(room: Node3D) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "builds visual shelf nodes from existing content"
+    },
+    {
+      "file": "Godot/three_d/scripts/bar_display.gd",
+      "line": 18,
+      "name": "refresh",
+      "signature": "func refresh() -> void:",
+      "status": "explicit_exclusion",
+      "reason": "projects Run inventory and stock into shelf visuals"
+    },
+    {
+      "file": "Godot/three_d/scripts/bar_display.gd",
+      "line": 38,
+      "name": "deliver",
+      "signature": "func deliver(id: String) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "animates/displays a selected product; Run.service_action owns purchase state"
+    },
+    {
+      "file": "Godot/three_d/scripts/bar_display.gd",
+      "line": 52,
+      "name": "make_item",
+      "signature": "func make_item(parent: Node3D, id: String, pos: Vector3) -> Node3D:",
+      "status": "explicit_exclusion",
+      "reason": "constructs a visual product node"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 5,
+      "name": "_init",
+      "signature": "func _init(owner: Node3D) -> void: world = owner",
+      "status": "explicit_exclusion",
+      "reason": "scene presentation helper setup"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 6,
+      "name": "actor",
+      "signature": "func actor(id: String, parent: Node3D, pos: Vector3, yaw := 0.0) -> Dictionary:",
+      "status": "explicit_exclusion",
+      "reason": "constructs a visual character node"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 22,
+      "name": "build",
+      "signature": "func build(room: Node3D, definition: Dictionary) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "builds scene character visuals from content"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 32,
+      "name": "sync",
+      "signature": "func sync(room: Node3D, definition: Dictionary) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "updates visual character placement and pose"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 44,
+      "name": "refresh",
+      "signature": "func refresh(view: Dictionary) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "projects public table state into character visuals"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 57,
+      "name": "deliver",
+      "signature": "func deliver() -> void:",
+      "status": "explicit_exclusion",
+      "reason": "selects existing character feedback text/animation"
+    },
+    {
+      "file": "Godot/three_d/scripts/interactable.gd",
+      "line": 8,
+      "name": "prompt",
+      "signature": "func prompt() -> String:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 15,
+      "name": "_ready",
+      "signature": "func _ready() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 38,
+      "name": "_unhandled_input",
+      "signature": "func _unhandled_input(event: InputEvent) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 53,
+      "name": "_physics_process",
+      "signature": "func _physics_process(delta: float) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 63,
+      "name": "update_focus",
+      "signature": "func update_focus() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 71,
+      "name": "can_interact",
+      "signature": "func can_interact(target: Area3D) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/scene_props.gd",
+      "line": 6,
+      "name": "_init",
+      "signature": "func _init(owner: Node3D) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/scene_props.gd",
+      "line": 8,
+      "name": "register",
+      "signature": "func register(id: String, node: Node3D, anchor: Area3D, property: String, closed: Variant, opened: Variant) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/scene_props.gd",
+      "line": 11,
+      "name": "interact",
+      "signature": "func interact(id: String) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/scene_props.gd",
+      "line": 18,
+      "name": "restore",
+      "signature": "func restore(values: Dictionary) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/scene_props.gd",
+      "line": 23,
+      "name": "build_stash",
+      "signature": "func build_stash(room: Node3D, lamp: OmniLight3D) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/scene_props.gd",
+      "line": 106,
+      "name": "build_tavern",
+      "signature": "func build_tavern(room: Node3D, prefix: String) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/services_hud.gd",
+      "line": 5,
+      "name": "_ready",
+      "signature": "func _ready() -> void:",
+      "status": "explicit_exclusion",
+      "reason": "constructs service UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/services_hud.gd",
+      "line": 21,
+      "name": "refresh",
+      "signature": "func refresh(view: Dictionary) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "projects a read-only service view into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 27,
+      "name": "_ready",
+      "signature": "func _ready() -> void:",
+      "status": "explicit_exclusion",
+      "reason": "constructs table UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 102,
+      "name": "text",
+      "signature": "func text(parent: Node, value: String, font_size: int) -> Label:",
+      "status": "explicit_exclusion",
+      "reason": "constructs a label"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 114,
+      "name": "make_button",
+      "signature": "func make_button(parent: Node, caption: String) -> Button:",
+      "status": "explicit_exclusion",
+      "reason": "constructs a button"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 122,
+      "name": "card_text",
+      "signature": "static func card_text(card: Dictionary) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "formats a card for display"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 126,
+      "name": "cards_text",
+      "signature": "static func cards_text(cards: Array) -> String:",
+      "status": "explicit_exclusion",
+      "reason": "formats cards for display"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 132,
+      "name": "pregame",
+      "signature": "func pregame(cash := 0, definition: Dictionary = {}, inventory: Array = [], run: RefCounted = null) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "projects pregame options into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 164,
+      "name": "refresh",
+      "signature": "func refresh(view: Dictionary, locked := false) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "projects public table state into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 226,
+      "name": "selected_collateral",
+      "signature": "func selected_collateral() -> String:",
+      "status": "explicit_exclusion",
+      "reason": "reads current UI selection"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 229,
+      "name": "update_raise_preview",
+      "signature": "func update_raise_preview() -> void:",
+      "status": "explicit_exclusion",
+      "reason": "updates a read-only action preview"
+    },
+    {
+      "file": "Godot/three_d/scripts/tavern_layout.gd",
+      "line": 3,
+      "name": "sign_at",
+      "signature": "static func sign_at(w: Node3D, room: Node3D, value: String, pos: Vector3, yaw := 0.0) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "constructs a sign visual"
+    },
+    {
+      "file": "Godot/three_d/scripts/tavern_layout.gd",
+      "line": 16,
+      "name": "build",
+      "signature": "static func build(w: Node3D, room: Node3D) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "builds room decoration nodes"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 71,
+      "name": "_ready",
+      "signature": "func _ready() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 109,
+      "name": "configure_playtest",
+      "signature": "func configure_playtest(arguments: PackedStringArray) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 122,
+      "name": "trace_playtest",
+      "signature": "func trace_playtest(event: String, choice := \"\", details := {}) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 143,
+      "name": "configure_input",
+      "signature": "func configure_input() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 152,
+      "name": "make_materials",
+      "signature": "func make_materials() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 172,
+      "name": "box",
+      "signature": "func box(parent: Node3D, node_name: String, pos: Vector3, size: Vector3, material: String, solid := true) -> Node3D:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 194,
+      "name": "room_shell",
+      "signature": "func room_shell(offset: Vector3, label: String) -> Node3D:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 221,
+      "name": "build_stash",
+      "signature": "func build_stash() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 248,
+      "name": "build_tavern",
+      "signature": "func build_tavern(room_name := \"Tavern\", offset := 10.0) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 312,
+      "name": "target",
+      "signature": "func target(parent: Node3D, node_name: String, pos: Vector3, size: Vector3, action: StringName, caption: String) -> Area3D:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 328,
+      "name": "make_door",
+      "signature": "func make_door(room: Node3D, pos: Vector3, caption: String, action: StringName) -> Area3D:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 334,
+      "name": "build_lighting",
+      "signature": "func build_lighting() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 346,
+      "name": "point_light",
+      "signature": "func point_light(parent: Node3D, pos: Vector3, color: Color, energy: float, radius: float) -> OmniLight3D:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 356,
+      "name": "build_ui",
+      "signature": "func build_ui() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 435,
+      "name": "label",
+      "signature": "func label(parent: Node, content: String, font_size: int) -> Label:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 447,
+      "name": "make_panel",
+      "signature": "func make_panel(parent: Control, heading: String, body: String, button_label: String, callback: Callable) -> PanelContainer:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 472,
+      "name": "show_focus",
+      "signature": "func show_focus(focus: Area3D) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 476,
+      "name": "request_action",
+      "signature": "func request_action(anchor: Area3D) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 549,
+      "name": "travel",
+      "signature": "func travel(destination: String) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 564,
+      "name": "leave_seat",
+      "signature": "func leave_seat() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 586,
+      "name": "toggle_pause",
+      "signature": "func toggle_pause() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 601,
+      "name": "pause_game",
+      "signature": "func pause_game() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 612,
+      "name": "resume",
+      "signature": "func resume() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 621,
+      "name": "_notification",
+      "signature": "func _notification(what: int) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 634,
+      "name": "start_table",
+      "signature": "func start_table(seed_value: int = -1) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 647,
+      "name": "play_action",
+      "signature": "func play_action(kind: String, expected_revision: int, raise_target: int = -1) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 658,
+      "name": "continue_hand",
+      "signature": "func continue_hand(expected_revision: int) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 664,
+      "name": "_process",
+      "signature": "func _process(delta: float) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 683,
+      "name": "advance_table_beat",
+      "signature": "func advance_table_beat() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 698,
+      "name": "refresh_table",
+      "signature": "func refresh_table() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 719,
+      "name": "clear_cards",
+      "signature": "func clear_cards() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 724,
+      "name": "draw_card",
+      "signature": "func draw_card(card: Dictionary, pos: Vector3) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 736,
+      "name": "refresh_economy",
+      "signature": "func refresh_economy() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 754,
+      "name": "show_run_panel",
+      "signature": "func show_run_panel(action: String, preview_only := false) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 827,
+      "name": "close_run_panel",
+      "signature": "func close_run_panel() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 834,
+      "name": "confirm_run_action",
+      "signature": "func confirm_run_action() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 870,
+      "name": "select_table_room",
+      "signature": "func select_table_room(room_name: String) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 879,
+      "name": "_unhandled_input",
+      "signature": "func _unhandled_input(event: InputEvent) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 887,
+      "name": "open_services",
+      "signature": "func open_services(mode := \"bag\", item := \"\") -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 901,
+      "name": "close_services",
+      "signature": "func close_services() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 908,
+      "name": "service_action",
+      "signature": "func service_action(kind: String, item_id: String, revision: int, target_id := \"\") -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 947,
+      "name": "checkpoint_state",
+      "signature": "func checkpoint_state() -> Dictionary:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 950,
+      "name": "save_checkpoint",
+      "signature": "func save_checkpoint() -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 966,
+      "name": "load_checkpoint",
+      "signature": "func load_checkpoint() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 983,
+      "name": "checkpoint_position_valid",
+      "signature": "func checkpoint_position_valid(position: Vector3, room: String) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 990,
+      "name": "restore_checkpoint",
+      "signature": "func restore_checkpoint(state: Dictionary) -> bool:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1047,
+      "name": "check_pressure",
+      "signature": "func check_pressure() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1053,
+      "name": "install_detail",
+      "signature": "func install_detail(room: Node3D, asset: PackedScene) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1064,
+      "name": "make_detailed_prop",
+      "signature": "func make_detailed_prop(id: String) -> Node3D:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1071,
+      "name": "install_prop",
+      "signature": "func install_prop(parent: Node3D, id: String) -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1077,
+      "name": "visible_route_name",
+      "signature": "func visible_route_name(kind: String) -> String:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1082,
+      "name": "available_route_text",
+      "signature": "func available_route_text(excluded_kind: String) -> String:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1092,
+      "name": "refresh_route_labels",
+      "signature": "func refresh_route_labels() -> void:",
+      "status": "audit_inventory",
+      "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    }
+  ],
+  "errors": []
+}
