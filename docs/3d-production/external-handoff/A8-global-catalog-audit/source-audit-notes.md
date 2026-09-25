@@ -62,10 +62,21 @@
 
 本组目录核数：`advanced_services.gd` 42 个（26 + 11 + 5），`routes.gd` 24 个；`search_events.gd` 与 `run_variants.gd` 无独立 source entry。以上只核对当前归属关系，没有核定每个接受/拒绝分支的独立性、玩家可达性或证据强度。
 
+## 持久化入口初查
+
+| 源入口 | 当前目录 entry 与数量 | 当前测试/报告候选 | 初步证据边界 |
+|---|---|---|---|
+| `RunCheckpoint.capture/restore` | `capture` 2；`restore` 7 | `persistence_capture_coverage_test.gd`、`run_restore_bounds_test.gd`、`world_restore_atomic_test.gd`；`persistence-capture/run/restore-coverage.json` | capture 测完整字段与深拷贝隔离；restore 涵盖缺省迁移、字段/预约/桌定义校验与失败输入不变。没有真实历史用户存档样本，旧版恢复只证明当前合成兼容夹具。 |
+| `TableCheckpoint.capture/restore` | `capture` 2；`restore` 4 | `persistence_capture_coverage_test.gd`、`table_checkpoint_test.gd`；`persistence-capture/table-coverage.json` | 捕获字段、隔离、非法快照拒绝、贡献/下注额一致性与 RNG 连续恢复有断言；需继续核对每条拒绝分支是否映射同一合法结果或独立结果。 |
+| `SaveStore.read_checkpoint/write_checkpoint` | `read_checkpoint` 8；`write_checkpoint` 5 | `save_store_test.gd`；`persistence-io-coverage.json` | 读错/不支持版本保持文件字节，临时文件写回验证失败与原子替换失败受测；不可读分支用打开回调拒绝模拟，不等于 OS 权限实测。 |
+| World `checkpoint_state/load_checkpoint/restore_checkpoint/save_checkpoint` | 合计 22 个目录 entry 结果 | `persistence_capture_coverage_test.gd`、`world_restore_atomic_test.gd`、`world_rng_replay_test.gd`；`persistence-capture/restore/replay-coverage.json` | 失败恢复的 World 全快照不变、读档损坏/未来版本处理、桌中 RNG 重放有报告；只覆盖当前列举的错误输入与 160 步重放样本，不证明任意无效数据穷尽。 |
+
+本组当前映射核数为 50 个目录结果（Run capture/restore 9、Table capture/restore 6、SaveStore 13、World capture/load/restore/save 22）。现有 `output/3d` 报告最新快照分别显示：persistence capture 6/6、Run restore 6/6、Table restore 4/4、I/O 13/13、World restore 18/18、RNG replay 2/2，均无 missing/failure；这只证明登记结果报告可命中，不等于源码入口已穷举，也不等于真实历史存档样本覆盖。
+
 ## 未完成事项
 
 - 尚未对上述入口逐分支确认源码后继状态与目录 ID 的一一映射。
 - 尚未核验候选测试是否对每条结果断言权威 Run 状态及拒绝原子性。
 - 尚未为这些分支填写当前源码行、测试、报告、证据强度和可达性 CSV。
-- 尚未逐分支完成 Table、扑克/对手、服务 helper、路线/事件/变体、存档及 World 物理入口审计；本节仅完成服务/路线/事件/变体的初步模块归属核对。
+- 尚未逐分支完成 Table、扑克/对手、服务 helper、路线/事件/变体、存档及 World 物理入口审计；本节已对这些模块做部分入口归属初查，但仍未逐行核对接受/拒绝语义、玩家可达性及后继断言。
 - 尚未分析目录外的可达结果；不能据本底稿推导覆盖百分比或 Phase 1 通过。
