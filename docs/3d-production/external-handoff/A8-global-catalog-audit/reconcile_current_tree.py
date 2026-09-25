@@ -42,8 +42,8 @@ def main() -> int:
     entry_heat_cap = 0
     settlement_heat_relief = 0
     player_raise_pattern = 0
-    world_search_open = 0
-    world_product_open = 0
+    world_search_evidence = 0
+    world_product_evidence = 0
     reclassified_nonplayer = 0
     presentation_only = 0
     reclassified_weak = 0
@@ -92,24 +92,24 @@ def main() -> int:
             player_raise_pattern += 1
         if row["source_file"] == "Godot/three_d/scripts/world.gd" and row["source_line"] == "Godot/three_d/scripts/world.gd:482-484" and row["catalog_id"] == "-":
             row.update({
-                "catalog_id": "world.search_open",
-                "test": "Godot/three_d/tests/world_coverage_test.gd::world.search_open",
+                "catalog_id": "world.services_open",
+                "test": "Godot/three_d/tests/world_coverage_test.gd::world.services_open",
                 "evidence_report": f"output/3d/world-coverage.json;{LATEST_REPORT}",
                 "evidence_strength": "strong",
                 "disposition": "catalogued_strong",
-                "notes": "通过真实 Tavern/SearchSite 锚点射线调 request_action，断言搜索模式面板打开、站点 ID 正确、玩家控制禁用且 Run 快照不变。",
+                "notes": "复用 world.services_open 语义 ID；通过真实 Tavern/SearchSite 锚点射线调 request_action，断言搜索模式面板打开、站点 ID 正确、玩家控制禁用且 Run 快照不变。",
             })
-            world_search_open += 1
+            world_search_evidence += 1
         if row["source_file"] == "Godot/three_d/scripts/world.gd" and row["source_line"] == "Godot/three_d/scripts/world.gd:485-487" and row["catalog_id"] == "-":
             row.update({
-                "catalog_id": "world.product_open",
-                "test": "Godot/three_d/tests/world_coverage_test.gd::world.product_open",
+                "catalog_id": "world.services_open",
+                "test": "Godot/three_d/tests/world_coverage_test.gd::world.services_open",
                 "evidence_report": f"output/3d/world-coverage.json;{LATEST_REPORT}",
                 "evidence_strength": "strong",
                 "disposition": "catalogued_strong",
-                "notes": "通过真实货架 shop 锚点射线调 request_action，断言单品模式面板打开、商品 ID 正确、玩家控制禁用且 Run 快照不变。",
+                "notes": "复用 world.services_open 语义 ID；通过真实货架 shop 锚点射线调 request_action，断言单品模式面板打开、商品 ID 正确、玩家控制禁用且 Run 快照不变。",
             })
-            world_product_open += 1
+            world_product_evidence += 1
         if row["player_reachable"] == "no" and row["disposition"] == "reachable_unmapped":
             row["disposition"] = "unreachable_or_not_transition"
             row["notes"] += " 当前树归因：损坏/篡改存档恢复拒绝或底层写盘失败，不计入正常玩家可达缺口；保留为系统防御分支记录。"
@@ -128,8 +128,8 @@ def main() -> int:
         if "20260925-103506" in row["evidence_report"] or "20260925-105659" in row["evidence_report"]:
             row["evidence_report"] = row["evidence_report"].replace("20260925-103506/report.json", LATEST_REPORT).replace("20260925-105659/report.json", LATEST_REPORT)
 
-    if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or world_search_open != 1 or world_product_open != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or reclassified_weak != 1:
-        raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, search_open={world_search_open}, product_open={world_product_open}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, weak={reclassified_weak}")
+    if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or world_search_evidence != 1 or world_product_evidence != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or reclassified_weak != 1:
+        raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, search_evidence={world_search_evidence}, product_evidence={world_product_evidence}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, weak={reclassified_weak}")
 
     current_gaps = [
         row.copy() for row in old_gaps
@@ -195,14 +195,14 @@ def main() -> int:
 ## 当前映射和缺口
 
 - 当前目录 ID 已全部映射：{len(mapped_ids)}/{len(catalog_ids)}。
-- `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`world.search_open` 与 `world.product_open` 已在对应 lifecycle、entry、settlement、poker 和 world 覆盖测试中验证并从旧候选表归因到正式 ID。
+- `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief` 与 `poker.player_raise_pattern` 已在对应测试中登记；搜索点与货架入口复用既有 `world.services_open` ID，并由真实锚点射线测试补强。
 - 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`；其中 1 条 yes 已有 `world.services_open` ID，但实体入口后置证据偏弱。当前树把 6 条 no 排除出玩家路径缺口，把该 services 行移入弱证据表；另 1 条仅显示试玩存档提示、不改变权威状态，也分类为非状态转移。
 - 当前仍有 {len(current_gaps)} 条标为玩家可达、尚无目录 ID 的候选，详见 `current-tree-player-path-gaps.csv`。这仍需逐条审查后才能新增语义 ID；全局分母尚未冻结。弱证据行见 `current-tree-weak-evidence.csv`。
 - 分支行 disposition 计数：`{dict(counts)}`。
 
 ## 限制
 
-此对账仅把原 382 项审计映射到当前目录，并补入已验证的本金封顶、入座风声封顶、盈利降风声、玩家行为画像、搜索/货架入口结果及明确的可达性/展示项分类。它没有重新逐行审计全部 16 个源码文件，也没有证明剩余候选均是独立状态转移。因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
+此对账仅把原 382 项审计映射到当前目录，并补入已验证的本金封顶、入座风声封顶、盈利降风声、玩家行为画像、搜索/货架入口证据及明确的可达性/展示项分类。它没有重新逐行审计全部 16 个源码文件，也没有证明剩余候选均是独立状态转移。因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
 
 ## 重建
 

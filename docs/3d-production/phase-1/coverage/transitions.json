@@ -1672,18 +1672,6 @@
       "outcome": "accepted"
     },
     {
-      "id": "world.search_open",
-      "source": "Godot/three_d/scripts/world.gd",
-      "entry": "request_action",
-      "outcome": "accepted"
-    },
-    {
-      "id": "world.product_open",
-      "source": "Godot/three_d/scripts/world.gd",
-      "entry": "request_action",
-      "outcome": "accepted"
-    },
-    {
       "id": "world.services_close",
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "close_services",

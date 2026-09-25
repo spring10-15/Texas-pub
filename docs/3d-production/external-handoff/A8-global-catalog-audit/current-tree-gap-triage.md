@@ -18,7 +18,7 @@
 
 **漂移 2 — 目录 385 项 → 386 项。** 上游于 11:36:40 在工作树追加 `poker.player_raise_pattern`（`Godot/three_d/rules/table.gd` / `act` / outcome = `accepted updates player raise profile for raise/all-in, not opponent actions`）。该 ID 的语义正中本表 **Row 7（`table.gd:119-120`：`playerPattern.raiseCount` 仅对 `id == "player"` 累加）**，故 Row 7 的归属已直接改记为该 ID。除此之外 386 项与 385 项的差集仅此一项，其余 29 行的判定不受影响。
 
-**后续状态补记（2026-09-25）**：主线为 Row 13/14 对应的搜索锚点与货架锚点补充了 `world.search_open`、`world.product_open`，真实射线交互测试通过，完整回归 59/59；当前目录为 388 项，当前树对账剩 27 条可达无 ID 候选、18 条弱证据项。此补记更新现况，不改写本表在原始 30 行输入上的逐行审计结论。
+**后续状态补记（2026-09-25）**：主线为搜索锚点与货架锚点补充了真实射线交互测试，两个模式复用 `world.services_open`，不新增目录 ID；测试和完整回归通过。当前目录为 386 项，当前树对账仍有 27 条可达无 ID 候选、18 条弱证据项。此补记更新现况，不改写本表在原始 30 行输入上的逐行审计结论。
 
 - 输入行数：**30**（以核验期间实际 CSV 为准；任务书第 10 行亦已同步为 30 行）
 - 输入 CSV SHA-256：`f6afc40dbc586e78fbbcdf6d57cb027f843ef61642d90dac27fd2c8f6822d0f1`

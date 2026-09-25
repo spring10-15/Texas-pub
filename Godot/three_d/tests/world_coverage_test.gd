@@ -93,7 +93,7 @@ func run() -> void:
 	world.close_run_panel()
 	world.open_services()
 	var modal: Dictionary = world.checkpoint_state()
-	verify("services_open", world.services_panel.visible and world.services_panel.rows.get_child_count()>0 and not world.player.controls_enabled and not world.crosshair.visible and not world.seat_panel.visible and world.checkpoint_state()==modal)
+	var bag_services_open: bool = world.services_panel.visible and world.services_panel.rows.get_child_count()>0 and not world.player.controls_enabled and not world.crosshair.visible and not world.seat_panel.visible and world.checkpoint_state()==modal
 	verify("modal_guard", not world.request_action(anchor) and world.checkpoint_state()==modal)
 	world.toggle_pause()
 	verify("toggle_pause_services", not world.services_panel.visible and not world.paused and world.player.controls_enabled and world.crosshair.visible and world.checkpoint_state()==modal)
@@ -351,7 +351,7 @@ func run() -> void:
 	var search_before: Dictionary = RunCheckpoint.capture(world.run_game)
 	var search_aimed: bool = await aim_room_anchor(world, search_anchor)
 	var search_opened: bool = search_aimed and world.request_action(search_anchor)
-	verify("search_open", search_opened and world.services_panel.visible and world.service_mode == "search" and world.product_id == "cargo-table" and not world.player.controls_enabled and RunCheckpoint.capture(world.run_game) == search_before)
+	search_opened = search_opened and world.services_panel.visible and world.service_mode == "search" and world.product_id == "cargo-table" and not world.player.controls_enabled and RunCheckpoint.capture(world.run_game) == search_before
 	world.close_services()
 	var shop_anchor: Area3D
 	for node in world.get_node("Tavern/ShopObjects").get_children():
@@ -365,7 +365,7 @@ func run() -> void:
 		var shop_aimed: bool = await aim_room_anchor(world, shop_anchor)
 		product_opened = shop_aimed and world.request_action(shop_anchor) and world.services_panel.visible and world.service_mode == "product" and world.product_id == shop_item and not world.player.controls_enabled and RunCheckpoint.capture(world.run_game) == product_before
 		world.close_services()
-	verify("product_open", product_opened)
+	verify("services_open", bag_services_open and search_opened and product_opened)
 	var product_id := ""
 	for stocked_id in world.run_game.shop_stock():
 		if world.run_game.service_reason("buy", stocked_id).is_empty():
