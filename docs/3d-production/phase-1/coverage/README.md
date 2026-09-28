@@ -317,6 +317,10 @@ signal_analysis 的强/中/弱与参与人数分支已拆分入目录，从 pend
 
 同日将写入失败的两条分支加入正式覆盖：临时文件无法创建时不产生目标文件；目标路径是目录、原子替换失败时目录保留且临时文件清理。结果登记为 `persistence_io.write_open_rejected` 与 `persistence_io.write_rename_rejected`，待本轮全量回归刷新报告。
 
+## 旧计划转场兼容性（2026-09-28）
+
+`transfer_coverage_test.gd` 现对旧活动存档的空 `variant_plan` 与缺少 events/opponents/room_layout 的 v1 plan 实际调用 `transfer_venue()`。测试检查牌桌种子与已有机会保留、缺失维度得到默认值、转场费用与行动力正确，并确认首次转场将离开和到达的酒馆都写入 `venue_history`。这些输入变体复用 `transfer.success`，没有新增转移 ID。定向测试 12/12；最新全量回归与 A8 当前树归因见 `output/3d/regression/20260928-124710/report.json` 和 `docs/3d-production/external-handoff/A8-global-catalog-audit/current-tree-reconciliation.md`。整体状态转移分母仍未冻结。
+
 ## 牌桌奖励情报与结算一致性（2026-09-23）
 
 玩家买到的完整情报原本从 `content.json` 的 `baseRewardPool` 显示可能奖励；独立结算夹具发现账房地窖多列了红宝石袖扣、余烬桌多列了翡翠胸针，两者都无法在对应桌的实际结算分支获得。现已从这两桌的展示池移除，并让 `settlement_coverage_test.gd` 从十种真实结算奖励结果汇集可达物品，逐桌与展示池比较；不再只检查奖励发放本身。结算金额、阈值与掉落规则未改。该检查是情报准确性证据，不新增语义转移 ID，也不改变全局覆盖率未定的状态。

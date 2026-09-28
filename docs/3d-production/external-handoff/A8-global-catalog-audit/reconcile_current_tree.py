@@ -379,6 +379,40 @@ def main() -> int:
                 "notes": run_restore_evidence[row["source_line"]],
             })
 
+    transfer_compatibility = {
+        "Godot/three_d/rules/run.gd:104": (
+            "Godot/three_d/tests/transfer_coverage_test.gd::empty_plan",
+            "transfer_coverage_test.gd 实际执行旧活动存档的空 variant_plan 转场；核对转场成功、费用/行动力变化、牌桌种子与玩家机会保持、venue_history 首次补入离开/到达酒馆，并验证生成计划有效。",
+        ),
+        "Godot/three_d/rules/run.gd:109-113": (
+            "Godot/three_d/tests/transfer_coverage_test.gd::v1_plan",
+            "从合法 v1 checkpoint 移除 events/opponents/room_layout 后恢复并实际转场；核对旧牌桌种子保留、缺失维度按默认路线/对手/线性房间补齐、计划仍有效且转场账目正确。",
+        ),
+        "Godot/three_d/rules/run.gd:115-116": (
+            "Godot/three_d/tests/transfer_coverage_test.gd::transfer.success",
+            "成功转场夹具开始时 venue_history 为空；测试断言一次转场后记录 [smoky-den, high-rise-suite]，避免漏记离开酒馆导致后续重访校验失效。",
+        ),
+    }
+    transfer_compatibility_rows = Counter()
+    for row in branches:
+        key = row["source_line"]
+        if (row["source_file"] != "Godot/three_d/rules/run.gd"
+                or row["entry"] != "transfer_venue"
+                or key not in transfer_compatibility):
+            continue
+        test, notes = transfer_compatibility[key]
+        row.update({
+            "catalog_id": "transfer.success",
+            "test": test,
+            "evidence_report": f"output/3d/transfer-coverage.json;{LATEST_REPORT}",
+            "evidence_strength": "strong",
+            "disposition": "catalogued_strong",
+            "notes": notes,
+        })
+        transfer_compatibility_rows[key] += 1
+    if any(transfer_compatibility_rows[key] != 1 for key in transfer_compatibility):
+        raise SystemExit(f"Unexpected legacy transfer evidence rows: {dict(transfer_compatibility_rows)}")
+
     interaction_evidence = {
         ("Godot/three_d/scripts/player.gd", "Godot/three_d/scripts/player.gd:43-44", "world.focus_controls_disabled"): {
             "test": "Godot/three_d/tests/player_input_coverage_test.gd::world.focus_controls_disabled",
