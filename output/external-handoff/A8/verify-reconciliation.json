@@ -1,7 +1,7 @@
 {
-  "doc_mtime": "2026-09-28 10:37:26",
+  "doc_mtime": "2026-09-28 10:38:26",
   "parsed": {
-    "head": "98ef9e2fa006cc60621885e550e00b76c102139a",
+    "head": "2e8126525a06f0b9ecaf0624acdae8e7d2c873a2",
     "catalog_ids": "394",
     "catalog_sha": "b257f6b78b9ae764f877782da8c698f2f42ebb024d22e3860e289df0ec402c19",
     "regression_path": "output/3d/regression/20260928-103143/report.json",
@@ -27,6 +27,7 @@
     "对账脚本 sha：8b79ebdd85e886b2e33b…",
     "缺口条数：0",
     "overlay 条数（文末重建节）：394",
+    "证据源码基线 2e8126525a06 是当前提交祖先，之后未改规则/脚本/场景/测试/项目输入映射/目录",
     "lifecycle 报告 sha 命中：output/3d/lifecycle-coverage.json",
     "目录 ID 归因完备：394/394",
     "disposition 计数逐项一致且合计 672：{'unreachable_or_not_transition': 150, 'catalogued_strong': 522}",
@@ -43,11 +44,9 @@
     "采用的回归 20260928-103143 为最新（report.json mtime 2026-09-28 10:37:15）",
     "回归基线之后没有测试文件被改动"
   ],
-  "drift": [
-    "证据源码基线之后权威源码/场景/测试/目录有变更：['Godot/three_d/tests/table_checkpoint_test.gd']"
-  ],
+  "drift": [],
   "refute": [],
-  "confirm_count": 24,
-  "drift_count": 1,
+  "confirm_count": 25,
+  "drift_count": 0,
   "refute_count": 0
 }
