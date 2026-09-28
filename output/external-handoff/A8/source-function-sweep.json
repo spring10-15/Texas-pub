@@ -1,7 +1,7 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "f4243398067e4d011df3642f564614523c3cf5bd2d7bbf7423bfc34b173d5b2c",
+  "branch_inventory_sha256": "ca484f0c77c55ad80c319ceb723bde5752b11e5d23e46195dbe919730d110212",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "d7009c834d0337d90602b1149c96573c4da567f5030b2f4615b9ce750ca05867",

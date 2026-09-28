@@ -13,7 +13,7 @@ from pathlib import Path
 TESTS = Path(__file__).resolve().parent
 ROOT = TESTS.parents[2]
 EXTRA = {'smoke.gd', 'table_integration.gd', 'table_parity.gd', 'two_tables.gd'}
-EXCLUDED = {'capture.gd', 'capture_table.gd', 'difficulty_probe.gd', 'process_restart_probe.gd'}
+EXCLUDED = {'capture.gd', 'capture_table.gd', 'difficulty_probe.gd', 'process_evening_probe.gd', 'process_restart_probe.gd'}
 
 
 def passed(code, log):

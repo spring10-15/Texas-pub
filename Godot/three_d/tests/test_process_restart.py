@@ -14,6 +14,28 @@ GODOT = shutil.which('godot') or '/Applications/Godot.app/Contents/MacOS/Godot'
 
 
 class ProcessRestartTest(unittest.TestCase):
+    def test_actual_evening_across_processes(self):
+        with tempfile.TemporaryDirectory(prefix='poker-evening-') as home:
+            environment = os.environ.copy()
+            environment['HOME'] = home
+            expected_wealth = None
+            for phase in ('write', 'restore'):
+                command = [GODOT, '--headless', '--path', str(ROOT / 'Godot'), '--script',
+                           'res://three_d/tests/process_evening_probe.gd', '--', '--phase=' + phase]
+                if expected_wealth is not None:
+                    command.append('--wealth=' + str(expected_wealth))
+                completed = subprocess.run(command, text=True, capture_output=True, timeout=20, env=environment)
+                output = completed.stdout + completed.stderr
+                self.assertEqual(completed.returncode, 0, output)
+                self.assertNotRegex(output, r'(?m)^(?:SCRIPT ERROR|ERROR|Parse Error):')
+                match = re.search(r'(?m)^PROCESS_EVENING (\{.*\})$', output)
+                self.assertIsNotNone(match, output)
+                result = json.loads(match.group(1))
+                self.assertEqual((result['failed'], result['phase']), (0, phase), output)
+                self.assertEqual(result['journey'], ['smoky-den', 'high-rise-suite'])
+                expected_wealth = result['wealth']
+            self.assertEqual(result['completed'], 4)
+
     def test_mid_hand_restart_and_settlement(self):
         scenes = ('smoky-den', 'high-rise-suite', 'rooftop-club', 'neon-poker-club')
         sites = ('cargo-table', 'ledger-cellar', 'mirror-hall', 'embers-table')
