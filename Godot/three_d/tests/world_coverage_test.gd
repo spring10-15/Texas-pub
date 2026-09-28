@@ -203,9 +203,12 @@ func run() -> void:
 		world.travel(destination)
 		for i in range(2): await physics_frame
 		var expected_position: Vector3 = Vector3(1.95,0.05,1.7) if destination == "stash" else Vector3(world.ROOMS[destination].x-2.0,0.05,1.7)
+		var expected_room_name: String = world.ROOMS.get(destination, world.ROOMS.tavern).node
+		var expected_table_setup: Dictionary = world.table_rooms[expected_room_name]
 		var actual_xz := Vector2(world.player.position.x, world.player.position.z)
 		var expected_xz := Vector2(expected_position.x, expected_position.z)
-		travel_landing_ok = travel_landing_ok and world.current_room==destination and actual_xz.is_equal_approx(expected_xz) and absf(world.player.position.y-expected_position.y)<0.02 and world.title_label.text==travel_destinations[destination]
+		var table_context_ok: bool = world.active_table_id == world.ROOMS.get(destination, world.ROOMS.tavern).table and world.table_target == expected_table_setup.target and world.seat_camera == expected_table_setup.camera and world.cards_root == expected_table_setup.cards
+		travel_landing_ok = travel_landing_ok and world.current_room==destination and actual_xz.is_equal_approx(expected_xz) and absf(world.player.position.y-expected_position.y)<0.02 and world.title_label.text==travel_destinations[destination] and table_context_ok
 	verify("travel_landing", travel_landing_ok)
 	world.travel("stash")
 	var room_prop_results := {"light_on":true, "light_off":true, "cupboard_open":true, "cupboard_close":true}

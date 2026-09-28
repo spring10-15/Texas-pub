@@ -552,6 +552,12 @@ def main() -> int:
             "strength": "strong",
             "notes": "高风声且现金不足时，从实际酒保面板执行有效 intel 服务动作，经 World.service_action→check_pressure 关闭面板并强制回藏匿点；断言强制失败结果、位置及损失提示，复用既有 forced-exit/close/travel ID。",
         },
+        "Godot/three_d/scripts/world.gd:554-560": {
+            "ids": "world.travel_landing",
+            "test": "Godot/three_d/tests/world_coverage_test.gd::travel_landing",
+            "strength": "strong",
+            "notes": "测试对 stash/tavern/ledger/mirror/embers 五目的地断言房间、落点、标题，并逐个核对 active_table_id、table_target、seat_camera 与 cards_root 均指向目标桌房；four_tables_test.gd 与 room_pool_test.gd 也经真实门到达。",
+        },
     }
     for target_rows in (branches, old_gaps):
         for row in target_rows:

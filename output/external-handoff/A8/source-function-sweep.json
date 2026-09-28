@@ -1,10 +1,10 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "7db01d7f20c6a9f540143d65e83299b62adb86029bc58a376b45efcde8053012",
+  "branch_inventory_sha256": "08f4c8712b31acfdd3878029169d212d6019c6117038917a2ff0eca2d4e5bcf8",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
-    "Godot/three_d/rules/opponent.gd": "b7f629124fb987550a958769933ddc97dd76be718326f1c1e7a6ae2b6dd04e94",
+    "Godot/three_d/rules/opponent.gd": "d7009c834d0337d90602b1149c96573c4da567f5030b2f4615b9ce750ca05867",
     "Godot/three_d/rules/poker.gd": "81c89274bf62e2e8cda03f4b2daddf3e187ff7af75e6b094660c890a6d441c38",
     "Godot/three_d/rules/routes.gd": "29c015a2fe729d224653061a1f12cf49ad7c2db486b821d30d44bdc997b5ef76",
     "Godot/three_d/rules/run.gd": "f6d61934d399eea05728c7f81780744ae8594a23afed8ca4e31a64cb8ffd0308",
@@ -1768,7 +1768,7 @@
     },
     {
       "file": "Godot/three_d/rules/opponent.gd",
-      "line": 84,
+      "line": 85,
       "method": "choose_with_odds",
       "kind": "if",
       "status": "branch_inventory_ref",
