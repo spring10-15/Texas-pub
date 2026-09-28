@@ -5,6 +5,13 @@ var checks := 0
 func verify(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok: failures.append(label); push_error(label)
+func trace_records(path: String) -> Array:
+	var records: Array = []
+	if not FileAccess.file_exists(path): return records
+	for line in FileAccess.get_file_as_string(path).split("\n", false):
+		var parsed = JSON.parse_string(line)
+		if parsed is Dictionary: records.append(parsed)
+	return records
 func _initialize() -> void:
 	call_deferred("run_tests")
 func run_tests() -> void:
@@ -33,25 +40,30 @@ func run_tests() -> void:
 	world.show_run_panel("enter")
 	world.confirm_run_action()
 	verify(world.run_game.run_seed == 20260922 and world.run_game.bankroll == 300 and world.run_game.vault == 900,"UI departure uses fixed seed and fresh bankroll")
-	var first_trace := FileAccess.get_file_as_string(trace_path).split("\n", false)
-	verify(first_trace.size() == 1 and JSON.parse_string(first_trace[0]).event == "run_started" and JSON.parse_string(first_trace[0]).seed == 20260922,"Accepted departure writes one isolated trace event")
+	var departure_trace := trace_records(trace_path)
+	verify(departure_trace.size() == 2 and departure_trace[0].event == "decision_opportunity" and departure_trace[0].details.scope == "run:enter" and departure_trace[0].details.options.size() > 1 and departure_trace[1].event == "run_started" and departure_trace[1].seed == 20260922 and departure_trace[1].details.opportunity_id == departure_trace[0].choice,"Accepted departure is linked to its offered decision set")
 	world.open_services("bar")
 	world.service_action("buy", "nonexistent", world.run_game.revision)
-	verify(FileAccess.get_file_as_string(trace_path).split("\n", false).size() == 1,"Rejected service action does not enter trace")
+	var rejected_trace := trace_records(trace_path)
+	verify(rejected_trace.size() == 4 and rejected_trace[2].event == "decision_opportunity" and rejected_trace[3].event == "decision_attempt_rejected" and rejected_trace[3].details.opportunity_id == rejected_trace[2].choice,"Rejected service attempt is recorded separately from effective choices")
 	world.service_action("intel", "cargo-table", world.run_game.revision)
-	var service_trace := FileAccess.get_file_as_string(trace_path).split("\n", false)
-	var service_record: Dictionary = JSON.parse_string(service_trace[1]) if service_trace.size() == 2 else {}
+	var service_trace := trace_records(trace_path)
+	var service_record: Dictionary = service_trace[4] if service_trace.size() > 4 else {}
 	var available_actions: Array = service_record.get("details", {}).get("available_actions", [])
-	verify(service_trace.size() == 2 and service_record.get("event") == "service_action" and service_record.get("choice") == "intel" and available_actions.size() > 1 and available_actions.any(func(action): return action.kind == "intel" and action.id == "cargo-table"),"Accepted service action records the offered decision set")
+	verify(service_trace.size() == 6 and service_record.get("event") == "service_action" and service_record.get("choice") == "intel" and available_actions.size() > 1 and available_actions.any(func(action): return action.kind == "intel" and action.id == "cargo-table") and service_record.details.opportunity_id == service_trace[2].choice,"Accepted service action records and links the offered decision set")
 	world.close_services()
 	world.seated = true
+	world.trace_choice_opportunity("table_start", [{"start_table":""}, "leave_table"], {"table":"cargo-table"})
 	world.start_table(301)
-	verify(FileAccess.get_file_as_string(trace_path).split("\n", false).size() == 3,"Starting a table writes one trace event")
+	var started_trace := trace_records(trace_path)
+	verify(started_trace.size() == 8 and started_trace[7].event == "table_started" and started_trace[7].details.opportunity_id == started_trace[6].choice,"Starting a table is linked to its decision opportunity")
 	world.table_delay = 0
+	world.trace_table_opportunity()
 	var turn: int = world.table_game.revision
 	world.play_action("fold", turn)
-	var poker_trace := FileAccess.get_file_as_string(trace_path).split("\n", false)
-	verify(poker_trace.size() == 4 and JSON.parse_string(poker_trace[3]).event == "table_action" and JSON.parse_string(poker_trace[3]).details.legal_before.fold,"Accepted poker action preserves pre-action legal choices")
+	var poker_trace := trace_records(trace_path)
+	var poker_action: Dictionary = poker_trace[9] if poker_trace.size() > 9 else {}
+	verify(poker_trace.size() == 10 and poker_trace[8].event == "decision_opportunity" and poker_action.get("event") == "table_action" and poker_action.details.legal_before.fold and poker_action.details.opportunity_id == poker_trace[8].choice,"Accepted poker action preserves and links pre-action legal choices")
 	world.table_game = null
 	world.seated = false
 	var plan: Dictionary = world.run_game.variant_plan.duplicate(true)
@@ -60,7 +72,8 @@ func run_tests() -> void:
 	world.show_run_panel("enter")
 	world.confirm_run_action()
 	verify(world.run_game.variant_plan == plan,"Same initial conditions reproduce plan")
-	verify(FileAccess.get_file_as_string(trace_path).split("\n", false).size() == 5,"Repeated fresh departure appends instead of replacing trace")
+	var final_trace := trace_records(trace_path)
+	verify(final_trace.size() == 12 and final_trace[10].event == "decision_opportunity" and final_trace[11].event == "run_started","Repeated fresh departure appends linked opportunity records")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(trace_path))
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(world.save_path))
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")

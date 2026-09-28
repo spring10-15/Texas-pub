@@ -56,6 +56,8 @@ var save_path := "user://three-d-checkpoint.save"
 var saving_enabled := false
 var playtest_seed := 0
 var playtest_trace_path := ""
+var playtest_opportunity_sequence := 0
+var playtest_opportunities: Dictionary = {}
 var save_clock := 0.0
 var last_saved: PackedByteArray
 var save_notice: Label
@@ -139,6 +141,43 @@ func trace_playtest(event: String, choice := "", details := {}) -> void:
 	var record := {"time": Time.get_datetime_string_from_system(), "elapsed_ms": Time.get_ticks_msec(), "seed": playtest_seed, "event": event, "choice": choice, "run_revision": run_game.revision, "scene": run_game.scene_id, "room": current_room, "cash": run_game.cash, "vault": run_game.vault, "heat": run_game.heat, "table": active_table_id if seated else "", "details": details}
 	file.store_line(JSON.stringify(record))
 	file.close()
+
+func trace_choice_opportunity(scope: String, options: Array, pre_state := {}) -> String:
+	if playtest_seed == 0:
+		return ""
+	var signature := JSON.stringify(options)
+	var active: Dictionary = playtest_opportunities.get(scope, {})
+	if active.get("signature", "") == signature:
+		return str(active.id)
+	playtest_opportunity_sequence += 1
+	var opportunity_id := "opp-%04d" % playtest_opportunity_sequence
+	playtest_opportunities[scope] = {"id": opportunity_id, "signature": signature}
+	trace_playtest("decision_opportunity", opportunity_id, {"scope":scope, "options":options, "pre_state":pre_state})
+	return opportunity_id
+
+func trace_opportunity_id(scope: String) -> String:
+	return str(playtest_opportunities.get(scope, {}).get("id", ""))
+
+func close_playtest_opportunity(scope: String) -> void:
+	playtest_opportunities.erase(scope)
+
+func legal_service_actions(view: Dictionary) -> Array:
+	var options: Array = []
+	for action in view.get("actions", []):
+		if action.get("reason", "").is_empty():
+			options.append({"kind":action.kind, "id":action.id, "target":action.get("target", ""), "label":action.label})
+	return options
+
+func trace_table_opportunity() -> void:
+	if table_game == null or table_game.state.currentActorId != "player":
+		return
+	var legal: Dictionary = table_game.legal_actions("player")
+	var options: Array = []
+	for kind in ["fold", "check", "call", "raise", "all-in"]:
+		var key: String = "allIn" if kind == "all-in" else kind
+		if legal.get(key, false):
+			options.append(kind)
+	trace_choice_opportunity("poker_action", options, {"revision":table_game.revision, "hand":table_game.state.handNumber, "street":table_game.state.street, "pot":table_game.state.pot, "legal":legal})
 
 func configure_input() -> void:
 	var bindings := {"move_forward": KEY_W, "move_back": KEY_S, "move_left": KEY_A, "move_right": KEY_D, "interact": KEY_E, "pause": KEY_ESCAPE, "inventory": KEY_B}
@@ -539,6 +578,10 @@ func request_action(anchor: Area3D) -> bool:
 			seat_camera.current = true
 			seat_panel.pregame(run_game.cash, run_game.table_definition(active_table_id), run_game.inventory, run_game)
 			seat_panel.show()
+			var table_choices: Array = ["leave_table"]
+			for i in range(seat_panel.collateral_choice.item_count):
+				table_choices.append({"start_table":str(seat_panel.collateral_choice.get_item_metadata(i))})
+			trace_choice_opportunity("table_start", table_choices, {"table":active_table_id, "cash":run_game.cash, "buy_in":run_game.table_definition(active_table_id).buyIn})
 			explore_instructions.hide()
 			crosshair.hide()
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -639,7 +682,8 @@ func start_table(seed_value: int = -1) -> void:
 	table_game = run_game.enter_table(seed_value, run_game.revision, active_table_id, seat_panel.selected_collateral())
 	if table_game == null:
 		return
-	trace_playtest("table_started", active_table_id, {"buy_in": int(table_game.state.tableDef.buyIn)})
+	trace_playtest("table_started", active_table_id, {"buy_in": int(table_game.state.tableDef.buyIn), "collateral":seat_panel.selected_collateral(), "opportunity_id":trace_opportunity_id("table_start")})
+	close_playtest_opportunity("table_start")
 	refresh_economy()
 	table_delay = 0.45
 	refresh_table()
@@ -651,9 +695,12 @@ func play_action(kind: String, expected_revision: int, raise_target: int = -1) -
 	var street: String = table_game.state.street
 	var hand: int = table_game.state.handNumber
 	if table_game.act("player", kind, expected_revision, raise_target):
-		trace_playtest("table_action", kind, {"legal_before": legal, "street_before": street, "hand_before": hand, "raise_target": raise_target})
+		trace_playtest("table_action", kind, {"legal_before": legal, "street_before": street, "hand_before": hand, "raise_target": raise_target, "opportunity_id":trace_opportunity_id("poker_action")})
+		close_playtest_opportunity("poker_action")
 		table_delay = 0.45
 		refresh_table()
+	else:
+		trace_playtest("decision_attempt_rejected", kind, {"scope":"poker_action", "opportunity_id":trace_opportunity_id("poker_action")})
 
 func continue_hand(expected_revision: int) -> void:
 	if not paused and not services_panel.visible and table_game != null and table_game.next_hand(expected_revision):
@@ -674,6 +721,7 @@ func _process(delta: float) -> void:
 	if table_delay > 0:
 		table_delay = maxf(0, table_delay - delta)
 		if table_delay == 0:
+			trace_table_opportunity()
 			seat_panel.refresh(table_game.public_state(), false)
 		return
 	if table_game.state.status != "playing" or table_game.state.currentActorId == "player":
@@ -822,9 +870,32 @@ func show_run_panel(action: String, preview_only := false) -> void:
 	crosshair.hide()
 	hint_label.text = ""
 	run_panel.show()
+	if not preview_only:
+		var options: Array = ["cancel"]
+		if run_action == "enter":
+			if run_game.vault >= 120:
+				for id in RunRules.SCENE_NAMES:
+					options.append({"start_run":id})
+			else:
+				options.append("reset_demo")
+		elif run_action == "reset":
+			options.append("reset_demo")
+		elif run_action == "transfer":
+			for id in RunRules.SCENE_NAMES:
+				if not run_game.transfer_quote(id).reason.is_empty():
+					continue
+				options.append({"transfer_to":id})
+		elif run_action == "abandon":
+			if run_game.abandon_quote().reason.is_empty(): options.append("abandon")
+		elif run_action == "extract":
+			if run_game.route_known(selected_route) and run_game.extraction_quote(selected_route).reason.is_empty():
+				options.append({"extract":selected_route})
+			if forfeit_button.visible: options.append("abandon")
+		trace_choice_opportunity("run:" + run_action, options, {"scene":run_game.scene_id, "cash":run_game.cash, "heat":run_game.heat, "revision":run_game.revision, "route":selected_route})
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func close_run_panel() -> void:
+	close_playtest_opportunity("run:" + run_action)
 	run_panel.hide()
 	run_action = ""
 	player.controls_enabled = not paused and not seated
@@ -838,32 +909,37 @@ func confirm_run_action() -> void:
 		var destination: String = str(scene_choice.get_item_metadata(scene_choice.selected))
 		if not run_game.start(run_revision, destination, playtest_seed if playtest_seed > 0 else int(randi() % 2147483646) + 1):
 			return
-		trace_playtest("run_started", destination)
+		trace_playtest("run_started", destination, {"opportunity_id":trace_opportunity_id("run:enter")})
+		close_playtest_opportunity("run:enter")
 		exit_notice.title = "查看出口告示"
 		close_run_panel()
 		travel("tavern")
 	elif run_action == "transfer":
 		var destination: String = str(scene_choice.get_item_metadata(scene_choice.selected))
 		if not run_game.transfer_venue(destination,run_revision): return
-		trace_playtest("venue_transferred", destination)
+		trace_playtest("venue_transferred", destination, {"opportunity_id":trace_opportunity_id("run:transfer")})
+		close_playtest_opportunity("run:transfer")
 		exit_notice.title = "查看出口告示"
 		close_run_panel()
 		travel("tavern")
 	elif run_action == "extract":
 		if not run_game.extract(run_revision, selected_route):
 			return
-		trace_playtest("run_extracted", selected_route)
+		trace_playtest("run_extracted", selected_route, {"opportunity_id":trace_opportunity_id("run:extract")})
+		close_playtest_opportunity("run:extract")
 		close_run_panel()
 		travel("stash")
 	elif run_action == "abandon":
 		if not run_game.abandon(run_revision):
 			return
-		trace_playtest("run_abandoned")
+		trace_playtest("run_abandoned", "", {"opportunity_id":trace_opportunity_id("run:abandon")})
+		close_playtest_opportunity("run:abandon")
 		close_run_panel()
 		travel("stash")
 	elif run_action == "reset":
 		if run_game.reset_demo(run_revision):
-			trace_playtest("bankroll_reset")
+			trace_playtest("bankroll_reset", "", {"opportunity_id":trace_opportunity_id("run:reset")})
+			close_playtest_opportunity("run:reset")
 			refresh_economy()
 			show_run_panel("enter")
 
@@ -889,8 +965,12 @@ func open_services(mode := "bag", item := "") -> void:
 		return
 	service_mode = mode
 	product_id = item
-	services_panel.refresh(run_game.service_view(service_mode, product_id))
+	var service_view: Dictionary = run_game.service_view(service_mode, product_id)
+	services_panel.refresh(service_view)
 	services_panel.show()
+	var service_options := legal_service_actions(service_view)
+	service_options.append({"kind":"close"})
+	trace_choice_opportunity("service:" + service_mode, service_options, {"item":product_id, "cash":run_game.cash, "heat":run_game.heat, "action_points":run_game.action_points, "revision":run_game.revision})
 	hint_label.text = ""
 	player.controls_enabled = false
 	player.velocity = Vector3.ZERO
@@ -899,6 +979,7 @@ func open_services(mode := "bag", item := "") -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func close_services() -> void:
+	close_playtest_opportunity("service:" + service_mode)
 	services_panel.hide()
 	player.controls_enabled = not seated and not paused
 	seat_panel.visible = seated and not paused
@@ -916,17 +997,20 @@ func service_action(kind: String, item_id: String, revision: int, target_id := "
 		if action.kind == kind and action.id == item_id and action.get("target", "") == target_id:
 			offered = true
 	if not offered:
+		trace_playtest("decision_attempt_rejected", kind, {"scope":"service:" + service_mode, "item":item_id, "target":target_id, "opportunity_id":trace_opportunity_id("service:" + service_mode)})
 		return
 	if kind == "route":
 		close_services()
 		show_run_panel("route:" + item_id, true)
 		return
 	if run_game.service_action(kind, item_id, revision, target_id):
-		trace_playtest("service_action", kind, {"item": item_id, "target": target_id, "available_actions": available_actions})
+		trace_playtest("service_action", kind, {"item": item_id, "target": target_id, "available_actions": available_actions, "opportunity_id":trace_opportunity_id("service:" + service_mode)})
+		close_playtest_opportunity("service:" + service_mode)
 		refresh_economy()
 		if table_game != null:
 			refresh_table()
-		services_panel.refresh(run_game.service_view(service_mode, product_id))
+		var updated_view: Dictionary = run_game.service_view(service_mode, product_id)
+		services_panel.refresh(updated_view)
 		bar_display.refresh()
 		refresh_route_labels()
 		if kind == "buy":
@@ -942,7 +1026,13 @@ func service_action(kind: String, item_id: String, revision: int, target_id := "
 			feedback.tween_callback(func():
 				if not services_panel.visible and not run_panel.visible:
 					show_focus(player.focused))
+		else:
+			var updated_options := legal_service_actions(updated_view)
+			updated_options.append({"kind":"close"})
+			trace_choice_opportunity("service:" + service_mode, updated_options, {"item":product_id, "cash":run_game.cash, "heat":run_game.heat, "action_points":run_game.action_points, "revision":run_game.revision})
 		check_pressure()
+	else:
+		trace_playtest("decision_attempt_rejected", kind, {"scope":"service:" + service_mode, "item":item_id, "target":target_id, "opportunity_id":trace_opportunity_id("service:" + service_mode)})
 
 func checkpoint_state() -> Dictionary:
 	return {"run": RunCheckpoint.capture(run_game), "room": current_room, "player": player.global_transform, "look": player.camera.rotation, "seated": seated, "return": return_transform, "caseOpen": case_open, "props": props.states.duplicate()}
