@@ -1,7 +1,7 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "816cd8d5b654e06f2538d4e2c01c324137cbf6ed8d04ecff85b8bb577e810227",
+  "branch_inventory_sha256": "425b1d20fd67c110894a64aaa2b44002b69148b9f615e73ef83e8b2f130b15a9",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "b7f629124fb987550a958769933ddc97dd76be718326f1c1e7a6ae2b6dd04e94",
@@ -21,7 +21,7 @@
     "Godot/three_d/scripts/scene_props.gd": "c0a32396ac4b4238bd56c1e9b995a088260e6ec4a3280584602d212bea5e1276",
     "Godot/three_d/scripts/services_hud.gd": "b0468c79b57fd9b309354b65c1cfdc1b9a55d3ffc8d9834d3eb907fef40ff14c",
     "Godot/three_d/scripts/table_hud.gd": "346e562d2480c9fa03ae7c324c6420e3348a0104281a56640fb1dedfa56e8746",
-    "Godot/three_d/scripts/tavern_layout.gd": "1c58b44faba59fe84ed8623a32b30c85f82e0996e1771b76bed2555ea8727d45",
+    "Godot/three_d/scripts/tavern_layout.gd": "eb34b55a7c7689eeac31895ff9394fff24bca272c38f7d1ae08666820320d4d6",
     "Godot/three_d/scripts/world.gd": "c033e6ea27543499fb2b06a50534dd89f97f457e10178e09763774d0a639265c"
   },
   "counts": {
@@ -1007,7 +1007,7 @@
     },
     {
       "file": "Godot/three_d/scripts/tavern_layout.gd",
-      "line": 3,
+      "line": 4,
       "name": "sign_at",
       "signature": "static func sign_at(w: Node3D, room: Node3D, value: String, pos: Vector3, yaw := 0.0) -> void:",
       "status": "explicit_exclusion",
@@ -1015,7 +1015,7 @@
     },
     {
       "file": "Godot/three_d/scripts/tavern_layout.gd",
-      "line": 16,
+      "line": 17,
       "name": "build",
       "signature": "static func build(w: Node3D, room: Node3D) -> void:",
       "status": "explicit_exclusion",

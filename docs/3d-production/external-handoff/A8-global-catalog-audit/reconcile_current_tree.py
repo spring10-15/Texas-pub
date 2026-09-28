@@ -524,6 +524,70 @@ def main() -> int:
     })
     branches.append(seed_row)
 
+    # Keep source-level dispatch / telemetry outcomes visible in the audit.
+    # These branches do not mutate authoritative game state and therefore do
+    # not create transition IDs, but omitting them would make the source list
+    # look more complete than it is.
+    non_transition_sites = [
+        {
+            "source_file": "Godot/three_d/rules/opponent.gd",
+            "entry": "choose_with_odds",
+            "source_line": "Godot/three_d/rules/opponent.gd:36",
+            "branch_or_guard": "match definition.archetype 分派到本地策略参数",
+            "player_reachable": "yes",
+            "outcome": "not_a_transition",
+            "test": "Godot/three_d/tests/opponent_profiles_test.gd",
+            "evidence_report": "",
+            "evidence_strength": "none",
+            "disposition": "unreachable_or_not_transition",
+            "notes": "该 match 只调整局部 profile 并选择后续 action 名称；权威牌桌状态由 Table.act 改变。现有策略分布测试覆盖原型差异，但不把 AI 选择分支本身当作独立状态转移。",
+        },
+        {
+            "source_file": "Godot/three_d/scripts/world.gd",
+            "entry": "trace_playtest",
+            "source_line": "Godot/three_d/scripts/world.gd:127-129",
+            "branch_or_guard": "试玩 trace 目录创建失败 → 报错并停止写遥测",
+            "player_reachable": "yes",
+            "outcome": "not_a_transition",
+            "test": "",
+            "evidence_report": "",
+            "evidence_strength": "none",
+            "disposition": "unreachable_or_not_transition",
+            "notes": "只影响 user:// 下的 JSONL 试玩遥测文件；不改 Run、Table、World 权威状态或正式存档。目录创建失败未由专门测试注入。",
+        },
+        {
+            "source_file": "Godot/three_d/scripts/world.gd",
+            "entry": "trace_playtest",
+            "source_line": "Godot/three_d/scripts/world.gd:132-133;Godot/three_d/scripts/world.gd:137-138",
+            "branch_or_guard": "试玩 trace 文件已存在 → 以追加模式打开并移至末尾；否则新建/覆盖打开",
+            "player_reachable": "yes",
+            "outcome": "not_a_transition",
+            "test": "Godot/three_d/tests/playtest_seed_test.gd",
+            "evidence_report": "",
+            "evidence_strength": "none",
+            "disposition": "unreachable_or_not_transition",
+            "notes": "只决定遥测文件打开模式，不改权威游戏状态；试玩 trace 测试检查记录输出，不将追加/新建视为独立玩法结果。",
+        },
+        {
+            "source_file": "Godot/three_d/scripts/world.gd",
+            "entry": "trace_playtest",
+            "source_line": "Godot/three_d/scripts/world.gd:133-136",
+            "branch_or_guard": "试玩 trace 文件打开失败 → 报错并停止写遥测",
+            "player_reachable": "yes",
+            "outcome": "not_a_transition",
+            "test": "",
+            "evidence_report": "",
+            "evidence_strength": "none",
+            "disposition": "unreachable_or_not_transition",
+            "notes": "只影响 user:// 下的 JSONL 试玩遥测写入；不改 Run、Table、World 权威状态或正式存档。文件打开失败未由专门测试注入。",
+        },
+    ]
+    for site in non_transition_sites:
+        row = {field: "" for field in branch_fields}
+        row.update(site)
+        row["catalog_id"] = "-"
+        branches.append(row)
+
     # A successful quote and its actual transfer command are exercised for
     # each invalid reason; the wrapper's common rejection gate is not a new ID.
     transfer_rejection_rows = 0
@@ -714,7 +778,7 @@ def main() -> int:
 - 分支清单按字面有 {len(literal_reachable_without_id)} 条 `player_reachable=yes` 且没有独立 `catalog_id`；它们均有逐行归类说明，未计入当前未映射缺口。其中 {accepted_without_id} 条的 `outcome=accepted` 仅表示该源码分支可执行，不能单独证明它是独立游戏状态转移。
 - 以本脚本生成的 {len(catalog_ids)} 项 overlay 为准；外部 triage 输入保留在 `current-tree-player-path-gaps.csv`，不是当前未映射清单。
 - `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal`、`world.autosave`、`world.window_focus_out`、`player.look_changed`、`player.movement` 与 `world.window_close_request` 已在对应测试中登记；无目标 E 输入复用 `world.raycast_unfocused`，成功 E 输入由 captured 鼠标模式的窗口测试走完整 Player→World 信号链。
-- 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`。吧台实体入口曾因缺少后置断言被列为弱证据；当前实体射线与 E 键集成测试已补足，映射到 `world.services_open`。另 1 条仅显示试玩存档提示、不改变权威状态，分类为非状态转移。当前弱证据表有 {len(weak_evidence)} 行。
+- 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`。吧台实体入口曾因缺少后置断言被列为弱证据；当前实体射线与 E 键集成测试已补足，映射到 `world.services_open`。试玩提示与 trace 文件 I/O 结果不改变权威状态，分别归为非状态转移；相关 I/O 错误注入未做专门测试。当前弱证据表有 {len(weak_evidence)} 行。
 - 原 12 条世界/牌桌编排候选逐项复核后，实际状态后继归并到已有规则层 ID；纯 UI/调度包装早退标为 `not_a_transition`，不借用其他入口的 ID。没有新增语义 ID，也没有把 394 项目录宣称为完整分母；当前候选表无未映射行不等于证明不存在其他缺口，全球转移分母仍未冻结。
 - 分支行 disposition 计数：`{dict(counts)}`。
 
