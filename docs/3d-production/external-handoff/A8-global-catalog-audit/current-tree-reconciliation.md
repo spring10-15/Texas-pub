@@ -1,14 +1,14 @@
 # A8 当前树对账记录
 
-- 证据源码基线 HEAD：`2044b1541aec7453c0d4d10ff2e2ead66ba4190f`
+- 证据源码基线 HEAD：`6445666bf7ac7c60579fdc514c066781e40e7c77`
 - 当前目录：394 个唯一 ID，SHA-256 `b257f6b78b9ae764f877782da8c698f2f42ebb024d22e3860e289df0ec402c19`
-- 采用的全量回归：`output/3d/regression/20260925-160511/report.json`（必须由当前源码/测试重跑后更新本记录）
-- 回归报告 SHA-256：`f1775a30c91c0a17ec9093905f35ab8639101822068bce711ccc850def0fb36b`
+- 采用的全量回归：`output/3d/regression/20260928-093848/report.json`（必须由当前源码/测试重跑后更新本记录）
+- 回归报告 SHA-256：`ea77ac2aaeff3993a8d0df5beb08a6062f19225e05993c220a446b0823d87459`
 - lifecycle 覆盖报告 SHA-256：`aeab5188980586031481a5a5b08e80c193f7085a78f418c60bf29f15faeda373`
-- 当前分支清单 SHA-256：`625b237d345c7d2951de71d7b5b8c639fd6aa6a09f519bce5d1072818f943b2c`
+- 当前分支清单 SHA-256：`816cd8d5b654e06f2538d4e2c01c324137cbf6ed8d04ecff85b8bb577e810227`
 - 当前玩家路径缺口清单 SHA-256：`147f8235e3872dab602718ce1f2e01f3d12b4b7904831e7ca8257de90341b167`
 - 当前弱证据清单 SHA-256：`147f8235e3872dab602718ce1f2e01f3d12b4b7904831e7ca8257de90341b167`
-- 对账脚本 SHA-256：`beda745c1753b455116c68d94aa6d530c5f575db0e70e9055b40286bf941c4e7`
+- 对账脚本 SHA-256：`0913bf9b03a446fe717769fb4d6187f0a706158832436d620cc4ecb235c55bc4`
 - 原始 A8 的 `branch-inventory.csv`、`unmapped-reachable.csv` 和审计 README 保留为 382 项冻结锚点，没有覆盖。
 
 ## 当前映射和缺口
