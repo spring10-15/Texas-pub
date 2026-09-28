@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "status": "incomplete_catalog",
-  "counting_rule": "One semantic accepted/rejected game-state outcome per ID in transitions. Test-only verification controls belong in verification_controls and are excluded from the state-transition count. Multiple input cases may exercise one ID. Verified catalog entries are not a complete global denominator until a source-driven audit accounts for every player-reachable state-changing outcome and defensible exclusions.",
+  "counting_rule": "One semantic accepted/rejected game-state outcome per ID in transitions. Test-only verification controls belong in verification_controls, and retired duplicate outcomes belong in retired_transition_ids; neither is counted as a state transition. Multiple input cases may exercise one ID. Verified catalog entries are not a complete global denominator until a source-driven audit accounts for every player-reachable state-changing outcome and defensible exclusions.",
   "transitions": [
     {
       "id": "transfer.success",
@@ -377,36 +377,6 @@
     },
     {
       "id": "route_guard.cash_general",
-      "source": "Godot/three_d/rules/routes.gd",
-      "entry": "Run.extract -> Routes.quote",
-      "outcome": "rejected"
-    },
-    {
-      "id": "route_guard.cash_fixed",
-      "source": "Godot/three_d/rules/routes.gd",
-      "entry": "Run.extract -> Routes.quote",
-      "outcome": "rejected"
-    },
-    {
-      "id": "route_guard.cash_service-stairs",
-      "source": "Godot/three_d/rules/routes.gd",
-      "entry": "Run.extract -> Routes.quote",
-      "outcome": "rejected"
-    },
-    {
-      "id": "route_guard.cash_river-launch",
-      "source": "Godot/three_d/rules/routes.gd",
-      "entry": "Run.extract -> Routes.quote",
-      "outcome": "rejected"
-    },
-    {
-      "id": "route_guard.cash_dropbag-cash",
-      "source": "Godot/three_d/rules/routes.gd",
-      "entry": "Run.extract -> Routes.quote",
-      "outcome": "rejected"
-    },
-    {
-      "id": "route_guard.cash_dropbag-valuables",
       "source": "Godot/three_d/rules/routes.gd",
       "entry": "Run.extract -> Routes.quote",
       "outcome": "rejected"
@@ -2374,5 +2344,32 @@
     "poker": [],
     "world": [],
     "persistence": []
-  }
+  },
+  "retired_transition_ids": [
+    {
+      "id": "route_guard.cash_dropbag-cash",
+      "merged_into": "route_guard.cash_general",
+      "reason": "Same rejected outcome as insufficient cash on routes.gd:49-50; route name and calculated fee are input variants, not separate state results."
+    },
+    {
+      "id": "route_guard.cash_dropbag-valuables",
+      "merged_into": "route_guard.cash_general",
+      "reason": "Same rejected outcome as insufficient cash on routes.gd:49-50; route name and calculated fee are input variants, not separate state results."
+    },
+    {
+      "id": "route_guard.cash_fixed",
+      "merged_into": "route_guard.cash_general",
+      "reason": "Same rejected outcome as insufficient cash on routes.gd:49-50; route name and calculated fee are input variants, not separate state results."
+    },
+    {
+      "id": "route_guard.cash_river-launch",
+      "merged_into": "route_guard.cash_general",
+      "reason": "Same rejected outcome as insufficient cash on routes.gd:49-50; route name and calculated fee are input variants, not separate state results."
+    },
+    {
+      "id": "route_guard.cash_service-stairs",
+      "merged_into": "route_guard.cash_general",
+      "reason": "Same rejected outcome as insufficient cash on routes.gd:49-50; route name and calculated fee are input variants, not separate state results."
+    }
+  ]
 }

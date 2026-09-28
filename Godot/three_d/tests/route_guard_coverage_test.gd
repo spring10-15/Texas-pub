@@ -76,7 +76,7 @@ func _initialize() -> void:
 					var overlap: Dictionary = Checkpoint.capture(r)
 					ok = ok and r.extraction_quote(route).reason == cases[key][1] and not r.extract(r.revision, route) and Checkpoint.capture(r) == overlap
 				samples += 1
-				var id: String = "route_guard."+key
+				var id: String = "route_guard.cash_general" if str(key).begins_with("cash_") else "route_guard."+key
 				if ok: hits[id] = {"test":"route_guard_coverage_test.gd","postcondition_verified":true}
 				else: failures.append(id+":"+scene+":"+str(offer)); push_error(failures.back())
 	var text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")

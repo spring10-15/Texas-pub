@@ -35,6 +35,7 @@ def sha256(path: Path) -> str:
 def main() -> int:
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     catalog_ids = {row["id"] for row in catalog["transitions"]}
+    retired_ids = {row["id"]: row["merged_into"] for row in catalog.get("retired_transition_ids", [])}
     branch_fields, branches = read_csv(AUDIT / "branch-inventory.csv")
     _, old_gaps = read_csv(AUDIT / "unmapped-reachable.csv")
 
@@ -52,6 +53,20 @@ def main() -> int:
             rng_control_rows += 1
     if rng_control_rows != 1:
         raise SystemExit(f"Unexpected RNG verification-control rows: {rng_control_rows}")
+
+    merged_route_cash_rows = 0
+    for row in branches:
+        if (row["catalog_id"] == "route_guard.cash_general"
+                or row["catalog_id"] in retired_ids and row["catalog_id"].startswith("route_guard.cash_")):
+            row["catalog_id"] = retired_ids.get(row["catalog_id"], row["catalog_id"])
+            row["test"] = "Godot/three_d/tests/route_guard_coverage_test.gd::cash_insufficient across six routes"
+            row["evidence_report"] = "output/3d/route-guard-coverage.json"
+            row["evidence_strength"] = "strong"
+            row["disposition"] = "catalogued_strong"
+            row["notes"] += " 当前目录将路线名/费用差异作为同一 cash<fee 拒绝结果的输入变体；专项仍逐酒馆、逐预约与六路线运行全部样本，但只登记 route_guard.cash_general 一个状态结果。"
+            merged_route_cash_rows += 1
+    if merged_route_cash_rows != 6:
+        raise SystemExit(f"Unexpected merged route cash rows: {merged_route_cash_rows}")
 
     partial_bankroll = 0
     entry_heat_cap = 0
@@ -806,6 +821,7 @@ def main() -> int:
 - `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal`、`world.autosave`、`world.window_focus_out`、`player.look_changed`、`player.movement` 与 `world.window_close_request` 已在对应测试中登记；无目标 E 输入复用 `world.raycast_unfocused`，成功 E 输入由 captured 鼠标模式的窗口测试走完整 Player→World 信号链。
 - 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`。吧台实体入口曾因缺少后置断言被列为弱证据；当前实体射线与 E 键集成测试已补足，映射到 `world.services_open`。试玩提示与 trace 文件 I/O 结果不改变权威状态，分别归为非状态转移；相关 I/O 错误注入未做专门测试。当前弱证据表有 {len(weak_evidence)} 行。
 - `persistence_replay.rng_negative_control` 是测试侧人工扰动的负对照，现已从 `transitions` 移至 `verification_controls`；它仍作为正向重放断言的非空检查，但不再增加状态转移目录计数。
+- 五条 `route_guard.cash_*` 历史 ID 与 `route_guard.cash_general` 共用 `routes.gd:49-50` 的同一拒绝后继；当前 overlay 将它们归并到该单一 ID，六条路线仍由同一专项逐项验证。
 - 原 12 条世界/牌桌编排候选逐项复核后，实际状态后继归并到已有规则层 ID；纯 UI/调度包装早退标为 `not_a_transition`，不借用其他入口的 ID。没有新增语义 ID，也没有把 393 项目录宣称为完整分母；当前候选表无未映射行不等于证明不存在其他缺口，全球转移分母仍未冻结。
 - 分支行 disposition 计数：`{dict(counts)}`。
 
