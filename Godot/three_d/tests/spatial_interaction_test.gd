@@ -1,4 +1,5 @@
 extends SceneTree
+const Table = preload("res://three_d/rules/table.gd")
 var world: Node3D
 var failures: Array[String] = []
 var checks := 0
@@ -33,6 +34,25 @@ func walk_to(pos: Vector3) -> void:
 		await physics_frame
 	Input.action_release("move_forward")
 	verify(count < 240, "Walk reaches " + str(pos))
+
+func finish_first_hand(table: RefCounted, force_player_win: bool) -> bool:
+	var steps := 0
+	while table.state.status == "playing" and steps < 100:
+		steps += 1
+		var actor: String = table.state.currentActorId
+		if actor.is_empty():
+			if not table.advance(table.revision): return false
+		else:
+			var legal: Dictionary = table.legal_actions(actor)
+			var action := "all-in" if force_player_win and actor == "player" else ("fold" if force_player_win else "")
+			if action.is_empty():
+				if actor == "player":
+					action = "call" if table.state.street == "preflop" else "fold"
+				else:
+					action = "check" if legal.get("check", false) else ("call" if legal.get("call", false) else "fold")
+			if not table.act(actor, action, table.revision): return false
+	return steps < 100 and table.state.status in ["hand_over", "finished"]
+
 func run() -> void:
 	world = load("res://three_d/scenes/main.tscn").instantiate()
 	root.add_child(world)
@@ -115,19 +135,30 @@ func run() -> void:
 	verify(world.player.position.y < -1.1, "Loading ramp descends to quay")
 	world.player.camera.look_at(Vector3(12.75, -0.1, -14.5))
 	await capture("river-quay")
-	# Results describe actual net, including refunds and shared pots.
+	# Verify results from completed actions, as well as the neutral banner wording.
 	var table: RefCounted = world.run_game.enter_table(301, world.run_game.revision)
 	var view: Dictionary = table.public_state()
-	view.status = "hand_over"
-	view.players[0].handContribution = 40
-	for amount in [70, 10, 40]:
-		view.summary = {"awards":{"player":amount}}
-		world.seat_panel.refresh(view)
-		verify(world.seat_panel.result_banner.visible and world.seat_panel.result_banner.text.contains("赢了" if amount > 40 else ("输了" if amount < 40 else "持平")), "Result banner describes net " + str(amount - 40))
+	var win_completed: bool = finish_first_hand(table, true)
+	view = table.public_state()
+	world.seat_panel.refresh(view)
+	var win_net: int = int(view.summary.get("awards", {}).get("player", 0)) - int(view.players[0].handContribution)
+	verify(win_completed and win_net > 0 and world.seat_panel.result_banner.visible and world.seat_panel.result_banner.text.contains("赢了") and world.seat_panel.result_banner.text.contains("+" + str(win_net)) and world.seat_panel.history.text.contains("你 全押"), "Real all-in win reaches the result banner and action history")
+	var loss_table := Table.new()
+	loss_table.start(world.table_content.tables["cargo-table"], 302)
+	var loss_completed: bool = finish_first_hand(loss_table, false)
+	var loss_view: Dictionary = loss_table.public_state()
+	world.seat_panel.refresh(loss_view)
+	var loss_net: int = int(loss_view.summary.get("awards", {}).get("player", 0)) - int(loss_view.players[0].handContribution)
+	verify(loss_completed and loss_net < 0 and world.seat_panel.result_banner.visible and world.seat_panel.result_banner.text.contains("输了这一手") and world.seat_panel.result_banner.text.contains(str(loss_net)), "Real folded loss reaches the result banner")
+	var tie_view: Dictionary = view.duplicate(true)
+	tie_view.status = "hand_over"
+	tie_view.players[0].handContribution = 40
+	tie_view.summary = {"awards":{"player":40}}
+	world.seat_panel.refresh(tie_view)
+	verify(world.seat_panel.result_banner.visible and world.seat_panel.result_banner.text.contains("本手持平"), "Zero net uses neutral result wording")
 	world.travel("tavern")
 	world.seat_camera.current = true
 	world.seat_panel.show()
-	view.summary.awards.player = 70
 	world.seat_panel.refresh(view)
 	await capture("hand-result-banner")
 	print("SPATIAL_INTERACTION ", JSON.stringify({"checks":checks, "failed":failures.size(), "failures":failures}))
