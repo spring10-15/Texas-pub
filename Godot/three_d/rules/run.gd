@@ -72,6 +72,7 @@ func start(expected_revision: int, destination := "smoky-den", seed_value := 0) 
 	search_index = 1
 	heat_reduced = false
 	preview = {}
+	preview_hand = 0
 	service_message = ""
 	last_result = {}
 	last_reward = ""
@@ -175,6 +176,7 @@ func enter_table(seed_value: int, expected_revision: int, table_id := "cargo-tab
 	heat = mini(6, heat + int(definition.heatGain) + int(scene_definition().entryHeatBonus))
 	used_tools.clear()
 	preview = {}
+	preview_hand = 0
 	table = TableRules.new()
 	table.start(definition, seed_value)
 	revision += 1

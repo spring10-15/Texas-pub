@@ -188,3 +188,8 @@ Phase 1 补充产物：[难度曲线](difficulty-curve.md)、[八对手条件策
 ### 2026-09-28 搜索与高级服务局部源码审计
 
 - 继续核对 `SearchEvents.reason/apply`、`Advanced.reason/apply` 与 `Run.service_action()` 派发，见[搜索与高级服务局部审计](coverage/search-advanced-source-audit.md)。搜索 18、高级服务 26、预约 11，共 55 个语义结果均有当前后继证据；事件池的四种布局也逐项验证奖励与读档后防重复领取。该局部分母不包含普通服务、牌桌、世界 UI 或其它状态入口；全局覆盖率仍不可用。
+
+### 2026-09-28 入座与结算状态清理复核
+
+- 源码审查发现新一局和新牌桌清空预览牌时没有同步清空 `preview_hand`，使旧桌手数标记残留在权威存档状态。新增断言先复现生命周期 `start.success` 及入座 `entry.success`、`entry.collateral` 失败，随后在两个入口重置标记；相关专项现为生命周期 32/32、入座 13/13。入座与结算的 35 个局部语义结果及夹具边界见[源码审计](coverage/entry-settlement-source-audit.md)。
+- 完整回归 `output/3d/regression/20260928-221245/report.json` 为 Godot 64/64、Python 17/17、源码指纹未变；A8 当前树 379/379 个已登记 ID 归因，对账 25 项确认、0 漂移、0 反证。该清理复用既有成功后继，不改变全局分母尚未闭合的结论。

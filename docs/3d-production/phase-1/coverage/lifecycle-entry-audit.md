@@ -1,6 +1,6 @@
 # Run 生命周期六入口的源码结果核对
 
-2026-09-28 当前树局部审计。源码 `Godot/three_d/rules/run.gd` SHA-256：`f6d61934d399eea05728c7f81780744ae8594a23afed8ca4e31a64cb8ffd0308`；测试 `lifecycle_coverage_test.gd` SHA-256：`f9aaf8db857f0bb0c7f3d70777a9e0036698893c1a32386ccdcd2fa46619918a`。执行证据为 `output/3d/lifecycle-coverage.json` 及完整回归 `output/3d/regression/20260928-204757/report.json`。
+2026-09-28 当前树局部审计。源码 `Godot/three_d/rules/run.gd` SHA-256：`2cd7ca0596ae84e32f83a707cf509361c002862b69e45f2fc96dfcc1d9d2c4ca`；测试 `lifecycle_coverage_test.gd` SHA-256：`23def4c06464fa56a2039470e4ac78f047551376cdbe13e76cd00cbaa6029039`。执行证据为 `output/3d/lifecycle-coverage.json` 及完整回归 `output/3d/regression/20260928-221245/report.json`。
 
 本表从六个公开入口的实际条件和写入点出发。一个 ID 表示一个有区别的语义结果；`start.partial_bankroll` 与 `abandon.wallet` 是成功路径内的附加结果，因此命中时也会命中对应的 `success`。报价和配置生成器的内部结果在各自子图核对，不计入这六个入口的局部分母。
 

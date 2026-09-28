@@ -1,6 +1,6 @@
 # 搜索事件与高级服务的源码结果核对
 
-2026-09-28 当前树局部审计。源码 SHA-256：`search_events.gd` 为 `cd183477b4de961161153cc7742f9b8ef83ebcb1c6700f93b35e537beab079e3`，`advanced_services.gd` 为 `744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8`，派发入口 `run.gd` 为 `f6d61934d399eea05728c7f81780744ae8594a23afed8ca4e31a64cb8ffd0308`。测试与当前源码哈希匹配；执行证据为 `output/3d/search-coverage.json`、`advanced-coverage.json`、`reservation-coverage.json`、`output/3d/regression/20260928-215737/event_pool_test.log` 及完整回归 `output/3d/regression/20260928-215737/report.json`。
+2026-09-28 当前树局部审计。源码 SHA-256：`search_events.gd` 为 `cd183477b4de961161153cc7742f9b8ef83ebcb1c6700f93b35e537beab079e3`，`advanced_services.gd` 为 `744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8`，派发入口 `run.gd` 为 `2cd7ca0596ae84e32f83a707cf509361c002862b69e45f2fc96dfcc1d9d2c4ca`。测试与当前源码哈希匹配；执行证据为 `output/3d/search-coverage.json`、`advanced-coverage.json`、`reservation-coverage.json`、`output/3d/regression/20260928-221245/event_pool_test.log` 及完整回归 `output/3d/regression/20260928-221245/report.json`。
 
 `Run.service_reason()` 与 `Run.service_action()` 对 `search` 和 `Advanced.KINDS` 先派发，再由各自模块决定拒绝或写入。一个目录 ID 表示有区别的拒绝或状态后继；相同拒绝与不变状态可由多个输入复用。下表从模块源码条件出发，不把其它 Run 服务或世界 UI 状态计入本局部分母。
 

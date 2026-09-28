@@ -1,13 +1,13 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "ca484f0c77c55ad80c319ceb723bde5752b11e5d23e46195dbe919730d110212",
+  "branch_inventory_sha256": "11804e21384fc72efc6853af68045f005769158174a3cc1c67225b065174d752",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "d7009c834d0337d90602b1149c96573c4da567f5030b2f4615b9ce750ca05867",
     "Godot/three_d/rules/poker.gd": "81c89274bf62e2e8cda03f4b2daddf3e187ff7af75e6b094660c890a6d441c38",
     "Godot/three_d/rules/routes.gd": "29c015a2fe729d224653061a1f12cf49ad7c2db486b821d30d44bdc997b5ef76",
-    "Godot/three_d/rules/run.gd": "f6d61934d399eea05728c7f81780744ae8594a23afed8ca4e31a64cb8ffd0308",
+    "Godot/three_d/rules/run.gd": "2cd7ca0596ae84e32f83a707cf509361c002862b69e45f2fc96dfcc1d9d2c4ca",
     "Godot/three_d/rules/run_checkpoint.gd": "3ff358a7bdeb8c08921e3a962b02da5074c052826caedde4111d7eaa62798354",
     "Godot/three_d/rules/run_variants.gd": "a65634653c6c59dd29d85721408af477f5d0958990948d616ec7303bc4cae623",
     "Godot/three_d/rules/save_store.gd": "0c1765b68e0faae1a076903024b6fb6ce54e92e4f81d227223411bba3a91aade",
@@ -183,7 +183,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 88,
+      "line": 89,
       "name": "transfer_quote",
       "signature": "func transfer_quote(destination: String) -> Dictionary:",
       "status": "explicit_exclusion",
@@ -191,7 +191,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 100,
+      "line": 101,
       "name": "transfer_venue",
       "signature": "func transfer_venue(destination: String, expected_revision: int) -> bool:",
       "status": "audit_inventory",
@@ -199,7 +199,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 130,
+      "line": 131,
       "name": "table_blocked_reason",
       "signature": "func table_blocked_reason(table_id := \"cargo-table\") -> String:",
       "status": "explicit_exclusion",
@@ -207,7 +207,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 146,
+      "line": 147,
       "name": "room_requirements",
       "signature": "func room_requirements(table_id: String) -> Array:",
       "status": "explicit_exclusion",
@@ -215,7 +215,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 153,
+      "line": 154,
       "name": "room_blocked_reason",
       "signature": "func room_blocked_reason(table_id: String) -> String:",
       "status": "explicit_exclusion",
@@ -223,7 +223,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 157,
+      "line": 158,
       "name": "table_definition",
       "signature": "func table_definition(table_id: String) -> Dictionary:",
       "status": "explicit_exclusion",
@@ -231,7 +231,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 165,
+      "line": 166,
       "name": "enter_table",
       "signature": "func enter_table(seed_value: int, expected_revision: int, table_id := \"cargo-table\", pledged_item := \"\") -> RefCounted:",
       "status": "audit_inventory",
@@ -239,7 +239,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 183,
+      "line": 185,
       "name": "settle_table",
       "signature": "func settle_table(expected_revision: int) -> bool:",
       "status": "audit_inventory",
@@ -247,7 +247,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 219,
+      "line": 221,
       "name": "discover_exit",
       "signature": "func discover_exit() -> bool:",
       "status": "audit_inventory",
@@ -255,7 +255,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 226,
+      "line": 228,
       "name": "extraction_quote",
       "signature": "func extraction_quote(kind := \"general\") -> Dictionary:",
       "status": "explicit_exclusion",
@@ -263,7 +263,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 229,
+      "line": 231,
       "name": "extract",
       "signature": "func extract(expected_revision: int, kind := \"general\") -> bool:",
       "status": "audit_inventory",
@@ -271,7 +271,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 242,
+      "line": 244,
       "name": "reset_demo",
       "signature": "func reset_demo(expected_revision: int) -> bool:",
       "status": "audit_inventory",
@@ -279,7 +279,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 250,
+      "line": 252,
       "name": "slots_used",
       "signature": "func slots_used() -> int:",
       "status": "explicit_exclusion",
@@ -287,7 +287,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 256,
+      "line": 258,
       "name": "service_reason",
       "signature": "func service_reason(kind: String, item_id: String, target_id := \"\") -> String:",
       "status": "explicit_exclusion",
@@ -295,7 +295,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 305,
+      "line": 307,
       "name": "shop_stock",
       "signature": "func shop_stock() -> Array:",
       "status": "explicit_exclusion",
@@ -303,7 +303,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 315,
+      "line": 317,
       "name": "service_action",
       "signature": "func service_action(kind: String, item_id: String, expected_revision: int, target_id := \"\") -> bool:",
       "status": "audit_inventory",
@@ -311,7 +311,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 366,
+      "line": 368,
       "name": "service_view",
       "signature": "func service_view(mode := \"bag\", product := \"\") -> Dictionary:",
       "status": "explicit_exclusion",
@@ -319,7 +319,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 447,
+      "line": 449,
       "name": "item_name",
       "signature": "func item_name(id: String) -> String:",
       "status": "explicit_exclusion",
@@ -327,7 +327,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 450,
+      "line": 452,
       "name": "sale_value",
       "signature": "func sale_value(id: String) -> int:",
       "status": "explicit_exclusion",
@@ -335,7 +335,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 454,
+      "line": 456,
       "name": "valuable_total",
       "signature": "func valuable_total() -> int:",
       "status": "explicit_exclusion",
@@ -343,7 +343,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 461,
+      "line": 463,
       "name": "reward_for_table",
       "signature": "func reward_for_table(definition: Dictionary, stack: int, collateral_returned: bool) -> String:",
       "status": "explicit_exclusion",
@@ -351,7 +351,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 470,
+      "line": 472,
       "name": "table_reward_pool",
       "signature": "func table_reward_pool(definition: Dictionary) -> Array:",
       "status": "explicit_exclusion",
@@ -359,7 +359,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 477,
+      "line": 479,
       "name": "abandon_quote",
       "signature": "func abandon_quote() -> Dictionary:",
       "status": "explicit_exclusion",
@@ -367,7 +367,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 481,
+      "line": 483,
       "name": "abandon",
       "signature": "func abandon(expected_revision: int) -> bool:",
       "status": "audit_inventory",
@@ -375,7 +375,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 494,
+      "line": 496,
       "name": "route_offer",
       "signature": "func route_offer() -> Dictionary:",
       "status": "explicit_exclusion",
@@ -383,7 +383,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 497,
+      "line": 499,
       "name": "fixed_known",
       "signature": "func fixed_known() -> bool:",
       "status": "explicit_exclusion",
@@ -391,7 +391,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 500,
+      "line": 502,
       "name": "emergency_known",
       "signature": "func emergency_known() -> bool:",
       "status": "explicit_exclusion",
@@ -399,7 +399,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 503,
+      "line": 505,
       "name": "actor_name",
       "signature": "func actor_name(id: String) -> String:",
       "status": "explicit_exclusion",
@@ -407,7 +407,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 506,
+      "line": 508,
       "name": "table_name",
       "signature": "func table_name(id: String) -> String:",
       "status": "explicit_exclusion",
@@ -415,7 +415,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 509,
+      "line": 511,
       "name": "archetype_name",
       "signature": "func archetype_name(value: String) -> String:",
       "status": "explicit_exclusion",
@@ -423,7 +423,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 512,
+      "line": 514,
       "name": "enforce_pressure",
       "signature": "func enforce_pressure() -> bool:",
       "status": "audit_inventory",
@@ -431,7 +431,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 529,
+      "line": 531,
       "name": "offer_name",
       "signature": "func offer_name(id: String) -> String:",
       "status": "explicit_exclusion",
@@ -439,7 +439,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 535,
+      "line": 537,
       "name": "route_known",
       "signature": "func route_known(kind: String) -> bool:",
       "status": "explicit_exclusion",
@@ -447,7 +447,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 545,
+      "line": 547,
       "name": "item_description",
       "signature": "func item_description(id: String) -> String:",
       "status": "explicit_exclusion",
@@ -455,7 +455,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 550,
+      "line": 552,
       "name": "rule_text",
       "signature": "func rule_text(id: String) -> String:",
       "status": "explicit_exclusion",
@@ -463,7 +463,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 554,
+      "line": 556,
       "name": "scene_definition",
       "signature": "func scene_definition() -> Dictionary:",
       "status": "explicit_exclusion",
@@ -471,7 +471,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 557,
+      "line": 559,
       "name": "reserve_fee",
       "signature": "func reserve_fee() -> int:",
       "status": "explicit_exclusion",
@@ -479,7 +479,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 560,
+      "line": 562,
       "name": "route_name",
       "signature": "func route_name(kind: String) -> String:",
       "status": "explicit_exclusion",
@@ -2136,17 +2136,9 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 92,
-      "method": "transfer_quote",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
       "line": 93,
       "method": "transfer_quote",
-      "kind": "elif",
+      "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
@@ -2184,7 +2176,15 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 101,
+      "line": 98,
+      "method": "transfer_quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 102,
       "method": "transfer_venue",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2192,15 +2192,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 103,
-      "method": "transfer_venue",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
-      "line": 108,
+      "line": 104,
       "method": "transfer_venue",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2216,7 +2208,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 111,
+      "line": 110,
       "method": "transfer_venue",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2224,7 +2216,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 113,
+      "line": 112,
       "method": "transfer_venue",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2232,7 +2224,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 115,
+      "line": 114,
       "method": "transfer_venue",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2240,7 +2232,15 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 131,
+      "line": 116,
+      "method": "transfer_venue",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 132,
       "method": "table_blocked_reason",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2248,7 +2248,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 133,
+      "line": 134,
       "method": "table_blocked_reason",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2256,7 +2256,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 135,
+      "line": 136,
       "method": "table_blocked_reason",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2264,15 +2264,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 137,
-      "method": "table_blocked_reason",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
-      "line": 141,
+      "line": 138,
       "method": "table_blocked_reason",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2288,8 +2280,8 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 147,
-      "method": "room_requirements",
+      "line": 143,
+      "method": "table_blocked_reason",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
@@ -2312,31 +2304,31 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 158,
-      "method": "table_definition",
-      "kind": "if",
-      "status": "explicit_method_exclusion",
-      "reason": "returns a defensive content copy with the selected opponent roster"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
-      "line": 161,
-      "method": "table_definition",
-      "kind": "if",
-      "status": "explicit_method_exclusion",
-      "reason": "returns a defensive content copy with the selected opponent roster"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
-      "line": 166,
-      "method": "enter_table",
+      "line": 150,
+      "method": "room_requirements",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 169,
+      "line": 159,
+      "method": "table_definition",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "returns a defensive content copy with the selected opponent roster"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 162,
+      "method": "table_definition",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "returns a defensive content copy with the selected opponent roster"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 167,
       "method": "enter_table",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2352,7 +2344,15 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 184,
+      "line": 171,
+      "method": "enter_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 186,
       "method": "settle_table",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2360,15 +2360,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 193,
-      "method": "settle_table",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
-      "line": 197,
+      "line": 195,
       "method": "settle_table",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2384,7 +2376,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 207,
+      "line": 201,
       "method": "settle_table",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2392,7 +2384,15 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 220,
+      "line": 209,
+      "method": "settle_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 222,
       "method": "discover_exit",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2400,7 +2400,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 231,
+      "line": 233,
       "method": "extract",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2408,16 +2408,8 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 243,
+      "line": 245,
       "method": "reset_demo",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
-      "line": 257,
-      "method": "service_reason",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
@@ -2427,16 +2419,16 @@
       "line": 259,
       "method": "service_reason",
       "kind": "if",
-      "status": "explicit_method_exclusion",
-      "reason": "read-only validation dispatcher; service_action owns the result"
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
       "line": 261,
       "method": "service_reason",
       "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
+      "status": "explicit_method_exclusion",
+      "reason": "read-only validation dispatcher; service_action owns the result"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
@@ -2451,16 +2443,16 @@
       "line": 265,
       "method": "service_reason",
       "kind": "if",
-      "status": "explicit_method_exclusion",
-      "reason": "read-only validation dispatcher; service_action owns the result"
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 266,
+      "line": 267,
       "method": "service_reason",
       "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
+      "status": "explicit_method_exclusion",
+      "reason": "read-only validation dispatcher; service_action owns the result"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
@@ -2496,7 +2488,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 277,
+      "line": 276,
       "method": "service_reason",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2520,7 +2512,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 282,
+      "line": 283,
       "method": "service_reason",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2546,15 +2538,15 @@
       "file": "Godot/three_d/rules/run.gd",
       "line": 288,
       "method": "service_reason",
-      "kind": "elif",
+      "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 289,
+      "line": 290,
       "method": "service_reason",
-      "kind": "if",
+      "kind": "elif",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
@@ -2562,15 +2554,15 @@
       "file": "Godot/three_d/rules/run.gd",
       "line": 291,
       "method": "service_reason",
-      "kind": "elif",
+      "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 292,
+      "line": 293,
       "method": "service_reason",
-      "kind": "if",
+      "kind": "elif",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
@@ -2594,13 +2586,21 @@
       "file": "Godot/three_d/rules/run.gd",
       "line": 298,
       "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 300,
+      "method": "service_reason",
       "kind": "elif",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 299,
+      "line": 301,
       "method": "service_reason",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2608,7 +2608,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 306,
+      "line": 308,
       "method": "shop_stock",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2616,19 +2616,11 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 311,
+      "line": 313,
       "method": "shop_stock",
       "kind": "if",
       "status": "explicit_method_exclusion",
       "reason": "read-only deterministic stock lookup; purchase outcome belongs to service_action"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
-      "line": 316,
-      "method": "service_action",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
@@ -2640,7 +2632,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 322,
+      "line": 320,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2648,7 +2640,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 326,
+      "line": 324,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2656,7 +2648,15 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 330,
+      "line": 328,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 332,
       "method": "service_action",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -2664,7 +2664,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 334,
+      "line": 336,
       "method": "service_action",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -2672,7 +2672,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 335,
+      "line": 337,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2680,7 +2680,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 342,
+      "line": 344,
       "method": "service_action",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -2688,7 +2688,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 345,
+      "line": 347,
       "method": "service_action",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -2696,7 +2696,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 349,
+      "line": 351,
       "method": "service_action",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -2704,7 +2704,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 352,
+      "line": 354,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2712,7 +2712,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 356,
+      "line": 358,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2720,15 +2720,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 368,
-      "method": "service_view",
-      "kind": "if",
-      "status": "explicit_method_exclusion",
-      "reason": "read-only construction of visible service choices and text"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
-      "line": 373,
+      "line": 370,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2744,7 +2736,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 381,
+      "line": 377,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2752,7 +2744,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 384,
+      "line": 383,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2768,7 +2760,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 387,
+      "line": 388,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2776,7 +2768,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 392,
+      "line": 389,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2784,7 +2776,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 399,
+      "line": 394,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2792,7 +2784,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 404,
+      "line": 401,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2800,7 +2792,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 405,
+      "line": 406,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2810,13 +2802,21 @@
       "file": "Godot/three_d/rules/run.gd",
       "line": 407,
       "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 409,
+      "method": "service_view",
       "kind": "elif",
       "status": "explicit_method_exclusion",
       "reason": "read-only construction of visible service choices and text"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 408,
+      "line": 410,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2824,15 +2824,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 411,
-      "method": "service_view",
-      "kind": "if",
-      "status": "explicit_method_exclusion",
-      "reason": "read-only construction of visible service choices and text"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
-      "line": 412,
+      "line": 413,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2842,15 +2834,15 @@
       "file": "Godot/three_d/rules/run.gd",
       "line": 414,
       "method": "service_view",
-      "kind": "elif",
+      "kind": "if",
       "status": "explicit_method_exclusion",
       "reason": "read-only construction of visible service choices and text"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 417,
+      "line": 416,
       "method": "service_view",
-      "kind": "if",
+      "kind": "elif",
       "status": "explicit_method_exclusion",
       "reason": "read-only construction of visible service choices and text"
     },
@@ -2864,7 +2856,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 423,
+      "line": 421,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2880,7 +2872,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 431,
+      "line": 427,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2888,7 +2880,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 440,
+      "line": 433,
       "method": "service_view",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2896,27 +2888,19 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 457,
+      "line": 442,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 459,
       "method": "valuable_total",
       "kind": "if",
       "status": "explicit_method_exclusion",
       "reason": "read-only inventory valuation"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
-      "line": 463,
-      "method": "reward_for_table",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/rules/run.gd",
-      "line": 464,
-      "method": "reward_for_table",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/run.gd",
@@ -2936,7 +2920,23 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 474,
+      "line": 467,
+      "method": "reward_for_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 468,
+      "method": "reward_for_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 476,
       "method": "table_reward_pool",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2944,7 +2944,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 483,
+      "line": 485,
       "method": "abandon",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2952,7 +2952,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 513,
+      "line": 515,
       "method": "enforce_pressure",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2960,7 +2960,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 519,
+      "line": 521,
       "method": "enforce_pressure",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2968,7 +2968,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 522,
+      "line": 524,
       "method": "enforce_pressure",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -2976,7 +2976,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 531,
+      "line": 533,
       "method": "offer_name",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2984,7 +2984,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 536,
+      "line": 538,
       "method": "route_known",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -2992,7 +2992,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 538,
+      "line": 540,
       "method": "route_known",
       "kind": "match",
       "status": "explicit_method_exclusion",
@@ -3000,7 +3000,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 546,
+      "line": 548,
       "method": "item_description",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -3008,7 +3008,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 561,
+      "line": 563,
       "method": "route_name",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -3016,7 +3016,7 @@
     },
     {
       "file": "Godot/three_d/rules/run.gd",
-      "line": 563,
+      "line": 565,
       "method": "route_name",
       "kind": "if",
       "status": "explicit_method_exclusion",

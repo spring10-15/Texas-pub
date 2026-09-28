@@ -28,6 +28,13 @@ func _initialize() -> void:
 		else:
 			ok = not accepted and Checkpoint.capture(r)==before
 		record("start."+case,ok)
+	var restarted := fresh()
+	restarted.preview = {"rank": 14, "suit": "S"}
+	restarted.preview_hand = 3
+	restarted.abandon(restarted.revision)
+	var previous_preview_hand: int = restarted.preview_hand
+	var started_again: bool = restarted.start(restarted.revision)
+	record("start.success", started_again and previous_preview_hand == 3 and restarted.preview.is_empty() and restarted.preview_hand == 0)
 	for case in ["success","stale","active","sufficient_funds"]:
 		var r := Run.new(content)
 		r.vault = 119

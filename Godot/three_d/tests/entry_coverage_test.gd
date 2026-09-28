@@ -25,6 +25,10 @@ func _initialize() -> void:
 			r.completed.assign(["cargo-table", "ledger-cellar"])
 			pledge = "steadying-drink" if key == "collateral_not_valuable" else "ivory-chip"
 			if key != "collateral_unowned": r.inventory.append(pledge)
+		if key in ["success", "collateral"]:
+			r.used_tools.append("marked-lens")
+			r.preview = {"rank": 14, "suit": "S"}
+			r.preview_hand = 3
 		var before := Checkpoint.capture(r)
 		var result: RefCounted = r.enter_table(7,r.revision-1 if key == "stale_revision" else r.revision,id,pledge)
 		var ok: bool
@@ -34,7 +38,7 @@ func _initialize() -> void:
 		elif key in ["success", "collateral"]:
 			var definition: Dictionary = content.tables[id]
 			ok = result != null and r.cash == before.cash-int(definition.buyIn) and r.heat == before.heat+int(definition.heatGain) and r.vault == before.vault and r.revision == before.revision+1 and r.collateral == pledge and r.inventory.is_empty() and r.completed == before.completed and r.action_points == before.action_points
-			ok = ok and r.table.state.tableDef.id == id and r.table.state.players.size() == 3
+			ok = ok and r.table.state.tableDef.id == id and r.table.state.players.size() == 3 and r.used_tools.is_empty() and r.preview.is_empty() and r.preview_hand == 0
 		else:
 			ok = result == null and Checkpoint.capture(r) == before
 		var outcome: String = "entry.heat_cap" if key == "heat_cap" else "entry."+key
