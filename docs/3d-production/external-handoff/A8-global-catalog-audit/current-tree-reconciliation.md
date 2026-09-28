@@ -1,22 +1,22 @@
 # A8 当前树对账记录
 
-- 证据源码基线 HEAD：`beed43ece1ac4895a40b10d1aa0742f4ee67a840`
-- 当前目录：388 个唯一 ID，SHA-256 `ffcb72b1e664c1ce590e518547558e3bd2d39f66b5dd1f13a25aab5f221d4118`
-- 采用的全量回归：`output/3d/regression/20260928-110607/report.json`（必须由当前源码/测试重跑后更新本记录）
-- 回归报告 SHA-256：`01d41b021e2d3b6a051d2713259d6c961406b0787c1fbc79c9d2acc9c679bbd7`
-- lifecycle 覆盖报告 SHA-256：`6d58d25b08ea9b5cc976078d9bb6b4ddb2b53cba662bc1e07e575ec63233dce7`
-- 当前分支清单 SHA-256：`cf08eec659d0b34b5aec1e526a911cb6e7508ccb6a2e3bc87a24eaebd8fe5d47`
+- 证据源码基线 HEAD：`1b774781c5fc3292a6354c889d04db09dbfb2484`
+- 当前目录：384 个唯一 ID，SHA-256 `5fe6e79c154d648f5905bfdf1d90ea253eeacc7f6e182b24aa4f14ba7431abc9`
+- 采用的全量回归：`output/3d/regression/20260928-113749/report.json`（必须由当前源码/测试重跑后更新本记录）
+- 回归报告 SHA-256：`708204023bec0289aec6988683c92b05f60abda0c9f03263b77e549975125776`
+- lifecycle 覆盖报告 SHA-256：`6e89f52f23f5920a1b4370584a12bcb16dab95dbfb4406f930b0b462ab7a9777`
+- 当前分支清单 SHA-256：`7db01d7f20c6a9f540143d65e83299b62adb86029bc58a376b45efcde8053012`
 - 当前玩家路径缺口清单 SHA-256：`147f8235e3872dab602718ce1f2e01f3d12b4b7904831e7ca8257de90341b167`
 - 当前弱证据清单 SHA-256：`147f8235e3872dab602718ce1f2e01f3d12b4b7904831e7ca8257de90341b167`
-- 对账脚本 SHA-256：`d95c5a6a635d931cd8eadea03748b7948cd7365fe253f38e2764c2f0587ac874`
+- 对账脚本 SHA-256：`a6e498ea21bff38a5d16981374e9b87229651f40337ed14f4e3d80473ee51759`
 - 原始 A8 的 `branch-inventory.csv`、`unmapped-reachable.csv` 和审计 README 保留为 382 项冻结锚点，没有覆盖。
 
 ## 当前映射和缺口
 
-- 当前目录 ID 已全部映射：388/388。
+- 当前目录 ID 已全部映射：384/384。
 - 当前仍有 0 条标为玩家可达但尚未映射。
 - 分支清单按字面有 115 条 `player_reachable=yes` 且没有独立 `catalog_id`；它们均有逐行归类说明，未计入当前未映射缺口。其中 53 条的 `outcome=accepted` 仅表示该源码分支可执行，不能单独证明它是独立游戏状态转移。
-- 以本脚本生成的 388 项 overlay 为准；外部 triage 输入保留在 `current-tree-player-path-gaps.csv`，不是当前未映射清单。
+- 以本脚本生成的 384 项 overlay 为准；外部 triage 输入保留在 `current-tree-player-path-gaps.csv`，不是当前未映射清单。
 - `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal`、`world.autosave`、`world.window_focus_out`、`player.look_changed`、`player.movement` 与 `world.window_close_request` 已在对应测试中登记；无目标 E 输入复用 `world.raycast_unfocused`，成功 E 输入由 captured 鼠标模式的窗口测试走完整 Player→World 信号链。
 - 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`。吧台实体入口曾因缺少后置断言被列为弱证据；当前实体射线与 E 键集成测试已补足，映射到 `world.services_open`。试玩提示与 trace 文件 I/O 结果不改变权威状态，分别归为非状态转移；相关 I/O 错误注入未做专门测试。当前弱证据表有 0 行。
 - `persistence_replay.rng_negative_control` 是测试侧人工扰动的负对照，现已从 `transitions` 移至 `verification_controls`；它仍作为正向重放断言的非空检查，但不再增加状态转移目录计数。

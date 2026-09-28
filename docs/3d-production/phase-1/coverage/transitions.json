@@ -424,13 +424,7 @@
       "outcome": "rejected"
     },
     {
-      "id": "search.inactive",
-      "source": "Godot/three_d/rules/run.gd",
-      "entry": "service_action(search)",
-      "outcome": "rejected"
-    },
-    {
-      "id": "search.table_active",
+      "id": "search.phase_unavailable",
       "source": "Godot/three_d/rules/run.gd",
       "entry": "service_action(search)",
       "outcome": "rejected"
@@ -484,13 +478,7 @@
       "outcome": "rejected"
     },
     {
-      "id": "search.cool_used",
-      "source": "Godot/three_d/rules/run.gd",
-      "entry": "service_action(search)",
-      "outcome": "rejected"
-    },
-    {
-      "id": "search.cool_unneeded",
+      "id": "search.cool_unavailable",
       "source": "Godot/three_d/rules/run.gd",
       "entry": "service_action(search)",
       "outcome": "rejected"
@@ -796,13 +784,7 @@
       "outcome": "rejected"
     },
     {
-      "id": "service.cool_used",
-      "source": "Godot/three_d/rules/run.gd",
-      "entry": "service_action",
-      "outcome": "rejected"
-    },
-    {
-      "id": "service.cool_unneeded",
+      "id": "service.cool_unavailable",
       "source": "Godot/three_d/rules/run.gd",
       "entry": "service_action",
       "outcome": "rejected"
@@ -820,13 +802,7 @@
       "outcome": "rejected"
     },
     {
-      "id": "service.intel_known",
-      "source": "Godot/three_d/rules/run.gd",
-      "entry": "service_action",
-      "outcome": "rejected"
-    },
-    {
-      "id": "service.intel_unknown",
+      "id": "service.intel_unavailable",
       "source": "Godot/three_d/rules/run.gd",
       "entry": "service_action",
       "outcome": "rejected"
@@ -2370,6 +2346,46 @@
       "id": "route_guard.cash_service-stairs",
       "merged_into": "route_guard.cash_general",
       "reason": "Same rejected outcome as insufficient cash on routes.gd:49-50; route name and calculated fee are input variants, not separate state results."
+    },
+    {
+      "id": "search.cool_unneeded",
+      "merged_into": "search.cool_unavailable",
+      "reason": "Both heat_reduced=true and heat<=0 hit the same guard and return the same rejection reason with no state change; retained as separate input cases, one outcome ID per action entry."
+    },
+    {
+      "id": "search.cool_used",
+      "merged_into": "search.cool_unavailable",
+      "reason": "Both heat_reduced=true and heat<=0 hit the same guard and return the same rejection reason with no state change; retained as separate input cases, one outcome ID per action entry."
+    },
+    {
+      "id": "search.inactive",
+      "merged_into": "search.phase_unavailable",
+      "reason": "The same action entry applies one guard and returns the same rejection reason without changing state; retained as separate input cases under one outcome ID."
+    },
+    {
+      "id": "search.table_active",
+      "merged_into": "search.phase_unavailable",
+      "reason": "The same action entry applies one guard and returns the same rejection reason without changing state; retained as separate input cases under one outcome ID."
+    },
+    {
+      "id": "service.cool_unneeded",
+      "merged_into": "service.cool_unavailable",
+      "reason": "Both heat_reduced=true and heat<=0 hit the same guard and return the same rejection reason with no state change; retained as separate input cases, one outcome ID per action entry."
+    },
+    {
+      "id": "service.cool_used",
+      "merged_into": "service.cool_unavailable",
+      "reason": "Both heat_reduced=true and heat<=0 hit the same guard and return the same rejection reason with no state change; retained as separate input cases, one outcome ID per action entry."
+    },
+    {
+      "id": "service.intel_known",
+      "merged_into": "service.intel_unavailable",
+      "reason": "The same action entry applies one guard and returns the same rejection reason without changing state; retained as separate input cases under one outcome ID."
+    },
+    {
+      "id": "service.intel_unknown",
+      "merged_into": "service.intel_unavailable",
+      "reason": "The same action entry applies one guard and returns the same rejection reason without changing state; retained as separate input cases under one outcome ID."
     }
   ]
 }

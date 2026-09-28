@@ -68,6 +68,43 @@ def main() -> int:
     if merged_route_cash_rows != 6:
         raise SystemExit(f"Unexpected merged route cash rows: {merged_route_cash_rows}")
 
+    duplicate_rejection_merges = {
+        "service.cool_used": "service.cool_unavailable",
+        "service.cool_unneeded": "service.cool_unavailable",
+        "search.cool_used": "search.cool_unavailable",
+        "search.cool_unneeded": "search.cool_unavailable",
+        "search.inactive": "search.phase_unavailable",
+        "search.table_active": "search.phase_unavailable",
+        "service.intel_known": "service.intel_unavailable",
+        "service.intel_unknown": "service.intel_unavailable",
+    }
+    merged_rejection_rows = 0
+    for row in branches:
+        old_id = row["catalog_id"]
+        if old_id not in duplicate_rejection_merges:
+            continue
+        prefix = old_id.split(".", 1)[0]
+        row["catalog_id"] = duplicate_rejection_merges[old_id]
+        input_cases = {
+            "service.cool_used": "cool_used and cool_unneeded",
+            "service.cool_unneeded": "cool_used and cool_unneeded",
+            "search.cool_used": "cool_used and cool_unneeded",
+            "search.cool_unneeded": "cool_used and cool_unneeded",
+            "search.inactive": "inactive and table_active",
+            "search.table_active": "inactive and table_active",
+            "service.intel_known": "intel_known and intel_unknown",
+            "service.intel_unknown": "intel_known and intel_unknown",
+        }
+        row["test"] = f"Godot/three_d/tests/{prefix}_coverage_test.gd::{input_cases[old_id]} input cases"
+        row["evidence_report"] = f"output/3d/{prefix}-coverage.json"
+        row["evidence_strength"] = "strong"
+        row["disposition"] = "catalogued_strong"
+        row["notes"] += " 当前目录按动作入口将同一 guard 的多个拒绝条件归为一个结果 ID；专项仍分别执行各输入并断言完整 checkpoint 不变。"
+        merged_rejection_rows += 1
+    expected_rejection_rows = 12  # SearchEvents guards are recorded at both Run dispatch and their source.
+    if merged_rejection_rows != expected_rejection_rows:
+        raise SystemExit(f"Unexpected merged rejection rows: {merged_rejection_rows}/{expected_rejection_rows}")
+
     partial_bankroll = 0
     entry_heat_cap = 0
     settlement_heat_relief = 0
@@ -654,14 +691,14 @@ def main() -> int:
             "service.not_stocked", "service.buy_cash", "service.full_bag", "service.buy",
         },
         "Godot/three_d/rules/run.gd:291-291": {
-            "service.cool_used", "service.cool_unneeded", "service.drink_unowned",
+            "service.cool_unavailable", "service.drink_unowned",
             "service.cool_cash", "service.drink", "service.cool",
         },
         "Godot/three_d/rules/run.gd:298-298": {
-            "service.intel_known", "service.intel_unknown", "service.intel",
+            "service.intel_unavailable", "service.intel",
         },
     }
-    service_dispatch_rows = 0
+    service_dispatch_mappings = set()
     for row in branches:
         if row["entry"] != "service_action" or row["catalog_id"] == "-":
             continue
@@ -671,10 +708,10 @@ def main() -> int:
                 if source_ref not in source_refs:
                     row["source_line"] += f";{source_ref}"
                 row["notes"] += f" service_reason 的 kind 分派条件 {source_ref.rsplit(':', 1)[1]} 由同一套端到端服务用例命中；此处是已有结果的选择路径，不另增 ID。"
-                service_dispatch_rows += 1
+                service_dispatch_mappings.add((source_ref, row["catalog_id"]))
     expected_dispatch_rows = sum(map(len, service_dispatch_ids.values()))
-    if service_dispatch_rows != expected_dispatch_rows:
-        raise SystemExit(f"Unexpected service dispatch mapping rows: {service_dispatch_rows}/{expected_dispatch_rows}")
+    if len(service_dispatch_mappings) != expected_dispatch_rows:
+        raise SystemExit(f"Unexpected service dispatch mappings: {len(service_dispatch_mappings)}/{expected_dispatch_rows}")
 
     # Ordered rewardRules are tested through real settle_table calls with
     # exact inventory, stack-threshold, and collateral postconditions. Link

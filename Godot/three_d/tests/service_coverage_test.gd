@@ -43,6 +43,8 @@ func _initialize() -> void:
 		else:
 			ok = ok and not accepted and Checkpoint.capture(r) == before
 		var id: String = "service."+key
+		if key in ["cool_used", "cool_unneeded"]: id = "service.cool_unavailable"
+		elif key in ["intel_known", "intel_unknown"]: id = "service.intel_unavailable"
 		if ok: hits[id] = {"test":"service_coverage_test.gd","postcondition_verified":true}
 		else: failures.append(id); push_error(id)
 	var valuable_sales := {}

@@ -40,6 +40,8 @@
 
 2026-09-28 重复拒绝结果合并：六条 `route_guard.cash_*` 仅路线/费用输入不同，均在 `routes.gd:49-50` 返回相同“随身现金不足”拒绝且不改状态。保留 `route_guard.cash_general` 作为语义 ID，另外五个记入 `retired_transition_ids` 并指向它；测试仍对六路线全部跑样本。当前状态转移登记数因此从 393 调整为 388，历史计数不回写；总体覆盖率仍为空。
 
+2026-09-28 同守卫拒绝结果合并：服务与搜索冷却各自把 `heat_reduced=true` 和 `heat<=0` 纳入同一 `or` 守卫；搜索阶段的“未出发/牌桌中”与服务情报的“已知/未开放”也各由同一入口守卫处理。四组各保留一个动作入口结果 ID，旧条件 ID 记入 `retired_transition_ids`；测试仍逐个执行所有输入并检查 checkpoint 不变。目录由 388 项修正为 384 项，总体覆盖率仍为空。
+
 2026-09-25 A4 世界交互四组收口：逐行复核 `leave_seat`、`physical_raycast`、`prop_interactions`、`modal_guards` 的 47 个 A4 结果候选；所有可达结果都映射到当前 74/74 的世界覆盖报告，且对应目录 ID 均有后继状态证据。`leave_seat` 中 `settle_table` 失败仅能通过破坏桌/Run 对象同步制造，A4 标为不可达防御分支，不纳入玩家路径；未注册道具 ID 同样不可由公开交互锚点产生。报告的目录、测试及四份 World 源码哈希均与当前文件匹配。因此 `pending_families.world` 清空；存档仍有 6 组待审，全局目录与覆盖率仍未封板。完整回归 59/59，目录证据 379/379，覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-061911/report.json`。
 
 2026-09-25 入座分支复核：A4 `seat` 组的三项结果现均由 `world_coverage_test.gd` 正式覆盖：`world.seat` 核对真实牌桌交互后的座席面板、座席相机与控制权切换；`world.seat_blocked` 核对藏匿点未入酒馆时拒绝且完整世界快照不变；`world.seated_world_action_rejected` 核对入座后道具请求拒绝且快照不变。三项都能在当前世界覆盖报告中命中，因此从 `pending_families.world` 移除 `seat`，待审组从 5 减至 4；没有新增语义 ID。完整回归 59/59，目录证据 379/379，覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-061253/report.json`。整体目录仍未封板。

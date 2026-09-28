@@ -61,6 +61,8 @@ func _initialize() -> void:
 		else:
 			ok = ok and not accepted and Checkpoint.capture(r) == before
 		var id: String = "search."+key
+		if key in ["cool_used", "cool_unneeded"]: id = "search.cool_unavailable"
+		elif key in ["inactive", "table_active"]: id = "search.phase_unavailable"
 		if ok: hits[id] = {"test":"search_coverage_test.gd","postcondition_verified":true}
 		else: failures.append(id); push_error(id)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("search.")).map(func(row): return row.id)

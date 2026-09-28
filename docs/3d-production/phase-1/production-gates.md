@@ -111,3 +111,9 @@ Phase 1 补充产物：[难度曲线](difficulty-curve.md)、[八对手条件策
 
 - `route_guard_coverage_test.gd` 继续逐场景、逐预约、逐六路线执行现金不足样本；同一 `cash<fee` 拒绝后继只产生一个 `route_guard.cash_general` 命中。专项报告 19/19，覆盖 192 组输入；此前六个路线变体 ID 中五个现由 `retired_transition_ids` 映射到保留 ID。
 - 完整回归 64/64、Python 单测 8/8、来源快照未变：`output/3d/regression/20260928-105819/report.json`。当前登记证据与状态结果均为 388/388，全球覆盖率仍为 `null`；A5 自检为 39/39。提交后需刷新 A8 当前树证据基线。
+
+### 2026-09-28 服务与搜索冷却拒绝去重
+
+- `Run.service_reason` 与 `SearchEvents.reason` 各自将“本轮已降过风声”和“风声已为零”合并为同一守卫、同一拒绝文案和不变 checkpoint；每个入口保留一个语义结果，测试仍分别验证 `heat_reduced=true` 与 `heat=0` 两类输入。
+- 同一轮还合并了搜索阶段“未出发/牌桌中”与服务情报“已知/未开放”两对同入口、同文案拒绝条件，保留独立输入检查。
+- 活动目录由 388 修正为 384 项，八个旧 ID 保留在 `retired_transition_ids` 并映射到四个规范结果。完整回归和 A5 已重跑；A8 当前树需在提交新基线后刷新。全局分母及 ≥95% 门槛仍未闭合。
