@@ -184,3 +184,7 @@ Phase 1 补充产物：[难度曲线](difficulty-curve.md)、[八对手条件策
 ### 2026-09-28 普通服务与牌桌道具局部源码审计
 
 - 逐项核对 `Run.service_reason()` 和 `Run.service_action()` 的普通服务及牌桌道具守卫、写入和现有断言，见[服务局部审计](coverage/service-source-audit.md)。该局部目录有 34 个语义结果、34 个当前后继证据（普通服务 19、牌桌道具 15）。搜索事件与高级服务是独立派发子图，未计入这个局部分母；全局状态转移分母仍未闭合。
+
+### 2026-09-28 搜索与高级服务局部源码审计
+
+- 继续核对 `SearchEvents.reason/apply`、`Advanced.reason/apply` 与 `Run.service_action()` 派发，见[搜索与高级服务局部审计](coverage/search-advanced-source-audit.md)。搜索 18、高级服务 26、预约 11，共 55 个语义结果均有当前后继证据；事件池的四种布局也逐项验证奖励与读档后防重复领取。该局部分母不包含普通服务、牌桌、世界 UI 或其它状态入口；全局覆盖率仍不可用。
