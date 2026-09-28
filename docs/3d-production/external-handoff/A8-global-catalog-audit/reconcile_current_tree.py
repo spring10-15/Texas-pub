@@ -458,6 +458,17 @@ def main() -> int:
                 "notes": mapping["notes"],
             })
 
+    ai_dispatch_rows = 0
+    for row in branches:
+        if (row["source_file"] == "Godot/three_d/scripts/world.gd"
+                and row["entry"] == "advance_table_beat"
+                and row["source_line"] == "Godot/three_d/scripts/world.gd:690-692"):
+            row["source_line"] = "Godot/three_d/scripts/world.gd:689-692"
+            row["notes"] += " 同时覆盖 `elif actor_id != player` 的 AI 调度分派条件（world.gd:689）；测试由 World._process 驱动真实对手行动。"
+            ai_dispatch_rows += 1
+    if ai_dispatch_rows != 1:
+        raise SystemExit(f"Unexpected AI dispatch rows: {ai_dispatch_rows}")
+
     # `act()` rechecks legality before mutating the authoritative table. The
     # same 12 legality outcomes are asserted at both the query and command
     # boundary by poker_guard_coverage_test.gd; record the shared rejection
@@ -529,6 +540,56 @@ def main() -> int:
             transfer_rejection_rows += 1
     if transfer_rejection_rows != 10:
         raise SystemExit(f"Unexpected transfer rejection guard rows: {transfer_rejection_rows}")
+
+    # The service-reason kind dispatch selects which accepted/rejected
+    # service outcome applies. Existing boundary suites execute service_action
+    # and assert the complete Run checkpoint for each listed outcome.
+    service_dispatch_ids = {
+        "Godot/three_d/rules/run.gd:281-281": {
+            "service.not_stocked", "service.buy_cash", "service.full_bag", "service.buy",
+        },
+        "Godot/three_d/rules/run.gd:291-291": {
+            "service.cool_used", "service.cool_unneeded", "service.drink_unowned",
+            "service.cool_cash", "service.drink", "service.cool",
+        },
+        "Godot/three_d/rules/run.gd:298-298": {
+            "service.intel_known", "service.intel_unknown", "service.intel",
+        },
+    }
+    service_dispatch_rows = 0
+    for row in branches:
+        if row["entry"] != "service_action" or row["catalog_id"] == "-":
+            continue
+        source_refs = row["source_line"].split(";")
+        for source_ref, ids in service_dispatch_ids.items():
+            if row["catalog_id"] in ids:
+                if source_ref not in source_refs:
+                    row["source_line"] += f";{source_ref}"
+                row["notes"] += f" service_reason 的 kind 分派条件 {source_ref.rsplit(':', 1)[1]} 由同一套端到端服务用例命中；此处是已有结果的选择路径，不另增 ID。"
+                service_dispatch_rows += 1
+    expected_dispatch_rows = sum(map(len, service_dispatch_ids.values()))
+    if service_dispatch_rows != expected_dispatch_rows:
+        raise SystemExit(f"Unexpected service dispatch mapping rows: {service_dispatch_rows}/{expected_dispatch_rows}")
+
+    # Ordered rewardRules are tested through real settle_table calls with
+    # exact inventory, stack-threshold, and collateral postconditions. Link
+    # the pure selector implementation to the existing reward outcome IDs.
+    reward_ids = {
+        "settlement.ivory", "settlement.lighter", "settlement.ruby", "settlement.emerald",
+        "settlement.pearl", "settlement.watch", "settlement.bond", "settlement.antique",
+        "settlement.idol", "settlement.promissory",
+    }
+    reward_selector_rows = 0
+    for row in branches:
+        if (row["source_file"] == "Godot/three_d/rules/run.gd"
+                and row["entry"] == "settle_table"
+                and row["catalog_id"] in reward_ids
+                and row["source_line"] == "Godot/three_d/rules/run.gd:197-202"):
+            row["source_line"] += ";Godot/three_d/rules/run.gd:461-467"
+            row["notes"] += " settlement_coverage_test.gd 的该奖励用例还执行有序 reward_for_table selector；矩阵覆盖 minStack、inventoryHas/inventoryMissing、collateralReturned 的通过/回退及四桌兜底发奖，并断言结算后的准确库存与奖励 ID。"
+            reward_selector_rows += 1
+    if reward_selector_rows != len(reward_ids):
+        raise SystemExit(f"Unexpected settlement reward selector rows: {reward_selector_rows}/{len(reward_ids)}")
 
     if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or room_layout_selected != 1 or room_layout_locked != 2 or poker_short_blinds != 1 or poker_seeded_deals != 1 or poker_open_raise_right != 1 or player_pause_input != 1 or player_interaction_signal != 1 or player_look != 1 or player_movement != 1 or player_unfocused_input != 1 or world_search_evidence != 1 or world_product_evidence != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or focus_idempotence != 1 or world_autosave != 1 or world_focus_out != 1 or world_close_request != 1 or reclassified_weak != 1:
         raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, room_layout={room_layout_selected}, layout_locked={room_layout_locked}, poker_short_blinds={poker_short_blinds}, poker_seeded_deals={poker_seeded_deals}, poker_open_raise_right={poker_open_raise_right}, player_pause_input={player_pause_input}, player_interaction_signal={player_interaction_signal}, player_look={player_look}, player_movement={player_movement}, player_unfocused_input={player_unfocused_input}, search_evidence={world_search_evidence}, product_evidence={world_product_evidence}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, focus_idempotence={focus_idempotence}, autosave={world_autosave}, focus_out={world_focus_out}, close_request={world_close_request}, weak={reclassified_weak}")
