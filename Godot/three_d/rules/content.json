@@ -215,7 +215,7 @@
         "bluff": 0.08,
         "finalHandSpike": 0.11,
         "patternPunish": 0.08,
-        "valueRaiseShift": -0.04
+        "valueRaiseShift": -0.08
       }
     },
     "ash-smuggler": {

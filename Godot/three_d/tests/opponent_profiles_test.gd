@@ -25,6 +25,7 @@ func _initialize() -> void:
 		{"id":"weak_free","odds":.20,"bet":0,"stack":100,"last":false,"repeats":0},
 		{"id":"weak_pressure","odds":.20,"bet":40,"stack":60,"last":false,"repeats":0},
 		{"id":"marginal_pressure","odds":.35,"bet":40,"stack":60,"last":false,"repeats":0},
+		{"id":"medium_value_pressure","odds":.60,"bet":20,"stack":200,"last":false,"repeats":0},
 		{"id":"strong_early","odds":.72,"bet":20,"stack":100,"last":false,"repeats":0},
 		{"id":"strong_final","odds":.72,"bet":20,"stack":100,"last":true,"repeats":0},
 		{"id":"pattern_baseline","odds":.52,"bet":0,"stack":200,"last":false,"repeats":0},
@@ -57,6 +58,8 @@ func _initialize() -> void:
 	var value_table := {"tableDef":{"buyIn":120,"openBet":40},"street":"turn","handNumber":1,"totalHands":3,"currentBet":20,"playerPattern":{"raiseCount":0}}
 	var value_actor := {"stack":200}
 	var value_legal := {"allIn":true,"raise":true,"call":true,"check":false,"fold":true}
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["house-viper"],.5,.60)=="raise", "Viper pressures a medium-strong hand")
+	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["river-shark"],.5,.60)=="call", "River shark waits on the same medium-strong hand")
 	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["house-viper"],.5,.65)=="raise", "Viper applies measured value pressure")
 	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["river-shark"],.5,.65)=="call", "River shark waits for stronger value")
 	verify(Opponent.choose_with_odds(value_table,value_actor,value_legal,content.opponents["river-shark"],.5,.70)=="raise", "River shark presses once its value read is strong")
@@ -81,7 +84,7 @@ func _initialize() -> void:
 				if sampled_actions[ids[left]][sample] != sampled_actions[ids[right]][sample]:
 					differences += 1
 			pairwise_differences[ids[left] + "/" + ids[right]] = differences
-	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"scope":"Conditional policy probe: 7 fixed public situations and equity inputs, 100 uniform random quantiles per opponent. Pairwise differences count distinct choices under the same input and random quantile. Not gameplay win rates or human recognizability evidence.","cases":cases,"distributions":distributions,"pairwiseDifferences":pairwise_differences}
+	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"scope":"Conditional policy probe: 8 fixed public situations and equity inputs, 100 uniform random quantiles per opponent. Pairwise differences count distinct choices under the same input and random quantile. Not gameplay win rates or human recognizability evidence.","cases":cases,"distributions":distributions,"pairwiseDifferences":pairwise_differences}
 	FileAccess.open("res://../output/3d/opponent-profiles.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("OPPONENT_PROFILES checks=",checks," failed=",failures.size()," failures=",failures)
 	quit(0 if failures.is_empty() else 1)

@@ -84,6 +84,10 @@
 
 建议（供主 Agent 决策，本复核不改代码）：把 `run_regression.py` 的默认 `--timeout` 抬到 ≥180，或在文档的复现命令里显式写 `--timeout 180`。
 
+### 2026-09-28 当前树更正
+
+上表与本节记录的是 2026-09-25 历史复核，当时的 90 秒默认超时问题已在当前树修正：`run_regression.py:45` 现在默认 `--timeout=180`。A7 核验器本次重新执行后确认完整回归 64/64，`roster_showdown_test.gd` 用时 134 秒；当前目录证据为 382/382，`overall_state_transition_coverage` 仍为 `null`。因此 §4 的历史结论仍是当时的真实记录，但不能再表述成当前脚本默认值或当前回归状态。复验结果见 `output/external-handoff/A7/a7-verify.json` 与 `output/3d/regression/20260928-131057/report.json`。
+
 ## 5. 数字漂移说明
 
 A7 文档写「覆盖证据 356/356」，本次实测为 **382/382**。目录在本轮期间从 356 长到 382（主 Agent 连续注入多个存档/世界结果），这类计数**不应写进交付文档**——写进去几分钟后就会过期。建议交付文档只写判定式：「`EXIT=0` 且 `REFUTE=0`，汇总器 `verified == catalogued` 且 `unverified` 为空」。
