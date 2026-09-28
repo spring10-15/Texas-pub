@@ -1446,5 +1446,4150 @@
       "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
     }
   ],
+  "control_flow_site_scope": "line-start if/elif/match sites only; site ownership is not branch-outcome enumeration or a transition denominator",
+  "control_flow_site_counts": {
+    "branch_inventory_ref": 454,
+    "explicit_method_exclusion": 61,
+    "telemetry_file_io": 1,
+    "action_dispatch": 1
+  },
+  "control_flow_sites": [
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 5,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 8,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 10,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 11,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 14,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 16,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 18,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 21,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 23,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 25,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 26,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 28,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 30,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 32,
+      "method": "reason",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 34,
+      "method": "reason",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 36,
+      "method": "reason",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 38,
+      "method": "reason",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 39,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 41,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 45,
+      "method": "apply",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 52,
+      "method": "apply",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 55,
+      "method": "apply",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 59,
+      "method": "apply",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 60,
+      "method": "apply",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 64,
+      "method": "apply",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 67,
+      "method": "apply",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 71,
+      "method": "apply",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 75,
+      "method": "apply",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/advanced_services.gd",
+      "line": 77,
+      "method": "apply",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 19,
+      "method": "estimate_odds",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 22,
+      "method": "estimate_odds",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 36,
+      "method": "choose_with_odds",
+      "kind": "match",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 70,
+      "method": "choose_with_odds",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 72,
+      "method": "choose_with_odds",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 74,
+      "method": "choose_with_odds",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 75,
+      "method": "choose_with_odds",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 77,
+      "method": "choose_with_odds",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 80,
+      "method": "choose_with_odds",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 82,
+      "method": "choose_with_odds",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/opponent.gd",
+      "line": 84,
+      "method": "choose_with_odds",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 35,
+      "method": "compare_hands",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 40,
+      "method": "compare_hands",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 45,
+      "method": "evaluate_best_hand",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 55,
+      "method": "evaluate_best_hand",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 73,
+      "method": "evaluate_five",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 78,
+      "method": "evaluate_five",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 80,
+      "method": "evaluate_five",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 87,
+      "method": "evaluate_five",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 89,
+      "method": "evaluate_five",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 91,
+      "method": "evaluate_five",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 93,
+      "method": "evaluate_five",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 95,
+      "method": "evaluate_five",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 97,
+      "method": "evaluate_five",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 99,
+      "method": "evaluate_five",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 101,
+      "method": "evaluate_five",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 114,
+      "method": "build_pots",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 123,
+      "method": "build_pots",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 125,
+      "method": "build_pots",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 138,
+      "method": "settle_pots",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 144,
+      "method": "settle_pots",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 146,
+      "method": "settle_pots",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 149,
+      "method": "settle_pots",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 10,
+      "method": "quote",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 12,
+      "method": "quote",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 14,
+      "method": "quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 16,
+      "method": "quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 17,
+      "method": "quote",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 21,
+      "method": "quote",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 23,
+      "method": "quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 25,
+      "method": "quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 28,
+      "method": "quote",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 30,
+      "method": "quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 32,
+      "method": "quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 34,
+      "method": "quote",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 36,
+      "method": "quote",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 41,
+      "method": "quote",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 45,
+      "method": "quote",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 47,
+      "method": "quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/routes.gd",
+      "line": 49,
+      "method": "quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 52,
+      "method": "start",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 92,
+      "method": "transfer_quote",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 93,
+      "method": "transfer_quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 94,
+      "method": "transfer_quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 95,
+      "method": "transfer_quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 96,
+      "method": "transfer_quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 97,
+      "method": "transfer_quote",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 101,
+      "method": "transfer_venue",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 103,
+      "method": "transfer_venue",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 108,
+      "method": "transfer_venue",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 109,
+      "method": "transfer_venue",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 111,
+      "method": "transfer_venue",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 113,
+      "method": "transfer_venue",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 115,
+      "method": "transfer_venue",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 131,
+      "method": "table_blocked_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 133,
+      "method": "table_blocked_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 135,
+      "method": "table_blocked_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 137,
+      "method": "table_blocked_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 141,
+      "method": "table_blocked_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 142,
+      "method": "table_blocked_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 147,
+      "method": "room_requirements",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 148,
+      "method": "room_requirements",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 149,
+      "method": "room_requirements",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 158,
+      "method": "table_definition",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "returns a defensive content copy with the selected opponent roster"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 161,
+      "method": "table_definition",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "returns a defensive content copy with the selected opponent roster"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 166,
+      "method": "enter_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 169,
+      "method": "enter_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 170,
+      "method": "enter_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 184,
+      "method": "settle_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 193,
+      "method": "settle_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 197,
+      "method": "settle_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 199,
+      "method": "settle_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 207,
+      "method": "settle_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 220,
+      "method": "discover_exit",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 231,
+      "method": "extract",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 243,
+      "method": "reset_demo",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 257,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 259,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only validation dispatcher; service_action owns the result"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 261,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 263,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 265,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only validation dispatcher; service_action owns the result"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 266,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 268,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 270,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 272,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 274,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 277,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 279,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 281,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 282,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 284,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 286,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 288,
+      "method": "service_reason",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 289,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 291,
+      "method": "service_reason",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 292,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 294,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 296,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 298,
+      "method": "service_reason",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 299,
+      "method": "service_reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 306,
+      "method": "shop_stock",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only deterministic stock lookup; purchase outcome belongs to service_action"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 311,
+      "method": "shop_stock",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only deterministic stock lookup; purchase outcome belongs to service_action"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 316,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 318,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 322,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 326,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 330,
+      "method": "service_action",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 334,
+      "method": "service_action",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 335,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 342,
+      "method": "service_action",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 345,
+      "method": "service_action",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 349,
+      "method": "service_action",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 352,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 356,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 368,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 373,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 375,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 381,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 384,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 386,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 387,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 392,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 399,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 404,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 405,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 407,
+      "method": "service_view",
+      "kind": "elif",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 408,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 411,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 412,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 414,
+      "method": "service_view",
+      "kind": "elif",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 417,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 419,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 423,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 425,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 431,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 440,
+      "method": "service_view",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only construction of visible service choices and text"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 457,
+      "method": "valuable_total",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only inventory valuation"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 463,
+      "method": "reward_for_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 464,
+      "method": "reward_for_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 465,
+      "method": "reward_for_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 466,
+      "method": "reward_for_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 474,
+      "method": "table_reward_pool",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only reward-intel projection"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 483,
+      "method": "abandon",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 513,
+      "method": "enforce_pressure",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 519,
+      "method": "enforce_pressure",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 522,
+      "method": "enforce_pressure",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 531,
+      "method": "offer_name",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "presentation label lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 536,
+      "method": "route_known",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only route visibility predicate"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 538,
+      "method": "route_known",
+      "kind": "match",
+      "status": "explicit_method_exclusion",
+      "reason": "read-only route visibility predicate"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 546,
+      "method": "item_description",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "presentation description lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 561,
+      "method": "route_name",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "presentation label lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run.gd",
+      "line": 563,
+      "method": "route_name",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "presentation label lookup"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 26,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 29,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 31,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 33,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 35,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 37,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 39,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 41,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 42,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 45,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 47,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 49,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 52,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 54,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 56,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 58,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 60,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 61,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 62,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 64,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 66,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 67,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 69,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 70,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 72,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 74,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 77,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 81,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 83,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 84,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 86,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 88,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 90,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 94,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 96,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 99,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 101,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 102,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 106,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 107,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 109,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 112,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 115,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 116,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 119,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 123,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 125,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 128,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 131,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_checkpoint.gd",
+      "line": 138,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 14,
+      "method": "generate",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 17,
+      "method": "generate",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 30,
+      "method": "generate",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 39,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 41,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 45,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 47,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 50,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 53,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 56,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 57,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 58,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 60,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 61,
+      "method": "valid",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 63,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 64,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 68,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 70,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 72,
+      "method": "valid",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 74,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 75,
+      "method": "valid",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/run_variants.gd",
+      "line": 76,
+      "method": "valid",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 13,
+      "method": "_write_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 19,
+      "method": "_write_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 22,
+      "method": "_write_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 26,
+      "method": "_write_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 34,
+      "method": "_read_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 37,
+      "method": "_read_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 39,
+      "method": "_read_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 45,
+      "method": "_read_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 48,
+      "method": "_read_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 50,
+      "method": "_read_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 53,
+      "method": "_read_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/save_store.gd",
+      "line": 56,
+      "method": "_read_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 15,
+      "method": "event_for",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 21,
+      "method": "choice",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 25,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 26,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 27,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 28,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 29,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 30,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 31,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 32,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 33,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 34,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 35,
+      "method": "reason",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 41,
+      "method": "apply",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 42,
+      "method": "apply",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 43,
+      "method": "apply",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 45,
+      "method": "apply",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/search_events.gd",
+      "line": 46,
+      "method": "apply",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 20,
+      "method": "ordered_after",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 31,
+      "method": "start_hand",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 35,
+      "method": "start_hand",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 61,
+      "method": "legal_actions",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 64,
+      "method": "legal_actions",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 71,
+      "method": "legal_actions",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 78,
+      "method": "act",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 82,
+      "method": "act",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 88,
+      "method": "act",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 90,
+      "method": "act",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 94,
+      "method": "act",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 97,
+      "method": "act",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 104,
+      "method": "act",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 106,
+      "method": "act",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 109,
+      "method": "act",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 114,
+      "method": "act",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 119,
+      "method": "act",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 125,
+      "method": "act",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 130,
+      "method": "act",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 141,
+      "method": "set_queue",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 147,
+      "method": "advance",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 150,
+      "method": "advance",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 186,
+      "method": "next_hand",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 194,
+      "method": "find_player",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 200,
+      "method": "log_event",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table.gd",
+      "line": 209,
+      "method": "public_state",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 9,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 11,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 14,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 17,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 19,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 21,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 30,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 32,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 34,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 40,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 42,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 43,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 46,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 47,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 57,
+      "method": "valid_card",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 59,
+      "method": "valid_card",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 62,
+      "method": "valid_card",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 16,
+      "method": "actor",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "constructs a visual character node"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 29,
+      "method": "build",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "builds scene character visuals from content"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 35,
+      "method": "sync",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "updates visual character placement and pose"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 51,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into character visuals"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 54,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into character visuals"
+    },
+    {
+      "file": "Godot/three_d/scripts/characters.gd",
+      "line": 56,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into character visuals"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 39,
+      "method": "_unhandled_input",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 43,
+      "method": "_unhandled_input",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 45,
+      "method": "_unhandled_input",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 48,
+      "method": "_unhandled_input",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 50,
+      "method": "_unhandled_input",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 54,
+      "method": "_physics_process",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/player.gd",
+      "line": 67,
+      "method": "update_focus",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/services_hud.gd",
+      "line": 22,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects a read-only service view into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/services_hud.gd",
+      "line": 38,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects a read-only service view into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/services_hud.gd",
+      "line": 40,
+      "method": "refresh",
+      "kind": "elif",
+      "status": "explicit_method_exclusion",
+      "reason": "projects a read-only service view into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/services_hud.gd",
+      "line": 42,
+      "method": "refresh",
+      "kind": "elif",
+      "status": "explicit_method_exclusion",
+      "reason": "projects a read-only service view into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 133,
+      "method": "pregame",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects pregame options into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 140,
+      "method": "pregame",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects pregame options into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 146,
+      "method": "pregame",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects pregame options into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 148,
+      "method": "pregame",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects pregame options into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 179,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 180,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 181,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 183,
+      "method": "refresh",
+      "kind": "elif",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 192,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 198,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 201,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 222,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 230,
+      "method": "update_raise_preview",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "updates a read-only action preview"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 233,
+      "method": "update_raise_preview",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "updates a read-only action preview"
+    },
+    {
+      "file": "Godot/three_d/scripts/tavern_layout.gd",
+      "line": 8,
+      "method": "sign_at",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "constructs a sign visual"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 72,
+      "method": "_ready",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 100,
+      "method": "_ready",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 103,
+      "method": "_ready",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 105,
+      "method": "_ready",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 106,
+      "method": "_ready",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 112,
+      "method": "configure_playtest",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 113,
+      "method": "configure_playtest",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 115,
+      "method": "configure_playtest",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 117,
+      "method": "configure_playtest",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 123,
+      "method": "trace_playtest",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 125,
+      "method": "trace_playtest",
+      "kind": "if",
+      "status": "telemetry_file_io",
+      "reason": "only selects whether to create a user:// telemetry file; not authoritative game state"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 127,
+      "method": "trace_playtest",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 134,
+      "method": "trace_playtest",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 137,
+      "method": "trace_playtest",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 146,
+      "method": "configure_input",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 158,
+      "method": "make_materials",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 162,
+      "method": "make_materials",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 184,
+      "method": "box",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 201,
+      "method": "room_shell",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 209,
+      "method": "room_shell",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 228,
+      "method": "build_stash",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 269,
+      "method": "build_tavern",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 291,
+      "method": "build_tavern",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 463,
+      "method": "make_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 473,
+      "method": "show_focus",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 477,
+      "method": "request_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 479,
+      "method": "request_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 482,
+      "method": "request_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 485,
+      "method": "request_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 488,
+      "method": "request_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 491,
+      "method": "request_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 494,
+      "method": "request_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 499,
+      "method": "request_action",
+      "kind": "match",
+      "status": "action_dispatch",
+      "reason": "routes action ids to downstream world/run transitions; the dispatch itself is not a separate result"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 501,
+      "method": "request_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 518,
+      "method": "request_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 532,
+      "method": "request_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 565,
+      "method": "leave_seat",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 568,
+      "method": "leave_seat",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 570,
+      "method": "leave_seat",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 587,
+      "method": "toggle_pause",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 590,
+      "method": "toggle_pause",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 593,
+      "method": "toggle_pause",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 596,
+      "method": "toggle_pause",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 604,
+      "method": "pause_game",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 616,
+      "method": "resume",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 622,
+      "method": "_notification",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 623,
+      "method": "_notification",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 626,
+      "method": "_notification",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 627,
+      "method": "_notification",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 629,
+      "method": "_notification",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 631,
+      "method": "_notification",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 635,
+      "method": "start_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 637,
+      "method": "start_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 640,
+      "method": "start_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 648,
+      "method": "play_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 653,
+      "method": "play_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 659,
+      "method": "continue_hand",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 665,
+      "method": "_process",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 667,
+      "method": "_process",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 670,
+      "method": "_process",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 672,
+      "method": "_process",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 674,
+      "method": "_process",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 676,
+      "method": "_process",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 679,
+      "method": "_process",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 684,
+      "method": "advance_table_beat",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 687,
+      "method": "advance_table_beat",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 689,
+      "method": "advance_table_beat",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 737,
+      "method": "refresh_economy",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 739,
+      "method": "refresh_economy",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 741,
+      "method": "refresh_economy",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 746,
+      "method": "refresh_economy",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 747,
+      "method": "refresh_economy",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 749,
+      "method": "refresh_economy",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 763,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 765,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 769,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 777,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 781,
+      "method": "show_run_panel",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 788,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 791,
+      "method": "show_run_panel",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 796,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 801,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 807,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 813,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 816,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 835,
+      "method": "confirm_run_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 837,
+      "method": "confirm_run_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 839,
+      "method": "confirm_run_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 845,
+      "method": "confirm_run_action",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 847,
+      "method": "confirm_run_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 852,
+      "method": "confirm_run_action",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 853,
+      "method": "confirm_run_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 858,
+      "method": "confirm_run_action",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 859,
+      "method": "confirm_run_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 864,
+      "method": "confirm_run_action",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 865,
+      "method": "confirm_run_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 876,
+      "method": "select_table_room",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 880,
+      "method": "_unhandled_input",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 881,
+      "method": "_unhandled_input",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 888,
+      "method": "open_services",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 909,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 914,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 916,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 918,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 920,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 924,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 927,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 932,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 943,
+      "method": "service_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 951,
+      "method": "save_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 954,
+      "method": "save_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 956,
+      "method": "save_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 959,
+      "method": "save_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 967,
+      "method": "load_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 969,
+      "method": "load_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 972,
+      "method": "load_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 973,
+      "method": "load_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 991,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 993,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 995,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 997,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 999,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1002,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1005,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1007,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1009,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1011,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1013,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1038,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1039,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1043,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1048,
+      "method": "check_pressure",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1049,
+      "method": "check_pressure",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1056,
+      "method": "install_detail",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1058,
+      "method": "install_detail",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1073,
+      "method": "install_prop",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1078,
+      "method": "visible_route_name",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1085,
+      "method": "available_route_text",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1088,
+      "method": "available_route_text",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1097,
+      "method": "refresh_route_labels",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1100,
+      "method": "refresh_route_labels",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1103,
+      "method": "refresh_route_labels",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1106,
+      "method": "refresh_route_labels",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1116,
+      "method": "refresh_route_labels",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1120,
+      "method": "refresh_route_labels",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1122,
+      "method": "refresh_route_labels",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1124,
+      "method": "refresh_route_labels",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1131,
+      "method": "refresh_route_labels",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1133,
+      "method": "refresh_route_labels",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    }
+  ],
   "errors": []
 }

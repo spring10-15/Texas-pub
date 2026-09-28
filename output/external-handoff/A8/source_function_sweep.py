@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Check function-level ownership of every runtime Godot GDScript method.
+"""Check method ownership and lexical control-site attribution in runtime GDScript.
 
 This is a scope-control check for the A8 source audit. It does not claim that
-the transition catalog denominator is complete or that every branch is tested.
+the transition catalog denominator is complete or that every branch outcome is tested.
 """
 from __future__ import annotations
 
@@ -111,6 +111,20 @@ def methods(path: Path) -> list[dict[str, object]]:
     return found
 
 
+def source_line_refs(rows: list[dict[str, str]]) -> dict[str, set[int]]:
+    found: dict[str, set[int]] = collections.defaultdict(set)
+    for row in rows:
+        source = row.get("source_file", "")
+        for reference in row.get("source_line", "").split(";"):
+            match = re.search(r":(\d+)(?:-(\d+))?$", reference.strip())
+            if not match:
+                continue
+            start = int(match.group(1))
+            end = int(match.group(2) or start)
+            found[source].update(range(start, end + 1))
+    return found
+
+
 def main() -> int:
     branch_rows = list(csv.DictReader(INVENTORY.open(encoding="utf-8", newline="")))
     audited_lines: dict[str, set[int]] = collections.defaultdict(set)
@@ -120,13 +134,17 @@ def main() -> int:
 
     files = sorted([*RULES.glob("*.gd"), *SCRIPTS.glob("*.gd")])
     inventory = []
+    branch_sites = []
     errors = []
     counts = collections.Counter()
+    branch_counts = collections.Counter()
     seen_exclusions = set()
+    source_refs = source_line_refs(branch_rows)
     for path in files:
         relative = path.relative_to(ROOT).as_posix()
         exclusions = EXCLUDED.get(relative, {})
-        for method in methods(path):
+        file_methods = methods(path)
+        for method in file_methods:
             key = (relative, method["name"])
             if int(method["line"]) in audited_lines.get(relative, set()):
                 status = "audit_inventory"
@@ -141,6 +159,41 @@ def main() -> int:
                 errors.append(f"{relative}:{method['line']} {method['name']}")
             counts[status] += 1
             inventory.append({"file": relative, **method, "status": status, "reason": reason})
+
+        current_method = "(top level)"
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            method_match = re.match(r"\s*(?:static\s+)?func\s+([A-Za-z_]\w*)\s*\(", line)
+            if method_match:
+                current_method = method_match.group(1)
+            branch_match = re.match(r"\s*(if|elif|match)\b", line)
+            if not branch_match:
+                continue
+            branch_kind = branch_match.group(1)
+            if number in source_refs.get(relative, set()):
+                status = "branch_inventory_ref"
+                reason = "source line is represented in the A8 current-tree branch inventory"
+            elif current_method in exclusions:
+                status = "explicit_method_exclusion"
+                reason = exclusions[current_method]
+            elif relative == "Godot/three_d/scripts/world.gd" and current_method == "trace_playtest":
+                status = "telemetry_file_io"
+                reason = "only selects whether to create a user:// telemetry file; not authoritative game state"
+            elif relative == "Godot/three_d/scripts/world.gd" and current_method == "request_action" and branch_kind == "match":
+                status = "action_dispatch"
+                reason = "routes action ids to downstream world/run transitions; the dispatch itself is not a separate result"
+            else:
+                status = "unclassified_branch_site"
+                reason = "conditional site is neither referenced by the branch inventory nor covered by a reviewed method classification"
+                errors.append(f"{relative}:{number} {current_method} {branch_kind}")
+            branch_counts[status] += 1
+            branch_sites.append({
+                "file": relative,
+                "line": number,
+                "method": current_method,
+                "kind": branch_kind,
+                "status": status,
+                "reason": reason,
+            })
     for relative, exclusions in EXCLUDED.items():
         for name in exclusions:
             if (relative, name) not in seen_exclusions:
@@ -153,6 +206,9 @@ def main() -> int:
         "source_sha256": {p.relative_to(ROOT).as_posix(): sha(p) for p in files},
         "counts": dict(counts),
         "functions": inventory,
+        "control_flow_site_scope": "line-start if/elif/match sites only; site ownership is not branch-outcome enumeration or a transition denominator",
+        "control_flow_site_counts": dict(branch_counts),
+        "control_flow_sites": branch_sites,
         "errors": errors,
     }
     REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
