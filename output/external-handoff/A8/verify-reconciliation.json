@@ -1,7 +1,7 @@
 {
-  "doc_mtime": "2026-09-28 10:53:59",
+  "doc_mtime": "2026-09-28 10:54:43",
   "parsed": {
-    "head": "ab03f0806b8481cf75111f7f0e33a142ce70e4e6",
+    "head": "98c6c4eb8a5cf594e35da61767ffea5adfb5260d",
     "catalog_ids": "393",
     "catalog_sha": "4cb81d6f9a6b6e8bdc67b240797709117baebd06c4307e9da3e90ec01145bb54",
     "regression_path": "output/3d/regression/20260928-104608/report.json",
@@ -27,6 +27,7 @@
     "对账脚本 sha：a2b34b60f64d4632bf7f…",
     "缺口条数：0",
     "overlay 条数（文末重建节）：393",
+    "证据源码基线 98c6c4eb8a5c 是当前提交祖先，之后未改规则/脚本/场景/测试/项目输入映射/目录",
     "lifecycle 报告 sha 命中：output/3d/lifecycle-coverage.json",
     "目录 ID 归因完备：393/393",
     "disposition 计数逐项一致且合计 672：{'unreachable_or_not_transition': 150, 'catalogued_strong': 522}",
@@ -43,11 +44,9 @@
     "采用的回归 20260928-104608 为最新（report.json mtime 2026-09-28 10:51:37）",
     "回归基线之后没有测试文件被改动"
   ],
-  "drift": [
-    "证据源码基线之后权威源码/场景/测试/目录有变更：['Godot/three_d/tests/test_collect_coverage.py', 'Godot/three_d/tests/world_rng_replay_test.gd', 'docs/3d-production/phase-1/coverage/transitions.json']"
-  ],
+  "drift": [],
   "refute": [],
-  "confirm_count": 24,
-  "drift_count": 1,
+  "confirm_count": 25,
+  "drift_count": 0,
   "refute_count": 0
 }
