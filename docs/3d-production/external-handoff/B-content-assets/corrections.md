@@ -245,3 +245,13 @@
 - 未覆盖上一轮 `inventory/` 文件。
 - 未 commit / push。
 - `content-matrix.csv` 与 `asset-gaps.csv` 的改动前副本留在 `output/external-handoff/B1/*.bak`，可逐单元格比对。
+
+## 当前树复验补记（2026-09-28）
+
+本节覆盖上述 2026-09-22 快照中已经被主线改动取代的判断；原审计文字保留作历史证据。
+
+- **首攻折扣已接线**：主线提交 `12914aa` 将 `firstAggressionDiscount` 接入 `table.gd` 的每手可用状态、合法加注成本与实际扣款，以及 `table_hud.gd` 的预览。`raise_preview_test.gd` 把货运桌折扣改为 5，验证预览与实际扣款一致并只消费一次。旧「改配置不生效」结论已不适用于当前树。
+- **奖励情报与结算一致性已有断言**：同一提交令 `settlement_coverage_test.gd` 汇总十种实际奖励，逐桌对照 `baseRewardPool`；候选展示使用 `run.gd::table_reward_pool()` 读取 `rewardRules`。这是测试约束下的当前一致性，不应再描述成无验证的双份真相。
+- **`publicInfo` / `hiddenInfo` 已读取**：分别用于牌桌 HUD 风险展示与 `Run.rule_text()`；`intelBonus`、`forcedExitLossFactor`、`revealFlag` 已从权威 Godot 配置删除。
+- **仍待处理的遗留字段**：`signatureReward` 仍保留在内容配置与旧存档字段列表中，但当前结算按 `rewardRules` 选择，不读取此字段。未来应在兼容策略允许时决定删除或统一来源；这不是本次修复范围。
+- **当前证据核对**：2026-09-28 全量回归 64/64 通过；`raise_preview_test.gd` 与 `settlement_coverage_test.gd` 均在回归清单中。内容矩阵 cargo-table 行已同步标注，不再把旧结论当作当前缺口。

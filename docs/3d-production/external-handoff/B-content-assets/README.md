@@ -8,6 +8,8 @@
 > 本轮**只做事实返修**：未执行 build/export，未覆盖资产，未生图，未改代码或规则，未 commit。
 > **返修后已做对抗性审查**：`firstAggressionDiscount` 一行的"0 命中"与复现命令曾自相矛盾，已修正为三口径（内容字段名 0 / 同义状态字段 12 行 / 字面量 `10` 共 7 处），见 §2.5 与 `corrections.md` B1-7 的「审查后订正」；总报告见 `docs/3d-production/external-handoff/对抗性审查-B1C1-2026-09-22.md`。
 
+> **当前状态补记（2026-09-28）**：下文 §2.5 与 `corrections.md` 中关于 `firstAggressionDiscount` 未接线、`baseRewardPool` 与奖励发放双份真相的判断，属于 2026-09-22 历史快照，已被主线 `12914aa`（2026-09-23）修复并由 `raise_preview_test.gd`、`settlement_coverage_test.gd` 验证。当前货运桌字段已接入首攻资格、合法行动、实际扣款与 HUD 预览；奖励候选清单与四桌结算可发放结果有逐桌一致性断言。具体现状和仍遗留字段见文末「当前树复验补记」。
+
 本轮**沿用**上一轮 `docs/3d-production/inventory/` 的清点结论，不重做素材清单；编号与命名保持原样，本目录只补"当前实现状态"与差异。
 
 依据顺序：`Godot/three_d/rules/content.json` + 实际执行代码 > `src/data.js` > 文档。文档与代码冲突时以代码为准，并记录冲突（见任务 C 的 `doc-corrections.md`）。
@@ -125,6 +127,16 @@ grep -rn --include='*.gd' -E '10 if .*(iscount|table_id == "cargo-table")' Godot
 - `content.json` **有**而 `src/data.js` **没有**：`searchActions`、`inventorySlots`、`standardBankroll`、`startingVault` —— 这 4 个是 Godot 侧新增的规则参数（行动力、背包格数、试玩本金、初始金库）。
 - 两边都定义但 **Godot 不消费**的字段见 2.5。
 - **按任务要求，未擅自同步 `src/data.js`**。web 版与 Godot 版目前是"同一份内容、两套消费逻辑"，`firstAggressionDiscount` 这种"数值可调"的字段在 Godot 侧已退化。
+
+> 注：以上 §2.5–2.6 是 2026-09-22 的历史审计结论；其中首攻折扣的「未接线」句子已被 2026-09-23 的修复取代，勿将其当作当前状态。
+
+### 当前树复验补记（2026-09-28）
+
+- `firstAggressionDiscount` 已在 `table.gd:26,67,95` 与 `table_hud.gd:211` 读取。`raise_preview_test.gd:50-60` 将货运桌配置临时改为 5，验证预览金额、真实扣款和一次性消耗一致；该字段不再是接线缺口。
+- 奖励情报经 `run.gd:434` 的 `table_reward_pool()` 从 `rewardRules` 生成；`settlement_coverage_test.gd` 把十种实际结算奖励按桌汇总，与每桌 `baseRewardPool` 比较。现有样本中四桌候选情报与结算结果一致；这是内容一致性检查，不证明未覆盖的边界不存在。
+- `publicInfo` 当前由 `table_hud.gd:137` 读取，`hiddenInfo.rule` 由 `run.gd:551` 读取。旧场景/路线字段 `intelBonus`、`forcedExitLossFactor`、`revealFlag` 已从权威配置删除，`scene_rules_test.gd` 检查其不存在。
+- `signatureReward` 仍留在配置及旧存档兼容字段列表中，但当前结算使用 `rewardRules`；它目前不参与奖励选择，是剩余的遗留配置清理候选，不应与已接线的 `firstAggressionDiscount` 混为一谈。
+- 当前核验：`python3 output/external-handoff/B2/verify_b2.py` 为 149 项确认、0 项反证；最近完整回归 `20260928-093848` 为 64/64。B2 核验器验证其声明范围，不能代替逐项检查以上配置变更。
 
 ---
 
