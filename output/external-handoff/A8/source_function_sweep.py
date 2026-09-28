@@ -213,6 +213,7 @@ def main() -> int:
     }
     REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"SOURCE_FUNCTIONS total={len(inventory)} audit_inventory={counts['audit_inventory']} explicit_exclusion={counts['explicit_exclusion']} unclassified={counts['unclassified']} errors={len(errors)}")
+    print(f"SOURCE_BRANCH_SITES total={len(branch_sites)} inventory_ref={branch_counts['branch_inventory_ref']} explicit_method_exclusion={branch_counts['explicit_method_exclusion']} telemetry_io={branch_counts['telemetry_file_io']} dispatch={branch_counts['action_dispatch']} unclassified={branch_counts['unclassified_branch_site']}")
     return 1 if errors else 0
 
 
