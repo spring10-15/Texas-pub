@@ -1,5 +1,7 @@
 extends SceneTree
 const Store = preload("res://three_d/rules/save_store.gd")
+const SITES := ["cargo-table", "ledger-cellar", "mirror-hall", "embers-table"]
+const SITE_ROOMS := ["tavern", "ledger", "mirror", "embers"]
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -10,18 +12,28 @@ func fail(message: String) -> void:
 	quit(1)
 
 func run() -> void:
-	var phase := "write" if OS.get_cmdline_user_args().has("--phase=write") else "restore"
+	var arguments := OS.get_cmdline_user_args()
+	var phase := "write" if arguments.has("--phase=write") else "restore"
+	var scene := ""
+	var site := ""
+	for argument in arguments:
+		if argument.begins_with("--scene="): scene = argument.trim_prefix("--scene=")
+		if argument.begins_with("--site="): site = argument.trim_prefix("--site=")
+	if site not in SITES or scene not in ["smoky-den", "high-rise-suite", "rooftop-club", "neon-poker-club"]:
+		fail("Invalid process-restart case")
+		return
 	var world: Node3D = load("res://three_d/scenes/main.tscn").instantiate()
 	root.add_child(world)
 	world.set_process(false)
 	if phase == "write":
-		if not world.saving_enabled or not world.run_game.start(world.run_game.revision, "smoky-den", 17):
+		if not world.saving_enabled or not world.run_game.start(world.run_game.revision, scene, 17):
 			fail("Fresh startup cannot begin a run")
 			return
-		world.travel("tavern")
+		world.run_game.completed.assign(SITES.slice(0, SITES.find(site)))
+		world.travel(SITE_ROOMS[SITES.find(site)])
 		world.return_transform = world.player.global_transform
 		world.seated = true
-		world.table_game = world.run_game.enter_table(31, world.run_game.revision, "cargo-table")
+		world.table_game = world.run_game.enter_table(31, world.run_game.revision, site)
 		if world.table_game == null:
 			fail("Cannot enter first table")
 			return
@@ -37,11 +49,11 @@ func run() -> void:
 		if saved.status != "ok" or saved.state != world.checkpoint_state():
 			fail("Disk checkpoint differs from live world")
 			return
-		print("PROCESS_RESTART ", JSON.stringify({"failed": 0, "phase": phase, "turn": table.state.turnCounter}))
+		print("PROCESS_RESTART ", JSON.stringify({"failed": 0, "phase": phase, "scene": scene, "site": site, "turn": table.state.turnCounter}))
 		quit()
 		return
 	var disk: Dictionary = Store.read_checkpoint(world.save_path)
-	if disk.status != "ok" or not world.saving_enabled or not world.paused or not world.seated or world.table_game == null or world.checkpoint_state() != disk.state:
+	if disk.status != "ok" or not world.saving_enabled or not world.paused or not world.seated or world.table_game == null or world.run_game.scene_id != scene or world.table_game.state.tableDef.id != site or world.checkpoint_state() != disk.state:
 		fail("Fresh process did not auto-restore the seated world")
 		return
 	world.resume()
@@ -68,5 +80,5 @@ func run() -> void:
 	if world.run_game.table != null or world.run_game.vault + world.run_game.cash + world.run_game.valuable_total() != opening_wealth + stack + reward_value:
 		fail("Restored table did not settle")
 		return
-	print("PROCESS_RESTART ", JSON.stringify({"failed": 0, "phase": phase, "turn": int(disk.state.run.table.state.turnCounter), "steps": steps}))
+	print("PROCESS_RESTART ", JSON.stringify({"failed": 0, "phase": phase, "scene": scene, "site": site, "turn": int(disk.state.run.table.state.turnCounter), "steps": steps}))
 	quit()

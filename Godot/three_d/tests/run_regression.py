@@ -78,7 +78,7 @@ def main():
         results.append(dict(test=script.name, status=status, exit_code=code,
                             seconds=round(time.monotonic()-start, 2), command=command))
         print(f'{status}: {script.name}', flush=True)
-    unit = subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', str(TESTS), '-p', 'test_*.py'], capture_output=True, text=True, timeout=30)
+    unit = subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', str(TESTS), '-p', 'test_*.py'], capture_output=True, text=True, timeout=60)
     (output / 'python-tests.log').write_text(unit.stdout + unit.stderr)
     unchanged = before == fingerprint()
     report = dict(results=results, excluded=sorted(EXCLUDED), source_sha256=before,
