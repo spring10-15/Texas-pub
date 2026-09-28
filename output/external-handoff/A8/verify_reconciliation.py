@@ -80,6 +80,7 @@ def parse_doc(text: str) -> dict[str, str]:
         "script_sha": g(r"对账脚本 SHA-256：`([0-9a-f]{64})`"),
         "mapped_claim": g(r"当前目录 ID 已全部映射：(\d+/\d+)"),
         "gap_count": g(r"当前仍有 (\d+) 条标为玩家可达但尚未映射"),
+        "reachable_without_id": g(r"字面有 (\d+) 条 `player_reachable=yes` 且没有独立 `catalog_id`"),
         "overlay_claim": g(r"以本脚本生成的 (\d+) 项 overlay 为准"),
         "disposition": g(r"分支行 disposition 计数：`(\{[^`]+\})`"),
     }
@@ -201,14 +202,78 @@ def main() -> int:
         else:
             REFUTE.append(f"disposition 合计异常：记录 {sum(want.values())}，实测 {sum(got.values())}（清单 {len(inv)} 行）")
 
+        # ---------- 2b) 记录是否仍在引用已被清空的「弱证据表」 ----------
+        # 弱证据表在 683f320(16:12) 被清空（19 行 → 0 行），表内行全部升为 catalogued_strong。
+        # 若记录已经不再有 catalogued_weak 计数，却仍以现在时叙述「移入弱证据表」/「弱证据行见…」，
+        # 那两句即与记录自身的 disposition 行矛盾。
+        if "catalogued_weak" not in want:
+            stale = []
+            if re.search(r"移入弱证据表", text):
+                stale.append("「把该 services 行移入弱证据表」")
+            if re.search(r"弱证据行见\s*`current-tree-weak-evidence\.csv`", text):
+                stale.append("「弱证据行见 `current-tree-weak-evidence.csv`」")
+            if stale:
+                DRIFT.append(
+                    "记录已无 catalogued_weak 计数（弱证据表 0 行），但仍以现在时引用该机制："
+                    + "；".join(stale)
+                    + "。该表述描述的是 16:12 之前的状态，须改为历史限定语或删除"
+                )
+            else:
+                CONFIRM.append("记录未在无弱证据行时继续引用弱证据表")
+
     # ---------- 3) 缺口表 ≡ 清单 reachable_unmapped ----------
     k = lambda r: (r["source_file"], r["entry"], r["source_line"], r["function_line"])
     a = {k(r) for r in inv if r.get("disposition") == "reachable_unmapped"}
     b = {k(r) for r in gaps}
-    if a == b:
+    if a == b and len(b) > 0:
         CONFIRM.append(f"缺口表 ≡ 清单 reachable_unmapped（键集合完全相等，{len(b)} 行）")
+    elif a == b:
+        # 空集相等是恒真式，不作为证据；由下方的逐行分类核验承担证据。
+        pass
     else:
         REFUTE.append(f"缺口表与清单 reachable_unmapped 不一致：仅清单有 {sorted(a - b)[:3]}，仅表有 {sorted(b - a)[:3]}")
+
+    # ---------- 3b) 明确区分字面可达与独立状态结果的映射口径 ----------
+    yes_rows = [r for r in inv if (r.get("player_reachable") or "").strip() == "yes"]
+    yes_no_id = [r for r in yes_rows if (r.get("catalog_id") or "").strip() in ("", "-")]
+    n_acc = sum(1 for r in yes_no_id if r.get("outcome") == "accepted")
+    excluded = all(r.get("disposition") != "reachable_unmapped" and (r.get("notes") or "").strip() for r in yes_no_id)
+    if doc["reachable_without_id"] == str(len(yes_no_id)) and excluded:
+        CONFIRM.append(
+            f"字面可达但无独立目录 ID 的行已单列：{len(yes_no_id)} 行（源码分支 outcome=accepted {n_acc} 行）；"
+            "均有排除/非独立结果归类说明，不混算为未映射缺口"
+        )
+    else:
+        DRIFT.append(
+            f"字面可达无目录 ID 行记录/归类不一致：清单 {len(yes_no_id)} 行、记录 {doc['reachable_without_id']}；"
+            f"无归类说明或仍标 reachable_unmapped={not excluded}"
+        )
+
+    # ---------- 3c) catalogued_strong 的元数据完备性 ----------
+    # 「证据强」是断言。要成立，每行需 test 非空 + evidence_report 非空且路径真实存在。
+    strong = [r for r in inv if r.get("disposition") == "catalogued_strong"]
+    no_report = [r["source_line"] for r in strong if (r.get("evidence_report") or "").strip() in ("", "-")]
+    missing_report = [
+        f"{r['source_line']} → {p}"
+        for r in strong
+        for p in (r.get("evidence_report") or "").split(";")
+        if p.strip() and p.strip() != "-" and not (ROOT / p.strip()).is_file()
+    ]
+    no_test = [r["source_line"] for r in strong if (r.get("test") or "").strip() in ("", "-")]
+    missing_test = [
+        f"{r['source_line']} → {p}"
+        for r in strong
+        for p in (r.get("test") or "").split(";")
+        if p.strip() and p.strip() != "-" and not (ROOT / p.split("::", 1)[0].strip()).is_file()
+    ]
+    if no_report or no_test or missing_report or missing_test:
+        DRIFT.append(
+            f"catalogued_strong 中元数据不完整：evidence_report 为空/占位的 {len(no_report)} 行 "
+            f"{no_report[:4]}；不存在的报告文件 {len(missing_report)} 行 {missing_report[:4]}；"
+            f"test 为空的 {len(no_test)} 行 {no_test[:4]}；不存在的测试文件 {len(missing_test)} 行 {missing_test[:4]}"
+        )
+    else:
+        CONFIRM.append(f"catalogued_strong 元数据完备（{len(strong)} 行均含存在的 test 与 evidence_report 文件）")
 
     # ---------- 4) 冻结 40 条 → 现行缺口的算术闭合与归因可解释性 ----------
     frozen = list(csv.DictReader(open(A8 / "unmapped-reachable.csv", encoding="utf-8")))

@@ -481,6 +481,15 @@ def main() -> int:
         and row["disposition"] == "reachable_unmapped"
     ]
     weak_evidence = [row.copy() for row in branches if row["disposition"] == "catalogued_weak"]
+    literal_reachable_without_id = [
+        row for row in branches
+        if row["player_reachable"] == "yes" and row["catalog_id"] == "-"
+    ]
+    if any(row["disposition"] == "reachable_unmapped" for row in literal_reachable_without_id):
+        raise SystemExit("A player-reachable row without a catalog ID remains unmapped")
+    if any(not row["notes"].strip() for row in literal_reachable_without_id):
+        raise SystemExit("A player-reachable row without a catalog ID lacks a disposition rationale")
+    accepted_without_id = sum(row["outcome"] == "accepted" for row in literal_reachable_without_id)
     for row in current_gaps:
         if "20260925-103506" in row["evidence_report"] or "20260925-105659" in row["evidence_report"]:
             row["evidence_report"] = row["evidence_report"].replace("20260925-103506/report.json", LATEST_REPORT).replace("20260925-105659/report.json", LATEST_REPORT)
@@ -496,10 +505,21 @@ def main() -> int:
     if missing_ids:
         raise SystemExit(f"Current catalog IDs lack a branch mapping: {sorted(missing_ids)}")
 
+    regression_path = ROOT / LATEST_REPORT
+    regression = json.loads(regression_path.read_text(encoding="utf-8"))
+    passed_regression_tests = {
+        item["test"] for item in regression.get("results", []) if item.get("status") == "PASS"
+    }
     for row in branches:
         source = ROOT / row["source_file"]
         if not source.is_file():
             raise SystemExit(f"Missing source file: {row['source_file']}")
+        if row["disposition"] == "catalogued_strong" and row["evidence_report"].strip() in ("", "-"):
+            declared_tests = [test.split("::", 1)[0].rsplit("/", 1)[-1] for test in row["test"].split(";") if test.strip() not in ("", "-")]
+            if declared_tests and all(test in passed_regression_tests for test in declared_tests):
+                row["evidence_report"] = LATEST_REPORT
+            else:
+                raise SystemExit(f"Strong evidence lacks a report containing its passing test: {row['source_line']}")
         for path in row["test"].split(";"):
             path = path.split("::", 1)[0].strip()
             if path and path != "-" and not (ROOT / path).is_file():
@@ -519,7 +539,7 @@ def main() -> int:
     # documentation-only commits are allowed; verify_reconciliation.py checks
     # that game rules, runtime scripts, tests, and catalog stayed unchanged.
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-    report = ROOT / LATEST_REPORT
+    report = regression_path
     lifecycle_report = ROOT / "output/3d/lifecycle-coverage.json"
     text = f"""# A8 当前树对账记录
 
@@ -538,15 +558,16 @@ def main() -> int:
 
 - 当前目录 ID 已全部映射：{len(mapped_ids)}/{len(catalog_ids)}。
 - 当前仍有 {len(current_gaps)} 条标为玩家可达但尚未映射。
+- 分支清单按字面有 {len(literal_reachable_without_id)} 条 `player_reachable=yes` 且没有独立 `catalog_id`；它们均有逐行归类说明，未计入当前未映射缺口。其中 {accepted_without_id} 条的 `outcome=accepted` 仅表示该源码分支可执行，不能单独证明它是独立游戏状态转移。
 - 以本脚本生成的 {len(catalog_ids)} 项 overlay 为准；外部 triage 输入保留在 `current-tree-player-path-gaps.csv`，不是当前未映射清单。
 - `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal`、`world.autosave`、`world.window_focus_out`、`player.look_changed`、`player.movement` 与 `world.window_close_request` 已在对应测试中登记；无目标 E 输入复用 `world.raycast_unfocused`，成功 E 输入由 captured 鼠标模式的窗口测试走完整 Player→World 信号链。
-- 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`；其中 1 条 yes 已有 `world.services_open` ID，但实体入口后置证据偏弱。当前树把 6 条 no 排除出玩家路径缺口，把该 services 行移入弱证据表；另 1 条仅显示试玩存档提示、不改变权威状态，也分类为非状态转移。
-- 原 12 条世界/牌桌编排候选逐项复核后，实际状态后继归并到已有规则层 ID；纯 UI/调度包装早退标为 `not_a_transition`，不借用其他入口的 ID。没有新增语义 ID，也没有把 394 项目录宣称为完整分母；当前候选表无未映射行不等于证明不存在其他缺口，全球分母仍未冻结。弱证据行见 `current-tree-weak-evidence.csv`。
+- 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`。吧台实体入口曾因缺少后置断言被列为弱证据；当前实体射线与 E 键集成测试已补足，映射到 `world.services_open`。另 1 条仅显示试玩存档提示、不改变权威状态，分类为非状态转移。当前弱证据表有 {len(weak_evidence)} 行。
+- 原 12 条世界/牌桌编排候选逐项复核后，实际状态后继归并到已有规则层 ID；纯 UI/调度包装早退标为 `not_a_transition`，不借用其他入口的 ID。没有新增语义 ID，也没有把 394 项目录宣称为完整分母；当前候选表无未映射行不等于证明不存在其他缺口，全球转移分母仍未冻结。
 - 分支行 disposition 计数：`{dict(counts)}`。
 
 ## 限制
 
-此对账仅把原 382 项审计映射到当前目录，并补入本金封顶、入座风声封顶、盈利降风声、玩家行为画像、房间图选择、窗口生命周期、玩家输入和世界/牌桌编排证据及明确的可达性/展示项分类。它没有重新审计全部 16 个源码文件，也没有穷举组合状态空间，因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
+当前树对账把原 382 项审计映射到现行目录，并补入本金封顶、入座风声封顶、盈利降风声、玩家行为画像、房间图选择、窗口生命周期、玩家输入和世界/牌桌编排证据。函数级清点覆盖 20 个运行时文件、177 个函数（120 个在分支清单中，57 个为明确排除，未分类 0 个）；这只证明函数入口都有归属，不代表分支结果穷尽。玩家路径分母和状态组合空间仍未冻结，因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
 
 ## 重建
 
