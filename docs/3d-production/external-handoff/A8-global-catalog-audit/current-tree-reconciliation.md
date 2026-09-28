@@ -1,14 +1,14 @@
 # A8 当前树对账记录
 
-- 证据源码基线 HEAD：`be1647647256557a187cccc12a582ab784a80612`
+- 证据源码基线 HEAD：`24bdc3cf00ce9d99d13302661cd4c04c03bafe0e`
 - 当前目录：394 个唯一 ID，SHA-256 `b257f6b78b9ae764f877782da8c698f2f42ebb024d22e3860e289df0ec402c19`
 - 采用的全量回归：`output/3d/regression/20260925-160511/report.json`（必须由当前源码/测试重跑后更新本记录）
 - 回归报告 SHA-256：`f1775a30c91c0a17ec9093905f35ab8639101822068bce711ccc850def0fb36b`
 - lifecycle 覆盖报告 SHA-256：`aeab5188980586031481a5a5b08e80c193f7085a78f418c60bf29f15faeda373`
-- 当前分支清单 SHA-256：`4a6df1c55a956099002f96bf40ff32bff30bc6ae0da612e40433a64851f4ab0a`
+- 当前分支清单 SHA-256：`66d318066f4330132b076bd1a7d590a59535a2cfd1ffe69035aa18e7a06f7be9`
 - 当前玩家路径缺口清单 SHA-256：`147f8235e3872dab602718ce1f2e01f3d12b4b7904831e7ca8257de90341b167`
 - 当前弱证据清单 SHA-256：`147f8235e3872dab602718ce1f2e01f3d12b4b7904831e7ca8257de90341b167`
-- 对账脚本 SHA-256：`23a196264e1c7ebfcf1c9d15e12f798b7f9610c24aa94b6173ff84b98ea53674`
+- 对账脚本 SHA-256：`6eafb61e28b559495a3e61f166f458250fffcfcab7c2ff362dc9cc7c730691a3`
 - 原始 A8 的 `branch-inventory.csv`、`unmapped-reachable.csv` 和审计 README 保留为 382 项冻结锚点，没有覆盖。
 
 ## 当前映射和缺口
@@ -20,7 +20,7 @@
 - `start.partial_bankroll`、`entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal`、`world.autosave`、`world.window_focus_out`、`player.look_changed`、`player.movement` 与 `world.window_close_request` 已在对应测试中登记；无目标 E 输入复用 `world.raycast_unfocused`，成功 E 输入由 captured 鼠标模式的窗口测试走完整 Player→World 信号链。
 - 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`。吧台实体入口曾因缺少后置断言被列为弱证据；当前实体射线与 E 键集成测试已补足，映射到 `world.services_open`。另 1 条仅显示试玩存档提示、不改变权威状态，分类为非状态转移。当前弱证据表有 0 行。
 - 原 12 条世界/牌桌编排候选逐项复核后，实际状态后继归并到已有规则层 ID；纯 UI/调度包装早退标为 `not_a_transition`，不借用其他入口的 ID。没有新增语义 ID，也没有把 394 项目录宣称为完整分母；当前候选表无未映射行不等于证明不存在其他缺口，全球转移分母仍未冻结。
-- 分支行 disposition 计数：`{'unreachable_or_not_transition': 146, 'catalogued_strong': 521}`。
+- 分支行 disposition 计数：`{'unreachable_or_not_transition': 146, 'catalogued_strong': 522}`。
 
 ## 限制
 

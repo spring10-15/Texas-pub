@@ -458,6 +458,78 @@ def main() -> int:
                 "notes": mapping["notes"],
             })
 
+    # `act()` rechecks legality before mutating the authoritative table. The
+    # same 12 legality outcomes are asserted at both the query and command
+    # boundary by poker_guard_coverage_test.gd; record the shared rejection
+    # gate without creating duplicate semantic IDs.
+    act_legality_guard_ids = {
+        "poker_guard.not_playing", "poker_guard.wrong_turn", "poker_guard.unknown_actor",
+        "poker_guard.folded_actor", "poker_guard.empty_stack", "poker_guard.raise_used",
+        "poker_guard.open_short", "poker_guard.matched_raise_short", "poker_guard.raise_short",
+        "poker_guard.check_owes", "poker_guard.call_zero", "poker_guard.call_short",
+    }
+    act_legality_guard_rows = 0
+    for row in branches:
+        if (row["source_file"] == "Godot/three_d/rules/table.gd"
+                and row["entry"] == "legal_actions"
+                and row["catalog_id"] in act_legality_guard_ids):
+            source_ref = "Godot/three_d/rules/table.gd:82-83"
+            refs = row["source_line"].split(";")
+            if source_ref not in refs:
+                row["source_line"] += f";{source_ref}"
+            row["notes"] += " 测试还经 Table.act 命中该共享 legality gate（table.gd:82-83），并断言命令拒绝且完整 checkpoint 不变；仍复用同一语义 ID。"
+            act_legality_guard_rows += 1
+    if act_legality_guard_rows != len(act_legality_guard_ids):
+        raise SystemExit(f"Unexpected Table.act shared legality guard rows: {act_legality_guard_rows}")
+
+    # Record the general-exit dispatch predicate as part of the fee outcome
+    # that its existing parameterized route guard test actually asserts.
+    general_surcharge_rows = 0
+    for row in branches:
+        if row["catalog_id"] == "route_guard.general_surcharge" and row["source_line"] == "Godot/three_d/rules/routes.gd:11":
+            row["source_line"] = "Godot/three_d/rules/routes.gd:10-11"
+            row["notes"] += " 覆盖一般出口 kind 分派条件（routes.gd:10）；用例验证 fee 与 vault 的精确后继。"
+            general_surcharge_rows += 1
+    if general_surcharge_rows != 1:
+        raise SystemExit(f"Unexpected general surcharge branch rows: {general_surcharge_rows}")
+
+    # The normal UI start path passes the committed per-table seed through the
+    # default start_table argument. Reuse entry.success and its end-to-end test.
+    table_start_rows = [
+        row for row in branches
+        if row["source_file"] == "Godot/three_d/scripts/world.gd"
+        and row["source_line"] == "Godot/three_d/scripts/world.gd:642-645"
+        and row["catalog_id"] == "entry.success"
+    ]
+    if len(table_start_rows) != 1:
+        raise SystemExit(f"Expected one mapped World.start_table success row, got {len(table_start_rows)}")
+    seed_row = table_start_rows[0].copy()
+    seed_row.update({
+        "branch_or_guard": "默认 seed_value < 0 → 读取 variant_plan.table_seeds[active_table_id]",
+        "source_line": "Godot/three_d/scripts/world.gd:637-638",
+        "test": "Godot/three_d/tests/run_variants_test.gd::Normal table start uses committed seed",
+        "evidence_report": f"output/3d/run-variants.json;{LATEST_REPORT}",
+        "notes": "正常出发后的无参 start_table() 读取已提交的牌局种子；run_variants_test.gd 断言实际牌局 seed 等于 variant_plan.table_seeds，重载后牌堆不重掷。复用 entry.success，不把确定性参数选择重复计为新状态结果。",
+    })
+    branches.append(seed_row)
+
+    # A successful quote and its actual transfer command are exercised for
+    # each invalid reason; the wrapper's common rejection gate is not a new ID.
+    transfer_rejection_rows = 0
+    for row in branches:
+        if (row["source_file"] == "Godot/three_d/rules/run.gd"
+                and row["entry"] == "transfer_venue"
+                and row["catalog_id"].startswith("transfer.")
+                and row["catalog_id"] not in {"transfer.success", "transfer.stale_revision"}):
+            source_ref = "Godot/three_d/rules/run.gd:103-103"
+            refs = row["source_line"].split(";")
+            if source_ref not in refs:
+                row["source_line"] += f";{source_ref}"
+            row["notes"] += " transfer_coverage_test.gd 对报价与实际 transfer_venue 命令均断言；本行 also 覆盖统一 quote.reason 拒绝门（run.gd:103），完整 Run checkpoint 不变。"
+            transfer_rejection_rows += 1
+    if transfer_rejection_rows != 10:
+        raise SystemExit(f"Unexpected transfer rejection guard rows: {transfer_rejection_rows}")
+
     if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or room_layout_selected != 1 or room_layout_locked != 2 or poker_short_blinds != 1 or poker_seeded_deals != 1 or poker_open_raise_right != 1 or player_pause_input != 1 or player_interaction_signal != 1 or player_look != 1 or player_movement != 1 or player_unfocused_input != 1 or world_search_evidence != 1 or world_product_evidence != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or focus_idempotence != 1 or world_autosave != 1 or world_focus_out != 1 or world_close_request != 1 or reclassified_weak != 1:
         raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, room_layout={room_layout_selected}, layout_locked={room_layout_locked}, poker_short_blinds={poker_short_blinds}, poker_seeded_deals={poker_seeded_deals}, poker_open_raise_right={poker_open_raise_right}, player_pause_input={player_pause_input}, player_interaction_signal={player_interaction_signal}, player_look={player_look}, player_movement={player_movement}, player_unfocused_input={player_unfocused_input}, search_evidence={world_search_evidence}, product_evidence={world_product_evidence}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, focus_idempotence={focus_idempotence}, autosave={world_autosave}, focus_out={world_focus_out}, close_request={world_close_request}, weak={reclassified_weak}")
 
