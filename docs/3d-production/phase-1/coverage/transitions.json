@@ -298,25 +298,13 @@
       "outcome": "rejected"
     },
     {
-      "id": "route_guard.stairs_unknown",
+      "id": "route_guard.special_unknown",
       "source": "Godot/three_d/rules/routes.gd",
       "entry": "Run.extract -> Routes.quote",
       "outcome": "rejected"
     },
     {
-      "id": "route_guard.stairs_heat",
-      "source": "Godot/three_d/rules/routes.gd",
-      "entry": "Run.extract -> Routes.quote",
-      "outcome": "rejected"
-    },
-    {
-      "id": "route_guard.river_unknown",
-      "source": "Godot/three_d/rules/routes.gd",
-      "entry": "Run.extract -> Routes.quote",
-      "outcome": "rejected"
-    },
-    {
-      "id": "route_guard.river_heat",
+      "id": "route_guard.special_heat",
       "source": "Godot/three_d/rules/routes.gd",
       "entry": "Run.extract -> Routes.quote",
       "outcome": "rejected"
@@ -2322,6 +2310,26 @@
     "persistence": []
   },
   "retired_transition_ids": [
+    {
+      "id": "route_guard.river_heat",
+      "merged_into": "route_guard.special_heat",
+      "reason": "service-stairs and river-launch share the same special-route heat guard, rejection reason, and unchanged state at routes.gd:30-31; route kind is an input variant."
+    },
+    {
+      "id": "route_guard.river_unknown",
+      "merged_into": "route_guard.special_unknown",
+      "reason": "service-stairs and river-launch share the same undiscovered-entry guard, rejection reason, and unchanged state at routes.gd:28-29; route kind is an input variant."
+    },
+    {
+      "id": "route_guard.stairs_heat",
+      "merged_into": "route_guard.special_heat",
+      "reason": "service-stairs and river-launch share the same special-route heat guard, rejection reason, and unchanged state at routes.gd:30-31; route kind is an input variant."
+    },
+    {
+      "id": "route_guard.stairs_unknown",
+      "merged_into": "route_guard.special_unknown",
+      "reason": "service-stairs and river-launch share the same undiscovered-entry guard, rejection reason, and unchanged state at routes.gd:28-29; route kind is an input variant."
+    },
     {
       "id": "route_guard.cash_dropbag-cash",
       "merged_into": "route_guard.cash_general",

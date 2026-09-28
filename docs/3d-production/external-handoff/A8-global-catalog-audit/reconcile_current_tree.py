@@ -77,6 +77,10 @@ def main() -> int:
         "search.table_active": "search.phase_unavailable",
         "service.intel_known": "service.intel_unavailable",
         "service.intel_unknown": "service.intel_unavailable",
+        "route_guard.stairs_unknown": "route_guard.special_unknown",
+        "route_guard.river_unknown": "route_guard.special_unknown",
+        "route_guard.stairs_heat": "route_guard.special_heat",
+        "route_guard.river_heat": "route_guard.special_heat",
     }
     merged_rejection_rows = 0
     for row in branches:
@@ -94,14 +98,19 @@ def main() -> int:
             "search.table_active": "inactive and table_active",
             "service.intel_known": "intel_known and intel_unknown",
             "service.intel_unknown": "intel_known and intel_unknown",
+            "route_guard.stairs_unknown": "stairs_unknown and river_unknown",
+            "route_guard.river_unknown": "stairs_unknown and river_unknown",
+            "route_guard.stairs_heat": "stairs_heat and river_heat",
+            "route_guard.river_heat": "stairs_heat and river_heat",
         }
         row["test"] = f"Godot/three_d/tests/{prefix}_coverage_test.gd::{input_cases[old_id]} input cases"
-        row["evidence_report"] = f"output/3d/{prefix}-coverage.json"
+        report_prefix = "route-guard" if prefix == "route_guard" else prefix
+        row["evidence_report"] = f"output/3d/{report_prefix}-coverage.json"
         row["evidence_strength"] = "strong"
         row["disposition"] = "catalogued_strong"
         row["notes"] += " 当前目录按动作入口将同一 guard 的多个拒绝条件归为一个结果 ID；专项仍分别执行各输入并断言完整 checkpoint 不变。"
         merged_rejection_rows += 1
-    expected_rejection_rows = 12  # SearchEvents guards are recorded at both Run dispatch and their source.
+    expected_rejection_rows = 16  # SearchEvents guards are recorded at both Run dispatch and their source; route guards have two input variants per shared outcome.
     if merged_rejection_rows != expected_rejection_rows:
         raise SystemExit(f"Unexpected merged rejection rows: {merged_rejection_rows}/{expected_rejection_rows}")
 

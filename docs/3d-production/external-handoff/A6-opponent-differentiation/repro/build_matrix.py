@@ -67,7 +67,7 @@ def main() -> None:
     pair_fields = ["opponent_a", "opponent_b", "slice", "snapshots", "different",
                    "denominator", "difference_rate", "example_snapshot_ids"]
     with (OUT / "pairwise-matrix.csv").open("w", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=pair_fields)
+        writer = csv.DictWriter(file, fieldnames=pair_fields, lineterminator="\n")
         writer.writeheader()
         for group, group_rows in groups.items():
             group_ids = {id(row) for row in group_rows}
@@ -89,7 +89,7 @@ def main() -> None:
     action_fields = ["opponent", "slice", "samples", *ACTIONS,
                      *(f"{action}_rate" for action in ACTIONS)]
     with (OUT / "action-distribution.csv").open("w", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=action_fields)
+        writer = csv.DictWriter(file, fieldnames=action_fields, lineterminator="\n")
         writer.writeheader()
         for group, group_rows in groups.items():
             for opponent in profile_ids:

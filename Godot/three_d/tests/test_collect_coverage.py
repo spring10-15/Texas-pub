@@ -10,7 +10,7 @@ class CoverageEvidenceTests(unittest.TestCase):
     def test_current_evidence_does_not_claim_global_completion(self):
         result = coverage.collect()
         self.assertEqual(result['catalogued_outcomes'], result['verified_outcomes'])
-        self.assertEqual(result['catalogued_outcomes'], 384)
+        self.assertEqual(result['catalogued_outcomes'], 382)
         self.assertEqual(result['catalog_status'], 'incomplete_catalog')
         self.assertEqual(set(result['pending_families']), {'poker', 'world', 'persistence'})
         self.assertTrue(all(not rows for rows in result['pending_families'].values()))
@@ -58,6 +58,18 @@ class CoverageEvidenceTests(unittest.TestCase):
             self.assertNotIn(old_id, transition_ids)
             self.assertIn(canonical, transition_ids)
             self.assertEqual(retired[old_id], canonical)
+
+    def test_special_route_guards_share_outcomes_across_route_kinds(self):
+        catalog = json.loads(coverage.CATALOG.read_text())
+        transition_ids = {row['id'] for row in catalog['transitions']}
+        retired = {row['id']: row['merged_into'] for row in catalog['retired_transition_ids']}
+        for suffix in ['unknown', 'heat']:
+            canonical = 'route_guard.special_' + suffix
+            self.assertIn(canonical, transition_ids)
+            for route in ['stairs', 'river']:
+                old_id = 'route_guard.' + route + '_' + suffix
+                self.assertNotIn(old_id, transition_ids)
+                self.assertEqual(retired[old_id], canonical)
 
     def test_changed_source_catalog_or_test_is_rejected(self):
         original_digest = coverage.digest
