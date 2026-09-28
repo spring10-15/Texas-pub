@@ -166,7 +166,7 @@
 | **B** | 装饰层**无同名物件，但有同族基底** | **3** | `old-silver-lighter`、`ivory-chip`、`antique-coin` | 可用道具 `signal-lighter`（打火机，548 tri）、场景件 `loose-chip`（筹码，3052 tri）可借形制与材质。**古币属此组**：`loose-chip` 的圆盘 + 边齿结构可作基底，但**只是部分可借**（币面纹样与材质另定）。 |
 | **C** | 装饰层与可用道具里**都没有可借形制** | **5** | `ruby-cufflink`、`sealed-bond`、`emerald-brooch`、`obsidian-idol`、`vault-promissory` | 仅材质库（`Aged brass` / `Polished gold edges` / `Tarnished silver` / `Charcoal`，`build_scene.py:35-43`）可复用。**具体几何与体积未核实**——"没有同名物"只说明缺独立模型，**不等于**已确认没有别的可借内容。 |
 
-- **项目级证据**：全项目 25 个模型文件（13 `.glb` + 12 `.blend`）中，**没有任何一个**以这 10 个 id 命名；`stash.glb` 只有 1 个合并节点 `Valuables`。这条与 B1、对抗性审查的结论一致。
+- **项目级证据**：当前全项目 27 个模型文件（14 `.glb` + 13 `.blend`）中，**没有任何一个**以这 10 个 id 命名；`stash.glb` 只有 1 个合并节点 `Valuables`。这条与 B1、对抗性审查的结论一致。计数已纳入 2026-09-28 新增的 `tavern-routes.blend` 与 `tavern-routes.glb`。
 - **占 2 格的只有 3 件**：`sealed-bond`、`obsidian-idol`、`vault-promissory`（`content.json` 的 `slots == 2`）。「体积差异要不要按格数做」是产品判断，B2 不代答。
 - **「要做什么模型」仍是产品判断**：B 组、C 组的具体形制与体积**本轮未核实**，B2 不主张「A 组从零建 / C 组从零建」这类从「无同名物」直接推出的结论。三组各自的**可复用几何**与**未核实部分**已分开写在上表。
 
@@ -343,7 +343,7 @@ python3 -c "import csv;p='docs/3d-production/external-handoff/B2-production-brea
 
 # 3) 复核「10 件贵重物无同名模型文件」
 find assets Godot/three_d/assets -type f \( -name '*.glb' -o -name '*.blend' \) | wc -l
-# 期望：25（13 glb + 12 blend），且无一个以贵重物 id 命名
+# 期望：27（14 glb + 13 blend），且无一个以贵重物 id 命名
 
 # 4) 交付文档引用自检（含本目录）
 python3 output/external-handoff/C1/verify_links.py

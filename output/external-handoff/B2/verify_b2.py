@@ -504,8 +504,8 @@ files = [p.name for p in list((ROOT / 'assets').rglob('*.glb')) +
          list((ROOT / 'assets').rglob('*.blend')) +
          list((GODOT / 'assets').rglob('*.glb'))]
 clash = [f for f in files for v in valuable if v in f]
-chk('B2-18a', '25 个模型文件中无一以 10 件贵重物 id 命名', not clash, clash)
-chk('B2-18b', '模型文件总数 25（13 glb + 12 blend）', len(set(files)) == 25, len(set(files)))
+chk('B2-18a', '27 个模型文件中无一以 10 件贵重物 id 命名', not clash, clash)
+chk('B2-18b', '模型文件总数 27（14 glb + 13 blend）', len(set(files)) == 27, len(set(files)))
 
 # ---------------- 19. 金库装饰层的同名物件 ----------------
 SC = read(ROOT / 'assets/blender/stash-noir/build_scene.py')

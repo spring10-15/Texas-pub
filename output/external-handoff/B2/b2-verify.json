@@ -512,15 +512,15 @@
     },
     {
       "id": "B2-18a",
-      "claim": "25 个模型文件中无一以 10 件贵重物 id 命名",
+      "claim": "27 个模型文件中无一以 10 件贵重物 id 命名",
       "ok": true,
       "detail": "[]"
     },
     {
       "id": "B2-18b",
-      "claim": "模型文件总数 25（13 glb + 12 blend）",
+      "claim": "模型文件总数 27（14 glb + 13 blend）",
       "ok": true,
-      "detail": "25"
+      "detail": "27"
     },
     {
       "id": "B2-19a",
