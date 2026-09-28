@@ -45,6 +45,25 @@ func run() -> void:
 	for field in ["run_seed","variant_plan"]: old_save.erase(field)
 	var restored: RefCounted = Checkpoint.restore(old_save,content)
 	verify(restored != null and restored.variant_plan.is_empty() and restored.shop_stock()==content.shops["smoky-den"]["1"],"Old active run keeps original shelf without reroll")
+	var legacy_phone_cases := 0
+	for scene in Run.SCENE_NAMES:
+		var legacy_source := Run.new(content)
+		verify(legacy_source.start(legacy_source.revision,scene,0),"Legacy stage-two fixture starts in "+scene)
+		var legacy_stage_two: Dictionary = Checkpoint.capture(legacy_source)
+		legacy_stage_two.erase("run_seed")
+		legacy_stage_two.erase("variant_plan")
+		legacy_stage_two.search_index = 2
+		var legacy_run: RefCounted = Checkpoint.restore(legacy_stage_two,content)
+		var expected_stock: Array = content.shops[scene]["2"].duplicate()
+		if "disposable-phone" not in expected_stock:
+			expected_stock.append("disposable-phone")
+		verify(legacy_run != null and legacy_run.variant_plan.is_empty() and legacy_run.shop_stock()==expected_stock,"Legacy stage-two shelf preserves its fixed stock and adds the phone in "+scene)
+		if legacy_run != null:
+			var before_phone: Dictionary = Checkpoint.capture(legacy_run)
+			var purchased: bool = legacy_run.service_action("buy","disposable-phone",legacy_run.revision)
+			verify(purchased and "disposable-phone" in legacy_run.inventory and legacy_run.cash==before_phone.cash-int(content.items["disposable-phone"].buy) and legacy_run.action_points==before_phone.action_points-1 and legacy_run.revision==before_phone.revision+1,"Legacy player can buy the guaranteed stage-two phone in "+scene)
+			legacy_phone_cases += 1
+	verify(legacy_phone_cases==Run.SCENE_NAMES.size(),"Legacy phone compatibility was checked in all venues")
 	var world: Node = load("res://three_d/scenes/main.tscn").instantiate()
 	root.add_child(world)
 	await process_frame
@@ -72,7 +91,7 @@ func run() -> void:
 	await seat(world)
 	world.start_table()
 	verify(world.table_game != null and world.table_game.state.deck==deck,"Reload before seating cannot reroll deck")
-	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"distinct_shelf_route_plans_per_100_seeds":diversity,"scope":"Shelf availability and initial fixed offer only. Room/event/opponent pools and human strategy diversity remain unverified."}
+	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"distinct_shelf_route_plans_per_100_seeds":diversity,"legacy_stage_two_phone_cases":legacy_phone_cases,"scope":"Shelf availability and initial fixed offer only. Room/event/opponent pools and human strategy diversity remain unverified."}
 	FileAccess.open("res://../output/3d/run-variants.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("RUN_VARIANTS ",JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)

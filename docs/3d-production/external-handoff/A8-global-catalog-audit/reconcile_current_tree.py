@@ -591,6 +591,26 @@ def main() -> int:
     if reward_selector_rows != len(reward_ids):
         raise SystemExit(f"Unexpected settlement reward selector rows: {reward_selector_rows}/{len(reward_ids)}")
 
+    # `shop_stock()` is a read-only projection, not a separate state result,
+    # but both the committed-plan path and legacy save fallback determine
+    # which service purchase can follow. The run-variants test now verifies
+    # the legacy second-stage phone through purchase in all four venues.
+    stock_projection_rows = 0
+    for row in branches:
+        if (row["source_file"] == "Godot/three_d/rules/run_variants.gd"
+                and row["entry"] == "generate"
+                and row["source_line"] == "Godot/three_d/rules/run_variants.gd:12-19"):
+            row["source_line"] += ";Godot/three_d/rules/run.gd:306-312"
+            legacy_test = "Godot/three_d/tests/run_variants_test.gd::Legacy stage-two shelf and phone purchase across venues"
+            tests = row["test"].split(";")
+            if legacy_test not in tests:
+                row["test"] += f";{legacy_test}"
+            row["evidence_report"] = f"output/3d/run-variants.json;{LATEST_REPORT}"
+            row["notes"] += " 同一回归现还覆盖 Run.shop_stock 的变体计划投影及无计划旧存档回退（run.gd:306-312）；四家酒馆的第二阶段旧存档都恢复一次性手机，并成功购买、精确扣款/行动力。该只读货架选择本身不新增 Run 状态转移 ID。"
+            stock_projection_rows += 1
+    if stock_projection_rows != 1:
+        raise SystemExit(f"Unexpected shop_stock projection rows: {stock_projection_rows}")
+
     if partial_bankroll != 1 or entry_heat_cap != 1 or settlement_heat_relief != 1 or player_raise_pattern != 1 or room_layout_selected != 1 or room_layout_locked != 2 or poker_short_blinds != 1 or poker_seeded_deals != 1 or poker_open_raise_right != 1 or player_pause_input != 1 or player_interaction_signal != 1 or player_look != 1 or player_movement != 1 or player_unfocused_input != 1 or world_search_evidence != 1 or world_product_evidence != 1 or reclassified_nonplayer != 6 or presentation_only != 1 or focus_idempotence != 1 or world_autosave != 1 or world_focus_out != 1 or world_close_request != 1 or reclassified_weak != 1:
         raise SystemExit(f"Unexpected reconciliation counts: partial={partial_bankroll}, heat_cap={entry_heat_cap}, settlement_relief={settlement_heat_relief}, player_pattern={player_raise_pattern}, room_layout={room_layout_selected}, layout_locked={room_layout_locked}, poker_short_blinds={poker_short_blinds}, poker_seeded_deals={poker_seeded_deals}, poker_open_raise_right={poker_open_raise_right}, player_pause_input={player_pause_input}, player_interaction_signal={player_interaction_signal}, player_look={player_look}, player_movement={player_movement}, player_unfocused_input={player_unfocused_input}, search_evidence={world_search_evidence}, product_evidence={world_product_evidence}, nonplayer={reclassified_nonplayer}, presentation={presentation_only}, focus_idempotence={focus_idempotence}, autosave={world_autosave}, focus_out={world_focus_out}, close_request={world_close_request}, weak={reclassified_weak}")
 
