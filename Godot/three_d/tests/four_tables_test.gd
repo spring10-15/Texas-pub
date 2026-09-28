@@ -47,6 +47,7 @@ func run() -> void:
 	world.run_game.variant_plan.room_layout = "linear"
 	world.travel("tavern")
 	var start_vault: int = world.run_game.vault
+	var expected_wealth: int = world.run_game.vault + world.run_game.cash + world.run_game.valuable_total()
 	verify(world.run_game.enter_table(1, world.run_game.revision, "mirror-hall") == null, "Mirror remains locked initially")
 	verify(world.run_game.enter_table(1, world.run_game.revision, "embers-table") == null, "Embers remains locked initially")
 	for room in ["tavern", "ledger", "mirror", "embers"]:
@@ -85,6 +86,9 @@ func run() -> void:
 		var before_leave: int = world.run_game.cash
 		world.leave_seat()
 		verify(world.run_game.cash == before_leave + stack, "Stack returned once " + room)
+		var reward_value: int = int(world.table_content.items[world.run_game.last_table_result.reward].value) if world.run_game.last_table_result.reward_added else 0
+		expected_wealth += stack - int(world.table_content.tables[world.ROOMS[room].table].buyIn) + reward_value
+		verify(world.run_game.vault + world.run_game.cash + world.run_game.valuable_total() == expected_wealth, "Four-table wealth ledger balances after " + room)
 		verify(not world.run_game.settle_table(world.run_game.revision), "Duplicate settlement rejected")
 		if not pledged.is_empty():
 			verify(pledged in world.run_game.inventory and world.run_game.collateral.is_empty(), "Winning final hand returns collateral")
@@ -97,12 +101,13 @@ func run() -> void:
 	world.show_run_panel("extract")
 	var quote: Dictionary = world.run_game.extraction_quote()
 	world.confirm_run_action()
-	verify(not world.run_game.active and world.current_room == "stash" and world.run_game.vault == start_vault + quote.net, "Four-table run settles cash and goods into vault")
+	verify(not world.run_game.active and world.current_room == "stash" and world.run_game.vault == start_vault + quote.net and world.run_game.vault == expected_wealth - int(quote.fee) - int(quote.lostCash) - int(quote.lostGoods), "Four-table run settles cash and goods into vault")
 	# Exercise a legal loss of pledged goods, then repeat settlement and reload checks.
 	world.run_game.start(world.run_game.revision)
 	world.run_game.completed.assign(["cargo-table", "ledger-cellar"])
 	world.run_game.inventory.assign(["ivory-chip"])
 	var r: RefCounted = world.run_game
+	var loss_opening_wealth: int = r.vault + r.cash + r.valuable_total()
 	var rev: int = r.revision
 	verify(r.enter_table(1, rev, "cargo-table", "ivory-chip") == null, "Non-collateral table rejects pledge")
 	verify(r.enter_table(1, rev, "mirror-hall", "antique-coin") == null, "Unowned pledge rejected atomically")
@@ -110,8 +115,11 @@ func run() -> void:
 	world.travel("mirror")
 	world.table_game = r.enter_table(1, rev, "mirror-hall", "ivory-chip")
 	await play(false)
+	var loss_stack: int = int(r.table.state.players[0].stack)
 	verify(r.settle_table(r.revision), "Losing table settles")
 	verify("ivory-chip" not in r.inventory and not r.last_table_result.returned and r.collateral.is_empty(), "Final loss forfeits exactly pledged item")
+	var loss_wealth: int = loss_opening_wealth + loss_stack - int(world.table_content.tables["mirror-hall"].buyIn) - int(world.table_content.items["ivory-chip"].value)
+	verify(not r.last_table_result.reward_added and r.vault + r.cash + r.valuable_total() == loss_wealth, "Actual collateral loss balances after table")
 	var restored: RefCounted = Checkpoint.restore(Checkpoint.capture(r), world.table_content)
 	verify(restored != null and restored.last_table_result == r.last_table_result, "Collateral outcome survives checkpoint")
 	# Settlement fixtures isolate main-pot vs side-pot awards and a tied main pot.
@@ -131,6 +139,11 @@ func run() -> void:
 	legacy.erase("collateral")
 	legacy.erase("last_table_result")
 	verify(Checkpoint.restore(legacy, world.table_content) != null, "Pre-expansion saves remain readable")
+	var loss_quote: Dictionary = r.extraction_quote()
+	verify(loss_quote.reason.is_empty() and loss_quote.lostCash == 0 and loss_quote.lostGoods == 0, "Losing run has an ordinary exit quote")
+	verify(r.extract(r.revision) and r.vault == loss_wealth - int(loss_quote.fee) and r.cash == 0 and r.inventory.is_empty(), "Actual collateral loss and extraction balance final vault")
+	var after_loss_exit := Checkpoint.capture(r)
+	verify(not r.extract(r.revision) and Checkpoint.capture(r) == after_loss_exit, "Losing run cannot bank twice")
 	var report := {"checks":checks,"failed":failures.size(),"failures":failures}
 	FileAccess.open("res://../output/3d/four-tables.json", FileAccess.WRITE).store_string(JSON.stringify(report, "  "))
 	print("FOUR_TABLES ", JSON.stringify(report))
