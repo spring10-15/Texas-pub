@@ -16,7 +16,7 @@
   "probe_sha256": "34b28469c6a14c7a40aa131143909df815400406d47da542615d912c2b526b61",
   "content_sha256": "246b07d24deb17fd4a35cbb489d1e1c827ca3cb48d55db552861ff229dd947a2",
   "opponent_code_sha256": "d7009c834d0337d90602b1149c96573c4da567f5030b2f4615b9ce750ca05867",
-  "source_commit": "3e6f3892c8ffd906fdda9bcbda79dab57e6261ba",
+  "source_commit": "6e4214bf003d80bb60547ae53a0cc949716c2257",
   "slices": {
     "all": 78,
     "player_raises>=2": 78,
