@@ -61,9 +61,16 @@ func run() -> void:
 					var legal := {"allIn":true,"raise":true,"call":true,"fold":true,"check":false}
 					var action := Opponent.choose(snapshot,actor,legal,content.opponents[id],.5)
 					verify(legal.get("allIn" if action=="all-in" else action,false),"Each venue/table/opponent produces a legal decision")
+					var current_id: String = table.state.currentActorId
+					var current_legal: Dictionary = table.legal_actions(current_id)
+					var first_action: String = "check" if current_legal.check else ("call" if current_legal.call else "fold")
+					verify(table.act(current_id, first_action, table.revision), "First legal action precedes checkpoint: " + key)
 					var saved := Checkpoint.capture(test_run)
 					var loaded: RefCounted = Checkpoint.restore(saved,content)
 					verify(loaded != null and loaded.table.state==table.state,"Active roster and cards survive restore")
+					if loaded == null: continue
+					test_run = loaded
+					table = loaded.table
 					var buy_in: int = int(table.state.tableDef.buyIn)
 					var finished: bool = play_to_settlement(test_run, table, content)
 					var player_stack: int = int(table.state.players.filter(func(p): return p.id == "player")[0].stack)
@@ -117,7 +124,7 @@ func run() -> void:
 		world.seat_panel.pregame(r.cash,r.table_definition(setup.table),r.inventory,r)
 		verify(world.seat_panel.opponent_left.text==r.actor_name(ids[0]) and world.seat_panel.opponent_right.text==r.actor_name(ids[1]),"Pregame labels match visible roster")
 	world.queue_free()
-	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"venue_table_actor_combinations":coverage.size(),"complete_table_runs":complete_runs,"unbalanced_or_incomplete_runs":run_failures,"distinct_rosters_per_100_seeds":distinct,"scope":"Every venue/table/opponent combination completes one full table using legal player/AI actions; the independent wealth ledger is checked. This does not prove full-night survival or human difficulty balance."}
+	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"venue_table_actor_combinations":coverage.size(),"complete_table_runs":complete_runs,"unbalanced_or_incomplete_runs":run_failures,"distinct_rosters_per_100_seeds":distinct,"scope":"Every venue/table/opponent combination takes a legal action, restores its mid-hand checkpoint, then completes one table using legal player/AI actions; the independent wealth ledger is checked. This does not prove process restart, full-night survival or human difficulty balance."}
 	FileAccess.open("res://../output/3d/opponent-pool.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("OPPONENT_POOL ",JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)
