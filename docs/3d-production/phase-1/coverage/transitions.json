@@ -346,24 +346,6 @@
       "outcome": "accepted"
     },
     {
-      "id": "route_guard.fixed_expiry_boundary",
-      "source": "Godot/three_d/rules/routes.gd",
-      "entry": "Run.extract -> Routes.quote",
-      "outcome": "accepted"
-    },
-    {
-      "id": "route_guard.stairs_heat_boundary",
-      "source": "Godot/three_d/rules/routes.gd",
-      "entry": "Run.extract -> Routes.quote",
-      "outcome": "accepted"
-    },
-    {
-      "id": "route_guard.river_heat_boundary",
-      "source": "Godot/three_d/rules/routes.gd",
-      "entry": "Run.extract -> Routes.quote",
-      "outcome": "accepted"
-    },
-    {
       "id": "route_guard.cash_general",
       "source": "Godot/three_d/rules/routes.gd",
       "entry": "Run.extract -> Routes.quote",
@@ -2310,6 +2292,21 @@
     "persistence": []
   },
   "retired_transition_ids": [
+    {
+      "id": "route_guard.fixed_expiry_boundary",
+      "merged_into": "extract.fixed",
+      "reason": "At search_index == expiresAfterSearch, fixed-route extraction has the same accepted state change, fee, and payout as any other unexpired fixed reservation; the boundary remains a test input."
+    },
+    {
+      "id": "route_guard.stairs_heat_boundary",
+      "merged_into": "extract.service-stairs",
+      "reason": "At heat == maxHeat, service-stairs extraction has the same accepted state change, fee, and payout as any other allowed heat value; the boundary remains a test input."
+    },
+    {
+      "id": "route_guard.river_heat_boundary",
+      "merged_into": "extract.river-launch",
+      "reason": "At heat == maxHeat, river-launch extraction has the same accepted state change, fee, and payout as any other allowed heat value; the boundary remains a test input."
+    },
     {
       "id": "route_guard.river_heat",
       "merged_into": "route_guard.special_heat",

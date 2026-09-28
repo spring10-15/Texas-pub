@@ -91,6 +91,27 @@ func _initialize() -> void:
 		var net := 170 if case=="extract" else 0
 		var ok: bool = accepted and not r.active and r.cash==0 and r.vault==before.vault+net and r.last_result.forced and r.last_result.net==net if case in ["extract","abandon"] else not accepted and Checkpoint.capture(r)==before
 		record("pressure."+case,ok)
+	var pressure_choice_cases := {}
+	for row in [["keep_goods",100,"dropbag-cash","dropbag-valuables"],["keep_cash",300,"dropbag-valuables","dropbag-cash"]]:
+		var name: String = row[0]
+		var r := fresh()
+		r.heat = 6
+		r.cash = row[1]
+		r.inventory.append("ivory-chip")
+		var selected: String = row[2]
+		var alternative: String = row[3]
+		var quote: Dictionary = r.extraction_quote(selected)
+		var other: Dictionary = r.extraction_quote(alternative)
+		var before := Checkpoint.capture(r)
+		var ok: bool = quote.reason.is_empty() and other.reason.is_empty() and quote.net > other.net
+		ok = ok and r.enforce_pressure()
+		ok = ok and r.last_result.route == selected and r.last_result.forced and r.last_result.net == quote.net
+		ok = ok and r.last_result.fee == quote.fee and r.last_result.lostCash == quote.lostCash and r.last_result.lostGoods == quote.lostGoods
+		ok = ok and r.vault == before.vault + quote.net and r.cash == 0 and r.inventory.is_empty() and not r.active
+		pressure_choice_cases[name] = {"selected":selected,"net":quote.net,"other_net":other.net,"verified":ok}
+		if not ok:
+			failures.append("pressure.extract.best_route."+name)
+			push_error("pressure.extract.best_route."+name)
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
 	var prefixes := ["start","reset","discover","extract","abandon","pressure"]
@@ -102,7 +123,7 @@ func _initialize() -> void:
 	for file in DirAccess.get_files_at("res://three_d/rules"):
 		if not (file.ends_with(".gd") or file.ends_with(".json")): continue
 		hashes[file] = FileAccess.get_file_as_string("res://three_d/rules/"+file).sha256_text()
-	var report := {"scope":"Six lifecycle entry points, not entire game","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/lifecycle_coverage_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
+	var report := {"scope":"Six lifecycle entry points, including both eligible emergency-route choices at heat 6; not entire game","pressure_choice_cases":pressure_choice_cases,"source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/lifecycle_coverage_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
 	FileAccess.open("res://../output/3d/lifecycle-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("LIFECYCLE_COVERAGE covered=",hits.size()," total=",expected.size()," missing=",missing," failures=",failures)
 	quit(0 if missing.is_empty() and failures.is_empty() else 1)

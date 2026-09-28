@@ -18,12 +18,14 @@ const CASES := {
 	"table_active":["general","请先完成牌桌并离座"],
 	"general_surcharge":["general",""],
 	"fixed_expiry_boundary":["fixed",""],
+	"fixed_heat_boundary":["fixed",""],
 	"stairs_heat_boundary":["service-stairs",""],
 	"river_heat_boundary":["river-launch",""]
 }
 var hits := {}
 var failures: Array[String] = []
 var samples := 0
+var boundary_controls := {}
 func _initialize() -> void:
 	var content: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
 	var cases := CASES.duplicate(true)
@@ -53,6 +55,7 @@ func _initialize() -> void:
 					"table_active": r.enter_table(1,r.revision)
 					"general_surcharge": r.heat = 5
 					"fixed_expiry_boundary": r.search_index = 3
+					"fixed_heat_boundary": r.heat = int(r.reservation.maxHeat)
 					"stairs_heat_boundary","river_heat_boundary": r.heat = int(content.routes[scene].specialRoutes[route].maxHeat)
 				if str(key).begins_with("cash_"): r.cash = 0
 				var before := Checkpoint.capture(r)
@@ -76,6 +79,10 @@ func _initialize() -> void:
 					var overlap: Dictionary = Checkpoint.capture(r)
 					ok = ok and r.extraction_quote(route).reason == cases[key][1] and not r.extract(r.revision, route) and Checkpoint.capture(r) == overlap
 				samples += 1
+				if key in ["fixed_expiry_boundary", "fixed_heat_boundary", "stairs_heat_boundary", "river_heat_boundary"]:
+					if ok: boundary_controls[key] = int(boundary_controls.get(key, 0)) + 1
+					else: failures.append(str(key)+":"+scene+":"+str(offer)); push_error(failures.back())
+					continue
 				var id: String = "route_guard.cash_general" if str(key).begins_with("cash_") else "route_guard."+key
 				if key in ["stairs_unknown", "river_unknown"]: id = "route_guard.special_unknown"
 				if key in ["stairs_heat", "river_heat"]: id = "route_guard.special_heat"
@@ -87,10 +94,15 @@ func _initialize() -> void:
 	var missing: Array = expected.filter(func(id): return not hits.has(id))
 	for id in hits:
 		if id not in expected: failures.append("Uncatalogued "+id)
+	var expected_boundary_samples := 0
+	for scene in Run.SCENE_NAMES: expected_boundary_samples += content.routes[scene].fixedRoutes.size()
+	for key in ["fixed_expiry_boundary", "fixed_heat_boundary", "stairs_heat_boundary", "river_heat_boundary"]:
+		if int(boundary_controls.get(key, 0)) != expected_boundary_samples:
+			failures.append("Boundary input not fully verified: "+key)
 	var hashes := {}
 	for file in DirAccess.get_files_at("res://three_d/rules"):
 		if file.ends_with(".gd") or file.ends_with(".json"): hashes[file] = FileAccess.get_file_as_string("res://three_d/rules/"+file).sha256_text()
-	var report := {"scope":"Route rejection outcomes and fee/expiry/heat boundaries","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/route_guard_coverage_test.gd").sha256_text(),"catalog_sha256":text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"samples":samples,"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
+	var report := {"scope":"Route rejection outcomes and fee/expiry/heat boundaries; successful expiry/heat boundary inputs are tracked separately from state-transition IDs","boundary_controls":boundary_controls,"source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/route_guard_coverage_test.gd").sha256_text(),"catalog_sha256":text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"samples":samples,"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
 	FileAccess.open("res://../output/3d/route-guard-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("ROUTE_GUARD_COVERAGE covered=",hits.size()," total=",expected.size()," samples=",samples," failures=",failures)
 	quit(0 if failures.is_empty() and missing.is_empty() else 1)

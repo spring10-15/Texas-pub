@@ -4,6 +4,7 @@ const Checkpoint = preload("res://three_d/rules/run_checkpoint.gd")
 var checks := 0
 var failures: Array[String] = []
 var cases := 0
+var table_ledger_snapshots := 0
 
 func verify(ok: bool, label: String) -> void:
 	checks += 1
@@ -11,7 +12,19 @@ func verify(ok: bool, label: String) -> void:
 		failures.append(label)
 		push_error(label)
 
-func finish_table(table: RefCounted, label: String) -> void:
+func verify_table_ledger(run: RefCounted, table: RefCounted, opening_wealth: int, label: String) -> void:
+	var stacks := 0
+	for player in table.state.players:
+		stacks += int(player.stack)
+	# finish_hand() distributes the pot but keeps its value for the result display.
+	var unsettled_pot: int = int(table.state.pot) if table.state.status == "playing" else 0
+	var opponent_buyins: int = (table.state.players.size() - 1) * int(table.state.tableDef.buyIn)
+	var balance: int = run.vault + run.cash + run.valuable_total() + stacks + unsettled_pot - opponent_buyins
+	verify(run.table == table and run.collateral.is_empty() and balance == opening_wealth, label + " chip and pot ledger at " + table.state.status + "/" + table.state.street + "/" + str(table.state.turnCounter))
+	table_ledger_snapshots += 1
+
+func finish_table(run: RefCounted, table: RefCounted, opening_wealth: int, label: String) -> void:
+	verify_table_ledger(run, table, opening_wealth, label)
 	var steps := 0
 	while table.state.status != "finished" and steps < 200:
 		steps += 1
@@ -24,6 +37,7 @@ func finish_table(table: RefCounted, label: String) -> void:
 			var legal: Dictionary = table.legal_actions(actor)
 			var action := "fold" if actor != "player" else ("check" if legal.check else "call")
 			verify(table.act(actor, action, table.revision), label + " legal action")
+		verify_table_ledger(run, table, opening_wealth, label)
 	verify(table.state.status == "finished" and steps < 200, label + " finishes")
 
 func _initialize() -> void:
@@ -46,7 +60,7 @@ func _initialize() -> void:
 				verify(table != null, label + " enters " + site)
 				if table == null: break
 				var buy_in: int = int(table.state.tableDef.buyIn)
-				finish_table(table, label + "/" + site)
+				finish_table(r, table, wealth, label + "/" + site)
 				var returned: int = int(table.state.players[0].stack)
 				verify(r.settle_table(r.revision), label + " settles " + site)
 				var reward_value := int(content.items[r.last_table_result.reward].value) if r.last_table_result.reward_added else 0
@@ -70,5 +84,5 @@ func _initialize() -> void:
 			verify(r.vault == wealth and r.cash == 0 and r.inventory.is_empty() and r.last_result.net == quote.net, label + " final vault balances complete run")
 			cases += 1
 	verify(cases == 8, "All four venues and both offer variants complete")
-	print("RESERVATION_LEDGER ", JSON.stringify({"cases": cases, "checks": checks, "failed": failures.size(), "failures": failures, "scope": "Eight seeded two-table runs with controlled folding opponents, real rewards, paid reservation, save/restore and fixed-route extraction; not live AI difficulty or human playtest evidence."}))
+	print("RESERVATION_LEDGER ", JSON.stringify({"cases": cases, "checks": checks, "table_ledger_snapshots": table_ledger_snapshots, "failed": failures.size(), "failures": failures, "scope": "Eight seeded two-table runs with chip-plus-pot checks after every legal table step, controlled folding opponents, real rewards, paid reservation, save/restore and fixed-route extraction; not live AI difficulty or human playtest evidence."}))
 	quit(0 if failures.is_empty() else 1)

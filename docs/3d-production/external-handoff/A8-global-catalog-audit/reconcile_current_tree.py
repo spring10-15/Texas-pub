@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import csv
+import difflib
 import hashlib
 import json
+import re
 import subprocess
 from collections import Counter
 from pathlib import Path
@@ -12,6 +14,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[4]
 AUDIT = ROOT / "docs/3d-production/external-handoff/A8-global-catalog-audit"
 CATALOG = ROOT / "docs/3d-production/phase-1/coverage/transitions.json"
+SOURCE_SWEEP = ROOT / "output/external-handoff/A8/source-function-sweep.json"
+SOURCE_BASELINE = "29dbc411d13b5baca8f22a28465c8971bab182a1"
 LATEST_REPORT = "output/3d/regression/" + sorted((ROOT / "output/3d/regression").glob("*/report.json"))[-1].parent.name + "/report.json"
 
 
@@ -32,7 +36,63 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def line_map(relative: str) -> dict[int, int]:
+    """Map frozen A8 source line references to the current file after insertions."""
+    old_text = subprocess.check_output(
+        ["git", "show", f"{SOURCE_BASELINE}:{relative}"], cwd=ROOT, text=True
+    )
+    new_text = (ROOT / relative).read_text(encoding="utf-8")
+    old_lines, new_lines = old_text.splitlines(), new_text.splitlines()
+    mapping: dict[int, int] = {}
+    for tag, old_start, old_end, new_start, new_end in difflib.SequenceMatcher(
+        a=old_lines, b=new_lines, autojunk=False
+    ).get_opcodes():
+        if tag == "equal":
+            for offset in range(old_end - old_start):
+                mapping[old_start + offset + 1] = new_start + offset + 1
+        elif tag == "replace":
+            old_size, new_size = old_end - old_start, new_end - new_start
+            for offset in range(old_size):
+                if new_size:
+                    mapped_offset = min(offset, new_size - 1)
+                    mapping[old_start + offset + 1] = new_start + mapped_offset + 1
+    return mapping
+
+
+def remap_source_refs(row: dict[str, str], maps: dict[str, dict[int, int]]) -> None:
+    source = row["source_file"]
+    if source not in maps:
+        return
+    mapping = maps[source]
+
+    def replace_ref(match: re.Match[str]) -> str:
+        reference_source = match.group(1)
+        reference_map = maps.get(reference_source)
+        if reference_map is None:
+            return match.group(0)
+        start = int(match.group(2))
+        end = int(match.group(3) or start)
+        if start not in reference_map or end not in reference_map:
+            raise ValueError(f"Cannot remap frozen source reference: {match.group(0)}")
+        mapped_start, mapped_end = reference_map[start], reference_map[end]
+        suffix = f"-{mapped_end}" if match.group(3) else ""
+        return f"{match.group(1)}:{mapped_start}{suffix}"
+
+    row["source_line"] = re.sub(
+        r"([A-Za-z0-9_./-]+\.gd):(\d+)(?:-(\d+))?", replace_ref, row["source_line"]
+    )
+    function_line = row["function_line"]
+    if function_line.isdigit():
+        old_line = int(function_line)
+        if old_line not in mapping:
+            raise ValueError(f"Cannot remap function line {source}:{old_line}")
+        row["function_line"] = str(mapping[old_line])
+
+
 def main() -> int:
+    source_sweep = json.loads(SOURCE_SWEEP.read_text(encoding="utf-8"))
+    if source_sweep.get("branch_inventory_sha256") != sha256(AUDIT / "current-tree-branch-inventory.csv"):
+        raise SystemExit("A8 source-function sweep is stale; rebuild it after the current-tree overlay")
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     catalog_ids = {row["id"] for row in catalog["transitions"]}
     retired_ids = {row["id"]: row["merged_into"] for row in catalog.get("retired_transition_ids", [])}
@@ -113,6 +173,26 @@ def main() -> int:
     expected_rejection_rows = 16  # SearchEvents guards are recorded at both Run dispatch and their source; route guards have two input variants per shared outcome.
     if merged_rejection_rows != expected_rejection_rows:
         raise SystemExit(f"Unexpected merged rejection rows: {merged_rejection_rows}/{expected_rejection_rows}")
+
+    boundary_input_merges = {
+        "route_guard.fixed_expiry_boundary": "extract.fixed",
+        "route_guard.stairs_heat_boundary": "extract.service-stairs",
+        "route_guard.river_heat_boundary": "extract.river-launch",
+    }
+    merged_boundary_rows = 0
+    for row in branches:
+        old_id = row["catalog_id"]
+        if old_id not in boundary_input_merges:
+            continue
+        if retired_ids.get(old_id) != boundary_input_merges[old_id]:
+            raise SystemExit(f"Route boundary retirement disagrees with catalog: {old_id}")
+        row["catalog_id"] = boundary_input_merges[old_id]
+        row["test"] = "Godot/three_d/tests/route_guard_coverage_test.gd::" + old_id.split(".", 1)[1]
+        row["evidence_report"] = "output/3d/route-guard-coverage.json"
+        row["notes"] += " 此处是已接受撤离的边界输入，费用与最终状态复用对应 extract.* 结果；专项继续核对等号边界，但不另计状态结果。"
+        merged_boundary_rows += 1
+    if merged_boundary_rows != 3:
+        raise SystemExit(f"Unexpected merged route boundary rows: {merged_boundary_rows}")
 
     partial_bankroll = 0
     entry_heat_cap = 0
@@ -875,6 +955,20 @@ def main() -> int:
     if len(current_gaps) != 0 or any(row["player_reachable"] != "yes" or row["catalog_id"] != "-" for row in current_gaps):
         raise SystemExit(f"Current player-path gap set is inconsistent: {len(current_gaps)} rows")
 
+    source_files = {row["source_file"] for row in branches}
+    for row in branches:
+        source_files.update(re.findall(r"([A-Za-z0-9_./-]+\.gd):\d+(?:-\d+)?", row["source_line"]))
+    line_maps = {}
+    for source in source_files:
+        if not source.endswith(".gd"):
+            continue
+        try:
+            line_maps[source] = line_map(source)
+        except subprocess.CalledProcessError:
+            continue
+    for row in branches:
+        remap_source_refs(row, line_maps)
+
     write_csv(AUDIT / "current-tree-branch-inventory.csv", branch_fields, branches)
     write_csv(AUDIT / "current-tree-unmapped-player-path-gaps.csv", branch_fields, current_gaps)
     write_csv(AUDIT / "current-tree-weak-evidence.csv", branch_fields, weak_evidence)
@@ -885,6 +979,11 @@ def main() -> int:
     head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     report = regression_path
     lifecycle_report = ROOT / "output/3d/lifecycle-coverage.json"
+    function_counts = source_sweep["counts"]
+    branch_site_counts = source_sweep["control_flow_site_counts"]
+    source_file_count = len(source_sweep["source_sha256"])
+    function_count = sum(function_counts.values())
+    branch_site_count = sum(branch_site_counts.values())
     text = f"""# A8 当前树对账记录
 
 - 证据源码基线 HEAD：`{head}`
@@ -908,12 +1007,12 @@ def main() -> int:
 - 原表 40 条候选中，34 条标为 `player_reachable=yes`，6 条标为 `no`。吧台实体入口曾因缺少后置断言被列为弱证据；当前实体射线与 E 键集成测试已补足，映射到 `world.services_open`。试玩提示与 trace 文件 I/O 结果不改变权威状态，分别归为非状态转移；相关 I/O 错误注入未做专门测试。当前弱证据表有 {len(weak_evidence)} 行。
 - `persistence_replay.rng_negative_control` 是测试侧人工扰动的负对照，现已从 `transitions` 移至 `verification_controls`；它仍作为正向重放断言的非空检查，但不再增加状态转移目录计数。
 - 五条 `route_guard.cash_*` 历史 ID 与 `route_guard.cash_general` 共用 `routes.gd:49-50` 的同一拒绝后继；当前 overlay 将它们归并到该单一 ID，六条路线仍由同一专项逐项验证。
-- 原 12 条世界/牌桌编排候选逐项复核后，实际状态后继归并到已有规则层 ID；纯 UI/调度包装早退标为 `not_a_transition`，不借用其他入口的 ID。没有新增语义 ID，也没有把 393 项目录宣称为完整分母；当前候选表无未映射行不等于证明不存在其他缺口，全球转移分母仍未冻结。
+- 原 12 条世界/牌桌编排候选逐项复核后，实际状态后继归并到已有规则层 ID；纯 UI/调度包装早退标为 `not_a_transition`，不借用其他入口的 ID。没有因这些包装层新增语义 ID，也没有把当前目录宣称为完整分母；当前候选表无未映射行不等于证明不存在其他缺口，全球转移分母仍未冻结。
 - 分支行 disposition 计数：`{dict(counts)}`。
 
 ## 限制
 
-当前树对账把原 382 项审计映射到现行目录，并补入本金封顶、入座风声封顶、盈利降风声、玩家行为画像、房间图选择、窗口生命周期、玩家输入和世界/牌桌编排证据。函数级清点覆盖 20 个运行时文件、177 个函数（120 个在分支清单中，57 个为明确排除，未分类 0 个）；这只证明函数入口都有归属，不代表分支结果穷尽。玩家路径分母和状态组合空间仍未冻结，因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
+当前树对账把原 382 项审计映射到现行目录，并补入本金封顶、入座风声封顶、盈利降风声、玩家行为画像、房间图选择、窗口生命周期、玩家输入和世界/牌桌编排证据。函数级清点覆盖 {source_file_count} 个运行时文件、{function_count} 个函数（{function_counts.get('audit_inventory', 0)} 个在分支清单中，{function_counts.get('explicit_exclusion', 0)} 个明确排除，{function_counts.get('unclassified', 0)} 个未分类）；源码点位清点 {branch_site_count} 个 if/elif/match 行首位置（{branch_site_counts.get('branch_inventory_ref', 0)} 个有清单引用，{branch_site_counts.get('unclassified_branch_site', 0)} 个未分类）。这些数只证明函数/源码点位有归属，不代表分支结果穷尽。玩家路径分母和状态组合空间仍未冻结，因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
 
 ## 重建
 

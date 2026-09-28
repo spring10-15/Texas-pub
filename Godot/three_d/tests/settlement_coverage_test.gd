@@ -3,6 +3,7 @@ const Run = preload("res://three_d/rules/run.gd")
 const Checkpoint = preload("res://three_d/rules/run_checkpoint.gd")
 var failures: Array[String] = []
 var hits := {}
+var extraction_cases := 0
 func _initialize() -> void:
 	var content: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json"))
@@ -48,6 +49,21 @@ func _initialize() -> void:
 			if reward not in observed_rewards[id]: observed_rewards[id].append(reward)
 		var settled := Checkpoint.capture(r)
 		ok = ok and not r.settle_table(r.revision) and Checkpoint.capture(r) == settled
+		var expected_goods := 0
+		for item_id in inventory:
+			expected_goods += int(content.items[item_id].value)
+		var expected_wealth: int = int(before.vault) + int(before.cash) + stack + expected_goods
+		ok = ok and r.vault + r.cash + r.valuable_total() == expected_wealth
+		var quote: Dictionary = r.extraction_quote("general")
+		ok = ok and quote.reason.is_empty()
+		if quote.reason.is_empty():
+			ok = ok and quote.net + quote.fee + quote.lostCash + quote.lostGoods == r.cash + r.valuable_total()
+			var final_vault: int = expected_wealth - int(quote.fee) - int(quote.lostCash) - int(quote.lostGoods)
+			ok = ok and r.extract(r.revision, "general")
+			ok = ok and r.vault == final_vault and r.cash == 0 and r.inventory.is_empty() and r.collateral.is_empty()
+			var extracted := Checkpoint.capture(r)
+			ok = ok and not r.extract(r.revision, "general") and Checkpoint.capture(r) == extracted
+			extraction_cases += 1
 		record(key,ok)
 	for id in content.tables:
 		var listed: Array = []
@@ -110,7 +126,7 @@ func _initialize() -> void:
 	for file in DirAccess.get_files_at("res://three_d/rules"):
 		if not (file.ends_with(".gd") or file.ends_with(".json")): continue
 		hashes[file] = FileAccess.get_file_as_string("res://three_d/rules/"+file).sha256_text()
-	var report := {"scope":"settlement subgraph only; configured signature reward overrides verified for all four tables","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/settlement_coverage_test.gd").sha256_text(),"catalog_sha256":FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json").sha256_text(),"denominator":expected.size(),"numerator":hits.size(),"missing":missing,"failures":failures,"hits":hits,"signature_reward_cases":signature_results,"overall_state_transition_coverage":null,"overall_status":"Other families not yet enumerated; no global percentage claimed."}
+	var report := {"scope":"Settlement boundary with finished-table fixtures; each of 18 result cases independently balances expected reward and collateral value through general extraction. Configured signature reward overrides verified for all four tables. Does not prove poker action paths or global transition coverage.","extraction_cases":extraction_cases,"source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/settlement_coverage_test.gd").sha256_text(),"catalog_sha256":FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json").sha256_text(),"denominator":expected.size(),"numerator":hits.size(),"missing":missing,"failures":failures,"hits":hits,"signature_reward_cases":signature_results,"overall_state_transition_coverage":null,"overall_status":"Other families not yet enumerated; no global percentage claimed."}
 	FileAccess.open("res://../output/3d/settlement-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("SETTLEMENT_COVERAGE covered=",hits.size()," total=",expected.size()," missing=",missing," failures=",failures)
 	quit(0 if failures.is_empty() and missing.is_empty() else 1)

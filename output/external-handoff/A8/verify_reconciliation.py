@@ -153,7 +153,20 @@ def main() -> int:
         if not ancestor:
             DRIFT.append(f"证据源码基线 {evidence_head[:12]} 不是当前 HEAD {current_head[:12]} 的祖先")
         elif changed:
-            DRIFT.append(f"证据源码基线之后权威源码/场景/测试/目录有变更：{changed[:12]}")
+            regression = json.loads(reg.read_text(encoding="utf-8")) if reg and reg.is_file() else {}
+            snapshot = regression.get("source_sha256", {})
+            unverified = [
+                path for path in changed
+                if path not in snapshot or sha(ROOT / path) != snapshot[path]
+            ]
+            if not unverified and regression.get("sources_unchanged") is True:
+                CONFIRM.append(
+                    f"提交基线之后有 {len(changed)} 个权威文件变化，均与所引全量回归快照一致：{changed[:12]}"
+                )
+            else:
+                DRIFT.append(
+                    f"证据源码基线之后权威源码/场景/测试/目录有未被回归快照验证的变更：{unverified[:12]}"
+                )
         else:
             CONFIRM.append(
                 f"证据源码基线 {evidence_head[:12]} 是当前提交祖先，之后未改规则/脚本/场景/测试/项目输入映射/目录"
@@ -295,8 +308,18 @@ def main() -> int:
     unexplained = []
     for r in removed:
         line = r["source_line"]
-        got = (inv_by_line.get(line, {}).get("catalog_id") or "").strip()
-        targets = [x for x in got.split(";") if x and x != "-"]
+        current_rows = [inv_by_line[line]] if line in inv_by_line else [
+            row for row in inv
+            if row.get("source_file") == r.get("source_file")
+            and row.get("entry") == r.get("entry")
+            and row.get("branch_or_guard") == r.get("branch_or_guard")
+        ]
+        targets = sorted({
+            target.strip()
+            for row in current_rows
+            for target in (row.get("catalog_id") or "").split(";")
+            if target.strip() and target.strip() != "-"
+        })
         if not targets:
             unexplained.append(f"{line}（清单未给出 catalog_id）")
         else:

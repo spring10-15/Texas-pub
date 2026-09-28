@@ -91,6 +91,13 @@ EXCLUDED = {
         "selected_collateral": "reads current UI selection",
         "update_raise_preview": "updates a read-only action preview",
     },
+    "Godot/three_d/scripts/world.gd": {
+        "trace_choice_opportunity": "records the options visible at a fixed-seed decision point; telemetry only, no authoritative game-state mutation",
+        "trace_opportunity_id": "reads the active telemetry correlation id; does not mutate authoritative game state",
+        "close_playtest_opportunity": "closes a telemetry-only decision window; does not mutate authoritative game state",
+        "legal_service_actions": "filters a read-only service view for telemetry; service_action owns game-state results",
+        "trace_table_opportunity": "records currently legal poker choices; telemetry only, no authoritative game-state mutation",
+    },
     "Godot/three_d/scripts/tavern_layout.gd": {
         "sign_at": "constructs a sign visual",
         "build": "builds room decoration nodes",
@@ -161,10 +168,17 @@ def main() -> int:
             inventory.append({"file": relative, **method, "status": status, "reason": reason})
 
         current_method = "(top level)"
+        telemetry_choice_projection = False
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             method_match = re.match(r"\s*(?:static\s+)?func\s+([A-Za-z_]\w*)\s*\(", line)
             if method_match:
                 current_method = method_match.group(1)
+                telemetry_choice_projection = False
+            if relative == "Godot/three_d/scripts/world.gd" and current_method == "show_run_panel":
+                if line.strip() == "if not preview_only:":
+                    telemetry_choice_projection = True
+                elif telemetry_choice_projection and line.strip() == "Input.mouse_mode = Input.MOUSE_MODE_VISIBLE":
+                    telemetry_choice_projection = False
             branch_match = re.match(r"\s*(if|elif|match)\b", line)
             if not branch_match:
                 continue
@@ -175,9 +189,14 @@ def main() -> int:
             elif current_method in exclusions:
                 status = "explicit_method_exclusion"
                 reason = exclusions[current_method]
-            elif relative == "Godot/three_d/scripts/world.gd" and current_method == "trace_playtest":
+            elif relative == "Godot/three_d/scripts/world.gd" and current_method in {
+                "trace_playtest", "trace_choice_opportunity", "trace_table_opportunity"
+            }:
                 status = "telemetry_file_io"
-                reason = "only selects whether to create a user:// telemetry file; not authoritative game state"
+                reason = "records fixed-seed telemetry or checks whether an event should be written; not authoritative game state"
+            elif telemetry_choice_projection:
+                status = "telemetry_choice_projection"
+                reason = "projects eligible run-panel choices into the fixed-seed opportunity record; it does not execute the selected action"
             elif relative == "Godot/three_d/scripts/world.gd" and current_method == "request_action" and branch_kind == "match":
                 status = "action_dispatch"
                 reason = "routes action ids to downstream world/run transitions; the dispatch itself is not a separate result"

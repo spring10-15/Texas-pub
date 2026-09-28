@@ -9,9 +9,9 @@
 
 > **读这句话必须先看锚点**：`382/382` 与 `40 条未登记` 都是 **HEAD `8d8464e1` / 目录 `087971c9…` / 382 个 ID** 这一组基线上的结论。交付后工作区已增至 **383** 个 ID（未提交），详见 §2.1 —— 那 40 条里已有一条被主线采纳。
 
-**当前树复核（2026-09-25 最新）**：后续新增了 `entry.heat_cap`、`settlement.heat_relief`、`poker.player_raise_pattern`、`run_variant.room_layout_selected`、`poker_blind.short_stack_posts`、`poker_progress.seeded_deal`、`world.autosave`、`world.window_focus_out`、`player.look_changed`、`player.movement` 与 `world.window_close_request`；目录现为 394 个 ID。搜索与货架入口、禁用控制时的输入拒绝、存档保护等新证据映射至既有 ID；未增加重复 ID。当前 overlay 将 667 条分支归为 521 条强证据、146 条不可达或非状态转移；394/394 个登记 ID 均有归因，已审候选中未映射为 0、弱证据为 0。独立对账 23 项确认、0 项漂移、0 项反证。完整回归为 64/64，详见 [当前树对账记录](current-tree-reconciliation.md)。这仍只证明当前已登记 ID 及已审分支的归因；冻结 A8 仍是 382 项历史锚点，源码驱动的全局分母未闭合，不能据此声称目录完整或 Phase 1 通过。
+**当前树快照（2026-09-28 21:06）**：以[当前树对账记录](current-tree-reconciliation.md)和它引用的回归报告为准。当前目录 379 个登记 ID 均已映射；overlay 672 行，其中 525 行有强证据、147 行归为不可达或非独立转移，未映射与弱证据均为 0。最新完整回归 64/64、Python 单测 15/15；A8 独立核验 25 项确认、0 项漂移、0 项反证。源码入口清点为 182 个函数、533 个 if/elif/match 点位，未分类均为 0。强制撤离的两条择优样本复用 `pressure.extract`；三条成功撤离的报价等号边界改为对应 `extract.*` 的输入样本，归并后不再扩充目录。**这些数没有闭合全局状态转移分母**：`overall_state_transition_coverage` 仍为 `null`，目录仍是 `incomplete_catalog`，Phase 1 不通过。
 
-**源码入口普查（2026-09-25）**：新增[函数入口普查记录](source-function-sweep.md)，静态索引 rules/scripts 下 20 个运行时 GDScript 的 177 个方法；120 个对应 A8 当前树入口，57 个为逐方法注明理由的非独立转移方法，未分类 0。该检查限定了后续分支审计的入口范围，不代表守卫枚举闭合或全局目录完整。
+**源码入口普查**：历史报告[函数入口普查记录](source-function-sweep.md)保留 2026-09-25 的静态索引。本次入口与点位数字以 `output/external-handoff/A8/source-function-sweep.json` 为准；函数或源码点位有归属不代表守卫结果穷尽，也不代表全局目录完整。
 
 ## 1. 与主 Agent 底稿的关系
 

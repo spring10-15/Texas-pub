@@ -503,37 +503,38 @@ func run() -> void:
 		world_hashes[file] = FileAccess.get_file_as_string("res://three_d/scripts/"+file).sha256_text()
 	var report := {"scope":"Physical stash props, room entry, seating, modal guards, normal/forced table leave, venue transfer, extraction, abandonment and demo reset through world UI","source_sha256":hashes,"world_source_sha256":world_hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_coverage_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"overall_state_transition_coverage":null}
 	FileAccess.open("res://../output/3d/world-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
-	print("WORLD_COVERAGE covered=",hits.size()," total=",expected.size()," failed=",failures.size())
+	print("WORLD_COVERAGE covered=",hits.size()," total=",expected.size()," failed=",failures.size()," missing=",missing)
 	quit(0 if failures.is_empty() and missing.is_empty() else 1)
 
 func use_stash_prop(world: Node3D, prop_id: String) -> void:
 	var entry: Dictionary = world.props.entries[prop_id]
 	var anchor: Area3D = entry.anchor
-	var offset := Vector3(0, 0, 0.65)
-	if prop_id == "drawer0": offset = Vector3(0.7, 0, 0.65)
-	if prop_id in ["card", "chip"]: offset = Vector3(0, 0, -0.7)
-	world.player.global_position = Vector3(anchor.global_position.x + offset.x, 0.02, anchor.global_position.z + offset.z)
-	for i in range(3): await physics_frame
-	world.player.camera.look_at(anchor.global_position)
-	await physics_frame
+	var aimed: bool = await aim_room_anchor(world, anchor)
+	var focused_before: bool = world.player.focused == anchor
+	var busy_before: bool = world.action_busy
 	var before: Dictionary = RunCheckpoint.capture(world.run_game)
-	var activated: bool = world.request_action(anchor)
+	var activated: bool = aimed and world.request_action(anchor)
 	await create_timer(0.5).timeout
 	var actual: Variant = entry.node.get_indexed(NodePath(entry.property))
 	var opened: Variant = entry.opened
 	var visual_ok: bool = actual.is_equal_approx(opened) if actual is Vector3 else is_equal_approx(float(actual), float(opened))
-	verify("prop_" + prop_id, activated and world.props.states[prop_id] and visual_ok and RunCheckpoint.capture(world.run_game)==before)
-	world.player.global_position = Vector3(anchor.global_position.x + offset.x, 0.02, anchor.global_position.z + offset.z)
-	for i in range(3): await physics_frame
-	world.player.camera.look_at(anchor.global_position)
-	await physics_frame
+	var opened_ok: bool = activated and world.props.states[prop_id] and visual_ok and RunCheckpoint.capture(world.run_game)==before
+	if not opened_ok:
+		print("PROP_DIAG id=",prop_id," phase=open aimed=",aimed," focused=",focused_before," busy=",busy_before," acted=",activated," state=",world.props.states[prop_id]," visual=",visual_ok)
+	verify("prop_" + prop_id, opened_ok)
+	var aimed_reverse: bool = await aim_room_anchor(world, anchor)
+	focused_before = world.player.focused == anchor
+	busy_before = world.action_busy
 	before = RunCheckpoint.capture(world.run_game)
-	var reversed: bool = world.request_action(anchor)
+	var reversed: bool = aimed_reverse and world.request_action(anchor)
 	await create_timer(0.5).timeout
 	actual = entry.node.get_indexed(NodePath(entry.property))
 	var closed: Variant = entry.closed
 	visual_ok = actual.is_equal_approx(closed) if actual is Vector3 else is_equal_approx(float(actual), float(closed))
-	verify("prop_" + prop_id + "_reverse", reversed and not world.props.states[prop_id] and visual_ok and RunCheckpoint.capture(world.run_game)==before)
+	var closed_ok: bool = reversed and not world.props.states[prop_id] and visual_ok and RunCheckpoint.capture(world.run_game)==before
+	if not closed_ok:
+		print("PROP_DIAG id=",prop_id," phase=reverse aimed=",aimed_reverse," focused=",focused_before," busy=",busy_before," acted=",reversed," state=",world.props.states[prop_id]," visual=",visual_ok)
+	verify("prop_" + prop_id + "_reverse", closed_ok)
 
 func aim_room_anchor(world: Node3D, anchor: Area3D) -> bool:
 	var target: Vector3 = anchor.global_position
@@ -561,12 +562,22 @@ func use_room_prop(world: Node3D, id: String, opened_key: String, closed_key: St
 	var anchor: Area3D = entry.anchor
 	var before: Dictionary = RunCheckpoint.capture(world.run_game)
 	var aimed: bool = await aim_room_anchor(world, anchor)
+	var focused_before: bool = world.player.focused == anchor
+	var busy_before: bool = world.action_busy
 	var opened: bool = aimed and world.request_action(anchor)
 	await create_timer(0.5).timeout
 	var actual: Variant = entry.node.get_indexed(NodePath(entry.property))
-	results[opened_key] = results[opened_key] and opened and world.props.states[id] and is_equal_approx(float(actual), float(entry.opened)) and RunCheckpoint.capture(world.run_game)==before
+	var open_visual_ok: bool = is_equal_approx(float(actual), float(entry.opened))
+	var open_ok: bool = opened and world.props.states[id] and open_visual_ok and RunCheckpoint.capture(world.run_game)==before
+	if not open_ok:
+		print("ROOM_PROP_DIAG id=",id," phase=open aimed=",aimed," focused=",focused_before," busy=",busy_before," acted=",opened," state=",world.props.states[id]," visual=",open_visual_ok," value=",actual," expected=",entry.opened)
+	results[opened_key] = results[opened_key] and open_ok
 	aimed = await aim_room_anchor(world, anchor)
 	var closed: bool = aimed and world.request_action(anchor)
 	await create_timer(0.5).timeout
 	actual = entry.node.get_indexed(NodePath(entry.property))
-	results[closed_key] = results[closed_key] and closed and not world.props.states[id] and is_equal_approx(float(actual), float(entry.closed)) and RunCheckpoint.capture(world.run_game)==before
+	var close_visual_ok: bool = is_equal_approx(float(actual), float(entry.closed))
+	var close_ok: bool = closed and not world.props.states[id] and close_visual_ok and RunCheckpoint.capture(world.run_game)==before
+	if not close_ok:
+		print("ROOM_PROP_DIAG id=",id," phase=close aimed=",aimed," focused=",world.player.focused==anchor," busy=",world.action_busy," acted=",closed," state=",world.props.states[id]," visual=",close_visual_ok," value=",actual," expected=",entry.closed)
+	results[closed_key] = results[closed_key] and close_ok

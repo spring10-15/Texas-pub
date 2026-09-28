@@ -10,7 +10,7 @@ class CoverageEvidenceTests(unittest.TestCase):
     def test_current_evidence_does_not_claim_global_completion(self):
         result = coverage.collect()
         self.assertEqual(result['catalogued_outcomes'], result['verified_outcomes'])
-        self.assertEqual(result['catalogued_outcomes'], 382)
+        self.assertEqual(result['catalogued_outcomes'], 379)
         self.assertEqual(result['catalog_status'], 'incomplete_catalog')
         self.assertEqual(set(result['pending_families']), {'poker', 'world', 'persistence'})
         self.assertTrue(all(not rows for rows in result['pending_families'].values()))
@@ -70,6 +70,26 @@ class CoverageEvidenceTests(unittest.TestCase):
                 old_id = 'route_guard.' + route + '_' + suffix
                 self.assertNotIn(old_id, transition_ids)
                 self.assertEqual(retired[old_id], canonical)
+
+    def test_successful_route_boundaries_are_input_cases(self):
+        catalog = json.loads(coverage.CATALOG.read_text())
+        transition_ids = {row['id'] for row in catalog['transitions']}
+        retired = {row['id']: row['merged_into'] for row in catalog['retired_transition_ids']}
+        for old_id, canonical in {
+            'route_guard.fixed_expiry_boundary': 'extract.fixed',
+            'route_guard.stairs_heat_boundary': 'extract.service-stairs',
+            'route_guard.river_heat_boundary': 'extract.river-launch',
+        }.items():
+            self.assertNotIn(old_id, transition_ids)
+            self.assertIn(canonical, transition_ids)
+            self.assertEqual(retired[old_id], canonical)
+        report = json.loads((coverage.ROOT / 'output/3d/route-guard-coverage.json').read_text())
+        self.assertEqual(report['boundary_controls'], {
+            'fixed_expiry_boundary': 8,
+            'fixed_heat_boundary': 8,
+            'stairs_heat_boundary': 8,
+            'river_heat_boundary': 8,
+        })
 
     def test_changed_source_catalog_or_test_is_rejected(self):
         original_digest = coverage.digest
