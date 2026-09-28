@@ -81,6 +81,7 @@ static func choose_with_odds(table: Dictionary, actor: Dictionary, legal: Dictio
 		return "all-in"
 	if legal.get("raise", false) and (odds > 0.72 - raise_chance * 0.25 + value_raise_shift or (odds < 0.38 and random_value < bluff_chance * 0.85)):
 		return "raise"
-	if legal.get("call", false) and (odds > 0.24 + caution * 0.55 + float(profile.get("callOddsShift", 0.0)) or pressure < 0.18):
+	var low_pressure_call_floor := float(profile.get("lowPressureCallOddsFloor", -1.0))
+	if legal.get("call", false) and (odds > 0.24 + caution * 0.55 + float(profile.get("callOddsShift", 0.0)) or (pressure < 0.18 and odds > low_pressure_call_floor)):
 		return "call"
 	return "check" if legal.get("check", false) else "fold"

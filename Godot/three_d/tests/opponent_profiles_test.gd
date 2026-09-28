@@ -49,6 +49,11 @@ func _initialize() -> void:
 	verify(distributions["smiling-knife"].strong_final["all-in"] > distributions["smiling-knife"].strong_early["all-in"], "Final hand increases knife pressure")
 	verify(distributions["calm-widow"].repeated_raises.raise > distributions["calm-widow"].pattern_baseline.raise, "Widow responds to repeated player raises at identical equity")
 	verify(distributions["velvet-rook"].weak_pressure.call > distributions["ash-smuggler"].weak_pressure.call, "Calling station continues with a weak draw under pressure")
+	var cheap_call_table := {"tableDef":{"buyIn":120,"openBet":40},"street":"turn","handNumber":1,"totalHands":3,"currentBet":10,"playerPattern":{"raiseCount":0}}
+	var cheap_call_actor := {"stack":100}
+	var cheap_call_legal := {"allIn":false,"raise":false,"call":true,"check":false,"fold":true}
+	verify(Opponent.choose_with_odds(cheap_call_table,cheap_call_actor,cheap_call_legal,content.opponents["ledger-clerk"],.5,.20)=="fold", "Nit folds a very weak hand even when the call is cheap")
+	verify(Opponent.choose_with_odds(cheap_call_table,cheap_call_actor,cheap_call_legal,content.opponents["river-shark"],.5,.20)=="call", "Other profiles keep the existing low-pressure call behavior")
 	var value_table := {"tableDef":{"buyIn":120,"openBet":40},"street":"turn","handNumber":1,"totalHands":3,"currentBet":20,"playerPattern":{"raiseCount":0}}
 	var value_actor := {"stack":200}
 	var value_legal := {"allIn":true,"raise":true,"call":true,"check":false,"fold":true}

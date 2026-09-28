@@ -138,7 +138,8 @@
         "caution": 0.74,
         "bluff": 0.05,
         "finalHandSpike": 0,
-        "patternPunish": 0
+        "patternPunish": 0,
+        "lowPressureCallOddsFloor": 0.30
       }
     },
     "calm-widow": {
