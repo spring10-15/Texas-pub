@@ -82,12 +82,18 @@ func _initialize() -> void:
 	var malformed_rejected: bool = Checkpoint.restore({}) == null
 	verify(malformed_rejected, "Malformed snapshot rejected")
 	invalid_cases += 1 if malformed_rejected else 0
+	for seat_index in range(3):
+		var broken := good.duplicate(true)
+		broken.state.players[seat_index].stack = -1
+		var rejected: bool = Checkpoint.restore(broken) == null and Checkpoint.capture(sample) == good
+		verify(rejected, "Reject negative stack at seat %d without changing live table" % seat_index)
+		invalid_cases += 1 if rejected else 0
 	DirAccess.remove_absolute(path)
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
 	var expected: Array = catalog.transitions.filter(func(row): return str(row.id).begins_with("persistence_table.")).map(func(row): return row.id)
 	var hits := {}
-	if invalid_cases == 15 and failures.is_empty():
+	if invalid_cases == 18 and failures.is_empty():
 		hits["persistence_table.invalid_snapshot_rejected"] = {"test":"table_checkpoint_test.gd","postcondition_verified":true}
 	if contribution_mismatch_cases == 2 and failures.is_empty():
 		hits["persistence_table.contribution_total_consistent"] = {"test":"table_checkpoint_test.gd","postcondition_verified":true}

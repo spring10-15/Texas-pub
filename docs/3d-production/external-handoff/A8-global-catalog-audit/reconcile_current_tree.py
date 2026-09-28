@@ -524,6 +524,17 @@ def main() -> int:
     })
     branches.append(seed_row)
 
+    checkpoint_seat_rows = 0
+    for row in branches:
+        if (row["source_file"] == "Godot/three_d/rules/table_checkpoint.gd"
+                and row["entry"] == "restore"
+                and row["source_line"] == "Godot/three_d/rules/table_checkpoint.gd:30-31"
+                and row["catalog_id"] == "persistence_table.invalid_snapshot_rejected"):
+            row["notes"] += " 新增对 0/1/2 号座位分别注入 stack=-1 的正式回归；每次均拒绝恢复并断言活体 Table checkpoint 不变，覆盖固定三座循环在每个索引的该拒绝守卫。"
+            checkpoint_seat_rows += 1
+    if checkpoint_seat_rows != 1:
+        raise SystemExit(f"Unexpected checkpoint seat validation rows: {checkpoint_seat_rows}")
+
     # Keep source-level dispatch / telemetry outcomes visible in the audit.
     # These branches do not mutate authoritative game state and therefore do
     # not create transition IDs, but omitting them would make the source list
