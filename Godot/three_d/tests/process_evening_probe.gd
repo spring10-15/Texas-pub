@@ -91,6 +91,14 @@ func run() -> void:
 		if expected < 0:
 			fail("Second table ledger failed")
 			return
+		transfer = world.run_game.transfer_quote("rooftop-club")
+		if not transfer.reason.is_empty() or not world.run_game.transfer_venue("rooftop-club", world.run_game.revision):
+			fail("Cannot transfer after actual second table")
+			return
+		expected -= int(transfer.fee)
+		if wealth(world) != expected:
+			fail("Second transfer ledger failed")
+			return
 		cooling = cool_if_needed(world, "mirror-hall")
 		if cooling < 0 or not enter(world, "mirror", "mirror-hall"):
 			fail("Cannot enter third table")
@@ -112,8 +120,8 @@ func run() -> void:
 		quit()
 		return
 	var disk: Dictionary = Store.read_checkpoint(world.save_path)
-	if expected < 0 or disk.status != "ok" or not world.paused or not world.seated or world.table_game == null or world.run_game.completed.size() != 2 or world.run_game.venue_history != ["smoky-den", "high-rise-suite"] or world.checkpoint_state() != disk.state or wealth(world) != expected:
-		fail("New process did not restore actual two-venue history")
+	if expected < 0 or disk.status != "ok" or not world.paused or not world.seated or world.table_game == null or world.run_game.completed.size() != 2 or world.run_game.venue_history != ["smoky-den", "high-rise-suite", "rooftop-club"] or world.checkpoint_state() != disk.state or wealth(world) != expected:
+		fail("New process did not restore actual three-venue history")
 		return
 	world.resume()
 	var table: RefCounted = world.table_game
@@ -129,6 +137,14 @@ func run() -> void:
 	expected += stack + (int(world.table_content.items[result.reward].value) if result.reward_added else 0)
 	if wealth(world) != expected:
 		fail("Restored third table ledger failed")
+		return
+	var transfer: Dictionary = world.run_game.transfer_quote("neon-poker-club")
+	if not transfer.reason.is_empty() or not world.run_game.transfer_venue("neon-poker-club", world.run_game.revision):
+		fail("Cannot transfer after restored third table")
+		return
+	expected -= int(transfer.fee)
+	if wealth(world) != expected:
+		fail("Third transfer ledger failed")
 		return
 	var cooling: int = cool_if_needed(world, "embers-table")
 	if cooling < 0 or not enter(world, "embers", "embers-table"):

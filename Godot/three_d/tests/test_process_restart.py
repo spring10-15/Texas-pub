@@ -32,7 +32,10 @@ class ProcessRestartTest(unittest.TestCase):
                 self.assertIsNotNone(match, output)
                 result = json.loads(match.group(1))
                 self.assertEqual((result['failed'], result['phase']), (0, phase), output)
-                self.assertEqual(result['journey'], ['smoky-den', 'high-rise-suite'])
+                journey = ['smoky-den', 'high-rise-suite', 'rooftop-club']
+                if phase == 'restore':
+                    journey.append('neon-poker-club')
+                self.assertEqual(result['journey'], journey)
                 expected_wealth = result['wealth']
             self.assertEqual(result['completed'], 4)
 
