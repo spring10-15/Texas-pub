@@ -1,0 +1,28 @@
+{
+  "asset": "tavern-routes.glb",
+  "source": "assets/blender/tavern-routes/tavern-routes.blend",
+  "decorative_only": true,
+  "godot_local_meters": {
+    "hall": [
+      -4,
+      4,
+      -3.4,
+      -14
+    ],
+    "upper_kitchen_y": 1.2,
+    "quay_y": -1.3
+  },
+  "materials": [
+    "Aged brass",
+    "Blackened iron",
+    "Dark service oak",
+    "Exit enamel",
+    "Kiln brick",
+    "Kitchen glazed tile",
+    "Kitchen linen",
+    "Old ivory paint",
+    "Quay weathered timber",
+    "River water"
+  ],
+  "bytes": 789848
+}

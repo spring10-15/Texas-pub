@@ -1,5 +1,6 @@
 extends RefCounted
 ## Connected back-of-house spaces. Coordinates are local to the tavern.
+const ROUTE_DETAIL := preload("res://three_d/assets/tavern-routes.glb")
 static func sign_at(w: Node3D, room: Node3D, value: String, pos: Vector3, yaw := 0.0) -> void:
 	var sign := Label3D.new()
 	sign.text = value
@@ -60,7 +61,10 @@ static func build(w: Node3D, room: Node3D) -> void:
 	w.box(room, "DockFloor", Vector3(2.75, -1.32, -13), Vector3(2.5, 0.24, 2), "wood")
 	w.box(room, "LoadingWall", Vector3(4, 0.7, -10), Vector3(0.16, 3, 4), "wall")
 	w.box(room, "DockRail", Vector3(4, -0.55, -13), Vector3(0.1, 1.3, 2), "brass")
-	w.box(room, "QuayEnd", Vector3(2.75, -0.65, -14), Vector3(2.5, 1.1, 0.16), "wood")
+	# Frame the exit lane instead of stopping the walkway at a solid wall.
+	w.box(room, "QuayGatePostL", Vector3(1.75, -0.05, -14), Vector3(0.5, 1.2, 0.16), "wood")
+	w.box(room, "QuayGatePostR", Vector3(3.75, -0.05, -14), Vector3(0.5, 1.2, 0.16), "wood")
+	w.box(room, "QuayGateLintel", Vector3(2.75, 0.85, -14), Vector3(1.5, 0.6, 0.16), "wood")
 	w.box(room, "River", Vector3(2.75, -1.45, -16), Vector3(5, 0.1, 4), "green", false)
 	w.box(room, "LaunchHull", Vector3(2.7, -1.25, -15), Vector3(1.4, 0.5, 2.4), "dark", false)
 	w.target(room, "RiverExit", Vector3(2.75, -0.2, -13.75), Vector3(1.6, 1.6, 0.15), "route:river-launch", "装卸码头 · 河边接驳")
@@ -84,3 +88,6 @@ static func build(w: Node3D, room: Node3D) -> void:
 	sign_at(w, room, "预约接应 · 货梯", Vector3(1.20, 2.45, -11), -PI / 2)
 	sign_at(w, room, "后厨出口", Vector3(-2.75, 3.65, -12.75))
 	sign_at(w, room, "河边接驳", Vector3(2.75, 0.65, -13.85))
+	var route_detail: Node3D = ROUTE_DETAIL.instantiate()
+	route_detail.name = "RouteDetail"
+	room.add_child(route_detail)

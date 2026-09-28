@@ -21,6 +21,12 @@ func run() -> void:
 			if node.get_meta("visual_role", "") in ["Floor", "PokerTable", "Felt", "TableLeg", "OpponentChair", "BarCounter", "BarTop", "BarStool", "BottleShelf", "Bottle"]:
 				verify(node.get_child(0) is MeshInstance3D and not node.get_child(0).visible, "Original placeholder hidden " + str(node.get_meta("visual_role")))
 		verify(room.get_node("Floor").get_child(1) is CollisionShape3D, "Floor collision retained " + room_name)
+	var route_detail: Node3D = world.get_node("Tavern/RouteDetail")
+	var route_meshes := route_detail.find_children("*", "MeshInstance3D", true, false)
+	verify(route_meshes.size() >= 8, "Distinctive Blender route details imported")
+	verify(world.get_node("Tavern/KitchenExit").global_position.y > world.get_node("Tavern/FixedExit").global_position.y, "Kitchen route remains physically higher than the booking lift")
+	verify(world.get_node("Tavern/RiverExit").global_position.y < world.get_node("Tavern/FixedExit").global_position.y, "River route remains physically lower than the booking lift")
+	verify(world.get_node("Tavern/QuayGatePostL") != null and world.get_node("Tavern/QuayGatePostR") != null and world.get_node("Tavern/QuayGateLintel") != null, "Quay exit has an open framed passage")
 	for id in world.run_game.SUPPORTED_ITEMS + ["loose-card", "loose-chip", "drawer"]:
 		var prop: Node3D = world.make_detailed_prop(id)
 		var surfaces := prop.find_children("*", "MeshInstance3D", true, false)
