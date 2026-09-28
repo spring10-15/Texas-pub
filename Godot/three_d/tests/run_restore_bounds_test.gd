@@ -61,6 +61,44 @@ func run_tests() -> void:
 		verify(rejected,"Reject "+key)
 		verify(unchanged,"Rejected input does not mutate live state "+key)
 		invalid_cases += 1 if rejected and unchanged else 0
+	var variant_rejection_cases: Array[Dictionary] = []
+	var unknown_opponent := original.duplicate(true)
+	unknown_opponent.variant_plan.opponents["cargo-table"][0] = "missing-opponent"
+	variant_rejection_cases.append({"name":"variant_unknown_opponent","snapshot":unknown_opponent})
+	var duplicate_opponent := original.duplicate(true)
+	duplicate_opponent.variant_plan.opponents = {"cargo-table":["ash-smuggler","calm-widow"],"ledger-cellar":["ash-smuggler","dock-braggart"],"mirror-hall":["river-shark","smiling-knife"],"embers-table":["velvet-rook","house-viper"]}
+	variant_rejection_cases.append({"name":"variant_duplicate_opponent","snapshot":duplicate_opponent})
+	var short_roster := original.duplicate(true)
+	short_roster.variant_plan.opponents["cargo-table"] = ["ash-smuggler"]
+	variant_rejection_cases.append({"name":"variant_short_roster","snapshot":short_roster})
+	var missing_roster := original.duplicate(true)
+	missing_roster.variant_plan.opponents.erase("embers-table")
+	variant_rejection_cases.append({"name":"variant_missing_roster","snapshot":missing_roster})
+	var invalid_events := original.duplicate(true)
+	invalid_events.variant_plan.events["cargo-table"] = invalid_events.variant_plan.events["ledger-cellar"]
+	variant_rejection_cases.append({"name":"variant_duplicate_events","snapshot":invalid_events})
+	var invalid_layout := original.duplicate(true)
+	invalid_layout.variant_plan.room_layout = "spiral"
+	variant_rejection_cases.append({"name":"variant_invalid_room_layout","snapshot":invalid_layout})
+	var missing_layout := original.duplicate(true)
+	missing_layout.variant_plan.erase("room_layout")
+	variant_rejection_cases.append({"name":"variant_missing_room_layout","snapshot":missing_layout})
+	var legacy_v3_with_layout := original.duplicate(true)
+	legacy_v3_with_layout.variant_plan.version = 3
+	variant_rejection_cases.append({"name":"variant_v3_unexpected_room_layout","snapshot":legacy_v3_with_layout})
+	var legacy_v2_with_opponents := original.duplicate(true)
+	legacy_v2_with_opponents.variant_plan.version = 2
+	legacy_v2_with_opponents.variant_plan.erase("room_layout")
+	variant_rejection_cases.append({"name":"variant_v2_unexpected_opponents","snapshot":legacy_v2_with_opponents})
+	var legacy_v1_with_events := original.duplicate(true)
+	legacy_v1_with_events.variant_plan.version = 1
+	variant_rejection_cases.append({"name":"variant_v1_unexpected_events","snapshot":legacy_v1_with_events})
+	var variant_rejections := 0
+	for entry in variant_rejection_cases:
+		invalid_case_targets += 1
+		var rejected_variant: bool = check_invalid_snapshot(entry.name,entry.snapshot,content,r,original)
+		invalid_cases += 1 if rejected_variant else 0
+		variant_rejections += 1 if rejected_variant else 0
 	var route_count: int = content.routes[original.scene_id].fixedRoutes.size()
 	for entry in [
 		{"name":"negative_vault","field":"vault","value":-1},
@@ -257,7 +295,7 @@ func run_tests() -> void:
 	for source_file in DirAccess.get_files_at("res://three_d/rules"):
 		if source_file.ends_with(".gd") or source_file.ends_with(".json"):
 			hashes[source_file] = FileAccess.get_file_as_string("res://three_d/rules/" + source_file).sha256_text()
-	var report := {"scope":"Reject malformed run checkpoints and restore legacy variant plans","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/run_restore_bounds_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"failed":failures.size(),"invalid_cases":invalid_cases,"legacy_variant_cases":legacy_variant_cases,"overall_state_transition_coverage":null}
+	var report := {"scope":"Reject malformed run checkpoints and restore legacy variant plans","source_sha256":hashes,"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/run_restore_bounds_test.gd").sha256_text(),"catalog_sha256":catalog_text.sha256_text(),"numerator":hits.size(),"denominator":expected.size(),"checks":checks,"hits":hits,"missing":missing,"failures":failures,"failed":failures.size(),"invalid_cases":invalid_cases,"variant_rejection_cases":variant_rejections,"legacy_variant_cases":legacy_variant_cases,"overall_state_transition_coverage":null}
 	FileAccess.open("res://../output/3d/persistence-run-coverage.json", FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("RUN_RESTORE_BOUNDS ", JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)
