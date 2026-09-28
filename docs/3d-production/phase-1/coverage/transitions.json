@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "status": "incomplete_catalog",
-  "counting_rule": "One semantic accepted/rejected outcome per ID. Multiple input cases may exercise one ID. Verified catalog entries are not a complete global denominator until a source-driven audit accounts for every player-reachable state-changing outcome and defensible exclusions.",
+  "counting_rule": "One semantic accepted/rejected game-state outcome per ID in transitions. Test-only verification controls belong in verification_controls and are excluded from the state-transition count. Multiple input cases may exercise one ID. Verified catalog entries are not a complete global denominator until a source-driven audit accounts for every player-reachable state-changing outcome and defensible exclusions.",
   "transitions": [
     {
       "id": "transfer.success",
@@ -2360,12 +2360,14 @@
       "source": "Godot/three_d/scripts/world.gd",
       "entry": "load_checkpoint",
       "outcome": "accepted"
-    },
+    }
+  ],
+  "verification_controls": [
     {
       "id": "persistence_replay.rng_negative_control",
-      "source": "Godot/three_d/scripts/world.gd",
-      "entry": "load_checkpoint",
-      "outcome": "rejected"
+      "test": "Godot/three_d/tests/world_rng_replay_test.gd",
+      "purpose": "Altered RNG diverges from the unmodified replay, confirming the positive replay check is not vacuous.",
+      "counted_as_state_transition": false
     }
   ],
   "pending_families": {

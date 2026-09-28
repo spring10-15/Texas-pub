@@ -29,7 +29,6 @@ CATALOG_IDS = [
     "persistence_io.write_open_rejected", "persistence_io.write_rename_rejected",
     "persistence_restore.corrupt_load_preserved", "persistence_restore.unsupported_version_preserved",
     "persistence_restore.active_in_stash", "persistence_replay.world_rng_resume",
-    "persistence_replay.rng_negative_control",
     "persistence_restore.missing_checkpoint_recovered", "persistence_restore.playtest_save_blocked",
     "persistence_restore.active_table_not_seated", "persistence_restore.table_id_mismatch",
     "persistence_capture.world_snapshot_isolated",

@@ -246,3 +246,9 @@ python3 output/external-handoff/A8/build_a8.py --check   # 只核验，不重写
 - `g1-run-transitions.csv` 两处 `evidence_report` 笔误：错误写法把报告名的下划线当连字符，写成 output/3d/settlement_coverage.json 与 output/3d/tool_coverage.json（此处**故意不加反引号**：这两个路径并不存在，加了会被当作可打开的引用）；实际文件是 output/3d/settlement-coverage.json 与 output/3d/tool-coverage.json。订正登记在 `build_a8.py` 的 `CORRECTIONS`，不静默改分片。
 - `g5-orphan-closure.csv` 有 5 行的 `source_line` 尾部带中文括号注解，已**原样移入 `notes`**（只搬位置，不丢信息）。
 - 3 组「同一源码行、并列条件、共享同一后继」的重复行已合并，`branch_or_guard` 用 ` / ` 连接保留各自描述。
+
+## 当前树口径订正（2026-09-28）
+
+冻结 A8 分片保留当时 382 项目录的原样锚点。针对其中 `persistence_replay.rng_negative_control` 的发现，当前状态目录已将其从 `transitions` 移到独立 `verification_controls`：它是测试人工扰动 RNG 的负对照，不是游戏源码的 `rejected` 后继。当前树 overlay 仅把它作为非转移审计说明，不再映射为状态 ID。历史冻结分片和历史计数不回写；当前转移目录为 393 项，仍标记 `incomplete_catalog`。
+
+因此，旧 `output/external-handoff/A8/build_a8.py --check` 会把这条历史 ID 报为冻结锚点删除及目录越界；这是本次有记录的口径订正，不是被静默忽略的验证失败。它继续用于查看历史冻结差异，不作为当前目录验收器。当前 393 项映射与源代码基线使用 `reconcile_current_tree.py` 生成，并由 `output/external-handoff/A8/verify_reconciliation.py` 独立核对。

@@ -4,6 +4,7 @@ const SaveStore = preload("res://three_d/rules/save_store.gd")
 var failures: Array[String] = []
 var checks := 0
 var hits := {}
+var verification_controls := {}
 
 func verify(id: String, ok: bool) -> void:
 	checks += 1
@@ -12,6 +13,13 @@ func verify(id: String, ok: bool) -> void:
 	else:
 		failures.append(id)
 		push_error(id)
+
+func verify_control(name: String, ok: bool) -> void:
+	checks += 1
+	verification_controls[name] = ok
+	if not ok:
+		failures.append("verification control: " + name)
+		push_error("verification control: " + name)
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -104,7 +112,7 @@ func run() -> void:
 		var right: Dictionary = snapshot(control_b)
 		if left.public != right.public or left.rng != right.rng:
 			negative_divergence = true
-	verify("rng_negative_control", negative_divergence)
+	verify_control("altered_rng_diverges", negative_divergence)
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
@@ -118,7 +126,7 @@ func run() -> void:
 	var world_hashes := {}
 	for file in ["world.gd", "player.gd", "scene_props.gd"]:
 		world_hashes[file] = FileAccess.get_file_as_string("res://three_d/scripts/" + file).sha256_text()
-	var report := {"scope":"World save/load continuation with visible result and RNG comparison; includes altered-RNG negative control","source_sha256":hashes,"world_source_sha256":world_hashes,"checks":checks,"hits":hits,"missing":missing,"failures":failures,"failed":failures.size(),"numerator":hits.size(),"denominator":expected_ids.size(),"catalog_sha256":catalog_text.sha256_text(),"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_rng_replay_test.gd").sha256_text(),"overall_state_transition_coverage":null}
+	var report := {"scope":"World save/load continuation with visible result and RNG comparison","source_sha256":hashes,"world_source_sha256":world_hashes,"checks":checks,"hits":hits,"verification_controls":verification_controls,"missing":missing,"failures":failures,"failed":failures.size(),"numerator":hits.size(),"denominator":expected_ids.size(),"catalog_sha256":catalog_text.sha256_text(),"test_sha256":FileAccess.get_file_as_string("res://three_d/tests/world_rng_replay_test.gd").sha256_text(),"overall_state_transition_coverage":null}
 	FileAccess.open("res://../output/3d/persistence-replay-coverage.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("WORLD_RNG_REPLAY ",JSON.stringify(report))
 	quit(0 if failures.is_empty() and missing.is_empty() else 1)

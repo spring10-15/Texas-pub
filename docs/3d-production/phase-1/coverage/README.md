@@ -36,6 +36,8 @@
 
 2026-09-25 存档 RNG 重放族收口：A5 `rng_replay` 的三行结果均落在现有目录 ID：牌桌恢复逐动作边界对照（`persistence_table.rng_replay`，660 个动作边界）、世界恢复后的 160 步同步重放（`persistence_replay.world_rng_resume`）及 +12345 RNG 扰动后的 60 步差异负对照（`persistence_replay.rng_negative_control`）。当前两份专项报告均为全命中、无缺项，目录哈希与相关 Run/Table/World 源码哈希匹配。因此从 `pending_families.persistence` 移除 `rng_replay`，待审组从 6 减至 5；完整回归 59/59，目录证据 379/379，覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-062450/report.json`。
 
+2026-09-28 目录口径订正：重新核对发现 `persistence_replay.rng_negative_control` 是测试人工扰动 RNG 后确认正向重放断言非空的负对照，不是游戏源码产生的状态结果。现从 `transitions` 移至 `verification_controls`，仍要求测试通过，但不计入状态转移 ID 或覆盖分子/分母。目录转移数从 394 调整为 393；此前按 394 统计的记录保留为历史快照，不代表当前分母。
+
 2026-09-25 A4 世界交互四组收口：逐行复核 `leave_seat`、`physical_raycast`、`prop_interactions`、`modal_guards` 的 47 个 A4 结果候选；所有可达结果都映射到当前 74/74 的世界覆盖报告，且对应目录 ID 均有后继状态证据。`leave_seat` 中 `settle_table` 失败仅能通过破坏桌/Run 对象同步制造，A4 标为不可达防御分支，不纳入玩家路径；未注册道具 ID 同样不可由公开交互锚点产生。报告的目录、测试及四份 World 源码哈希均与当前文件匹配。因此 `pending_families.world` 清空；存档仍有 6 组待审，全局目录与覆盖率仍未封板。完整回归 59/59，目录证据 379/379，覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-061911/report.json`。
 
 2026-09-25 入座分支复核：A4 `seat` 组的三项结果现均由 `world_coverage_test.gd` 正式覆盖：`world.seat` 核对真实牌桌交互后的座席面板、座席相机与控制权切换；`world.seat_blocked` 核对藏匿点未入酒馆时拒绝且完整世界快照不变；`world.seated_world_action_rejected` 核对入座后道具请求拒绝且快照不变。三项都能在当前世界覆盖报告中命中，因此从 `pending_families.world` 移除 `seat`，待审组从 5 减至 4；没有新增语义 ID。完整回归 59/59，目录证据 379/379，覆盖汇总器单测 3/3；报告：`output/3d/regression/20260925-061253/report.json`。整体目录仍未封板。

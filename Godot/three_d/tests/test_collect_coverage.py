@@ -10,10 +10,18 @@ class CoverageEvidenceTests(unittest.TestCase):
     def test_current_evidence_does_not_claim_global_completion(self):
         result = coverage.collect()
         self.assertEqual(result['catalogued_outcomes'], result['verified_outcomes'])
+        self.assertEqual(result['catalogued_outcomes'], 393)
         self.assertEqual(result['catalog_status'], 'incomplete_catalog')
         self.assertEqual(set(result['pending_families']), {'poker', 'world', 'persistence'})
         self.assertTrue(all(not rows for rows in result['pending_families'].values()))
         self.assertIsNone(result['overall_state_transition_coverage'])
+
+    def test_rng_negative_control_is_not_a_transition(self):
+        catalog = json.loads(coverage.CATALOG.read_text())
+        transition_ids = {row['id'] for row in catalog['transitions']}
+        controls = {row['id']: row for row in catalog['verification_controls']}
+        self.assertNotIn('persistence_replay.rng_negative_control', transition_ids)
+        self.assertFalse(controls['persistence_replay.rng_negative_control']['counted_as_state_transition'])
 
     def test_changed_source_catalog_or_test_is_rejected(self):
         original_digest = coverage.digest
