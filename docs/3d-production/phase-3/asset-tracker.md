@@ -13,3 +13,5 @@
 运行接口：`Godot/three_d/scripts/world.gd` 建造四个牌室并以 `install_detail()` 安装共用视觉包；`Godot/three_d/scripts/tavern_layout.gd` 建造后勤三翼、楼梯/坡道及撤离锚点。建模源在 `assets/blender/tavern-detail/`、`assets/blender/tavern-routes/`；角色按 ID 从 `Godot/three_d/assets/characters/` 加载。W2 若改为四店独立 GLB，应在保留现有碰撞和交互逻辑的条件下按 `scene_id` 选取视觉包，并对四店 × 四桌 × 各撤离翼复测。
 
 W0 尚缺的现场证据：五空间固定视角的 Godot 截图、目标 Mac/Windows 中端机型与同口径帧时/内存基线、逐张参考图的适用性判断。现有文件与节点盘点不能替代这些测量，也不能据 GLB 文件大小推断 60 fps。
+
+交互锚点可从当前运行代码重导：`/Applications/Godot.app/Contents/MacOS/Godot --headless --path Godot --script res://three_d/tools/export_interaction_anchors.gd -- --test`。脚本输出本地 `output/3d/phase-3-interaction-anchors.json`，记录每个 `Area3D` 的房间、动作 ID、房间局部坐标、世界坐标和盒形射线范围。本次导出共 59 个锚点：藏匿点 9、酒馆主厅 18、账房 11、镜厅 11、余烬 10。示例：皮箱 `(-0.39, 1.04, -0.72)`、牌桌座位 `(-0.45, 1.0, 0.04)`、货梯 `(1.12, 1.2, -11.0)`、上行楼梯 `(-2.75, 2.3, -12.65)`、下行码头 `(2.75, -0.2, -13.75)`，均为所在房间局部米坐标。该快照只反映当前默认种子和现有布局；货架、房间变化后应重导，不能把一次导出当成所有种子的交互全集。
