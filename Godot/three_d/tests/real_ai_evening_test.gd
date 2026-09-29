@@ -37,8 +37,10 @@ func _initialize() -> void:
 	var emergency_extractions := 0
 	var abandonments := 0
 	var blocked := {}
+	var attempts := []
 	for seed_value in range(12):
 		var evening := Run.new(content)
+		var attempt := {"seed":seed_value,"blocked_table":"","cash_at_block":-1,"buy_in":-1,"general_fee":-1,"exit":"","exit_fee":0,"lost_cash":0,"completed":0,"final_vault":0}
 		verify(evening.start(evening.revision, VENUES[0], seed_value), "Evening starts: " + str(seed_value))
 		var expected: int = evening.vault + evening.cash + evening.valuable_total()
 		var stopped := false
@@ -48,11 +50,15 @@ func _initialize() -> void:
 				var transfer: Dictionary = evening.transfer_quote(VENUES[index])
 				if not transfer.reason.is_empty():
 					blocked[transfer.reason] = int(blocked.get(transfer.reason, 0)) + 1
+					attempt.blocked_table = site
+					attempt.cash_at_block = evening.cash
+					attempt.buy_in = int(evening.table_definition(site).buyIn)
 					stopped = true
 					break
 				verify(evening.transfer_venue(VENUES[index], evening.revision), "Real-AI transfer succeeds")
 				expected -= int(transfer.fee)
 				verify(evening.vault + evening.cash + evening.valuable_total() == expected, "Transfer wealth balances")
+				verify(evening.discover_exit(), "New venue public exit is discovered")
 			var projected: int = evening.heat + int(evening.table_definition(site).heatGain) + int(evening.scene_definition().entryHeatBonus)
 			if evening.heat > 0 and projected >= 5:
 				var cool_cost: int = int(evening.scene_definition().heatReductionCost)
@@ -61,6 +67,9 @@ func _initialize() -> void:
 			var reason: String = evening.table_blocked_reason(site)
 			if not reason.is_empty():
 				blocked[reason] = int(blocked.get(reason, 0)) + 1
+				attempt.blocked_table = site
+				attempt.cash_at_block = evening.cash
+				attempt.buy_in = int(evening.table_definition(site).buyIn)
 				stopped = true
 				break
 			var table: RefCounted = evening.enter_table(int(evening.variant_plan.table_seeds[site]), evening.revision, site)
@@ -77,28 +86,44 @@ func _initialize() -> void:
 		if stopped:
 			if evening.table != null: continue
 			var exit_quote: Dictionary = evening.extraction_quote("general")
+			attempt.general_fee = int(exit_quote.fee)
+			attempt.completed = evening.completed.size()
 			if exit_quote.reason.is_empty():
 				verify(evening.extract(evening.revision, "general"), "Blocked evening can extract early")
 				verify(evening.vault == expected - int(exit_quote.fee) and not evening.active, "Early extraction ledger balances")
+				attempt.exit = "general"
+				attempt.exit_fee = int(exit_quote.fee)
 				early_extractions += 1
 			else:
 				var emergency: Dictionary = evening.extraction_quote("dropbag-cash")
 				if emergency.reason.is_empty():
 					verify(evening.extract(evening.revision, "dropbag-cash"), "Blocked evening can use known emergency exit")
 					verify(evening.vault == expected - int(emergency.fee) - int(emergency.lostCash) and not evening.active, "Emergency extraction ledger balances")
+					attempt.exit = "dropbag-cash"
+					attempt.exit_fee = int(emergency.fee)
+					attempt.lost_cash = int(emergency.lostCash)
 					emergency_extractions += 1
 				else:
 					var abandon_quote: Dictionary = evening.abandon_quote()
 					verify(evening.abandon(evening.revision), "Blocked evening can abandon")
 					verify(evening.vault == int(abandon_quote.vaultAfter) and not evening.active, "Abandonment ledger balances")
+					attempt.exit = "abandon"
 					abandonments += 1
+			attempt.final_vault = evening.vault
+			attempts.append(attempt)
 			continue
 		var quote: Dictionary = evening.extraction_quote("general")
 		verify(quote.reason.is_empty(), "Four-table evening has public exit")
 		if not quote.reason.is_empty(): continue
 		verify(evening.extract(evening.revision, "general"), "Four-table evening extracts")
 		verify(evening.vault == expected - int(quote.fee) and evening.completed.size() == 4, "Four-table evening final ledger balances")
+		attempt.completed = 4
+		attempt.exit = "general"
+		attempt.general_fee = int(quote.fee)
+		attempt.exit_fee = int(quote.fee)
+		attempt.final_vault = evening.vault
+		attempts.append(attempt)
 		complete += 1
-	verify(complete > 0 and complete + early_extractions + emergency_extractions + abandonments == 12, "Every real-AI evening reaches an accounted ending")
-	print("REAL_AI_EVENING ", JSON.stringify({"seeds":12,"complete":complete,"early_extractions":early_extractions,"emergency_extractions":emergency_extractions,"abandonments":abandonments,"blocked":blocked,"checks":checks,"failed":failures.size(),"scope":"Twelve seeded four-venue real-AI attempts without completed-room fixtures; fixed conservative player strategy. Completion rate is a diagnostic, not a human difficulty measure."}))
+	verify(complete > 0 and complete + early_extractions + emergency_extractions + abandonments == 12 and attempts.size() == 12, "Every real-AI evening reaches an accounted ending")
+	print("REAL_AI_EVENING ", JSON.stringify({"seeds":12,"complete":complete,"early_extractions":early_extractions,"emergency_extractions":emergency_extractions,"abandonments":abandonments,"blocked":blocked,"attempts":attempts,"checks":checks,"failed":failures.size(),"scope":"Twelve seeded four-venue real-AI attempts without completed-room fixtures; fixed conservative player strategy. Completion rate is a diagnostic, not a human difficulty measure."}))
 	quit(0 if failures.is_empty() else 1)
