@@ -22,6 +22,14 @@
 
 规则和 ID 以 `content.json` 为准；现成的 56 行内容矩阵在 `docs/3d-production/external-handoff/B-content-assets/content-matrix.csv`，19 件物品与 9 人逐件制作信息在 B2 的 `items.csv`、`characters.csv`。不要复制出另一套互相漂移的 ID 真相源。
 
+### W0 已核对的技术接缝（2026-09-29）
+
+- 当前 Godot 项目入口是 `Godot/project.godot`，视口配置为 1376×768、Forward Plus、Mac Metal、Windows D3D12、3D MSAA 2×。这只是配置，不是实测帧率。
+- 当前开发机为 MacBook Pro（Mac17,2，Apple M5，24 GB 内存，内屏 3024×1964）。它可做本机基线；不能据此声称目标「中端 Mac/Windows」已过 60 fps。高级模型需记录目标测试机实际型号、游戏分辨率与画质档，再定可执行的面数/贴图/灯光预算。
+- `world.gd` 的 `build_stash()` 使用 `stash.glb`，通过 `CaseLidPivot` 查找皮箱盖；台灯、窗户、抽屉、牌、筹码的状态和可点击范围在 `scene_props.gd` / Godot 节点。`build_tavern()` 给货架、牌桌、搜索点、座位与出口建立物理/交互节点，`install_detail()` 只隐藏原可视网格并装入 `tavern-detail.glb`。新 GLB 必须与这些锚点对齐，不能让视觉门挡住射线或可走空间。
+- 后勤三翼的路径、斜坡、楼梯平台和出口交互在 `tavern_layout.gd`；角色加载与 `idle/bet/win/fold` 动画映射在 `characters.gd`。先从这些源文件导出锚点表，再定建模坐标和角色动作命名，避免靠截图估位置。
+- 当前各 GLB 磁盘大小可作包体初始记录，不能代替显存或运行性能：藏匿点约 16 MB、酒馆细节约 11 MB、交互道具约 5.7 MB、路线细节约 0.8 MB、九人物每人约 2.5 MB。W0 的性能基线仍需实机采样；本次没有测量帧时。
+
 ## 工作包与顺序
 
 | 顺序 | 高级模型具体工作 | 应交付成品 | 放行条件 |
