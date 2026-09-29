@@ -22,7 +22,7 @@
 
 规则和 ID 以 `content.json` 为准；现成的 56 行内容矩阵在 `docs/3d-production/external-handoff/B-content-assets/content-matrix.csv`，19 件物品与 9 人逐件制作信息在 B2 的 `items.csv`、`characters.csv`。不要复制出另一套互相漂移的 ID 真相源。
 
-W0 的五空间现状和逐件清单入口见 [资产追踪入口](phase-3/asset-tracker.md)；高级模型应从该入口补实机截图和性能基线，再定最终视觉规格。
+W0 的五空间现状和逐件清单入口见 [资产追踪入口](phase-3/asset-tracker.md)；本机静态视角的初始采样和仍待确定的目标设备见[性能基线](phase-3/performance-budget.md)。高级模型应补实机截图、目标机型与真实游玩性能基线，再定最终视觉规格。
 
 ### W0 已核对的技术接缝（2026-09-29）
 
