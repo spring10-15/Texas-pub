@@ -29,6 +29,12 @@ func run() -> void:
 	world.start_table(302)
 	verify(world.run_game.cash == 240, "Repeated start cannot charge twice")
 	verify(world.table_game != null, "Start creates a real table")
+	for id in world.table_content.opponents:
+		var lines: Dictionary = world.table_content.opponents[id].get("tableLines", {})
+		verify(["pressure", "patient", "fold"].all(func(key): return not str(lines.get(key, "")).is_empty()), "Opponent has three action lines: " + id)
+		for action in ["raise", "call", "fold"]:
+			var key: String = "pressure" if action == "raise" else ("fold" if action == "fold" else "patient")
+			verify(world.seat_panel.opponent_line({"id":id,"lastAction":action}) == str(lines[key]), "Opponent action selects matching line: " + id + "/" + action)
 	world.leave_seat()
 	verify(world.seated, "Cannot leave while table remains active")
 	var revision: int = world.table_game.revision
@@ -65,10 +71,16 @@ func run() -> void:
 				world_empty_actor_beats += 1
 			else:
 				world_ai_beats += 1
+			var acting_id: String = state.currentActorId
 			var prior: int = world.table_game.revision
 			var before_beat: Dictionary = world.table_game.public_state()
 			world._process(0.01)
 			verify(world.table_game.revision == prior + 1 and world.table_game.public_state() != before_beat, "World process advances exactly one AI action or street")
+			if not acting_id.is_empty():
+				var acted: Dictionary = world.table_game.find_player(acting_id)
+				var label: Label = world.seat_panel.opponent_left if acted.seatIndex == 1 else world.seat_panel.opponent_right
+				var line: String = world.seat_panel.opponent_line(acted)
+				verify(not line.is_empty() and label.text.contains("「%s」" % line), "Acting opponent line appears by their seat")
 		var view: Dictionary = world.table_game.public_state()
 		if view.status == "playing":
 			verify(view.players[1].holeCards.is_empty() and view.players[2].holeCards.is_empty(), "HUD receives no private opponent cards during play")

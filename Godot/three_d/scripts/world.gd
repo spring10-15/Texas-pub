@@ -416,6 +416,7 @@ func build_ui() -> void:
 	hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	pause_panel = make_panel(ui, "已暂停", "", "继续探索", resume)
 	seat_panel = TableHUD.new()
+	seat_panel.opponent_definitions = table_content.opponents
 	ui.add_child(seat_panel)
 	seat_panel.start_requested.connect(start_table)
 	seat_panel.action_requested.connect(play_action)

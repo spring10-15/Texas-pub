@@ -119,6 +119,7 @@
       "seatLabel": "Dock Braggart",
       "archetype": "Maniac",
       "intro": "Too loud for the cards he is actually holding.",
+      "tableLines": {"pressure":"跟得上就坐稳。","patient":"别急，牌还没翻。","fold":"这手算你捡的。"},
       "profile": {
         "aggression": 0.76,
         "caution": 0.18,
@@ -133,6 +134,7 @@
       "seatLabel": "Ledger Clerk",
       "archetype": "Nit",
       "intro": "Counts the room twice before he risks one chip.",
+      "tableLines": {"pressure":"账面上值得。","patient":"我再核一遍。","fold":"这笔不入账。"},
       "profile": {
         "aggression": 0.28,
         "caution": 0.74,
@@ -148,6 +150,7 @@
       "seatLabel": "Calm Widow",
       "archetype": "Shark",
       "intro": "Patient, precise, and excellent at noticing repetition.",
+      "tableLines": {"pressure":"你又做了同一个动作。","patient":"再看一张。","fold":"这手不值得。"},
       "profile": {
         "aggression": 0.48,
         "caution": 0.62,
@@ -164,6 +167,7 @@
       "seatLabel": "Smiling Knife",
       "archetype": "Shark",
       "intro": "Coasts early, then leans on the table when the pot matters.",
+      "tableLines": {"pressure":"现在才轮到我。","patient":"我先陪你走。","fold":"笑到下一手。"},
       "profile": {
         "aggression": 0.5,
         "caution": 0.42,
@@ -179,6 +183,7 @@
       "seatLabel": "River Shark",
       "archetype": "Shark",
       "intro": "Looks passive until the pot starts smelling like a sure thing.",
+      "tableLines": {"pressure":"水涨了，得跟。","patient":"让河牌说话。","fold":"这条水路不走。"},
       "profile": {
         "aggression": 0.5,
         "caution": 0.42,
@@ -194,6 +199,7 @@
       "seatLabel": "Velvet Rook",
       "archetype": "Calling Station",
       "intro": "Protects small edges and only turns sharp once the room gets narrow.",
+      "tableLines": {"pressure":"别把安静当软弱。","patient":"这一点我接。","fold":"我把筹码留着。"},
       "profile": {
         "aggression": 0.34,
         "caution": 0.6,
@@ -209,6 +215,7 @@
       "seatLabel": "House Viper",
       "archetype": "Shark",
       "intro": "Never looks rushed, but the room tightens when he finally presses.",
+      "tableLines": {"pressure":"下注要有代价。","patient":"我等你露底。","fold":"不为这口咬人。"},
       "profile": {
         "aggression": 0.51,
         "caution": 0.5,
@@ -224,6 +231,7 @@
       "seatLabel": "Ash Smuggler",
       "archetype": "Fish",
       "intro": "Hides under smoke and only shows teeth when the line looks soft.",
+      "tableLines": {"pressure":"烟里看不清我的牌吧。","patient":"火还没烧旺。","fold":"货先藏起来。"},
       "profile": {
         "aggression": 0.42,
         "caution": 0.46,

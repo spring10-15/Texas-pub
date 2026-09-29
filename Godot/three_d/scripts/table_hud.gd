@@ -23,6 +23,7 @@ var action_buttons := {}
 var displayed_revision := -1
 var result_banner: Label
 var collateral_choice: OptionButton
+var opponent_definitions: Dictionary = {}
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -129,6 +130,12 @@ static func cards_text(cards: Array) -> String:
 		parts.append(card_text(card))
 	return "  ".join(parts)
 
+func opponent_line(seat: Dictionary) -> String:
+	var lines: Dictionary = opponent_definitions.get(seat.id, {}).get("tableLines", {})
+	var action: String = str(seat.get("lastAction", ""))
+	var key := "fold" if action == "fold" else ("pressure" if action in ["raise", "all-in"] else "patient")
+	return str(lines.get(key, "")) if not action.is_empty() else ""
+
 func pregame(cash := 0, definition: Dictionary = {}, inventory: Array = [], run: RefCounted = null) -> void:
 	if definition.is_empty():
 		return
@@ -175,6 +182,9 @@ func refresh(view: Dictionary, locked := false) -> void:
 		var state_text: String = "已弃牌" if seat.folded else ("全押" if seat.stack == 0 else "本轮已投 %d" % seat.currentBet)
 		var label: Label = opponent_left if i == 1 else opponent_right
 		label.text = "%s · 筹码 %d\n%s\n%s" % [NAMES.get(seat.id, seat.id), seat.stack, state_text, cards_text(seat.holeCards) if not seat.holeCards.is_empty() else "暗牌"]
+		var line := opponent_line(seat)
+		if not line.is_empty():
+			label.text += "\n「%s」" % line
 	hand.text = "你的手牌  %s     筹码 %d" % [cards_text(you.holeCards), you.stack]
 	if playing:
 		if your_turn:
