@@ -87,6 +87,32 @@ func run() -> void:
 	verify(content==original_content,"Variant definitions do not mutate shared content")
 	verify(coverage.size()==128,"All four venues x four tables x eight actors reached")
 	verify(complete_runs==128 and run_failures==0,"Every venue/table/opponent line completes with a balanced independent ledger")
+	var complete_extractions := 0
+	for scene in Run.SCENE_NAMES:
+		for seed_value in [3, 17, 41, 83]:
+			var evening := Run.new(content)
+			verify(evening.start(evening.revision,scene,seed_value),"Real-AI evening starts")
+			var opening_wealth: int = evening.vault + evening.cash + evening.valuable_total()
+			var table: RefCounted = evening.enter_table(int(evening.variant_plan.table_seeds["cargo-table"]),evening.revision)
+			verify(table != null,"Real-AI evening enters first table")
+			if table == null: continue
+			var buy_in: int = int(table.state.tableDef.buyIn)
+			var finished: bool = play_to_settlement(evening,table,content)
+			verify(finished,"Real-AI evening settles first table")
+			if not finished: continue
+			var player_stack: int = int(table.state.players[0].stack)
+			var result: Dictionary = evening.last_table_result
+			var reward_value: int = int(content.items[result.reward].value) if result.reward_added else 0
+			verify(evening.public_exit,"Real-AI table settlement reveals public exit")
+			var scene_rules: Dictionary = content.scenes[scene]
+			var fee: int = int(scene_rules.generalExtractionFlatFee) + int(floor(evening.cash * float(scene_rules.generalExtractionRate))) + (int(scene_rules.lockdownSurcharge) if evening.heat == 5 else 0)
+			var expected_vault: int = opening_wealth + player_stack - buy_in + reward_value - fee
+			var quote: Dictionary = evening.extraction_quote("general")
+			verify(quote.reason.is_empty() and quote.fee == fee,"Real-AI evening public exit quote matches scene rules")
+			verify(evening.extract(evening.revision,"general"),"Real-AI evening extracts")
+			verify(evening.vault == expected_vault and evening.cash == 0 and evening.inventory.is_empty() and not evening.active,"Real-AI evening final wealth balances")
+			complete_extractions += 1
+	verify(complete_extractions == 16,"Four venues x four real-AI seeds complete extraction")
 	var r := Run.new(content)
 	r.start(r.revision,"smoky-den",71)
 	var bad := Checkpoint.capture(r)
@@ -124,7 +150,7 @@ func run() -> void:
 		world.seat_panel.pregame(r.cash,r.table_definition(setup.table),r.inventory,r)
 		verify(world.seat_panel.opponent_left.text==r.actor_name(ids[0]) and world.seat_panel.opponent_right.text==r.actor_name(ids[1]),"Pregame labels match visible roster")
 	world.queue_free()
-	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"venue_table_actor_combinations":coverage.size(),"complete_table_runs":complete_runs,"unbalanced_or_incomplete_runs":run_failures,"distinct_rosters_per_100_seeds":distinct,"scope":"Every venue/table/opponent combination takes a legal action, restores its mid-hand checkpoint, then completes one table using legal player/AI actions; the independent wealth ledger is checked. This does not prove process restart, full-night survival or human difficulty balance."}
+	var report := {"checks":checks,"failed":failures.size(),"failures":failures,"venue_table_actor_combinations":coverage.size(),"complete_table_runs":complete_runs,"unbalanced_or_incomplete_runs":run_failures,"complete_real_ai_extractions":complete_extractions,"distinct_rosters_per_100_seeds":distinct,"scope":"Every venue/table/opponent combination takes a legal action, restores its mid-hand checkpoint, then completes one table using legal player/AI actions; 16 fixture-free first-table runs also extract with an independent wealth ledger. This does not prove process restart, full-night survival or human difficulty balance."}
 	FileAccess.open("res://../output/3d/opponent-pool.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("OPPONENT_POOL ",JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)
