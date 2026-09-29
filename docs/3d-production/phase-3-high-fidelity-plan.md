@@ -22,6 +22,8 @@
 
 规则和 ID 以 `content.json` 为准；现成的 56 行内容矩阵在 `docs/3d-production/external-handoff/B-content-assets/content-matrix.csv`，19 件物品与 9 人逐件制作信息在 B2 的 `items.csv`、`characters.csv`。不要复制出另一套互相漂移的 ID 真相源。
 
+W0 的五空间现状和逐件清单入口见 [资产追踪入口](phase-3/asset-tracker.md)；高级模型应从该入口补实机截图和性能基线，再定最终视觉规格。
+
 ### W0 已核对的技术接缝（2026-09-29）
 
 - 当前 Godot 项目入口是 `Godot/project.godot`，视口配置为 1376×768、Forward Plus、Mac Metal、Windows D3D12、3D MSAA 2×。这只是配置，不是实测帧率。
