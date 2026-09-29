@@ -969,6 +969,28 @@ def main() -> int:
     for row in branches:
         remap_source_refs(row, line_maps)
 
+    for line, guard, note in (
+        (97, "拒绝：completed 中的牌桌缺少已完成的前置房间", "completion_checkpoint_test.gd 覆盖线性布局的非法顺序与叉路布局的合法顺序；损坏存档防御分支。"),
+        (133, "拒绝：活动牌桌已完成或缺少前置房间", "completion_checkpoint_test.gd 覆盖活动牌桌与完成记录冲突、跳过前置房间；损坏存档防御分支。"),
+    ):
+        row = {field: "" for field in branch_fields}
+        row.update({
+            "source_file": "Godot/three_d/rules/run_checkpoint.gd",
+            "entry": "restore（世界启动/加载时由 world.gd 调用）",
+            "function_line": "22",
+            "branch_or_guard": guard,
+            "source_line": f"Godot/three_d/rules/run_checkpoint.gd:{line}",
+            "outcome": "rejected",
+            "player_reachable": "no",
+            "catalog_id": "-",
+            "test": "Godot/three_d/tests/completion_checkpoint_test.gd",
+            "evidence_report": LATEST_REPORT,
+            "evidence_strength": "strong",
+            "disposition": "unreachable_or_not_transition",
+            "notes": note,
+        })
+        branches.append(row)
+
     write_csv(AUDIT / "current-tree-branch-inventory.csv", branch_fields, branches)
     write_csv(AUDIT / "current-tree-unmapped-player-path-gaps.csv", branch_fields, current_gaps)
     write_csv(AUDIT / "current-tree-weak-evidence.csv", branch_fields, weak_evidence)

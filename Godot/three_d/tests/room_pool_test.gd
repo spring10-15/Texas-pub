@@ -27,6 +27,7 @@ func run() -> void:
 			verify((r.service_reason("search","mirror-hall",Run.SearchEvents.event_for(r,"mirror-hall").choices[0].id)!="该房间尚未解锁")==(actual=="fork"),"Search cannot bypass graph lock")
 			r.completed.append("mirror-hall")
 			verify(r.room_blocked_reason("embers-table").is_empty()==(actual=="linear"),"Fork final room requires both middle tables")
+			if actual == "linear": r.completed.assign(["cargo-table", "ledger-cellar", "mirror-hall"])
 			var loaded: RefCounted = Checkpoint.restore(Checkpoint.capture(r),content)
 			verify(loaded != null and loaded.room_requirements("embers-table")==r.room_requirements("embers-table"),"Room requirements survive save")
 	for scene in Run.SCENE_NAMES:
@@ -102,6 +103,7 @@ func run() -> void:
 	var old := Checkpoint.capture(world.run_game)
 	old.variant_plan.version = 3
 	old.variant_plan.erase("room_layout")
+	old.completed.assign(["cargo-table", "ledger-cellar", "mirror-hall"])
 	var legacy: RefCounted = Checkpoint.restore(old,content)
 	verify(legacy != null and legacy.room_requirements("mirror-hall")==["ledger-cellar"],"Version 3 keeps linear rooms")
 	var bad := Checkpoint.capture(world.run_game)

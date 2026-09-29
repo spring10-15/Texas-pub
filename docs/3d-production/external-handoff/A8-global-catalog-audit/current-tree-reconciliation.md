@@ -1,14 +1,14 @@
 # A8 当前树对账记录
 
-- 证据源码基线 HEAD：`b66f52986b2597f7d0442c65415fb4176ae752b4`
+- 证据源码基线 HEAD：`f9d5a7022388c65349ecf50f9f3df5272b586567`
 - 当前目录：379 个唯一 ID，SHA-256 `becbf2213b164b3f9f6efc1297437e799bcbc4bcff854a360c55e097eb425d92`
-- 采用的全量回归：`output/3d/regression/20260928-222303/report.json`（必须由当前源码/测试重跑后更新本记录）
-- 回归报告 SHA-256：`07589a06b17cce8046344b611b356b6ef3cfb6c7bded7ce7a435c3ce14cdb802`
-- lifecycle 覆盖报告 SHA-256：`e2a4192515c425ef47b6e57eb49b881ba47d1158df30bd724e1cf421ee9d4e63`
-- 当前分支清单 SHA-256：`1dec7bf0205070de3c383ba49dcbec6e49402e358f6ca1294066c0f1167f00d7`
+- 采用的全量回归：`output/3d/regression/20260929-092507/report.json`（必须由当前源码/测试重跑后更新本记录）
+- 回归报告 SHA-256：`e2c9f33d64de276e9379c562d5e7f0c28ed4ed5ababc574c75f3e4db7a1260ab`
+- lifecycle 覆盖报告 SHA-256：`8bb528edfc9906318254e4a3f10243780f4ac6833566571df7a1635c2428416e`
+- 当前分支清单 SHA-256：`8fe9769b7a9a5b7cc342f65e63751a6de3cbf39dd3cb5229dfe67f064be3c721`
 - 当前玩家路径缺口清单 SHA-256：`147f8235e3872dab602718ce1f2e01f3d12b4b7904831e7ca8257de90341b167`
 - 当前弱证据清单 SHA-256：`147f8235e3872dab602718ce1f2e01f3d12b4b7904831e7ca8257de90341b167`
-- 对账脚本 SHA-256：`30da9cb146f3847d3839e94f9710c3e7c8786de1664daeefa68ade43937c763f`
+- 对账脚本 SHA-256：`e2ca3d97b3281b3812105ba5bd4265aaa4d960f1717f7ef5f3a92ae82fb9adfd`
 - 原始 A8 的 `branch-inventory.csv`、`unmapped-reachable.csv` 和审计 README 保留为 382 项冻结锚点，没有覆盖。
 
 ## 当前映射和缺口
@@ -22,11 +22,11 @@
 - `persistence_replay.rng_negative_control` 是测试侧人工扰动的负对照，现已从 `transitions` 移至 `verification_controls`；它仍作为正向重放断言的非空检查，但不再增加状态转移目录计数。
 - 五条 `route_guard.cash_*` 历史 ID 与 `route_guard.cash_general` 共用 `routes.gd:49-50` 的同一拒绝后继；当前 overlay 将它们归并到该单一 ID，六条路线仍由同一专项逐项验证。
 - 原 12 条世界/牌桌编排候选逐项复核后，实际状态后继归并到已有规则层 ID；纯 UI/调度包装早退标为 `not_a_transition`，不借用其他入口的 ID。没有因这些包装层新增语义 ID，也没有把当前目录宣称为完整分母；当前候选表无未映射行不等于证明不存在其他缺口，全球转移分母仍未冻结。
-- 分支行 disposition 计数：`{'unreachable_or_not_transition': 147, 'catalogued_strong': 525}`。
+- 分支行 disposition 计数：`{'unreachable_or_not_transition': 149, 'catalogued_strong': 525}`。
 
 ## 限制
 
-当前树对账把原 382 项审计映射到现行目录，并补入本金封顶、入座风声封顶、盈利降风声、玩家行为画像、房间图选择、窗口生命周期、玩家输入和世界/牌桌编排证据。函数级清点覆盖 20 个运行时文件、182 个函数（120 个在分支清单中，62 个明确排除，0 个未分类）；源码点位清点 533 个 if/elif/match 行首位置（465 个有清单引用，0 个未分类）。这些数只证明函数/源码点位有归属，不代表分支结果穷尽。玩家路径分母和状态组合空间仍未冻结，因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
+当前树对账把原 382 项审计映射到现行目录，并补入本金封顶、入座风声封顶、盈利降风声、玩家行为画像、房间图选择、窗口生命周期、玩家输入和世界/牌桌编排证据。函数级清点覆盖 20 个运行时文件、182 个函数（120 个在分支清单中，62 个明确排除，0 个未分类）；源码点位清点 535 个 if/elif/match 行首位置（465 个有清单引用，2 个未分类）。这些数只证明函数/源码点位有归属，不代表分支结果穷尽。玩家路径分母和状态组合空间仍未冻结，因此不得据此声称全局覆盖率已知或 Phase 1 已通过。
 
 ## 重建
 

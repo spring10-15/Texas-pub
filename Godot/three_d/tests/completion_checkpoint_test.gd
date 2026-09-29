@@ -22,6 +22,28 @@ func _initialize() -> void:
 		var bad := clean.duplicate(true)
 		bad.completed.assign(invalid)
 		verify(Checkpoint.restore(bad,content)==null,"Invalid completion cannot count as another table: "+str(invalid))
+	for invalid in [["ledger-cellar"], ["cargo-table", "mirror-hall"], ["cargo-table", "ledger-cellar", "embers-table"]]:
+		var bad := clean.duplicate(true)
+		bad.completed.assign(invalid)
+		verify(Checkpoint.restore(bad,content)==null,"Linear completion cannot skip prerequisite: "+str(invalid))
+	var fork := clean.duplicate(true)
+	fork.variant_plan.room_layout = "fork"
+	fork.completed.assign(["cargo-table", "mirror-hall", "ledger-cellar", "embers-table"])
+	verify(Checkpoint.restore(fork,content)!=null,"Fork accepts either middle-table order")
+	fork.completed.assign(["cargo-table", "embers-table"])
+	verify(Checkpoint.restore(fork,content)==null,"Fork rejects embers before both middle tables")
+	var playing := Run.new(content)
+	playing.start(playing.revision,"smoky-den",0)
+	verify(playing.enter_table(7,playing.revision)!=null,"Build active table snapshot")
+	var active_save := Checkpoint.capture(playing)
+	active_save.completed.append("cargo-table")
+	verify(Checkpoint.restore(active_save,content)==null,"Active table cannot already be completed")
+	playing.table = null
+	playing.completed.assign(["cargo-table", "ledger-cellar"])
+	verify(playing.enter_table(7,playing.revision,"mirror-hall")!=null,"Build unlocked mirror snapshot")
+	active_save = Checkpoint.capture(playing)
+	active_save.completed.assign(["cargo-table"])
+	verify(Checkpoint.restore(active_save,content)==null,"Active table cannot bypass its room prerequisite")
 	verify(Checkpoint.capture(r)==clean,"Rejected snapshots leave original run intact")
 	for count in range(1,5):
 		var saved := clean.duplicate(true)

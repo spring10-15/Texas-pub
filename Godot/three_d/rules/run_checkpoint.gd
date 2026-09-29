@@ -90,8 +90,11 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 	if values.offer_index < 0 or values.offer_index >= content.routes[values.scene_id].fixedRoutes.size():
 		return null
 	var completed_ids := {}
+	run.variant_plan = values.variant_plan.duplicate(true)
 	for id in values.completed:
 		if not content.tables.has(id) or completed_ids.has(id): return null
+		for predecessor in run.room_requirements(id):
+			if not completed_ids.has(predecessor): return null
 		completed_ids[id] = true
 	if values.arrival_completed < 0 or values.arrival_completed > values.completed.size(): return null
 	var visited := {}
@@ -126,6 +129,8 @@ static func restore(values: Dictionary, content: Dictionary) -> RefCounted:
 			return null
 		var id: Variant = stored_state.tableDef.get("id")
 		if not id is String or not content.tables.has(id):
+			return null
+		if run.completed.has(id) or not run.room_blocked_reason(id).is_empty():
 			return null
 		var current_definition: Dictionary = run.table_definition(id)
 		if not table_definitions_compatible(stored_state.tableDef, current_definition):
