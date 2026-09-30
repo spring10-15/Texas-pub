@@ -24,9 +24,17 @@
 ## 原生导出的待办
 
 1. 安装精确匹配 4.7.2.stable 的官方模板；引擎要求的位置是 `~/Library/Application Support/Godot/export_templates/4.7.2.stable/macos.zip`，当前没有该文件。
-2. 引擎还报告 arm64/universal 需要启用 `rendering/textures/vram_compression/import_etc2_astc`。下一次原生导出前启用并等待纹理重新导入，验证材质和包体；不能用改成仅 Intel 来绕过 Apple Silicon 交付。
+2. 已启用 `rendering/textures/vram_compression/import_etc2_astc` 并完成导入；重新尝试原生导出，ARM 纹理错误消失，仅报告模板缺失。真实 ARM 窗口性能仍待测。
 3. 本地访问 Godot 下载服务曾超时，先恢复下载可达性，再取得官方模板。不要修改用户系统 DNS/代理作为隐式解决方案。
 4. 在独立包内验证四酒馆、角色与动态材质、存读档、胜负反馈、撤离及视频；随后测真实窗口和目标机性能、30 分钟稳定性及干净机器启动。
 5. 当前预设关闭签名，仅用于内部预览。公开分发前另行决定签名、公证与安装说明。
 
 角色和场景精修会继续更新资源，因此该 PCK 是一次工作树快照，不是冻结版本。新增运行素材时须更新预设资源选择，再重做导出验证。
+
+## 补充：包内动态资源检查
+
+新增 `Godot/three_d/tools/verify_export_pack.gd`，作为包外检查脚本运行。当前包内 9 个角色可加载并实例化、12 张材质贴图可加载、4 个场景模型和主场景可加载，共 26 项资源检查、0 失败。检查同时确认测试和工具目录未随包交付。原始日志为 `output/builds/pack-resources.log`。这不等于全部游戏行为或视觉通过。
+
+```sh
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path /tmp --main-pack "$PWD/output/builds/TexasPub-preview.pck" --script "$PWD/Godot/three_d/tools/verify_export_pack.gd"
+```
