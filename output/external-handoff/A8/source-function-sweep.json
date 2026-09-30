@@ -1,7 +1,7 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "5dcf53ac0878f5d47ae957d3c067942f38b605113cec5eb579c3b1eab68ec670",
+  "branch_inventory_sha256": "ba8678a580f3c280bea660d7bdd1b9d292659e7a5440a4ecfc7f434ae59c2b80",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "d7009c834d0337d90602b1149c96573c4da567f5030b2f4615b9ce750ca05867",
@@ -13,7 +13,7 @@
     "Godot/three_d/rules/save_store.gd": "550e92fd9f02fed8c511ef2719905eccd2087c789511ff8d35b19f3c64d55f60",
     "Godot/three_d/rules/search_events.gd": "cd183477b4de961161153cc7742f9b8ef83ebcb1c6700f93b35e537beab079e3",
     "Godot/three_d/rules/table.gd": "d248b457389321750dab5366c13da7b6ce346f933516ea2fd0dd6b3aed56217e",
-    "Godot/three_d/rules/table_checkpoint.gd": "f5ea07438d5ecef97fe7db3d31d7cb8da14582729582d1ecba1504898e69a27b",
+    "Godot/three_d/rules/table_checkpoint.gd": "09754f5dd3ec82b06e71f68c2206eabddbd518986a373dfaf76dfa235c4929f1",
     "Godot/three_d/scripts/bar_display.gd": "a32dc21ce561270e1c065d57b4b67fd9f3b49a6453038562976563d894eaf7b8",
     "Godot/three_d/scripts/characters.gd": "a37cbbece24a2a14af6081d147ed4b2992552dcf23b9164ef46d4921abbddd84",
     "Godot/three_d/scripts/interactable.gd": "02903564281ff42f000c224aaae9d602b5f889bc5406c772e0094eaa3e590003",
@@ -727,7 +727,7 @@
     },
     {
       "file": "Godot/three_d/rules/table_checkpoint.gd",
-      "line": 56,
+      "line": 69,
       "name": "valid_card",
       "signature": "static func valid_card(card: Variant, seen: Dictionary) -> bool:",
       "status": "audit_inventory",
@@ -1504,7 +1504,7 @@
   ],
   "control_flow_site_scope": "line-start if/elif/match sites only; site ownership is not branch-outcome enumeration or a transition denominator",
   "control_flow_site_counts": {
-    "branch_inventory_ref": 468,
+    "branch_inventory_ref": 473,
     "explicit_method_exclusion": 68,
     "telemetry_file_io": 1,
     "action_dispatch": 1
@@ -4136,7 +4136,7 @@
     },
     {
       "file": "Godot/three_d/rules/table_checkpoint.gd",
-      "line": 30,
+      "line": 23,
       "method": "restore",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4144,7 +4144,7 @@
     },
     {
       "file": "Godot/three_d/rules/table_checkpoint.gd",
-      "line": 32,
+      "line": 25,
       "method": "restore",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4152,7 +4152,7 @@
     },
     {
       "file": "Godot/three_d/rules/table_checkpoint.gd",
-      "line": 34,
+      "line": 29,
       "method": "restore",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4160,7 +4160,7 @@
     },
     {
       "file": "Godot/three_d/rules/table_checkpoint.gd",
-      "line": 40,
+      "line": 37,
       "method": "restore",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4168,7 +4168,15 @@
     },
     {
       "file": "Godot/three_d/rules/table_checkpoint.gd",
-      "line": 42,
+      "line": 39,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 41,
       "method": "restore",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4184,7 +4192,7 @@
     },
     {
       "file": "Godot/three_d/rules/table_checkpoint.gd",
-      "line": 46,
+      "line": 49,
       "method": "restore",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4192,7 +4200,7 @@
     },
     {
       "file": "Godot/three_d/rules/table_checkpoint.gd",
-      "line": 47,
+      "line": 51,
       "method": "restore",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4200,7 +4208,39 @@
     },
     {
       "file": "Godot/three_d/rules/table_checkpoint.gd",
-      "line": 57,
+      "line": 52,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 56,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 58,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 60,
+      "method": "restore",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/table_checkpoint.gd",
+      "line": 70,
       "method": "valid_card",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4208,7 +4248,7 @@
     },
     {
       "file": "Godot/three_d/rules/table_checkpoint.gd",
-      "line": 59,
+      "line": 72,
       "method": "valid_card",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4216,7 +4256,7 @@
     },
     {
       "file": "Godot/three_d/rules/table_checkpoint.gd",
-      "line": 62,
+      "line": 75,
       "method": "valid_card",
       "kind": "if",
       "status": "branch_inventory_ref",

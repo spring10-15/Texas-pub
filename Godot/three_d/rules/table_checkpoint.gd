@@ -20,7 +20,14 @@ static func restore(snapshot: Dictionary) -> RefCounted:
 		return null
 	if not state.get("pot") is int or state.pot < 0 or not state.get("currentActorId") is String or not state.get("currentBet") is int or state.currentBet < 0:
 		return null
+	if state.get("street") not in ["preflop", "flop", "turn", "river"] or not state.get("raiseUsed") is bool or not state.get("log") is Array:
+		return null
+	if not state.get("playerPattern") is Dictionary or not state.playerPattern.get("raiseCount") is int or state.playerPattern.raiseCount < 0:
+		return null
 	var expected_ids: Array = ["player"] + definition.opponentIds
+	for entry in state.log:
+		if not entry is Dictionary or entry.get("kind") not in ["hand", "street", "result", "fold", "check", "call", "raise", "all-in"] or entry.get("actor") not in expected_ids + [""] or not entry.get("amount") is int or entry.amount < 0 or entry.get("street") not in ["preflop", "flop", "turn", "river"]:
+			return null
 	var seen := {}
 	var chips := 0
 	var contributions := 0
@@ -30,6 +37,8 @@ static func restore(snapshot: Dictionary) -> RefCounted:
 		if not player is Dictionary or player.get("id") != expected_ids[i] or player.get("seatIndex") != i or not player.get("stack") is int or player.stack < 0:
 			return null
 		if not player.get("currentBet") is int or player.currentBet < 0 or not player.get("handContribution") is int or player.handContribution < 0 or not player.get("folded") is bool or not player.get("holeCards") is Array:
+			return null
+		if player.get("lastAction") not in ["", "fold", "check", "call", "raise", "all-in"]:
 			return null
 		if player.currentBet > player.handContribution:
 			return null
@@ -42,8 +51,12 @@ static func restore(snapshot: Dictionary) -> RefCounted:
 		if not valid_card(card,seen): return null
 	if seen.size() != 52 or contributions != state.pot or (state.status == "playing" and highest_current_bet != state.currentBet) or chips + (state.pot if state.status == "playing" else 0) != definition.buyIn * 3:
 		return null
+	var queued := {}
 	for id in state.toAct:
-		if id not in expected_ids: return null
+		if id not in expected_ids or queued.has(id): return null
+		var player: Dictionary = state.players[expected_ids.find(id)]
+		if player.folded or player.stack <= 0: return null
+		queued[id] = true
 	if state.currentActorId != (state.toAct[0] if not state.toAct.is_empty() else ""):
 		return null
 	var table := TableRules.new()

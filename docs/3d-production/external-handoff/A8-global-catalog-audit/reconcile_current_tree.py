@@ -985,6 +985,15 @@ def main() -> int:
     for row in branches:
         remap_source_refs(row, line_maps)
 
+    continuation_rows = 0
+    for row in branches:
+        if row["source_file"].endswith("/table_checkpoint.gd") and "pot 或 currentActorId" in row["branch_or_guard"]:
+            row["source_line"] += ";Godot/three_d/rules/table_checkpoint.gd:23-30;Godot/three_d/rules/table_checkpoint.gd:41-42;Godot/three_d/rules/table_checkpoint.gd:54-59"
+            row["notes"] += " 续局字段拒绝矩阵另覆盖缺失/非法街道、日志、加注标记、行为画像、上一行动，以及重复/已弃牌/无筹码行动队列；逐例断言输入快照和活体牌桌未变，复用 invalid_snapshot_rejected。"
+            continuation_rows += 1
+    if continuation_rows != 1:
+        raise SystemExit(f"Unexpected continuation-field rows: {continuation_rows}")
+
     for line, guard, note in (
         (97, "拒绝：completed 中的牌桌缺少已完成的前置房间", "completion_checkpoint_test.gd 覆盖线性布局的非法顺序与叉路布局的合法顺序；损坏存档防御分支。"),
         (133, "拒绝：活动牌桌已完成或缺少前置房间", "completion_checkpoint_test.gd 覆盖活动牌桌与完成记录冲突、跳过前置房间；损坏存档防御分支。"),

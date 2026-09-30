@@ -50,6 +50,24 @@ func _initialize() -> void:
 	var sample := Table.new()
 	sample.start(definitions.tables["cargo-table"], 42)
 	var good := Checkpoint.capture(sample)
+	for label in ["missing_street", "unknown_street", "missing_log", "invalid_log_entry", "missing_raise_used", "missing_pattern", "invalid_pattern", "missing_last_action", "duplicate_queue", "queued_folded", "queued_empty"]:
+		var broken := good.duplicate(true)
+		match label:
+			"missing_street": broken.state.erase("street")
+			"unknown_street": broken.state.street = "unknown"
+			"missing_log": broken.state.erase("log")
+			"invalid_log_entry": broken.state.log.append("invalid")
+			"missing_raise_used": broken.state.erase("raiseUsed")
+			"missing_pattern": broken.state.erase("playerPattern")
+			"invalid_pattern": broken.state.playerPattern.raiseCount = "invalid"
+			"missing_last_action": broken.state.players[1].erase("lastAction")
+			"duplicate_queue": broken.state.toAct.append(broken.state.toAct[0])
+			"queued_folded": broken.state.players[0].folded = true
+			"queued_empty":
+				broken.state.players[1].stack += broken.state.players[0].stack
+				broken.state.players[0].stack = 0
+		var before := broken.duplicate(true)
+		verify(Checkpoint.restore(broken) == null and broken == before and Checkpoint.capture(sample) == good, "Reject unsafe continuation field without mutations: " + label)
 	var invalid := {"negative_revision":["revision",-1],"rng_overflow":["rngValue",0x100000000]}
 	for label in invalid:
 		var broken := good.duplicate(true)
