@@ -50,3 +50,9 @@
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path /tmp --main-pack "$PWD/output/builds/TexasPub-preview.pck" --script "$PWD/Godot/three_d/tools/verify_export_loop.gd" -- --test
 ```
+
+## 补充：包内真实磁盘存读档
+
+扩展同一 `verify_export_loop.gd`：四家酒馆均在货运桌进行中捕获状态，通过包内 SaveStore 原子写入临时文件、实际读回，再由 RunCheckpoint 恢复并比较完整状态（包含牌局和 RNG）。使用恢复实例继续结算、撤离；将撤离后的状态替换写回、读回并恢复，确认重复撤离被拒绝且金库不增加。检查 `.tmp` 无残留并删除测试文件。当前共 94 项检查、0 失败，退出码 0；同一日志 `output/builds/pack-loop.log` 更新为本次结果。
+
+文件位于系统缓存目录，带进程号；存在同名文件时直接拒绝运行。未读写正式 `user://three-d-checkpoint.save`。这些检查覆盖规则状态的磁盘恢复，未通过 World 恢复玩家位置/镜头/交互物，也未模拟关闭和重启进程；正式包仍需验证这两层。当前包保持原快照，检查脚本在包外执行，因此不需要因工具变化重新打包。

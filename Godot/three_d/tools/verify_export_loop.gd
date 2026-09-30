@@ -21,6 +21,14 @@ func run() -> void:
 	await physics_frame
 	world.set_process(false)
 	var rules = load("res://three_d/rules/run.gd")
+	var checkpoint = load("res://three_d/rules/run_checkpoint.gd")
+	var store = load("res://three_d/rules/save_store.gd")
+	var save_path: String = OS.get_cache_dir().path_join("texaspub-pack-probe-%d.save" % OS.get_process_id())
+	verify(not FileAccess.file_exists(save_path), "Probe save path is unused")
+	if FileAccess.file_exists(save_path):
+		world.queue_free()
+		quit(1)
+		return
 	for venue in rules.SCENE_NAMES:
 		var night = rules.new(world.table_content)
 		verify(night.start(night.revision, venue, 41), "Start " + venue)
@@ -35,6 +43,17 @@ func run() -> void:
 		var table = night.enter_table(301, night.revision, "cargo-table")
 		verify(table != null, "Enter cargo table in " + venue)
 		if table == null: continue
+		var snapshot: Dictionary = checkpoint.capture(night)
+		verify(store.write_checkpoint(save_path, snapshot) == OK, "Pack writes active table checkpoint")
+		var loaded: Dictionary = store.read_checkpoint(save_path)
+		verify(loaded.status == "ok" and loaded.state == snapshot, "Pack reads active table checkpoint exactly")
+		if loaded.status != "ok": continue
+		var restored = checkpoint.restore(loaded.state, world.table_content)
+		verify(restored != null, "Pack restores active table and RNG")
+		if restored == null: continue
+		verify(checkpoint.capture(restored) == snapshot, "Restored packed state equals source state")
+		night = restored
+		table = night.table
 		var steps := 0
 		while table.state.status != "finished" and steps < 200:
 			steps += 1
@@ -53,7 +72,20 @@ func run() -> void:
 		verify(quote.reason.is_empty(), "Packed extraction is available")
 		verify(night.extract(night.revision), "Packed extraction succeeds")
 		verify(night.vault == starting_vault + int(quote.net) and night.cash == 0 and not night.active, "Packed extraction banks exact quote")
+		var completed: Dictionary = checkpoint.capture(night)
+		verify(store.write_checkpoint(save_path, completed) == OK, "Pack replaces completed checkpoint")
+		var completed_file: Dictionary = store.read_checkpoint(save_path)
+		verify(completed_file.status == "ok", "Pack reads completed checkpoint")
+		if completed_file.status == "ok":
+			var resumed = checkpoint.restore(completed_file.state, world.table_content)
+			verify(resumed != null, "Pack restores completed extraction")
+			if resumed != null:
+				var banked: int = resumed.vault
+				verify(not resumed.extract(resumed.revision) and resumed.vault == banked, "Restored extraction cannot credit twice")
+		verify(not FileAccess.file_exists(save_path + ".tmp"), "Atomic replacement leaves no temporary save")
 		print("Packed loop completed: ", venue)
+	if FileAccess.file_exists(save_path):
+		verify(DirAccess.remove_absolute(save_path) == OK, "Remove isolated probe save")
 	world.queue_free()
 	await process_frame
 	print("Export loop: %d checks, %d failures" % [checks, failures])
