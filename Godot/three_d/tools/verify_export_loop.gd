@@ -40,38 +40,52 @@ func run() -> void:
 				searched = night.service_action("search", "cargo-table", night.revision, choice.id)
 				break
 		verify(searched, "Resolve legal search in " + venue)
-		var table = night.enter_table(301, night.revision, "cargo-table")
-		verify(table != null, "Enter cargo table in " + venue)
-		if table == null: continue
-		var snapshot: Dictionary = checkpoint.capture(night)
-		verify(store.write_checkpoint(save_path, snapshot) == OK, "Pack writes active table checkpoint")
-		var loaded: Dictionary = store.read_checkpoint(save_path)
-		verify(loaded.status == "ok" and loaded.state == snapshot, "Pack reads active table checkpoint exactly")
-		if loaded.status != "ok": continue
-		var restored = checkpoint.restore(loaded.state, world.table_content)
-		verify(restored != null, "Pack restores active table and RNG")
-		if restored == null: continue
-		verify(checkpoint.capture(restored) == snapshot, "Restored packed state equals source state")
-		night = restored
-		table = night.table
-		var steps := 0
-		while table.state.status != "finished" and steps < 200:
-			steps += 1
-			if table.state.status == "hand_over":
-				table.next_hand(table.revision)
-			elif table.state.currentActorId.is_empty():
-				table.advance(table.revision)
-			else:
-				var id: String = table.state.currentActorId
-				var legal: Dictionary = table.legal_actions(id)
-				verify(table.act(id, "fold" if id != "player" else ("check" if legal.check else "call"), table.revision), "Legal packed table action")
-		verify(table.state.status == "finished", "Packed table terminates")
-		verify(night.settle_table(night.revision), "Packed table settles")
+		var expected_wealth: int = night.vault + night.cash + night.valuable_total()
+		for site in ["cargo-table", "ledger-cellar", "mirror-hall", "embers-table"]:
+			if night.heat > 0 and not night.heat_reduced:
+				var cooling_cost: int = night.scene_definition().heatReductionCost
+				verify(night.service_action("cool", "", night.revision), "Use real cooling service")
+				expected_wealth -= cooling_cost
+			var table = night.enter_table(301, night.revision, site)
+			verify(table != null, "Enter " + site + " in " + venue)
+			if table == null: continue
+			var snapshot: Dictionary = checkpoint.capture(night)
+			verify(store.write_checkpoint(save_path, snapshot) == OK, "Pack writes active table checkpoint")
+			var loaded: Dictionary = store.read_checkpoint(save_path)
+			verify(loaded.status == "ok" and loaded.state == snapshot, "Pack reads active table checkpoint exactly")
+			if loaded.status != "ok": continue
+			var restored = checkpoint.restore(loaded.state, world.table_content)
+			verify(restored != null, "Pack restores active table and RNG")
+			if restored == null: continue
+			verify(checkpoint.capture(restored) == snapshot, "Restored packed state equals source state")
+			night = restored
+			table = night.table
+			var steps := 0
+			while table.state.status != "finished" and steps < 200:
+				steps += 1
+				if table.state.status == "hand_over":
+					table.next_hand(table.revision)
+				elif table.state.currentActorId.is_empty():
+					table.advance(table.revision)
+				else:
+					var id: String = table.state.currentActorId
+					var legal: Dictionary = table.legal_actions(id)
+					verify(table.act(id, "fold" if id != "player" else ("check" if legal.check else "call"), table.revision), "Legal packed table action")
+			verify(table.state.status == "finished", "Packed table terminates")
+			expected_wealth += int(table.state.players[0].stack) - int(table.state.tableDef.buyIn)
+			verify(night.settle_table(night.revision), "Packed table settles")
+			if night.last_table_result.reward_added:
+				expected_wealth += int(night.content.items[night.last_table_result.reward].value)
+			verify(night.vault + night.cash + night.valuable_total() == expected_wealth, "Independent packed wealth ledger balances")
+			verify(not night.enforce_pressure(), "Legal cooling keeps whole evening playable")
+			print("Packed table completed: ", venue, "/", site)
+		verify(night.completed.size() == 4, "All four packed tables completed without unlock fixtures")
 		verify(night.public_exit, "Completed packed table reveals public exit")
 		var quote: Dictionary = night.extraction_quote()
 		verify(quote.reason.is_empty(), "Packed extraction is available")
 		verify(night.extract(night.revision), "Packed extraction succeeds")
 		verify(night.vault == starting_vault + int(quote.net) and night.cash == 0 and not night.active, "Packed extraction banks exact quote")
+		verify(night.vault == expected_wealth - int(quote.fee), "Final packed wealth equals table ledger minus public exit fee")
 		var completed: Dictionary = checkpoint.capture(night)
 		verify(store.write_checkpoint(save_path, completed) == OK, "Pack replaces completed checkpoint")
 		var completed_file: Dictionary = store.read_checkpoint(save_path)
