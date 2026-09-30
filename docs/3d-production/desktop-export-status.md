@@ -38,3 +38,15 @@
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path /tmp --main-pack "$PWD/output/builds/TexasPub-preview.pck" --script "$PWD/Godot/three_d/tools/verify_export_pack.gd"
 ```
+
+## 补充：四酒馆包内最短循环
+
+`verify_export_loop.gd` 在项目目录外加载 PCK，实例化真实主场景，然后针对四家酒馆逐一调用包内实际规则：出发、一次合法搜索、货运桌完整结算、公共出口撤离、金库按报价入账。56 项检查通过，退出码 0，最终日志无引擎错误；原始日志为 `output/builds/pack-loop.log`。
+
+首轮脚本错误地要求在牌桌结算后再次发现出口，4 项失败。核对实际 `settle_table` 会自动揭示公共出口后，检查改为验证这一真实结果，未修改游戏规则。
+
+牌局采用固定合法策略（玩家过牌/跟注，对手弃牌），测试目的为包内可执行性；不代表 AI 策略验收。四酒馆只测货运桌与公共出口，其他三桌、特殊出口、抵押、商店、存档和物理射线仍需包内扩展检查。主场景已实例化，但并未通过角色移动或鼠标触发流程，不能代替真人完整试玩。
+
+```sh
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path /tmp --main-pack "$PWD/output/builds/TexasPub-preview.pck" --script "$PWD/Godot/three_d/tools/verify_export_loop.gd" -- --test
+```
