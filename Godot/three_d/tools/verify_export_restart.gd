@@ -24,6 +24,7 @@ func run() -> void:
 	root.add_child(world)
 	await physics_frame
 	world.set_process(false)
+	world.save_path = path
 	var store = load("res://three_d/rules/save_store.gd")
 	if args[1] == "write":
 		check(not FileAccess.file_exists(path), "Refuse to overwrite probe state")
@@ -41,18 +42,37 @@ func run() -> void:
 				world.start_table(301)
 				check(world.table_game != null, "Create active world table")
 			if not failed:
-				check(store.write_checkpoint(path, world.checkpoint_state()) == OK, "Write world snapshot")
+				check(world.save_checkpoint(), "Save through actual world save entry")
 	else:
 		var loaded: Dictionary = store.read_checkpoint(path)
 		check(loaded.status == "ok", "Read snapshot from previous process")
 		if not failed:
-			check(world.restore_checkpoint(loaded.state), "Restore whole world")
+			world.load_checkpoint()
+			check(world.paused and world.pause_panel.visible, "Loaded game waits for Continue")
+			check(world.saving_enabled, "Valid loaded game permits saving")
 			check(world.checkpoint_state() == loaded.state, "World position, look, props, table and RNG match")
 			check(world.seated == (args[2] == "table"), "Restore correct seat mode")
+			check(not world.player.controls_enabled, "Pause blocks player movement")
+			world.resume()
+			check(not world.paused and not world.pause_panel.visible, "Continue exits loaded pause")
 			check(world.player.controls_enabled == not world.seated, "Restore appropriate player controls")
 			for id in ["lamp", "window", "drawer0"]:
 				check(world.props.states[id], "Restore opened prop " + id)
 			check(world.seat_camera.current if world.seated else world.player.camera.current, "Restore correct camera")
+			var valid_bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
+			var corrupt := FileAccess.open(path, FileAccess.WRITE)
+			corrupt.store_string("invalid probe save")
+			corrupt.close()
+			var corrupt_bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
+			var before: Dictionary = world.checkpoint_state()
+			world.load_checkpoint()
+			check(not world.saving_enabled, "Invalid save disables automatic replacement")
+			check(world.checkpoint_state() == before, "Invalid load leaves live world unchanged")
+			check(FileAccess.get_file_as_bytes(path) == corrupt_bytes, "Invalid file remains preserved")
+			check(world.save_notice.text.contains("损坏"), "Invalid load gives player readable notice")
+			var replacement := FileAccess.open(path, FileAccess.WRITE)
+			replacement.store_buffer(valid_bytes)
+			replacement.close()
 	world.queue_free()
 	await process_frame
 	print("Pack restart %s %s: %s" % [args[1], args[2], "FAILED" if failed else "PASS"])
