@@ -56,3 +56,21 @@
 扩展同一 `verify_export_loop.gd`：四家酒馆均在货运桌进行中捕获状态，通过包内 SaveStore 原子写入临时文件、实际读回，再由 RunCheckpoint 恢复并比较完整状态（包含牌局和 RNG）。使用恢复实例继续结算、撤离；将撤离后的状态替换写回、读回并恢复，确认重复撤离被拒绝且金库不增加。检查 `.tmp` 无残留并删除测试文件。当前共 94 项检查、0 失败，退出码 0；同一日志 `output/builds/pack-loop.log` 更新为本次结果。
 
 文件位于系统缓存目录，带进程号；存在同名文件时直接拒绝运行。未读写正式 `user://three-d-checkpoint.save`。这些检查覆盖规则状态的磁盘恢复，未通过 World 恢复玩家位置/镜头/交互物，也未模拟关闭和重启进程；正式包仍需验证这两层。当前包保持原快照，检查脚本在包外执行，因此不需要因工具变化重新打包。
+
+## 补充：真实进程退出与 World 恢复
+
+`verify_export_restart.gd` 已通过两个独立进程验证两种状态，四次运行均退出码 0，日志无脚本或资源错误：
+
+- 藏匿点：关灯、打开窗户和首个抽屉，设置非默认位置及镜头，写入完整 World 状态；写进程退出后，读进程重新创建主场景并恢复。
+- 牌桌：从真实 World 出发到烟雾酒馆，移动到桌前并通过实际物理射线入座，创建货运桌牌局，保存并退出；读进程恢复运行状态、玩家和返回位置、镜头、环境物件、牌局/RNG、入座摄像机及玩家控制权限。
+
+两种恢复均比较完整 `world.checkpoint_state()` 与前进程写入状态一致。测试运行从临时目录加载既有 PCK，传入 `--test`，正式存档未加载；临时目录在全部进程结束后删除。日志为 `output/builds/pack-restart-{stash,table}-{write,read}.log`。
+
+复现：对同一绝对临时文件路径分别执行 `write` 和 `read`，例如在原有 `--main-pack` 参数后加入：
+
+```text
+--script /绝对项目路径/Godot/three_d/tools/verify_export_restart.gd -- --test write table /绝对临时目录/texaspub-restart-table.save
+--script /绝对项目路径/Godot/three_d/tools/verify_export_restart.gd -- --test read table /绝对临时目录/texaspub-restart-table.save
+```
+
+藏匿点将 `table` 换为 `stash`，使用另一份文件。写模式拒绝覆盖已有测试文件，结束后仅删除本次创建的临时目录。这里由脚本显式调用存储和恢复，未通过正式启动自动读档/暂停界面，不代表干净机器的窗口试玩、全酒馆关闭重开或原生应用验收。
