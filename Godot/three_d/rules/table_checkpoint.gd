@@ -24,7 +24,28 @@ static func restore(snapshot: Dictionary) -> RefCounted:
 		return null
 	if not state.get("playerPattern") is Dictionary or not state.playerPattern.get("raiseCount") is int or state.playerPattern.raiseCount < 0:
 		return null
+	if not state.get("firstAggressionDiscountAvailable") is bool or not state.get("pendingNextHand") is bool or not state.get("pendingConclusion") is bool or not state.get("summary") is Dictionary:
+		return null
+	if not state.get("turnCounter") is int or state.turnCounter < 0 or not state.get("dealerSeat") is int or state.dealerSeat < 0 or state.dealerSeat >= 3 or state.totalHands != definition.get("hands"):
+		return null
+	if state.pendingNextHand != (state.status == "hand_over") or state.pendingConclusion != (state.status == "finished"):
+		return null
 	var expected_ids: Array = ["player"] + definition.opponentIds
+	if state.status == "playing":
+		if not state.summary.is_empty(): return null
+	else:
+		var summary: Dictionary = state.summary
+		if summary.get("kind") not in ["fold", "showdown"] or not summary.get("awards") is Dictionary or not summary.get("pots") is Array or summary.get("pot") != state.pot:
+			return null
+		var awarded := 0
+		for id in summary.awards:
+			if id not in expected_ids or not summary.awards[id] is int or summary.awards[id] < 0: return null
+			awarded += int(summary.awards[id])
+		if awarded != state.pot: return null
+		for pot in summary.pots:
+			if not pot is Dictionary or not pot.get("winnerIds") is Array or pot.winnerIds.is_empty(): return null
+			for id in pot.winnerIds:
+				if id not in expected_ids: return null
 	for entry in state.log:
 		if not entry is Dictionary or entry.get("kind") not in ["hand", "street", "result", "fold", "check", "call", "raise", "all-in"] or entry.get("actor") not in expected_ids + [""] or not entry.get("amount") is int or entry.amount < 0 or entry.get("street") not in ["preflop", "flop", "turn", "river"]:
 			return null

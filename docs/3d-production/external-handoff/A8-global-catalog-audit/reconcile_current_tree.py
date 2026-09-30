@@ -988,8 +988,8 @@ def main() -> int:
     continuation_rows = 0
     for row in branches:
         if row["source_file"].endswith("/table_checkpoint.gd") and "pot 或 currentActorId" in row["branch_or_guard"]:
-            row["source_line"] += ";Godot/three_d/rules/table_checkpoint.gd:23-30;Godot/three_d/rules/table_checkpoint.gd:41-42;Godot/three_d/rules/table_checkpoint.gd:54-59"
-            row["notes"] += " 续局字段拒绝矩阵另覆盖缺失/非法街道、日志、加注标记、行为画像、上一行动，以及重复/已弃牌/无筹码行动队列；逐例断言输入快照和活体牌桌未变，复用 invalid_snapshot_rejected。"
+            row["source_line"] += ";Godot/three_d/rules/table_checkpoint.gd:23-51;Godot/three_d/rules/table_checkpoint.gd:62-63;Godot/three_d/rules/table_checkpoint.gd:75-80"
+            row["notes"] += " 续局字段拒绝矩阵另覆盖缺失/非法街道、日志、加注与折扣标记、行为画像、回合计数、庄位、阶段标记、上一行动、结算摘要，以及重复/已弃牌/无筹码行动队列；逐例断言输入快照和活体牌桌未变，复用 invalid_snapshot_rejected。"
             continuation_rows += 1
     if continuation_rows != 1:
         raise SystemExit(f"Unexpected continuation-field rows: {continuation_rows}")

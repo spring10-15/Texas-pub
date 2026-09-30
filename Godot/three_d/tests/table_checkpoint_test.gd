@@ -50,7 +50,7 @@ func _initialize() -> void:
 	var sample := Table.new()
 	sample.start(definitions.tables["cargo-table"], 42)
 	var good := Checkpoint.capture(sample)
-	for label in ["missing_street", "unknown_street", "missing_log", "invalid_log_entry", "missing_raise_used", "missing_pattern", "invalid_pattern", "missing_last_action", "duplicate_queue", "queued_folded", "queued_empty"]:
+	for label in ["missing_street", "unknown_street", "missing_log", "invalid_log_entry", "missing_raise_used", "missing_pattern", "invalid_pattern", "missing_last_action", "duplicate_queue", "queued_folded", "queued_empty", "missing_discount", "missing_summary", "missing_turn_counter", "missing_dealer", "missing_pending_next", "missing_pending_conclusion", "invalid_hands"]:
 		var broken := good.duplicate(true)
 		match label:
 			"missing_street": broken.state.erase("street")
@@ -66,6 +66,13 @@ func _initialize() -> void:
 			"queued_empty":
 				broken.state.players[1].stack += broken.state.players[0].stack
 				broken.state.players[0].stack = 0
+			"missing_discount": broken.state.erase("firstAggressionDiscountAvailable")
+			"missing_summary": broken.state.erase("summary")
+			"missing_turn_counter": broken.state.erase("turnCounter")
+			"missing_dealer": broken.state.erase("dealerSeat")
+			"missing_pending_next": broken.state.erase("pendingNextHand")
+			"missing_pending_conclusion": broken.state.erase("pendingConclusion")
+			"invalid_hands": broken.state.totalHands += 1
 		var before := broken.duplicate(true)
 		verify(Checkpoint.restore(broken) == null and broken == before and Checkpoint.capture(sample) == good, "Reject unsafe continuation field without mutations: " + label)
 	var invalid := {"negative_revision":["revision",-1],"rng_overflow":["rngValue",0x100000000]}
@@ -106,6 +113,22 @@ func _initialize() -> void:
 		var rejected: bool = Checkpoint.restore(broken) == null and Checkpoint.capture(sample) == good
 		verify(rejected, "Reject negative stack at seat %d without changing live table" % seat_index)
 		invalid_cases += 1 if rejected else 0
+	var terminal := Table.new()
+	terminal.start(definitions.tables["cargo-table"], 42)
+	for i in range(150):
+		if terminal.state.status == "finished": break
+		step(terminal)
+	var final_snapshot := Checkpoint.capture(terminal)
+	verify(terminal.state.status == "finished", "Summary rejection fixture is a legally completed table")
+	for label in ["missing_awards", "invalid_award", "invalid_pots", "invalid_winners"]:
+		var broken := final_snapshot.duplicate(true)
+		match label:
+			"missing_awards": broken.state.summary.erase("awards")
+			"invalid_award": broken.state.summary.awards.player = "invalid"
+			"invalid_pots": broken.state.summary.pots = ["invalid"]
+			"invalid_winners": broken.state.summary.pots = [{"winnerIds":["ghost"]}]
+		var before := broken.duplicate(true)
+		verify(Checkpoint.restore(broken) == null and broken == before and Checkpoint.capture(terminal) == final_snapshot, "Reject unsafe settlement summary without mutations: " + label)
 	DirAccess.remove_absolute(path)
 	var catalog_text := FileAccess.get_file_as_string("res://../docs/3d-production/phase-1/coverage/transitions.json")
 	var catalog: Dictionary = JSON.parse_string(catalog_text)
