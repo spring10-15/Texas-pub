@@ -2020,6 +2020,12 @@
       "outcome": "rejected"
     },
     {
+      "id": "persistence_io.write_flush_rejected",
+      "source": "Godot/three_d/rules/save_store.gd",
+      "entry": "write_checkpoint",
+      "outcome": "rejected"
+    },
+    {
       "id": "persistence_io.write_rename_rejected",
       "source": "Godot/three_d/rules/save_store.gd",
       "entry": "write_checkpoint",

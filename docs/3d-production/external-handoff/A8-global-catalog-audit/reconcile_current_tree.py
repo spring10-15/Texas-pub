@@ -918,6 +918,22 @@ def main() -> int:
         if "20260925-103506" in row["evidence_report"] or "20260925-105659" in row["evidence_report"]:
             row["evidence_report"] = row["evidence_report"].replace("20260925-103506/report.json", LATEST_REPORT).replace("20260925-105659/report.json", LATEST_REPORT)
 
+    flush_rows = 0
+    for row in branches:
+        if row["source_file"].endswith("/save_store.gd") and "store_var/flush" in row["branch_or_guard"]:
+            row.update({
+                "branch_or_guard": "拒绝：临时文件写入/刷新返回错误，关闭文件并清理 .tmp，保留旧存档",
+                "catalog_id": "persistence_io.write_flush_rejected",
+                "test": "Godot/three_d/tests/save_store_test.gd::write_flush_rejected",
+                "evidence_report": "output/3d/persistence-io-coverage.json",
+                "evidence_strength": "strong",
+                "disposition": "catalogued_strong",
+                "notes": "可控写入回调创建临时文件后返回 ERR_FILE_CANT_WRITE；断言错误返回、旧存档字节不变及临时文件删除。没有实际模拟磁盘写满或只读卷。",
+            })
+            flush_rows += 1
+    if flush_rows != 1:
+        raise SystemExit(f"Unexpected flush-error rows: {flush_rows}")
+
     mapped_ids: set[str] = set()
     for row in branches:
         for transition_id in row["catalog_id"].split(";"):

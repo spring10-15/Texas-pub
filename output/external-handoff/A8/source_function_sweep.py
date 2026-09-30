@@ -75,6 +75,7 @@ EXCLUDED = {
         "sync": "updates visual character placement and pose",
         "refresh": "projects public table state into character visuals",
         "deliver": "selects existing character feedback text/animation",
+        "handoff_socket": "finds or creates a visual bone attachment for the purchased product; no authoritative Run/table state mutation",
     },
     "Godot/three_d/scripts/services_hud.gd": {
         "_ready": "constructs service UI controls",
@@ -86,6 +87,7 @@ EXCLUDED = {
         "make_button": "constructs a button",
         "card_text": "formats a card for display",
         "cards_text": "formats cards for display",
+        "opponent_line": "projects an opponent's public last action into a content-defined display line",
         "pregame": "projects pregame options into UI controls",
         "refresh": "projects public table state into UI controls",
         "selected_collateral": "reads current UI selection",

@@ -26,6 +26,13 @@ func _initialize() -> void:
 	loaded = Store.read_checkpoint(path)
 	record("write_replace", replaced and loaded.status == "ok" and loaded.state == state and not FileAccess.file_exists(path + ".tmp"))
 	var original_bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
+	var simulated_flush_error := func(temporary_path: String, stored: Dictionary) -> Error:
+		var temporary_file := FileAccess.open(temporary_path, FileAccess.WRITE)
+		temporary_file.store_var(stored, false)
+		temporary_file.close()
+		return ERR_FILE_CANT_WRITE
+	var flush_error: Error = Store._write_checkpoint(path, {"cash": 999}, func(temporary_path: String): return Store.read_checkpoint(temporary_path), simulated_flush_error)
+	record("write_flush_rejected", flush_error == ERR_FILE_CANT_WRITE and FileAccess.get_file_as_bytes(path) == original_bytes and not FileAccess.file_exists(path + ".tmp"))
 	var invalid_readback := func(_temporary_path: String) -> Dictionary: return {"status":"invalid"}
 	var verification_error: Error = Store._write_checkpoint(path, {"cash": 999}, invalid_readback)
 	var verification_rejected: bool = verification_error == ERR_FILE_CORRUPT and Store.read_checkpoint(path).status == "ok" and FileAccess.get_file_as_bytes(path) == original_bytes and not FileAccess.file_exists(path + ".tmp")
