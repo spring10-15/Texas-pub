@@ -48,6 +48,8 @@ var return_transform: Transform3D
 var seat_camera: Camera3D
 var readiness := false
 var materials := {}
+var scene_environment: Environment
+var venue_lighting: RefCounted
 var table_rooms := {}
 const ROOMS := {"tavern":{"node":"Tavern", "table":"cargo-table", "x":10.0}, "ledger":{"node":"LedgerCellar", "table":"ledger-cellar", "x":20.0}, "mirror":{"node":"MirrorHall", "table":"mirror-hall", "x":30.0}, "embers":{"node":"EmbersRoom", "table":"embers-table", "x":40.0}}
 var active_table_id := "cargo-table"
@@ -81,6 +83,7 @@ func _ready() -> void:
 	configure_input()
 	make_materials()
 	build_lighting()
+	venue_lighting = preload("res://three_d/scripts/venue_lighting.gd").new(self)
 	props = preload("res://three_d/scripts/scene_props.gd").new(self)
 	bar_display = preload("res://three_d/scripts/bar_display.gd").new(self)
 	characters = preload("res://three_d/scripts/characters.gd").new(self)
@@ -380,6 +383,7 @@ func build_lighting() -> void:
 	environment.ambient_light_color = Color("b0b7c0")
 	environment.ambient_light_energy = 0.35
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	scene_environment = environment
 	world.environment = environment
 	add_child(world)
 
@@ -605,6 +609,7 @@ func travel(destination: String) -> void:
 	player.rotation = Vector3(0, -0.65 if destination != "stash" else 0.55, 0)
 	player.camera.rotation = Vector3(-0.10, 0, 0)
 	title_label.text = {"tavern": RunRules.SCENE_NAMES[run_game.scene_id], "ledger": "账房地窖", "mirror":"镜厅", "embers":"余烬牌室", "stash": "藏匿点"}[destination]
+	venue_lighting.apply(get_node("Stash" if destination=="stash" else ROOMS[destination].node), "stash" if destination=="stash" else run_game.scene_id)
 	player.update_focus()
 	refresh_economy()
 

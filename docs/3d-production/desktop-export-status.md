@@ -318,3 +318,18 @@ Mac 原生应用从 `/tmp` 以 `--headless --quit-after 120 -- --test` 启动，
 - Windows `output/builds/TexasPub-Windows-preview.zip`：`46a1246b6faf1ff9e91e29700612cfe5f354cda9950d293eaae58062d6676939`。
 
 日志为 `inventory-preview-{macos,windows}-export.log`、`inventory-preview-{macos,windows}-test.log`、`inventory-preview-native-check.log`。Mac 解压核验副本在 `macos-inventory-preview/`；旧 ZIP 保留 `before-inventory-preview` 备份。资源仍包含另一模型未提交的当前人物样板；源 Git SHA 不代表美术包可仅从已提交文件完整复建。未上传 GitHub Release，未重复旧版 30 分钟记录或声称目标平台性能通过。
+
+## 2026-10-04：五类灯光样板预览包
+
+五类环境与点光源配色已接入场景切换和读档。保留开关状态、光源能量数值、规则与碰撞。主工作区完整回归 76/76 Godot 套件和 20/20 Python 测试通过，报告 `output/3d/regression/20261004-014228/report.json`，期间指纹不变；独立导出副本也完成同等回归，报告 `output/builds/lighting-validation-source/output/3d/regression/20261004-014455/report.json`。副本复制后与已通过工作区的源码/资产一致，固定指纹记录在 `output/builds/lighting-snapshot-source-sha256.json`。
+
+Mac、Windows release 导出退出 0；两份实际 PCK 各通过 56 项 headless 灯光检查，Mac PCK 再通过有窗口 Metal 渲染 56 项，五类截图 `output/builds/lighting-package-*.png` 已生成，霓虹截图已核对。Mac 原生程序从 `/tmp` 以 `--test` headless 运行 120 帧退出 0；首次检查误传官方模板不支持的 `--path` 参数，失败日志保留为 `lighting-native-check.log`，修正调用后的通过日志为 `lighting-native-check-retry.log`。没有修改引擎或游戏来绕过限制。
+
+两份 ZIP CRC 与内嵌文件大小/SHA256 清单核验通过：
+
+- Mac `output/builds/TexasPub.zip`：`34ee2226df60a2185ada27af14e5c80633d03d0193c6bd5cbf07b84a89f2fc1a`。
+- Windows `output/builds/TexasPub-Windows-preview.zip`：`62b69cc2ef5bdc8aa46ef282deeebdcabbf5aaffe54fcbee705713e824311ae8`。
+
+导出/专项日志为 `lighting-{macos,windows}-{export,test}.log`，有窗口日志 `lighting-package-capture.log`，校验汇总 `lighting-package-verification.json`。Mac 解压副本 `macos-lighting-preview/`，上一版两份 ZIP 保留 `before-lighting` 备份。当前包包括外部模型未提交的三个人物 36 骨骼样板；仅凭 Git 提交不能完整复建相同美术包，未上传 GitHub Release。
+
+Windows PCK 在 Mac 引擎中验证不等于 Windows EXE 实机通过。独立建筑、最终高保真美术、Windows/干净机器以及本版长时性能仍需后续验收；旧版 30 分钟结果不重标为本版通过。

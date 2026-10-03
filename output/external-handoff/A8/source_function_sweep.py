@@ -84,6 +84,10 @@ EXCLUDED = {
         "_ready": "constructs service UI controls",
         "refresh": "projects a read-only service view into UI controls",
     },
+    "Godot/three_d/scripts/venue_lighting.gd": {
+        "_init": "stores the lighting presentation owner",
+        "apply": "projects the selected venue palette into environment/light colors; preserves interaction energies and authoritative Run state",
+    },
     "Godot/three_d/scripts/item_preview.gd": {
         "_init": "constructs an isolated one-shot inventory model render or missing-art symbol; no authoritative Run/table state mutation",
         "_ready": "stops the isolated preview viewport after its first render; no authoritative Run/table state mutation",
