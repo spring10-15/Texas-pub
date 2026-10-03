@@ -81,6 +81,30 @@ func run() -> void:
 			print("Packed table completed: ", venue, "/", site)
 		verify(night.completed.size() == 4, "All four packed tables completed without unlock fixtures")
 		verify(night.public_exit, "Completed packed table reveals public exit")
+		var active_snapshot: Dictionary = checkpoint.capture(night)
+		for route in ["fixed", "dropbag-cash", "dropbag-valuables"]:
+			var branch = checkpoint.restore(active_snapshot, world.table_content)
+			verify(branch != null, "Restore legal route branch")
+			if branch == null: continue
+			var prepaid := 0
+			if route == "fixed":
+				if branch.heat > int(branch.route_offer().maxHeat):
+					prepaid += int(branch.scene_definition().heatReductionCost)
+					verify(branch.service_action("cool", "", branch.revision), "Cool legally before reserved extraction")
+				prepaid += branch.reserve_fee()
+				verify(branch.service_action("reserve", "", branch.revision), "Reserve actual available route")
+				verify(not branch.service_action("reserve", "", branch.revision), "Reject duplicate reservation")
+			var prepared: Dictionary = checkpoint.capture(branch)
+			branch = checkpoint.restore(prepared, world.table_content)
+			verify(branch != null, "Prepared route survives checkpoint")
+			if branch == null: continue
+			var route_quote: Dictionary = branch.extraction_quote(route)
+			verify(route_quote.reason.is_empty(), "Legal packed route available: " + venue + "/" + route + ": " + route_quote.reason)
+			verify(branch.extract(branch.revision, route), "Packed special extraction: " + route)
+			verify(branch.vault == expected_wealth - prepaid - int(route_quote.fee) - int(route_quote.lostCash) - int(route_quote.lostGoods), "Special route independent wealth ledger")
+			var result: Dictionary = checkpoint.capture(branch)
+			verify(not branch.extract(branch.revision, route) and checkpoint.capture(branch) == result, "Special extraction cannot repeat")
+			print("Packed route completed: ", venue, "/", route)
 		var quote: Dictionary = night.extraction_quote()
 		verify(quote.reason.is_empty(), "Packed extraction is available")
 		verify(night.extract(night.revision), "Packed extraction succeeds")
