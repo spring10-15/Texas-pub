@@ -1,4 +1,5 @@
 """Observe one native soak process; RSS samples start when this observer starts."""
+import argparse
 import json
 import subprocess
 import time
@@ -10,7 +11,11 @@ OUTPUT = ROOT / "output/builds/native-soak-rss.json"
 
 
 def main():
-    report = json.loads(REPORT.read_text())
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--report", type=Path, default=REPORT)
+    parser.add_argument("--output", type=Path, default=OUTPUT)
+    args = parser.parse_args()
+    report = json.loads(args.report.read_text())
     pid = int(report["process_id"])
     executable = report["executable_path"]
     result = {"pid": pid, "executable": executable, "status": "observing", "samples": [],
@@ -26,7 +31,7 @@ def main():
             result["status"] = "process_identity_changed"
             break
         try:
-            report = json.loads(REPORT.read_text())
+            report = json.loads(args.report.read_text())
         except json.JSONDecodeError:
             time.sleep(1)
             continue
@@ -34,12 +39,12 @@ def main():
             result["status"] = "report_identity_changed"
             break
         result["samples"].append({"wall_time_unix": time.time(), "report_elapsed_seconds": report.get("elapsed_seconds"), "rss_bytes": int(rss) * 1024})
-        OUTPUT.write_text(json.dumps(result, indent=2) + "\n")
+        args.output.write_text(json.dumps(result, indent=2) + "\n")
         if report["status"] != "running":
             result["status"] = "report_terminal"
             break
         time.sleep(10)
-    OUTPUT.write_text(json.dumps(result, indent=2) + "\n")
+    args.output.write_text(json.dumps(result, indent=2) + "\n")
     print(result["status"], len(result["samples"]), "RSS samples")
 
 
