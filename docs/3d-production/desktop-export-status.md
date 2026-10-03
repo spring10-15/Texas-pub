@@ -132,3 +132,9 @@ GitHub 网络恢复，`main` 的积累提交已推送至 `eb9531f`。从 Godot �
 Mac 上的 Godot 读取 Windows PCK，26 项资源加载及 396 项规则循环检查通过。完整预览构建命令仍通过。Windows EXE 未在 Windows 真机运行，不能称为 Windows 启动或性能验收。
 
 交付准备包 `output/builds/TexasPub-Windows-preview.zip` 含 EXE、PCK、试玩说明和文件 SHA256/尺寸清单。说明源为 `docs/3d-production/windows-preview-readme.md`。两文件需保持同目录。本包未签名，当前建模样板未冻结，只用于内部试玩；Windows 实机、目标硬件与干净机器验收仍待执行。
+
+## 2026-10-03：八条通行证路线
+
+新增包外 `verify_export_routes.gd`，四酒馆分别验证后厨楼梯和河边接驳，共 8 条路线。使用合法基线种子 0 保留完整货架，按桌序真正完成牌局直到目标通行证上架；通过购买服务花钱/行动点，再使用通行证揭示线路并消耗物件。未知路线拒绝撤离、通行证不能重复使用、checkpoint 恢复后线路仍已知且物件不复生、最终撤离与独立资产账目一致，不能重复入账。没有直接写库存或解锁标记。
+
+170 项检查通过，0 失败；已加入 `build_preview.py` 的 `preview-routes` 步骤，本轮完整流水线通过。日志为 `output/builds/preview-routes.log`。基线种子样本不能代表所有随机货架组合；仍是包内规则调用，不是玩家走到楼梯/码头触发物理锚点。具名预约路线变体、有效期、风声边界及物理输入仍待测。仅新增工具检查，运行代码/模型未变，无需因此重导原生应用。
