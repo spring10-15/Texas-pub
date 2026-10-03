@@ -4,6 +4,14 @@ var failures := 0
 var checked := 0
 
 func _initialize() -> void:
+	checked += 1
+	if ProjectSettings.get_setting("application/run/main_scene", "") != "res://three_d/scenes/main.tscn":
+		failures += 1
+		push_error("Player pack has an unexpected main scene")
+	checked += 1
+	if FileAccess.file_exists("res://soak_main.gd") or FileAccess.file_exists("res://soak_main.tscn"):
+		failures += 1
+		push_error("Automated soak entry included in player pack")
 	var content = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
 	if not content is Dictionary:
 		push_error("Pack is missing readable content.json")
