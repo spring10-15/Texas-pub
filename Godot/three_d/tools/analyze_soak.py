@@ -23,14 +23,17 @@ def summarize(report):
     results = []
     for (venue, phase), samples in sorted(groups.items()):
         first, last = samples[0], samples[-1]
+        # Release templates can return zero when this monitor is unavailable.
+        static_available = all(s["static_memory_bytes"] > 0 for s in samples)
         results.append({
             "venue_index": venue, "phase": PHASES[phase], "sample_count": len(samples),
             "first_second": first["elapsed_seconds"], "last_second": last["elapsed_seconds"],
             "median_of_window_medians_ms": statistics.median(s["median_callback_ms"] for s in samples),
             "worst_window_p95_ms": max(s["p95_callback_ms"] for s in samples),
-            "static_memory_first_bytes": first["static_memory_bytes"],
-            "static_memory_last_bytes": last["static_memory_bytes"],
-            "static_memory_delta_bytes": last["static_memory_bytes"] - first["static_memory_bytes"],
+            "static_memory_available": static_available,
+            "static_memory_first_bytes": first["static_memory_bytes"] if static_available else None,
+            "static_memory_last_bytes": last["static_memory_bytes"] if static_available else None,
+            "static_memory_delta_bytes": last["static_memory_bytes"] - first["static_memory_bytes"] if static_available else None,
             "video_memory_delta_bytes": last["video_memory_bytes"] - first["video_memory_bytes"],
             "node_count_delta": last["nodes"] - first["nodes"],
             "spans_multiple_tours": int(first["tour_step"]) != int(last["tour_step"]),
