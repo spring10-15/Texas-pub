@@ -58,6 +58,17 @@ func _init(item_id: String) -> void:
 	settings.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	settings.ambient_light_color = Color("d4cbb8")
 	settings.ambient_light_energy = 0.7
+	# Metals need an environment to reflect, even with a solid card background.
+	var sky_material := ProceduralSkyMaterial.new()
+	sky_material.sky_top_color = Color("a7b9cc")
+	sky_material.sky_horizon_color = Color("ddd6c7")
+	sky_material.ground_bottom_color = Color("343a38")
+	sky_material.ground_horizon_color = Color("b5aa92")
+	var sky := Sky.new()
+	sky.sky_material = sky_material
+	sky.process_mode = Sky.PROCESS_MODE_REALTIME
+	settings.sky = sky
+	settings.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	environment.environment = settings
 	viewport.add_child(environment)
 	var light := DirectionalLight3D.new()

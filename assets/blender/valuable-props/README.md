@@ -14,4 +14,4 @@
 
 实际使用：背包 `item_preview.gd` 先解析原商品包，再解析本包；只有当前持有物品才创建预览，未知 ID 保留符号。预览自适应包围盒、一次渲染后停止。本包尚未接入奖励揭示、抵押桌面或出售交接表现，不能把背包模型算作这些显示用途已完成。
 
-结构专项 `valuable_asset_test.gd` 42 项通过；十件原始 GLB 索引计数与 Blender 清单、Godot 包围盒工具面数独立对齐，证据 `output/3d/valuable-props-integrity.json`。Godot 渲染联系图 `output/3d/valuable-props-contact-sheet.png` 已检查，使用相同背包预览组件，属于独立展示夹具。当前金属材质在预览中偏暗；缺环境反射校准、宝石玻璃/折射、真实磨损和物品 LOD，后续须在实际视角精修。
+结构专项 `valuable_asset_test.gd` 42 项通过；十件原始 GLB 索引计数与 Blender 清单、Godot 包围盒工具面数独立对齐，证据 `output/3d/valuable-props-integrity.json`。Godot 渲染联系图 `output/3d/valuable-props-contact-sheet.png` 已检查，使用相同背包预览组件，属于独立展示夹具。2026-10-04 后续已在预览组件补环境反射，解决金属近乎全黑的问题；最终场景中的反射校准、宝石玻璃/折射、真实磨损和物品 LOD 仍需在实际视角精修。
