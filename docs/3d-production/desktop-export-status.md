@@ -240,3 +240,7 @@ RSS 观察进程正常结束（process_ended、退出码 0），175 个样本，
 ## 2026-10-03：Windows 预览同步恢复矩阵修复
 
 Windows release 导出正常退出、日志无 ERROR；EXE 的 PE x64 头检查通过，运行资源源码指纹与 20261003-124036 全量回归一致。Godot 在 Mac 上加载新 Windows PCK 检查 28 项资源/入口、零失败，不能当作 Windows EXE 已运行。重建 TexasPub-Windows-preview.zip，包含 EXE、PCK、更新说明及校验清单；ZIP CRC 和逐文件 SHA256 全部核对。旧包保留 TexasPub-windows-before-transform-fix.zip。新 ZIP SHA256：`23536e52171cb9782f6c2d18d365738fa54e93580341622e14400f52277b18e7`。Windows 实机启动、默认用户目录存档、渲染与长时测试均未验收；manifest 保持 windows_runtime_verified=false。
+
+## 2026-10-03：当前试玩截图集
+
+新增 capture_preview_media.gd，以 --test 和绝对输出目录在窗口加载实际 Mac 玩家 PCK，截取藏匿点、出发面板和通过真实准星入座买入后的牌桌，共三张 1376×768 PNG。已逐张视觉检查，牌桌等待正常输入延迟结束后再截取，行动和费用提示可见。图片、来源 PCK SHA256、尺寸及说明打包为 output/builds/TexasPub-preview-media.zip。这是编辑器加载实际包资源的窗口截图，不是原生应用截图或最终高精美术宣传材料。现有基础人物与三人精修样板仍混用，风格统一尚未完成。未生图、未修改玩法或另一模型美术。
