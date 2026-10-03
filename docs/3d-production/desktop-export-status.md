@@ -333,3 +333,16 @@ Mac、Windows release 导出退出 0；两份实际 PCK 各通过 56 项 headles
 导出/专项日志为 `lighting-{macos,windows}-{export,test}.log`，有窗口日志 `lighting-package-capture.log`，校验汇总 `lighting-package-verification.json`。Mac 解压副本 `macos-lighting-preview/`，上一版两份 ZIP 保留 `before-lighting` 备份。当前包包括外部模型未提交的三个人物 36 骨骼样板；仅凭 Git 提交不能完整复建相同美术包，未上传 GitHub Release。
 
 Windows PCK 在 Mac 引擎中验证不等于 Windows EXE 实机通过。独立建筑、最终高保真美术、Windows/干净机器以及本版长时性能仍需后续验收；旧版 30 分钟结果不重标为本版通过。
+
+## 2026-10-04：十九物品实体首版预览包
+
+十件贵重物独立包已纳入 Mac/Windows release 导出，背包展示当前持有的实际模型。导出前后全部源码/测试/资产与已通过的完整回归 `output/3d/regression/20261004-020329/report.json` 指纹一致（77 Godot / 20 Python），未因本轮仅打包重复完整回归。
+
+两平台导出退出 0；每份实际 PCK 通过 42 项贵重物结构/ID/预览检查和 9 项有窗口背包检查，使用 Mac Metal 引擎。包内截图 `output/builds/valuables-inventory-preview.png` 已检查。Mac 原生应用从 `/tmp` 以 headless `--test` 运行 120 帧退出 0。全部日志无引擎错误，ZIP CRC 和内嵌文件大小/SHA256 核验通过：
+
+- Mac `output/builds/TexasPub.zip`：`71925d27173b668276fb569e9c266336b6d49ee83cc56806f7d8dc780dd6eb4d`。
+- Windows `output/builds/TexasPub-Windows-preview.zip`：`a794b181afe29d4f82ab1325c12cf31070ac9ab44bd2a4f22a4490f40fa7d4c2`。
+
+日志 `valuables-{macos,windows}-export.log`、`valuables-{macos,windows}-{valuable_asset_test,inventory_preview_test}.log`、`valuables-native-check.log`；校验汇总 `valuables-package-verification.json`。Mac 解压副本 `macos-valuables-preview/`，旧 ZIP 保留 `before-valuables` 备份。
+
+当前 19/19 是模型与规则 ID 覆盖；金属偏暗、磨损/宝石/LOD，以及奖励和抵押场景展示仍未完成。Windows EXE 实机、干净机器、GPU 计时及本版 30 分钟性能尚未验证。包仍含外部模型未提交的角色精修，不能仅从本次 Git SHA 完整复建同一美术包；未上传 GitHub Release。
