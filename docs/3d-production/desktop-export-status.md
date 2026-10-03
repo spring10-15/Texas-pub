@@ -236,3 +236,7 @@ RSS 观察进程正常结束（process_ended、退出码 0），175 个样本，
 重新导出 TexasPub.zip，官方 release 导出正常退出、日志无 ERROR。资源指纹逐项与 20261003-124036 的完整回归报告一致。提取内嵌 PCK 检查 28 项、零失败；从 /tmp 启动原生二进制无窗口 120 帧正常退出，另以窗口 240 帧正常退出，日志无 ERROR。测试带 --test，不访问正式玩家存档。操作说明注明异常变换保护，并重新嵌入 README 与校验清单；清单各文件 SHA256 逐项核对通过。
 
 新 ZIP SHA256：`ecb238da5207c5067182a53bb5e75dcc0e35af6384cc220856d9b7d4b514e67f`；旧包保留为 output/builds/TexasPub-before-transform-fix.zip。新解压应用在 output/builds/macos-transform-preview/。本次仅本机短时启动，不继承先前独立巡回包的 30 分钟验收，不证明干净机器或目标中端性能。Windows 包尚未刷新该修复。
+
+## 2026-10-03：Windows 预览同步恢复矩阵修复
+
+Windows release 导出正常退出、日志无 ERROR；EXE 的 PE x64 头检查通过，运行资源源码指纹与 20261003-124036 全量回归一致。Godot 在 Mac 上加载新 Windows PCK 检查 28 项资源/入口、零失败，不能当作 Windows EXE 已运行。重建 TexasPub-Windows-preview.zip，包含 EXE、PCK、更新说明及校验清单；ZIP CRC 和逐文件 SHA256 全部核对。旧包保留 TexasPub-windows-before-transform-fix.zip。新 ZIP SHA256：`23536e52171cb9782f6c2d18d365738fa54e93580341622e14400f52277b18e7`。Windows 实机启动、默认用户目录存档、渲染与长时测试均未验收；manifest 保持 windows_runtime_verified=false。
