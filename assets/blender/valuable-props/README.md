@@ -17,3 +17,11 @@
 结构专项 `valuable_asset_test.gd` 42 项通过；十件原始 GLB 索引计数与 Blender 清单、Godot 包围盒工具面数独立对齐，证据 `output/3d/valuable-props-integrity.json`。Godot 渲染联系图 `output/3d/valuable-props-contact-sheet.png` 已检查，使用相同背包预览组件，属于独立展示夹具。2026-10-04 后续已在预览组件补环境反射，解决金属近乎全黑的问题；最终场景中的反射校准、宝石玻璃/折射、真实磨损和物品 LOD 仍需在实际视角精修。
 
 后续接入：已增加开桌前抵押选择预览，以及 `collateral_display.gd` 的实际已抵押物静态桌面模型、读档重建和结算清理。归还/没收动作与奖励/出售交接仍待制作，以上不等同所有显示用途完成。
+
+## 金属表面细节首版（2026-10-04）
+
+`metal_surfaces.py` 以固定种子制作银、金的加工拉丝与少量细划痕，四张 512×512 法线/粗糙度 PNG 位于 `textures/`，源 blend 内同时打包。使用 Non-Color 数据贴图和显式 UV，GLB 内嵌四图；Godot 导入时提取出四张 `valuable-props_*.png`，已加入两平台导出清单以保持运行依赖完整。此为加工表面微细节，不等同接触区磨损、脏污分布或高模烘焙完成；不使用生图或外部图像。
+
+十件物品面数和尺寸保持不变，GLB 由 2,698,688 增至 2,907,648 字节。Godot 专项检查现为 69 项，验证导入后的贴图、法线开关和 UV；原始 glTF 与 Blender/Godot 面数独立对齐记录在 `output/3d/valuable-metal-integrity.json`。近景实机样板 `output/3d/valuable-metal-closeup.png` 能观察旧银打火机侧面的细拉丝，怀表保留表盘可读性。联系图仍使用背包预览组件，不是实际抵押视角或最终美术验收。该版本尚未重新导出安装包或完成 GPU/目标机型性能验证。
+
+全量回归：`output/3d/regression/20261004-032841/report.json`，81 个 Godot 套件、20 个 Python 测试通过，运行期间资源指纹不变。

@@ -23,6 +23,15 @@ func run() -> void:
 		root.add_child(preview)
 		verify(preview.get_child(0) is SubViewport,"Owned card resolves actual valuable "+id)
 		preview.queue_free()
+	var metal_names: Dictionary = {}
+	for mesh: MeshInstance3D in kit.find_children("*","MeshInstance3D",true,false):
+		for surface in range(mesh.mesh.get_surface_count()):
+			var material = mesh.mesh.surface_get_material(surface)
+			if material is StandardMaterial3D and material.resource_name in ["silver","gold"]:
+				metal_names[material.resource_name] = true
+				verify(material.normal_enabled and material.normal_texture != null and material.roughness_texture != null,"Imported metal has normal and roughness maps: " + material.resource_name)
+				verify(not mesh.mesh.surface_get_arrays(surface)[Mesh.ARRAY_TEX_UV].is_empty(),"Mapped metal has UVs")
+	verify(metal_names.size()==2,"Both gold and silver imported mapped materials")
 	var unknown=load("res://three_d/scripts/item_preview.gd").new("unknown-item")
 	verify(unknown.get_child(0) is Label,"Unknown ID retains safe symbol")
 	unknown.free()

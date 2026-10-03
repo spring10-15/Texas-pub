@@ -1,5 +1,5 @@
 """Ten rule-defined valuables. Meter scale, editable source, independent asset kit."""
-import bpy, math, json
+import bpy, math, json, sys
 from pathlib import Path
 from mathutils import Vector
 OUT=Path(__file__).resolve().parent
@@ -12,6 +12,9 @@ for name,color,metal,rough in [('silver',(.55,.59,.62),1,.28),('gold',(.72,.46,.
  m=bpy.data.materials.new(name);m.use_nodes=True
  p=m.node_tree.nodes.get('Principled BSDF');p.inputs['Base Color'].default_value=(*color,1);p.inputs['Metallic'].default_value=metal;p.inputs['Roughness'].default_value=rough
  materials[name]=m
+sys.path.insert(0,str(OUT))
+from metal_surfaces import apply_metal_surfaces
+apply_metal_surfaces(materials,OUT/"textures")
 ROOT=None
 COL=None
 def group(id):
@@ -106,6 +109,13 @@ for y in [-.027,.027]:box('Foil border',(0,y,.0013),(.125,.0005,.00015),'gold',0
 for x in [-.061,.061]:box('Foil border',(x,0,.0013),(.0005,.054,.00015),'gold',0)
 text('N 0019',(-.039,-.019,.0013),.004);text('CITY VAULT',(.035,-.019,.0013),.004)
 
+# Give metal surfaces explicit UVs; procedural shader nodes alone do not survive glTF.
+for o in list(bpy.data.objects):
+ if o.type != "MESH" or not any(m and m.name in {"silver","gold"} for m in o.data.materials):continue
+ bpy.ops.object.select_all(action="DESELECT");o.select_set(True);bpy.context.view_layer.objects.active=o
+ bpy.ops.object.mode_set(mode="EDIT");bpy.ops.mesh.select_all(action="SELECT")
+ bpy.ops.uv.cube_project(cube_size=.04)
+ bpy.ops.object.mode_set(mode="OBJECT")
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'valuable-props.blend'))
 report={}
