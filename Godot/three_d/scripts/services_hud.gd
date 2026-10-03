@@ -18,7 +18,7 @@ func _ready() -> void:
 	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	rows.add_theme_constant_override("separation", 8)
 	scroll.add_child(rows)
-func refresh(view: Dictionary, held_items: Array = []) -> void:
+func refresh(view: Dictionary, held_items: Array = [], received_item: Dictionary = {}) -> void:
 	if view.mode == "product":
 		set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
 		offset_left = 32
@@ -46,6 +46,15 @@ func refresh(view: Dictionary, held_items: Array = []) -> void:
 	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	heading.custom_minimum_size.x = 500 if view.mode == "product" else 760
 	rows.add_child(heading)
+	if view.mode == "search" and not received_item.is_empty():
+		var reward_card := VBoxContainer.new()
+		reward_card.set_meta("search_reward",received_item.id)
+		reward_card.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		rows.add_child(reward_card)
+		var reward_label := Label.new()
+		reward_label.text = "已放入背包：" + received_item.name
+		reward_card.add_child(reward_label)
+		reward_card.add_child(preload("res://three_d/scripts/item_preview.gd").new(received_item.id))
 	if view.mode == "bag" and not held_items.is_empty():
 		var grid := GridContainer.new()
 		grid.columns = 4

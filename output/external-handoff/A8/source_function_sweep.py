@@ -110,6 +110,7 @@ EXCLUDED = {
         "update_raise_preview": "updates a read-only action preview",
     },
     "Godot/three_d/scripts/world.gd": {
+        "received_search_item": "projects a recorded search reward still held in inventory into visual metadata, without awarding or changing authoritative state",
         "trace_choice_opportunity": "records the options visible at a fixed-seed decision point; telemetry only, no authoritative game-state mutation",
         "trace_opportunity_id": "reads the active telemetry correlation id; does not mutate authoritative game state",
         "close_playtest_opportunity": "closes a telemetry-only decision window; does not mutate authoritative game state",

@@ -359,3 +359,16 @@ Mac、Windows release 导出退出 0；每份实际 PCK 通过 42 项资产、9 
 日志 `collateral-{macos,windows}-export.log`、`collateral-{macos,windows}-{valuable_asset_test,inventory_preview_test,collateral_preview_test,collateral_display_test}.log` 和 `collateral-native-check.log`；汇总 `collateral-package-verification.json`，解压副本 `macos-collateral-preview/`，旧 ZIP 保留 `before-collateral` 备份。
 
 Windows EXE 实机、干净机器、最终高精美术和当前包 30 分钟性能仍待验证。桌面抵押物目前静态显示/移除，没有宣称归还、没收或奖励人物动作完成。资源包含外部未提交的人物样板，仅凭本次 Git SHA 不能完全复建相同美术；未上传 GitHub Release。
+
+## 2026-10-04：搜索奖励实物预览包
+
+两平台 release 包增加搜索奖励到账后模型与名称展示，已持有判定、重复领取、已售出、满背包及非物品结果沿用原规则。源码完整回归 `output/3d/regression/20261004-025400/report.json` 80 Godot / 20 Python 全过，导出前后全部被记录资源与该回归一致。
+
+两平台导出退出 0；每份实际 PCK 在 Mac 有窗口 Metal 引擎中通过 16 项奖励、9 项背包、12 项桌面抵押，合计 37 项本轮包内检查。Mac 原生程序从 `/tmp` headless `--test` 启动 120 帧退出 0。奖励截图 `output/builds/search-reward-macos-search-reward-preview.png` 已查看。ZIP CRC 与内嵌 SHA256/大小清单均通过：
+
+- Mac `output/builds/TexasPub.zip`：`781f3113ac87ab60d56010e3a8af2f2b2ff6fb22ab6aacaa1d1bc21e70702f38`。
+- Windows `output/builds/TexasPub-Windows-preview.zip`：`cd826f7e378ef7bd62249ea7db1ad55b1f6151801397fb3a3087d725d7922127`。
+
+日志 `search-reward-{macos,windows}-export.log`、`search-reward-{macos,windows}-{search_reward_preview_test,inventory_preview_test,collateral_display_test}.log`、`search-reward-native-check.log`；汇总 `search-reward-package-verification.json`，Mac 解压副本 `macos-search-reward-preview/`，旧 ZIP 保留 `before-search-reward` 备份。
+
+Windows EXE、干净机器与本版长时性能仍未实机验证；当前 GPU 计时缺口与最终高精美术门槛未关闭。外部角色精修仍未纳入此 Git 提交，仅凭提交 SHA 不能复建同一美术包，未上传 GitHub Release。

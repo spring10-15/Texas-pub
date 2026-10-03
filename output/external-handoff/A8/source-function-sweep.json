@@ -1,7 +1,7 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "ecf96ed6a9f06a95941cf446fe90b6b91ddcbc486cbd45743f5ae29f8c509df1",
+  "branch_inventory_sha256": "7fd3b5461edcb980da8966a0428d0a1d6152933368e3b1f718a9435b6dcb1ced",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "7faa062633284e1605adb9d03bc2f5a92866f6a40a6149e8c628d44428385603",
@@ -21,15 +21,15 @@
     "Godot/three_d/scripts/item_preview.gd": "3c468fe1d4b3eb6f05064905da55dd7928233126507861f3d73966b0881fceca",
     "Godot/three_d/scripts/player.gd": "54f72a44a49e787eebe20d49ad79147e3cb825c5574840a05a17775045170ef2",
     "Godot/three_d/scripts/scene_props.gd": "551956dbed1e5296dbf19f52605624a0a3cdeed510c2e69093eb52a385a8a44b",
-    "Godot/three_d/scripts/services_hud.gd": "76b696424e6bf7f1d4f716ff35ec722a1b7ece57ae84ae3a77dfa5c3e3df1e18",
+    "Godot/three_d/scripts/services_hud.gd": "d330790c6971f4b4375e6ecb8240d71fde435af98182927bf62060b96f4bf3f9",
     "Godot/three_d/scripts/table_hud.gd": "e505290b3c2b4e1a0dbe3d7d487ee1e2a6c57b4adc378150556320e3caf977cc",
     "Godot/three_d/scripts/tavern_layout.gd": "eb34b55a7c7689eeac31895ff9394fff24bca272c38f7d1ae08666820320d4d6",
     "Godot/three_d/scripts/venue_lighting.gd": "6b75840848b428248a36d76978af0e29dfdd9659f02daf922e2c4bce73fcce6e",
-    "Godot/three_d/scripts/world.gd": "486f440006f26a71413ee2d8cb26ccb9e9526e936406f4c70e4eb4dfe75ef508"
+    "Godot/three_d/scripts/world.gd": "1f1bf7f55dbe3fb53cb4f3619057964844c4f24a0e13c7fabf26e406ae9dac0b"
   },
   "counts": {
     "audit_inventory": 120,
-    "explicit_exclusion": 74
+    "explicit_exclusion": 75
   },
   "functions": [
     {
@@ -996,7 +996,7 @@
       "file": "Godot/three_d/scripts/services_hud.gd",
       "line": 21,
       "name": "refresh",
-      "signature": "func refresh(view: Dictionary, held_items: Array = []) -> void:",
+      "signature": "func refresh(view: Dictionary, held_items: Array = [], received_item: Dictionary = {}) -> void:",
       "status": "explicit_exclusion",
       "reason": "projects a read-only service view into UI controls"
     },
@@ -1583,12 +1583,20 @@
       "signature": "func refresh_route_labels() -> void:",
       "status": "audit_inventory",
       "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1252,
+      "name": "received_search_item",
+      "signature": "func received_search_item() -> Dictionary:",
+      "status": "explicit_exclusion",
+      "reason": "projects a recorded search reward still held in inventory into visual metadata, without awarding or changing authoritative state"
     }
   ],
   "control_flow_site_scope": "line-start if/elif/match sites only; site ownership is not branch-outcome enumeration or a transition denominator",
   "control_flow_site_counts": {
     "branch_inventory_ref": 487,
-    "explicit_method_exclusion": 95,
+    "explicit_method_exclusion": 98,
     "telemetry_file_io": 1,
     "action_dispatch": 1
   },
@@ -4778,6 +4786,14 @@
       "reason": "projects a read-only service view into UI controls"
     },
     {
+      "file": "Godot/three_d/scripts/services_hud.gd",
+      "line": 58,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects a read-only service view into UI controls"
+    },
+    {
       "file": "Godot/three_d/scripts/table_hud.gd",
       "line": 147,
       "method": "pregame",
@@ -6264,6 +6280,22 @@
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1253,
+      "method": "received_search_item",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects a recorded search reward still held in inventory into visual metadata, without awarding or changing authoritative state"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1257,
+      "method": "received_search_item",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects a recorded search reward still held in inventory into visual metadata, without awarding or changing authoritative state"
     }
   ],
   "errors": []

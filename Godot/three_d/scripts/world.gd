@@ -978,7 +978,7 @@ func open_services(mode := "bag", item := "") -> void:
 	service_mode = mode
 	product_id = item
 	var service_view: Dictionary = run_game.service_view(service_mode, product_id)
-	services_panel.refresh(service_view, run_game.inventory.map(func(id): return {"id":id,"name":run_game.item_name(id)}))
+	services_panel.refresh(service_view, run_game.inventory.map(func(id): return {"id":id,"name":run_game.item_name(id)}), received_search_item())
 	services_panel.show()
 	var service_options := legal_service_actions(service_view)
 	service_options.append({"kind":"close"})
@@ -1022,7 +1022,7 @@ func service_action(kind: String, item_id: String, revision: int, target_id := "
 		if table_game != null:
 			refresh_table()
 		var updated_view: Dictionary = run_game.service_view(service_mode, product_id)
-		services_panel.refresh(updated_view, run_game.inventory.map(func(id): return {"id":id,"name":run_game.item_name(id)}))
+		services_panel.refresh(updated_view, run_game.inventory.map(func(id): return {"id":id,"name":run_game.item_name(id)}), received_search_item())
 		bar_display.refresh()
 		refresh_route_labels()
 		if kind == "buy":
@@ -1248,3 +1248,12 @@ func refresh_route_labels() -> void:
 				node.title = "返回" + RunRules.SCENE_NAMES[run_game.scene_id]
 
 	show_focus(player.focused)
+
+func received_search_item() -> Dictionary:
+	if service_mode!="search": return {}
+	var record: Dictionary=run_game.search_results.get(product_id,{})
+	var event: Dictionary=RunRules.SearchEvents.EVENTS.get(record.get("event",product_id),{})
+	for choice in event.get("choices",[]):
+		if choice.id==record.get("choice","") and choice.has("item") and choice.item in run_game.inventory:
+			return {"id":choice.item,"name":run_game.item_name(choice.item)}
+	return {}
