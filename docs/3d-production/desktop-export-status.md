@@ -170,3 +170,15 @@ Mac 上的 Godot 读取 Windows PCK，26 项资源加载及 396 项规则循环�
 初次输入注入失败属于测试事件缓冲：发送同一事件对象后过早改为松开；修正为按下后 flush_buffered_events，松开使用独立 duplicate 对象。中途失败检查已主动停止，最终证据来自完整清洁运行，没有修改游戏输入代码。无窗口检查使用射线调用分支，不能当作 E 键输入证据；窗口分支才负责 E 键。
 
 随后完整无窗口构建流程再次通过；出口检查为 510 项（多出射线调用分支断言），日志 `preview-exit_rays.log`。两种模式的断言数量不同，不能相加为状态转移覆盖。
+
+## 2026-10-03：窗口长时巡回启动
+
+新增 `soak_preview.gd`，拒绝无窗口或缺少 `--test` 的启动。脚本使用当前 PCK，真实窗口依次巡回各牌室、库房、后厨、码头和藏匿点；每轮通过实际牌局动作、服务降风声、结算和公共撤离推进，不直接伪造完成表。以固定视角站位轮换，不模拟物理行走，也不在原生 release EXE 中运行。
+
+每 10 秒写帧回调间隔 median/p95、引擎静态内存、显存和节点数，附引擎、CPU/GPU、窗口尺寸、进程 ID 与运行状态。静态内存不是 RSS，帧回调间隔含系统调度/显示节奏，不能单凭它宣布中端机 60 fps 或无内存泄漏。
+
+30 秒预检已实际完成：39 项检查、0 失败，退出码 0；日志 `soak-smoke.log`，报告 `soak-smoke.json`。随后已启动目标 1800 秒正式窗口巡回，输出 `output/builds/soak-30min.log` 与 `soak-30min.json`；**本节记录启动，不代表 30 分钟已通过**。结束后需核对退出码、完整时长、日志、内存与帧时间走势。运行用 `--test` 不读写正式存档。
+
+```sh
+/Applications/Godot.app/Contents/MacOS/Godot --path /tmp --main-pack "$PWD/output/builds/TexasPub-preview.pck" --script "$PWD/Godot/three_d/tools/soak_preview.gd" -- --test --soak-seconds=1800 "--soak-output=$PWD/output/builds/soak-30min.json"
+```
