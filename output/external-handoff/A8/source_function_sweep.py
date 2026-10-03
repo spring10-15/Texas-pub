@@ -134,6 +134,26 @@ def source_line_refs(rows: list[dict[str, str]]) -> dict[str, set[int]]:
     return found
 
 
+def validate_function_refs(rows: list[dict[str, str]]) -> list[str]:
+    """Reject stale numeric anchors even when they point at another function."""
+    errors = []
+    sources = {}
+    for row in rows:
+        if not row["function_line"].isdigit():
+            continue
+        source = row["source_file"]
+        if source not in sources:
+            sources[source] = (ROOT / source).read_text(encoding="utf-8").splitlines()
+        number = int(row["function_line"])
+        lines = sources[source]
+        line = lines[number - 1] if 1 <= number <= len(lines) else ""
+        match = re.match(r"\s*(?:static\s+)?func\s+([A-Za-z_]\w*)\s*\(", line)
+        entry = row["entry"].split("（", 1)[0].split("(", 1)[0].strip().split(".")[-1]
+        if not match or match.group(1) != entry:
+            errors.append(f"stale function anchor: {source}:{number} expected {entry}")
+    return errors
+
+
 def main() -> int:
     branch_rows = list(csv.DictReader(INVENTORY.open(encoding="utf-8", newline="")))
     audited_lines: dict[str, set[int]] = collections.defaultdict(set)
@@ -144,7 +164,7 @@ def main() -> int:
     files = sorted([*RULES.glob("*.gd"), *SCRIPTS.glob("*.gd")])
     inventory = []
     branch_sites = []
-    errors = []
+    errors = validate_function_refs(branch_rows)
     counts = collections.Counter()
     branch_counts = collections.Counter()
     seen_exclusions = set()
