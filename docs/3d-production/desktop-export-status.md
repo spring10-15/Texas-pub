@@ -289,3 +289,19 @@ Mac/Windows release 导出均退出 0，日志无 ERROR。两份实际 PCK 各�
 - 日志：seven-card-macos-resources/score/equity.log、seven-card-windows-resources/score/equity.log、seven-card-native-check.log。
 
 本轮未将旧版 30 分钟记录重记为新版长时通过；Windows 实机、干净机器和最终精细资产验收仍未完成。
+
+## 2026-10-03：交互动画恢复修复包
+
+桌面包已包含源码提交 `e831210` 的物件/皮箱旧 Tween 取消逻辑。最终源码回归 `output/3d/regression/20261003-211539/report.json`：74 个 Godot 套件、20 个 Python 测试全部通过、运行期间源码/资产指纹未变。本轮只重新导出与验证包，没有重复完整源码回归。
+
+官方 macOS/Windows release 导出均退出 0，日志没有 ERROR/脚本解析错误。外部专项脚本仅改报告输出路径，世界与规则实际加载自对应 PCK：两份各 28 项检查通过，包含恢复后旧动画不再改写画面、非法恢复保持动画、新交互可继续。此范围不是完整打包玩法或任意历史存档验收。
+
+Mac 原生应用从 `/tmp` 以 `--headless --quit-after 120 -- --test` 启动，退出 0，无 ERROR。Windows PCK 在 Mac Godot 引擎中验证，不代表 Windows EXE 原生运行。两 ZIP 的 CRC 与内嵌文件大小/SHA256 清单全部核对；Windows ZIP 内容与导出完成后的 exe/pck/readme 文件逐字节相同。
+
+- 当前 Mac：`output/builds/TexasPub.zip`，SHA256 `c64d51211987db97219f472a4e8dd00b0bd2c5b60dc4bc6e1f52e41be12f7d7c`。
+- 当前 Windows：`output/builds/TexasPub-Windows-preview.zip`，SHA256 `12fe65bf535c828666bf91782c032d6d892aa7ed05c2f9b09a8aef64cc7405a0`。
+- Mac 解压核验副本：`output/builds/macos-animation-restore-preview/`。
+- 原有包保留 `TexasPub-before-animation-restore.zip` 与 `TexasPub-Windows-preview-before-animation-restore.zip`。
+- 本轮日志：`animation-restore-macos-export.log`、`animation-restore-windows-export.log`、`animation-restore-macos-test.log`、`animation-restore-windows-test.log`、`animation-restore-native-check.log`。包内专项原始 JSON 为 `animation-restore-macos-test.json` 与 `animation-restore-windows-test.json`。
+
+本地包包含当前工作区三个人物精修样板及其游戏接入；这些美术改动仍未纳入场景开发的 Git 提交，不能仅按 Git SHA 复建完全相同美术包。没有上传 GitHub Release。Windows 实机、干净机器、目标中端性能、当前版 30 分钟和最终高保真美术仍未完成，旧版长时报告不重标为本版通过。
