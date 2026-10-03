@@ -230,3 +230,9 @@ RSS 观察进程正常结束（process_ended、退出码 0），175 个样本，
 发现 TexasPub.zip 原先只有应用文件，没有试玩说明。新增 package_macos_preview.py，将 macos-preview-readme.md 作为包根目录 README.md，并生成 build-manifest.json，记录应用各文件与说明的字节数和 SHA256。包内明确 test_harness=false、clean_machine_verified=false，不把独立测试包验收转移到玩家包。工具支持重复执行替换说明和清单，不累加同名条目。实际打包通过，逐个核对应用字节与 ZIP 执行权限完全一致，ZIP CRC 校验通过；未重新导出或替换正在精修的美术资源。
 
 正式资源包检查新增主场景与自动巡回入口隔离断言。从实际 Mac 玩家 ZIP 提取内嵌 PCK，28 项检查、0 失败、退出码 0。独立巡回包反例被两项断言正确拒绝、退出码 1；初次 FileAccess 未识别导出资源重映射，改为 ResourceLoader.exists 后反例通过。ZIP 二进制权限为 0755。上述检查不替代干净机器运行。
+
+## 2026-10-03：存档矩阵修复进入 Mac 试玩包
+
+重新导出 TexasPub.zip，官方 release 导出正常退出、日志无 ERROR。资源指纹逐项与 20261003-124036 的完整回归报告一致。提取内嵌 PCK 检查 28 项、零失败；从 /tmp 启动原生二进制无窗口 120 帧正常退出，另以窗口 240 帧正常退出，日志无 ERROR。测试带 --test，不访问正式玩家存档。操作说明注明异常变换保护，并重新嵌入 README 与校验清单；清单各文件 SHA256 逐项核对通过。
+
+新 ZIP SHA256：`ecb238da5207c5067182a53bb5e75dcc0e35af6384cc220856d9b7d4b514e67f`；旧包保留为 output/builds/TexasPub-before-transform-fix.zip。新解压应用在 output/builds/macos-transform-preview/。本次仅本机短时启动，不继承先前独立巡回包的 30 分钟验收，不证明干净机器或目标中端性能。Windows 包尚未刷新该修复。
