@@ -47,7 +47,33 @@ func run() -> void:
 	await create_timer(0.6).timeout
 	world.set_process(false)
 	await capture("03-table")
+	var beats := 0
+	while world.table_game.state.status != "finished" and beats < 200:
+		beats += 1
+		var table = world.table_game
+		if table.state.status == "hand_over": table.next_hand(table.revision)
+		elif table.state.currentActorId == "player": table.act("player", "fold", table.revision)
+		else: world.advance_table_beat()
+		world.refresh_table()
+	if world.table_game.state.status != "finished":
+		push_error("Capture table did not complete")
+		quit(1)
+		return
+	await capture("04-table-result")
+	world.leave_seat()
+	world.show_run_panel("extract")
+	if world.run_confirm.disabled:
+		push_error("Extraction unavailable")
+		quit(1)
+		return
+	await capture("05-extraction-quote")
+	world.confirm_run_action()
+	if world.run_game.active or world.current_room != "stash":
+		push_error("Extraction did not return home")
+		quit(1)
+		return
+	await capture("06-banked")
 	world.queue_free()
 	await process_frame
-	print("PREVIEW_MEDIA captured=3")
+	print("PREVIEW_MEDIA captured=6")
 	quit(0)
