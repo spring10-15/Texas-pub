@@ -11,8 +11,8 @@ func _initialize() -> void:
 
 func run() -> void:
 	var args := OS.get_cmdline_user_args()
-	if args.size() != 4 or args[0] != "--test" or args[1] not in ["write", "read"] or args[2] not in ["stash", "table", "search", "shopping"]:
-		push_error("Expected -- --test write|read stash|table|search|shopping ABSOLUTE_TEMP_PATH")
+	if args.size() != 4 or args[0] != "--test" or args[1] not in ["write", "read"] or args[2] not in ["stash", "table", "search", "shopping", "reservation", "extracted"]:
+		push_error("Expected -- --test write|read stash|table|search|shopping|reservation|extracted ABSOLUTE_TEMP_PATH")
 		quit(1)
 		return
 	var path := args[3]
@@ -35,13 +35,36 @@ func run() -> void:
 			if args[2] != "stash":
 				check(world.run_game.start(world.run_game.revision, "smoky-den", 41), "Start real world run")
 				world.travel("tavern")
-				if args[2] == "table":
+				if args[2] in ["table", "reservation", "extracted"]:
 					world.player.position = Vector3(9.55, 0.02, 1.15)
 					world.player.camera.look_at(world.table_target.global_position)
 					for i in range(5): await physics_frame
 					check(world.request_action(world.table_target), "Seat using actual ray interaction")
 					world.start_table(301)
 					check(world.table_game != null, "Create active world table")
+					if args[2] != "table" and world.table_game != null:
+						var table = world.table_game
+						var beats := 0
+						while table.state.status != "finished" and beats < 200:
+							beats += 1
+							if table.state.status == "hand_over": check(table.next_hand(table.revision), "Next legal hand")
+							elif table.state.currentActorId.is_empty(): check(table.advance(table.revision), "Advance legal street")
+							else:
+								var actor: String = table.state.currentActorId
+								var legal: Dictionary = table.legal_actions(actor)
+								check(table.act(actor, "fold" if actor != "player" else ("check" if legal.check else "call"), table.revision), "Legal checkpoint preparation action")
+						check(table.state.status == "finished", "Finish real cargo table")
+						world.leave_seat()
+						check(world.table_game == null and not world.seated, "Settle and leave real table")
+						if args[2] == "reservation":
+							check(world.run_game.service_action("reserve", "", world.run_game.revision), "Pay for legal reservation")
+							check(not world.run_game.reservation.is_empty(), "Reservation recorded")
+						else:
+							var quote: Dictionary = world.run_game.extraction_quote()
+							var vault_before: int = world.run_game.vault
+							world.show_run_panel("extract")
+							world.confirm_run_action()
+							check(not world.run_game.active and world.current_room == "stash" and world.run_game.vault == vault_before + quote.net, "Actual extraction banks quoted amount")
 				elif args[2] == "search":
 					var events = load("res://three_d/rules/search_events.gd")
 					var applied := false
@@ -76,6 +99,11 @@ func run() -> void:
 			for id in ["lamp", "window", "drawer0"]:
 				check(world.props.states[id], "Restore opened prop " + id)
 			check(world.seat_camera.current if world.seated else world.player.camera.current, "Restore correct camera")
+			if args[2] == "extracted":
+				var banked: Dictionary = world.checkpoint_state()
+				world.check_pressure()
+				world.leave_seat()
+				check(world.checkpoint_state() == banked, "Restored extraction cannot bank twice")
 			var valid_bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
 			var corrupt := FileAccess.open(path, FileAccess.WRITE)
 			corrupt.store_string("invalid probe save")

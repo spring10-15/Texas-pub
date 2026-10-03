@@ -33,7 +33,7 @@ def main():
             with zipfile.ZipFile(archive) as package:
                 packs[key].write_bytes(package.read(PACK_MEMBER))
         report['pack_sha256'] = {key: digest(path) for key, path in packs.items()}
-        for scenario in ('stash', 'table', 'search', 'shopping'):
+        for scenario in ('stash', 'table', 'search', 'shopping', 'reservation', 'extracted'):
             save = output / ('texaspub-restart-' + scenario + '.save')
             original_digest = None
             for phase, generation in [('write', 'old'), ('read', 'new')]:
@@ -57,7 +57,7 @@ def main():
             report.setdefault('fixture_sha256', {})[scenario] = original_digest
     report['passed'] = True
     (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
-    print('Old-pack to new-pack stash/table/search/shopping restore passed: ' + str(output))
+    print('Old-pack to new-pack six scenarios restore passed: ' + str(output))
 
 
 if __name__ == '__main__':
