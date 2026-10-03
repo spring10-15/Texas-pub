@@ -5,16 +5,17 @@ static func estimate_odds(hole: Array, board: Array, opponents: int, seed_value:
 	var known := hole + board
 	var remaining := Poker.create_deck().filter(func(card): return not known.has(card))
 	var score := 0.0
+	var completed_hand: Dictionary = Poker.score_seven(hole + board) if board.size() == 5 else {}
 	for trial in range(trials):
 		var deck := Poker.shuffle_deck(remaining, Poker.DeterministicRng.new(seed_value + trial * 31 + opponents * 17))
 		var community := board.duplicate(true)
 		while community.size() < 5:
 			community.append(deck.pop_back())
-		var player_hand := Poker.evaluate_best_hand(hole + community)
+		var player_hand := completed_hand if not completed_hand.is_empty() else Poker.score_seven(hole + community)
 		var result := 1.0
 		var tied := 1
 		for i in range(opponents):
-			var opponent_hand := Poker.evaluate_best_hand([deck.pop_back(), deck.pop_back()] + community)
+			var opponent_hand := Poker.score_seven([deck.pop_back(), deck.pop_back()] + community)
 			var comparison := Poker.compare_hands(player_hand, opponent_hand)
 			if comparison < 0:
 				result = 0.0

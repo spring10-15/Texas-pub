@@ -30,3 +30,14 @@
 hand_evaluation_equivalence_test.gd 以原有逐组合完整五张结果选择方式作为参考，覆盖现有牌型 fixture、100 个种子的 4/5/6/7 张样本和同分不同花色候选；1414 个输入、4242 项断言通过。比较完整 rank/values/name/cards，输入不得变化，返回牌面不得引用输入字典。该专项证明优化后的选择与展示复制保持，不把它当成所有德扑规则的穷举证明。现有独立牌型/RNG fixture 1424 项及浏览器牌桌 parity 111 样本亦通过。
 
 最终完整回归：output/3d/regression/20261003-201735/report.json，71/71 个 Godot 套件与 20/20 个 Python 测试通过，运行期间源码、测试与资产指纹未变。此结论仍不是目标平台 60 fps 验收。
+
+
+## 2026-10-03：AI 七张牌直接评分
+
+原有完整牌型/展示接口继续按五张组合选择并生成独立展示副本；AI equity 只需要 rank 与 tiebreak values，新增 score_seven 直接统计七张牌的点数/花色，处理同花顺、四条、两个三条形成葫芦、同花、轮子顺子、三条、三对中的最佳两对、一对和高牌。straight_high 只读扫描降序点数。estimate_odds 仍进行 85 次原有洗牌和比较，种子、试验次序、牌堆复制、对手私牌抽取和随机数消耗不变；已完整的河牌可复用玩家评分。没有改变策略参数或下注规则。
+
+seven_card_score_test.gd 用原逐组合 evaluate_best_hand 为独立参考，对现有七张牌 fixture 与 10000 个固定种子手牌逐项比对 rank/values 和输入不变，20691 项检查通过，包含九类完整牌型。equity_equivalence_test.gd 保留优化前 equity 流程，用公开完整牌型接口和原洗牌验证四街道、1/2 对手、四种种子及公共皇家同花顺平分：34 组、66 项检查全部通过，胜率以精确 float 相等比较，而非容差。
+
+本机三次完整四桌 CPU 探针各 20 次对手决策：中位 4.509–4.692 ms，p95 5.278–6.336 ms，最大 6.123–6.823 ms；演员/桌/街道/手数/动作序列与第一轮优化记录全部一致，各桌终结路径相同。原始报告 ai-perf-seven-card-1/2/3.json，对账 ai-perf-seven-card-comparison.json。本次范围为 Apple M5 上的 CPU-only 决策，不包含画面重建、GPU 或目标中端机器；不能以这些值替代 60 fps 与 30 分钟验收。
+
+本轮完整回归 output/3d/regression/20261003-203614/report.json：73/73 个 Godot 套件、20/20 个 Python 测试通过，运行期间源码、测试及运行资产指纹未变。源码审计归属新增两个纯计算 helper，没有新增状态转移 ID；整体分母仍未冻结。

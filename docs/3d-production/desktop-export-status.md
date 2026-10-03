@@ -276,3 +276,16 @@ Mac/Windows 官方 release 导出退出 0，无 ERROR。两份实际 PCK 各自�
 旧版本 30 分钟记录没有重记为当前版本长时通过，本轮尚未重新做该项验收。
 
 优化包另通过旧包创建、新包加载的七类存档样本，14 个独立进程全部通过且原夹具字节不变：output/builds/upgrade-checks/20261003-202505/report.json。范围仍为既有七类代表样本，不证明任意历史存档。
+
+
+## 2026-10-03：AI 直接七张牌评分包
+
+AI 使用只读 rank/tiebreak 评分，保留 85 次原有洗牌、种子、随机数消耗和公共完整牌型/展示接口；完整河牌的玩家评分只计算一次。完整回归 output/3d/regression/20261003-203614/report.json，73/73 个 Godot 套件、20/20 个 Python 测试通过，源码/测试/运行资产指纹未变。三次本机 CPU 探针中位 4.509–4.692 ms、最大 6.123–6.823 ms，不等于最终画面 FPS 或目标设备验收。
+
+Mac/Windows release 导出均退出 0，日志无 ERROR。两份实际 PCK 各自通过 28 项资源检查、20691 项七张牌与原逐组合评分对照、34 组/66 项精确 equity 对照。七张牌校验使用外部固定测试 fixture，实际 Poker/Opponent 类从 PCK 加载。Mac 原生应用从 /tmp 以 --test 运行 headless 120 帧退出 0，无 ERROR。Windows x64 头、ZIP CRC、文件清单校验通过，但 Windows 原生运行仍未验证。旧包保留 before-seven-card-optimization 备份。
+
+- Mac ZIP SHA-256：`ed19f54e3ca687e4488ef13ecaf00c91916ef4dfab7109c512bd1c90e25cff08`。
+- Windows ZIP SHA-256：`86aff2e7db8ac5c8d779f58d91e2e375dc9d152c4bfea68a68e82bb5115bc12f`。
+- 日志：seven-card-macos-resources/score/equity.log、seven-card-windows-resources/score/equity.log、seven-card-native-check.log。
+
+本轮未将旧版 30 分钟记录重记为新版长时通过；Windows 实机、干净机器和最终精细资产验收仍未完成。

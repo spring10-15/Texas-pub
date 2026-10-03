@@ -59,6 +59,63 @@ static func evaluate_best_hand(cards: Array) -> Dictionary:
 							best_cards = candidate
 	return make_hand(best.rank, best.values, best_cards)
 
+# AI needs rank/tiebreak values for seven cards, without selecting display cards.
+static func score_seven(cards: Array) -> Dictionary:
+	var counts := {}
+	var suits := {}
+	for card in cards:
+		var rank := int(card.rank)
+		counts[rank] = counts.get(rank, 0) + 1
+		if not suits.has(card.suit): suits[card.suit] = []
+		suits[card.suit].append(rank)
+	var ranks: Array = counts.keys()
+	ranks.sort()
+	ranks.reverse()
+	var flush_ranks: Array = []
+	for suited in suits.values():
+		if suited.size() >= 5:
+			flush_ranks = suited.duplicate()
+			flush_ranks.sort()
+			flush_ranks.reverse()
+			var high := straight_high(flush_ranks)
+			if high > 0: return {"rank":8,"values":[high]}
+	var trips: Array = []
+	var pairs: Array = []
+	for rank in ranks:
+		if counts[rank] == 4:
+			var kickers := ranks.filter(func(value): return value != rank)
+			return {"rank":7,"values":[rank,kickers[0]]}
+		if counts[rank] >= 3: trips.append(rank)
+		if counts[rank] >= 2: pairs.append(rank)
+	if not trips.is_empty():
+		var house_pairs := pairs.filter(func(value): return value != trips[0])
+		if not house_pairs.is_empty(): return {"rank":6,"values":[trips[0],house_pairs[0]]}
+	if not flush_ranks.is_empty(): return {"rank":5,"values":flush_ranks.slice(0,5)}
+	var straight := straight_high(ranks)
+	if straight > 0: return {"rank":4,"values":[straight]}
+	if not trips.is_empty():
+		var kickers := ranks.filter(func(value): return value != trips[0])
+		return {"rank":3,"values":[trips[0],kickers[0],kickers[1]]}
+	if pairs.size() >= 2:
+		var kickers := ranks.filter(func(value): return value != pairs[0] and value != pairs[1])
+		return {"rank":2,"values":[pairs[0],pairs[1],kickers[0]]}
+	if pairs.size() == 1:
+		var kickers := ranks.filter(func(value): return value != pairs[0])
+		return {"rank":1,"values":[pairs[0],kickers[0],kickers[1],kickers[2]]}
+	return {"rank":0,"values":ranks.slice(0,5)}
+
+static func straight_high(descending: Array) -> int:
+	var ranks := descending.duplicate()
+	if ranks.has(14): ranks.append(1)
+	var length := 1
+	for i in range(1,ranks.size()):
+		if ranks[i] == ranks[i-1] - 1:
+			length += 1
+			if length == 5: return ranks[i-4]
+		elif ranks[i] != ranks[i-1]:
+			length = 1
+	return 0
+
 static func evaluate_five(cards: Array) -> Dictionary:
 	var score := evaluate_five_score(cards)
 	return make_hand(score.rank, score.values, cards)
