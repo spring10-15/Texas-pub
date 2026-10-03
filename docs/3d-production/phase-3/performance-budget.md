@@ -101,3 +101,34 @@ seven_card_score_test.gd 用原逐组合 evaluate_best_hand 为独立参考，�
 此样本没有 AI 行动帧尖峰，但不能推出所有种子、牌桌或设备的 AI 都不会掉帧。启动两条记录的引擎 process/physics 监视值为 0，不能作为 CPU 为零的证据；第三条最近引擎监视值为 process 7.512 ms、physics 0.358 ms。监视值可能滞后，且测试分支与引擎处理可能重叠，不将它们相加当作整帧 CPU 耗时。
 
 结论只到事件关联：下一步优先区分首次渲染/资源预热与每轮视觉重建的成本。短测最大值高于长测，并不构成性能回退证明；场景、窗口和调度条件尚未做严格控制。没有据单次样本删除灯光、降低模型精度或改变 AI。资源包、原长测脚本和玩法保持不变。
+
+## 2026-10-04：五类入口视角渲染计时与 GPU 证据缺口
+
+新增独立工具 `Godot/three_d/tools/perf_viewport.gd`，对现有五类空间入口固定视角各预热 120 次渲染回调，再采样至少 6 秒。只启用根 Viewport 的测量，不改光照/材质/玩法，不打开背包子视口，不启动 AI 牌局。工具要求有窗口、`--test` 与绝对输出路径；headless 负例退出 1，未创建 World 或触碰玩家正式存档。
+
+计时口径来自 [Godot RenderingServer 官方文档](https://docs.godotengine.org/en/stable/classes/class_renderingserver.html#class-renderingserver-method-viewport-get-measured-render-time-cpu)：CPU/GPU 返回单位是毫秒；CPU 渲染值不包括脚本和其他引擎子系统，完整渲染还涉及其他视口与 CPU frame setup，不能把单视口值当作总帧时。GPU API 可受电源状态影响，不能从毫秒读数直接推广其他硬件或显示呈现 FPS。
+
+运行采用实际新灯光 Mac PCK、Godot 4.7.2 有窗口 Metal/Forward+、Apple M5（Apple9），窗口/视口 1376×768。原始报告 `output/builds/viewport-profile.json`，进程退出 0、日志无引擎错误。再以同一 PCK 和脚本加官方 `--gpu-profile` 参数复核，报告 `viewport-profile-enabled.json`，同样退出 0。第二轮引擎打印的 32 条 GPU 总计时也全部是 0.0 ms。
+
+| 入口视角 | 首轮根视口渲染 CPU p95 / ms | 开启 GPU profile 后 CPU p95 / ms | 两轮 GPU |
+|---|---:|---:|---|
+| 藏匿点 | 0.353 | 0.348 | 所有读数为 0，计时不可用 |
+| 烟雾酒馆 | 1.059 | 1.025 | 同上 |
+| 高层套房 | 1.034 | 1.006 | 同上 |
+| 屋顶会所 | 1.059 | 0.997 | 同上 |
+| 霓虹扑克俱乐部 | 0.992 | 0.999 | 同上 |
+
+工具将零 GPU 读数单独计数、GPU 汇总标记 `available=false`，没有把它们加入分位数或当作“GPU 很快”。当前尚未判明零值原因，不推断所有 Metal 设备都不支持计时；增加 `--gpu-profile` 没有解决这台机器本轮证据缺口。Xcode 的 `xctrace` 与 Metal System Trace 模板存在，但本轮未运行系统跟踪，不能宣称已有外部 GPU 验证。
+
+复现：在项目根目录执行以下命令（输出路径替换为本机绝对路径）：
+
+```sh
+/Applications/Godot.app/Contents/MacOS/Godot --path /tmp \
+  --main-pack '/绝对路径/output/builds/macos-lighting-preview/Godot德扑酒馆.app/Contents/Resources/Godot德扑酒馆.pck' \
+  --script '/绝对路径/Godot/three_d/tools/perf_viewport.gd' \
+  -- --test --profile-output='/绝对路径/output/builds/viewport-profile.json'
+```
+
+可在 `--path` 前加入 `--gpu-profile` 作第二种诊断。报告及包/脚本 SHA256 与退出状态记录在 `viewport-profile-evidence.json` 和 `viewport-profile-enabled-evidence.json`；PCK SHA256 为 `4c3eba9dbbe4e9f73b486627fb7531b7b90baec9eb4de17d725810446fa3f4cf`。这两个记录是本轮实际命令与文件指纹的证据，不是自动识别引擎加载包路径的通用验证器。
+
+结论：已补根视口渲染 CPU 基线并确认 GPU 测量当前不可用，不能给 60 fps 目标放行。五视角仍为共同室内建筑及初始灯光，静止短测不代替精模后的行走、背包、牌桌、楼梯、完整 30 分钟或中端 Mac/Windows 实机门槛。后续需用实际支持的 GPU 时间来源或外部图形分析器补证，而不是继续用回调间隔冒充 GPU。
