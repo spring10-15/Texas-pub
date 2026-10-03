@@ -50,6 +50,49 @@ func _initialize() -> void:
 			var banked: int = night.vault
 			verify(not night.extract(night.revision, route) and night.vault == banked, "Pass extraction cannot pay twice")
 			print("Packed pass route: ", venue, "/", route)
+	for venue in rules.SCENE_NAMES:
+		for offer_index in range(content.routes[venue].fixedRoutes.size()):
+			var night = null
+			for seed_value in range(1, 101):
+				var candidate = rules.new(content)
+				candidate.start(candidate.revision, venue, seed_value)
+				if candidate.offer_index == offer_index:
+					night = candidate
+					break
+			verify(night != null, "Real seed selects authored reservation offer")
+			if night == null: continue
+			var table = night.enter_table(301, night.revision, "cargo-table")
+			verify(table != null, "Play to discover reservation lead")
+			if table == null: continue
+			finish(table)
+			verify(night.settle_table(night.revision), "Finish reservation lead table")
+			var wealth: int = night.vault + night.cash + night.valuable_total()
+			var prepaid: int = night.reserve_fee()
+			verify(night.service_action("reserve", "", night.revision), "Reserve selected authored offer")
+			verify(night.reservation.id == content.routes[venue].fixedRoutes[offer_index].id, "Reservation ID matches selected offer")
+			var reserved: Dictionary = checkpoint.capture(night)
+			var exiting = checkpoint.restore(reserved, content)
+			verify(exiting != null, "Authored reservation restores")
+			if exiting == null: continue
+			var quote: Dictionary = exiting.extraction_quote("fixed")
+			verify(quote.reason.is_empty() and exiting.extract(exiting.revision, "fixed"), "Authored reservation extracts")
+			verify(exiting.vault == wealth - prepaid - int(quote.fee), "Authored reservation prepaid and final fees balance")
+			for site in ["ledger-cellar", "mirror-hall", "embers-table"]:
+				if night.heat > 0:
+					verify(night.service_action("cool", "", night.revision), "Cool while advancing reservation clock")
+				table = night.enter_table(301, night.revision, site)
+				verify(table != null, "Advance expiry with real table completion")
+				if table == null: break
+				finish(table)
+				verify(night.settle_table(night.revision), "Complete real reservation clock step")
+				if night.search_index > night.reservation.expiresAfterSearch:
+					var before: Dictionary = checkpoint.capture(night)
+					verify(night.extraction_quote("fixed").reason == "预约已过期", "Expired authored offer is explained")
+					verify(not night.extract(night.revision, "fixed") and checkpoint.capture(night) == before, "Expired extraction leaves money and state untouched")
+					break
+				elif night.search_index == night.reservation.expiresAfterSearch:
+					verify(night.extraction_quote("fixed").reason != "预约已过期", "Reservation remains valid on final permitted round")
+			print("Packed authored reservation: ", venue, "/", content.routes[venue].fixedRoutes[offer_index].id)
 	print("Export pass routes: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)
 
