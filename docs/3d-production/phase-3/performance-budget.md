@@ -41,3 +41,20 @@ seven_card_score_test.gd 用原逐组合 evaluate_best_hand 为独立参考，�
 本机三次完整四桌 CPU 探针各 20 次对手决策：中位 4.509–4.692 ms，p95 5.278–6.336 ms，最大 6.123–6.823 ms；演员/桌/街道/手数/动作序列与第一轮优化记录全部一致，各桌终结路径相同。原始报告 ai-perf-seven-card-1/2/3.json，对账 ai-perf-seven-card-comparison.json。本次范围为 Apple M5 上的 CPU-only 决策，不包含画面重建、GPU 或目标中端机器；不能以这些值替代 60 fps 与 30 分钟验收。
 
 本轮完整回归 output/3d/regression/20261003-203614/report.json：73/73 个 Godot 套件、20/20 个 Python 测试通过，运行期间源码、测试及运行资产指纹未变。源码审计归属新增两个纯计算 helper，没有新增状态转移 ID；整体分母仍未冻结。
+
+
+## 2026-10-03：有窗口的实际 AI 行动与画面回调
+
+新增 `Godot/three_d/tools/perf_active_table.gd`，运行命令：
+
+```sh
+/Applications/Godot.app/Contents/MacOS/Godot --path Godot --script res://three_d/tools/perf_active_table.gd -- --test --playtest-seed=41
+```
+
+脚本通过真实焦点射线入座，预热 120 次渲染回调后启动货运桌 seed 301；场景种子 41，烟雾酒馆，对手 ash-smuggler 与 ledger-clerk。玩家自动合法 check/call/fold；对手由正常 World._process、生产 AI、行动延迟和 UI/动画共同推进。定位是测试夹具，不是玩家实际走路或鼠标操作。`--test` 隔离正式存档；无窗口运行会在创建游戏世界前拒绝，退出码 1，已验证。
+
+当前一次样本自然结束于第一手，持续 6.717439 秒，1779 次渲染回调：中位 3.639 ms、p95 4.113 ms、最大 9.370 ms；其中 5 个实际 AI 状态变更回调中位 8.714 ms、p95/最大 9.370 ms。全部样本没有超过 16.67 ms，探针失败数 0，正常退出码 0。环境为 Apple M5、Godot 4.7.2、Metal Forward Plus、1376×768、vsync 模式 1。
+
+原始报告 `output/3d/perf-active-table.json` 每次覆盖；包含种子、对手、行动转移、6 个源文件与 8 个 GLB 的 SHA256，均已与实际文件字节独立核对。本次包含工作区现有角色资产；角色美术仍由另一模型处理，不能将这些指纹当成已提交或最终美术版本。报告 SHA256：`73b3ce9c96b86fdd8bbe81d48f8421961bcc44c885c8c833809f9aa97df7e12c`。
+
+这只是一个短牌桌样本。渲染回调间隔包含调度与显示节奏，不等于独立 GPU 帧时或真实呈现 FPS；不得把 1779 次回调换算为目标平台帧率。未验证完整多局、30 分钟真实游玩、最终高精度美术、中端 Mac 或 Windows 原生运行。本轮只增加测量工具和记录；沿用此前 73 个 Godot 套件与 20 个 Python 测试的运行逻辑验证，不声称重新执行完整回归。
