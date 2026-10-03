@@ -11,8 +11,8 @@ func _initialize() -> void:
 
 func run() -> void:
 	var args := OS.get_cmdline_user_args()
-	if args.size() != 4 or args[0] != "--test" or args[1] not in ["write", "read"] or args[2] not in ["stash", "table"]:
-		push_error("Expected -- --test write|read stash|table ABSOLUTE_TEMP_PATH")
+	if args.size() != 4 or args[0] != "--test" or args[1] not in ["write", "read"] or args[2] not in ["stash", "table", "search", "shopping"]:
+		push_error("Expected -- --test write|read stash|table|search|shopping ABSOLUTE_TEMP_PATH")
 		quit(1)
 		return
 	var path := args[3]
@@ -32,15 +32,32 @@ func run() -> void:
 			world.props.restore({"lamp":true, "window":true, "drawer0":true})
 			world.player.position = Vector3(-0.2, 0.05, 1.6)
 			world.player.camera.rotation = Vector3(-0.2, 0.4, 0)
-			if args[2] == "table":
+			if args[2] != "stash":
 				check(world.run_game.start(world.run_game.revision, "smoky-den", 41), "Start real world run")
 				world.travel("tavern")
-				world.player.position = Vector3(9.55, 0.02, 1.15)
-				world.player.camera.look_at(world.table_target.global_position)
-				for i in range(5): await physics_frame
-				check(world.request_action(world.table_target), "Seat using actual ray interaction")
-				world.start_table(301)
-				check(world.table_game != null, "Create active world table")
+				if args[2] == "table":
+					world.player.position = Vector3(9.55, 0.02, 1.15)
+					world.player.camera.look_at(world.table_target.global_position)
+					for i in range(5): await physics_frame
+					check(world.request_action(world.table_target), "Seat using actual ray interaction")
+					world.start_table(301)
+					check(world.table_game != null, "Create active world table")
+				elif args[2] == "search":
+					var events = load("res://three_d/rules/search_events.gd")
+					var applied := false
+					for choice in events.event_for(world.run_game, "cargo-table").choices:
+						if world.run_game.service_reason("search", "cargo-table", choice.id).is_empty():
+							applied = world.run_game.service_action("search", "cargo-table", world.run_game.revision, choice.id)
+							break
+					check(applied and world.run_game.search_results.has("cargo-table"), "Resolve real search event")
+				elif args[2] == "shopping":
+					var purchased := false
+					for item in world.run_game.shop_stock():
+						if world.run_game.service_reason("buy", item).is_empty():
+							purchased = world.run_game.service_action("buy", item, world.run_game.revision)
+							check(item in world.run_game.inventory, "Purchased item enters inventory")
+							break
+					check(purchased and world.run_game.cash < world.run_game.bankroll, "Actual purchase deducts cash")
 			if not failed:
 				check(world.save_checkpoint(), "Save through actual world save entry")
 	else:
