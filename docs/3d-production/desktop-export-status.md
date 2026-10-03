@@ -1,6 +1,8 @@
 # 桌面导出准备与验证
 
-更新：2026-09-30。本记录属于交付准备，不代表 Phase 5 完成。
+更新：2026-10-03。本记录属于交付准备，不代表 Phase 5 完成。
+
+**最新状态：官方模板已安装，macOS 独立 ZIP 已导出并完成本机启动检查。下文模板缺失为历史记录，最新证据见末尾。**
 
 ## 本次结果
 
@@ -110,3 +112,15 @@ python3 Godot/three_d/tools/build_preview.py
 首次检查屋顶酒馆预约失败，因为四桌结束时风声超过路线限制；这是正常规则限制。本轮在预约前通过实际酒保降风声服务付费，未修改路线门槛。四店三类样本均通过。当前固定预约只覆盖各店当前 offer，不能声称 16 个具名路线全部通过；通行证的楼梯/河边路线、预约过期与高风声失败反馈仍需进一步包内验证。
 
 完整 `build_preview.py` 实跑通过，循环 396 项检查、0 失败，资源与跨进程恢复亦通过。证据为 `output/builds/preview-loop.log` 和 `preview-build.json`，本次报告替代上轮失败构建状态。仍为资源包检查，未产出原生应用。
+
+## 2026-10-03：macOS 独立应用首次导出
+
+GitHub 网络恢复，`main` 的积累提交已推送至 `eb9531f`。从 Godot 官方 godot-builds 的 4.7.2-stable Release 下载 `Godot_v4.7.2-stable_export_templates.tpz` 和 `SHA512-SUMS.txt`；完整档案 SHA512 与官方清单一致，内部 `templates/version.txt` 为 `4.7.2.stable`。只安装当前所需的 `macos.zip` 和版本文件，没有覆盖已有模板。官方档案保留于 `output/builds/`。
+
+使用现有 `macOS Preview` 预设成功导出 `output/builds/TexasPub.zip`，约 112 MiB，日志 `native-export.log` 无 ERROR/WARNING。解压结果为 `output/builds/macos-preview/Godot德扑酒馆.app`，恢复 ZIP 中记录的执行权限。该包包含当前未冻结的人物样板，仅作为内部预览，未签名/公证。
+
+实际启动导出的 `Contents/MacOS/Godot德扑酒馆`：工作目录 `/tmp`，不调用已安装编辑器，使用包内嵌资源；无窗口 120 帧、窗口 240 帧均退出码 0。测试带 `--test` 防止访问正式存档。首次尝试传入 `--path` 被发行模板拒绝，因此改为切换工作目录，未自编模板绕过。成功日志为 `native-startup.log`（引擎版本行）、`native-window-startup.log`（窗口运行无控制台输出）；窗口检查未留截图，不据此宣称视觉或性能通过。
+
+本机可以直接打开上述 `.app` 试玩，默认运行会使用正常存档。只进行隔离启动检查时，以绝对程序路径执行 `-- --test`。资源包构建命令暂只构建 PCK；原生导出需单独执行本文前述 `--export-release` 命令。
+
+剩余交付验收：Windows 包、Mac/Windows 目标机表现、30 分钟运行、干净机器启动与通关、全部特殊路线及真实输入操作、签名/公证策略。官方模板缺失已解决，不能再作为当前阻碍。
