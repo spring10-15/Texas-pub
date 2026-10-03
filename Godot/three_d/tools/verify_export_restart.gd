@@ -11,8 +11,8 @@ func _initialize() -> void:
 
 func run() -> void:
 	var args := OS.get_cmdline_user_args()
-	if args.size() != 4 or args[0] != "--test" or args[1] not in ["write", "read"] or args[2] not in ["stash", "table", "search", "shopping", "reservation", "extracted"]:
-		push_error("Expected -- --test write|read stash|table|search|shopping|reservation|extracted ABSOLUTE_TEMP_PATH")
+	if args.size() != 4 or args[0] != "--test" or args[1] not in ["write", "read"] or args[2] not in ["stash", "table", "search", "shopping", "reservation", "extracted", "collateral"]:
+		push_error("Expected -- --test write|read stash|table|search|shopping|reservation|extracted|collateral ABSOLUTE_TEMP_PATH")
 		quit(1)
 		return
 	var path := args[3]
@@ -35,7 +35,7 @@ func run() -> void:
 			if args[2] != "stash":
 				check(world.run_game.start(world.run_game.revision, "smoky-den", 41), "Start real world run")
 				world.travel("tavern")
-				if args[2] in ["table", "reservation", "extracted"]:
+				if args[2] in ["table", "reservation", "extracted", "collateral"]:
 					world.player.position = Vector3(9.55, 0.02, 1.15)
 					world.player.camera.look_at(world.table_target.global_position)
 					for i in range(5): await physics_frame
@@ -43,28 +43,30 @@ func run() -> void:
 					world.start_table(301)
 					check(world.table_game != null, "Create active world table")
 					if args[2] != "table" and world.table_game != null:
-						var table = world.table_game
-						var beats := 0
-						while table.state.status != "finished" and beats < 200:
-							beats += 1
-							if table.state.status == "hand_over": check(table.next_hand(table.revision), "Next legal hand")
-							elif table.state.currentActorId.is_empty(): check(table.advance(table.revision), "Advance legal street")
-							else:
-								var actor: String = table.state.currentActorId
-								var legal: Dictionary = table.legal_actions(actor)
-								check(table.act(actor, "fold" if actor != "player" else ("check" if legal.check else "call"), table.revision), "Legal checkpoint preparation action")
-						check(table.state.status == "finished", "Finish real cargo table")
-						world.leave_seat()
+						await finish_for_upgrade(world)
 						check(world.table_game == null and not world.seated, "Settle and leave real table")
 						if args[2] == "reservation":
 							check(world.run_game.service_action("reserve", "", world.run_game.revision), "Pay for legal reservation")
 							check(not world.run_game.reservation.is_empty(), "Reservation recorded")
-						else:
+						elif args[2] == "extracted":
 							var quote: Dictionary = world.run_game.extraction_quote()
 							var vault_before: int = world.run_game.vault
 							world.show_run_panel("extract")
 							world.confirm_run_action()
 							check(not world.run_game.active and world.current_room == "stash" and world.run_game.vault == vault_before + quote.net, "Actual extraction banks quoted amount")
+						elif args[2] == "collateral":
+							if not world.run_game.room_blocked_reason("mirror-hall").is_empty():
+								world.travel("ledger")
+								await seat_for_upgrade(world)
+								world.start_table(301)
+								await finish_for_upgrade(world)
+							world.travel("mirror")
+							await seat_for_upgrade(world)
+							check(world.seat_panel.collateral_choice.item_count > 1, "Earned valuable available for collateral")
+							world.seat_panel.collateral_choice.select(1)
+							var pledged: String = world.seat_panel.selected_collateral()
+							world.start_table(301)
+							check(world.table_game != null and world.run_game.collateral == pledged and not pledged.is_empty() and pledged not in world.run_game.inventory, "Real mirror buy-in pledges earned valuable")
 				elif args[2] == "search":
 					var events = load("res://three_d/rules/search_events.gd")
 					var applied := false
@@ -91,7 +93,7 @@ func run() -> void:
 			check(world.paused and world.pause_panel.visible, "Loaded game waits for Continue")
 			check(world.saving_enabled, "Valid loaded game permits saving")
 			check(world.checkpoint_state() == loaded.state, "World position, look, props, table and RNG match")
-			check(world.seated == (args[2] == "table"), "Restore correct seat mode")
+			check(world.seated == (args[2] in ["table", "collateral"]), "Restore correct seat mode")
 			check(not world.player.controls_enabled, "Pause blocks player movement")
 			world.resume()
 			check(not world.paused and not world.pause_panel.visible, "Continue exits loaded pause")
@@ -122,3 +124,26 @@ func run() -> void:
 	await process_frame
 	print("Pack restart %s %s: %s" % [args[1], args[2], "FAILED" if failed else "PASS"])
 	quit(1 if failed else 0)
+
+func seat_for_upgrade(world: Node3D) -> void:
+	world.player.position = Vector3(world.ROOMS[world.current_room].x - 0.45, 0.02, 1.15)
+	world.player.camera.look_at(world.table_target.global_position)
+	for i in range(5): await physics_frame
+	world.player.update_focus()
+	check(world.request_action(world.table_target), "Seat through physical mirror path")
+
+func finish_for_upgrade(world: Node3D) -> void:
+	var table = world.table_game
+	check(table != null, "Buy into prerequisite table")
+	if table == null: return
+	var beats := 0
+	while table.state.status != "finished" and beats < 200:
+		beats += 1
+		if table.state.status == "hand_over": check(table.next_hand(table.revision), "Next prerequisite hand")
+		elif table.state.currentActorId.is_empty(): check(table.advance(table.revision), "Advance prerequisite street")
+		else:
+			var actor: String = table.state.currentActorId
+			var legal: Dictionary = table.legal_actions(actor)
+			check(table.act(actor, "fold" if actor != "player" else ("check" if legal.check else "call"), table.revision), "Legal prerequisite action")
+	check(table.state.status == "finished", "Prerequisite table completes")
+	world.leave_seat()
