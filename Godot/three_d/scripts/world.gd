@@ -50,6 +50,7 @@ var readiness := false
 var materials := {}
 var scene_environment: Environment
 var venue_lighting: RefCounted
+var collateral_display: RefCounted
 var table_rooms := {}
 const ROOMS := {"tavern":{"node":"Tavern", "table":"cargo-table", "x":10.0}, "ledger":{"node":"LedgerCellar", "table":"ledger-cellar", "x":20.0}, "mirror":{"node":"MirrorHall", "table":"mirror-hall", "x":30.0}, "embers":{"node":"EmbersRoom", "table":"embers-table", "x":40.0}}
 var active_table_id := "cargo-table"
@@ -84,6 +85,7 @@ func _ready() -> void:
 	make_materials()
 	build_lighting()
 	venue_lighting = preload("res://three_d/scripts/venue_lighting.gd").new(self)
+	collateral_display = preload("res://three_d/scripts/collateral_display.gd").new(self)
 	props = preload("res://three_d/scripts/scene_props.gd").new(self)
 	bar_display = preload("res://three_d/scripts/bar_display.gd").new(self)
 	characters = preload("res://three_d/scripts/characters.gd").new(self)
@@ -791,6 +793,7 @@ func draw_card(card: Dictionary, pos: Vector3) -> void:
 	node.add_child(text)
 
 func refresh_economy() -> void:
+	collateral_display.sync()
 	if run_game.active:
 		economy_label.text = "金库 %d  ·  随身 %d  ·  风声 %d / 6  ·  出口%s" % [run_game.vault, run_game.cash, run_game.heat, "已知" if run_game.public_exit else "未知：查看门旁告示"]
 		if run_game.table == null and not run_game.last_table_result.is_empty():

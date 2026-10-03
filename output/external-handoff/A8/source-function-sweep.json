@@ -1,7 +1,7 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "24631ca9f33010b2240ba6529a787125c24c7d93f62142e12c55df8e45a73c8b",
+  "branch_inventory_sha256": "ecf96ed6a9f06a95941cf446fe90b6b91ddcbc486cbd45743f5ae29f8c509df1",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "7faa062633284e1605adb9d03bc2f5a92866f6a40a6149e8c628d44428385603",
@@ -16,6 +16,7 @@
     "Godot/three_d/rules/table_checkpoint.gd": "fde5ac9154f13da4cf5cd55acd4b01e9d7f8d5f24e300be162447857e146da53",
     "Godot/three_d/scripts/bar_display.gd": "a32dc21ce561270e1c065d57b4b67fd9f3b49a6453038562976563d894eaf7b8",
     "Godot/three_d/scripts/characters.gd": "4cd0337092c249cc4bd05130358a161ead2f894d5a893519acbd23d3d921aabc",
+    "Godot/three_d/scripts/collateral_display.gd": "cdbd672cc3ac3f0187db48e6e7f46320f04c5d0131072cfff4345e79fcb94783",
     "Godot/three_d/scripts/interactable.gd": "02903564281ff42f000c224aaae9d602b5f889bc5406c772e0094eaa3e590003",
     "Godot/three_d/scripts/item_preview.gd": "3c468fe1d4b3eb6f05064905da55dd7928233126507861f3d73966b0881fceca",
     "Godot/three_d/scripts/player.gd": "54f72a44a49e787eebe20d49ad79147e3cb825c5574840a05a17775045170ef2",
@@ -24,11 +25,11 @@
     "Godot/three_d/scripts/table_hud.gd": "e505290b3c2b4e1a0dbe3d7d487ee1e2a6c57b4adc378150556320e3caf977cc",
     "Godot/three_d/scripts/tavern_layout.gd": "eb34b55a7c7689eeac31895ff9394fff24bca272c38f7d1ae08666820320d4d6",
     "Godot/three_d/scripts/venue_lighting.gd": "6b75840848b428248a36d76978af0e29dfdd9659f02daf922e2c4bce73fcce6e",
-    "Godot/three_d/scripts/world.gd": "67fe63508235588d03a50b0e610c1a621c0b62c48b5a1b1a6c43c15b43524a71"
+    "Godot/three_d/scripts/world.gd": "486f440006f26a71413ee2d8cb26ccb9e9526e936406f4c70e4eb4dfe75ef508"
   },
   "counts": {
     "audit_inventory": 120,
-    "explicit_exclusion": 72
+    "explicit_exclusion": 74
   },
   "functions": [
     {
@@ -856,6 +857,22 @@
       "reason": "finds or creates a visual bone attachment for the purchased product; no authoritative Run/table state mutation"
     },
     {
+      "file": "Godot/three_d/scripts/collateral_display.gd",
+      "line": 6,
+      "name": "_init",
+      "signature": "func _init(owner: Node3D) -> void: world=owner",
+      "status": "explicit_exclusion",
+      "reason": "stores tabletop visual owner"
+    },
+    {
+      "file": "Godot/three_d/scripts/collateral_display.gd",
+      "line": 7,
+      "name": "sync",
+      "signature": "func sync() -> void:",
+      "status": "explicit_exclusion",
+      "reason": "projects authoritative pledged item into a static mesh and label, without changing Run state"
+    },
+    {
       "file": "Godot/three_d/scripts/interactable.gd",
       "line": 8,
       "name": "prompt",
@@ -1105,7 +1122,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 76,
+      "line": 77,
       "name": "_ready",
       "signature": "func _ready() -> void:",
       "status": "audit_inventory",
@@ -1113,7 +1130,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 115,
+      "line": 117,
       "name": "configure_playtest",
       "signature": "func configure_playtest(arguments: PackedStringArray) -> bool:",
       "status": "audit_inventory",
@@ -1121,7 +1138,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 128,
+      "line": 130,
       "name": "trace_playtest",
       "signature": "func trace_playtest(event: String, choice := \"\", details := {}) -> void:",
       "status": "audit_inventory",
@@ -1129,7 +1146,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 149,
+      "line": 151,
       "name": "trace_choice_opportunity",
       "signature": "func trace_choice_opportunity(scope: String, options: Array, pre_state := {}) -> String:",
       "status": "explicit_exclusion",
@@ -1137,7 +1154,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 162,
+      "line": 164,
       "name": "trace_opportunity_id",
       "signature": "func trace_opportunity_id(scope: String) -> String:",
       "status": "explicit_exclusion",
@@ -1145,7 +1162,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 165,
+      "line": 167,
       "name": "close_playtest_opportunity",
       "signature": "func close_playtest_opportunity(scope: String) -> void:",
       "status": "explicit_exclusion",
@@ -1153,7 +1170,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 168,
+      "line": 170,
       "name": "legal_service_actions",
       "signature": "func legal_service_actions(view: Dictionary) -> Array:",
       "status": "explicit_exclusion",
@@ -1161,7 +1178,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 175,
+      "line": 177,
       "name": "trace_table_opportunity",
       "signature": "func trace_table_opportunity() -> void:",
       "status": "explicit_exclusion",
@@ -1169,7 +1186,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 186,
+      "line": 188,
       "name": "configure_input",
       "signature": "func configure_input() -> void:",
       "status": "audit_inventory",
@@ -1177,7 +1194,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 195,
+      "line": 197,
       "name": "make_materials",
       "signature": "func make_materials() -> void:",
       "status": "audit_inventory",
@@ -1185,7 +1202,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 215,
+      "line": 217,
       "name": "box",
       "signature": "func box(parent: Node3D, node_name: String, pos: Vector3, size: Vector3, material: String, solid := true) -> Node3D:",
       "status": "audit_inventory",
@@ -1193,7 +1210,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 237,
+      "line": 239,
       "name": "room_shell",
       "signature": "func room_shell(offset: Vector3, label: String) -> Node3D:",
       "status": "audit_inventory",
@@ -1201,7 +1218,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 264,
+      "line": 266,
       "name": "build_stash",
       "signature": "func build_stash() -> void:",
       "status": "audit_inventory",
@@ -1209,7 +1226,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 291,
+      "line": 293,
       "name": "build_tavern",
       "signature": "func build_tavern(room_name := \"Tavern\", offset := 10.0) -> void:",
       "status": "audit_inventory",
@@ -1217,7 +1234,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 355,
+      "line": 357,
       "name": "target",
       "signature": "func target(parent: Node3D, node_name: String, pos: Vector3, size: Vector3, action: StringName, caption: String) -> Area3D:",
       "status": "audit_inventory",
@@ -1225,7 +1242,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 371,
+      "line": 373,
       "name": "make_door",
       "signature": "func make_door(room: Node3D, pos: Vector3, caption: String, action: StringName) -> Area3D:",
       "status": "audit_inventory",
@@ -1233,7 +1250,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 377,
+      "line": 379,
       "name": "build_lighting",
       "signature": "func build_lighting() -> void:",
       "status": "audit_inventory",
@@ -1241,7 +1258,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 390,
+      "line": 392,
       "name": "point_light",
       "signature": "func point_light(parent: Node3D, pos: Vector3, color: Color, energy: float, radius: float) -> OmniLight3D:",
       "status": "audit_inventory",
@@ -1249,7 +1266,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 400,
+      "line": 402,
       "name": "build_ui",
       "signature": "func build_ui() -> void:",
       "status": "audit_inventory",
@@ -1257,7 +1274,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 480,
+      "line": 482,
       "name": "label",
       "signature": "func label(parent: Node, content: String, font_size: int) -> Label:",
       "status": "audit_inventory",
@@ -1265,7 +1282,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 492,
+      "line": 494,
       "name": "make_panel",
       "signature": "func make_panel(parent: Control, heading: String, body: String, button_label: String, callback: Callable) -> PanelContainer:",
       "status": "audit_inventory",
@@ -1273,7 +1290,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 517,
+      "line": 519,
       "name": "show_focus",
       "signature": "func show_focus(focus: Area3D) -> void:",
       "status": "audit_inventory",
@@ -1281,7 +1298,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 521,
+      "line": 523,
       "name": "request_action",
       "signature": "func request_action(anchor: Area3D) -> bool:",
       "status": "audit_inventory",
@@ -1289,7 +1306,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 600,
+      "line": 602,
       "name": "travel",
       "signature": "func travel(destination: String) -> void:",
       "status": "audit_inventory",
@@ -1297,7 +1314,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 616,
+      "line": 618,
       "name": "leave_seat",
       "signature": "func leave_seat() -> void:",
       "status": "audit_inventory",
@@ -1305,7 +1322,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 638,
+      "line": 640,
       "name": "toggle_pause",
       "signature": "func toggle_pause() -> void:",
       "status": "audit_inventory",
@@ -1313,7 +1330,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 653,
+      "line": 655,
       "name": "pause_game",
       "signature": "func pause_game() -> void:",
       "status": "audit_inventory",
@@ -1321,7 +1338,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 664,
+      "line": 666,
       "name": "resume",
       "signature": "func resume() -> void:",
       "status": "audit_inventory",
@@ -1329,7 +1346,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 673,
+      "line": 675,
       "name": "_notification",
       "signature": "func _notification(what: int) -> void:",
       "status": "audit_inventory",
@@ -1337,7 +1354,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 686,
+      "line": 688,
       "name": "start_table",
       "signature": "func start_table(seed_value: int = -1) -> void:",
       "status": "audit_inventory",
@@ -1345,7 +1362,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 700,
+      "line": 702,
       "name": "play_action",
       "signature": "func play_action(kind: String, expected_revision: int, raise_target: int = -1) -> void:",
       "status": "audit_inventory",
@@ -1353,7 +1370,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 714,
+      "line": 716,
       "name": "continue_hand",
       "signature": "func continue_hand(expected_revision: int) -> void:",
       "status": "audit_inventory",
@@ -1361,7 +1378,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 720,
+      "line": 722,
       "name": "_process",
       "signature": "func _process(delta: float) -> void:",
       "status": "audit_inventory",
@@ -1369,7 +1386,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 740,
+      "line": 742,
       "name": "advance_table_beat",
       "signature": "func advance_table_beat() -> void:",
       "status": "audit_inventory",
@@ -1377,7 +1394,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 755,
+      "line": 757,
       "name": "refresh_table",
       "signature": "func refresh_table() -> void:",
       "status": "audit_inventory",
@@ -1385,7 +1402,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 776,
+      "line": 778,
       "name": "clear_cards",
       "signature": "func clear_cards() -> void:",
       "status": "audit_inventory",
@@ -1393,7 +1410,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 781,
+      "line": 783,
       "name": "draw_card",
       "signature": "func draw_card(card: Dictionary, pos: Vector3) -> void:",
       "status": "audit_inventory",
@@ -1401,7 +1418,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 793,
+      "line": 795,
       "name": "refresh_economy",
       "signature": "func refresh_economy() -> void:",
       "status": "audit_inventory",
@@ -1409,7 +1426,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 811,
+      "line": 814,
       "name": "show_run_panel",
       "signature": "func show_run_panel(action: String, preview_only := false) -> void:",
       "status": "audit_inventory",
@@ -1417,7 +1434,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 906,
+      "line": 909,
       "name": "close_run_panel",
       "signature": "func close_run_panel() -> void:",
       "status": "audit_inventory",
@@ -1425,7 +1442,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 914,
+      "line": 917,
       "name": "confirm_run_action",
       "signature": "func confirm_run_action() -> void:",
       "status": "audit_inventory",
@@ -1433,7 +1450,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 955,
+      "line": 958,
       "name": "select_table_room",
       "signature": "func select_table_room(room_name: String) -> void:",
       "status": "audit_inventory",
@@ -1441,7 +1458,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 964,
+      "line": 967,
       "name": "_unhandled_input",
       "signature": "func _unhandled_input(event: InputEvent) -> void:",
       "status": "audit_inventory",
@@ -1449,7 +1466,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 972,
+      "line": 975,
       "name": "open_services",
       "signature": "func open_services(mode := \"bag\", item := \"\") -> void:",
       "status": "audit_inventory",
@@ -1457,7 +1474,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 990,
+      "line": 993,
       "name": "close_services",
       "signature": "func close_services() -> void:",
       "status": "audit_inventory",
@@ -1465,7 +1482,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 998,
+      "line": 1001,
       "name": "service_action",
       "signature": "func service_action(kind: String, item_id: String, revision: int, target_id := \"\") -> void:",
       "status": "audit_inventory",
@@ -1473,7 +1490,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1046,
+      "line": 1049,
       "name": "checkpoint_state",
       "signature": "func checkpoint_state() -> Dictionary:",
       "status": "audit_inventory",
@@ -1481,7 +1498,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1049,
+      "line": 1052,
       "name": "save_checkpoint",
       "signature": "func save_checkpoint() -> bool:",
       "status": "audit_inventory",
@@ -1489,7 +1506,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1065,
+      "line": 1068,
       "name": "load_checkpoint",
       "signature": "func load_checkpoint() -> void:",
       "status": "audit_inventory",
@@ -1497,7 +1514,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1082,
+      "line": 1085,
       "name": "checkpoint_position_valid",
       "signature": "func checkpoint_position_valid(position: Vector3, room: String) -> bool:",
       "status": "audit_inventory",
@@ -1505,7 +1522,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1089,
+      "line": 1092,
       "name": "restore_checkpoint",
       "signature": "func restore_checkpoint(state: Dictionary) -> bool:",
       "status": "audit_inventory",
@@ -1513,7 +1530,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1158,
+      "line": 1161,
       "name": "check_pressure",
       "signature": "func check_pressure() -> void:",
       "status": "audit_inventory",
@@ -1521,7 +1538,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1164,
+      "line": 1167,
       "name": "install_detail",
       "signature": "func install_detail(room: Node3D, asset: PackedScene) -> void:",
       "status": "audit_inventory",
@@ -1529,7 +1546,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1175,
+      "line": 1178,
       "name": "make_detailed_prop",
       "signature": "func make_detailed_prop(id: String) -> Node3D:",
       "status": "audit_inventory",
@@ -1537,7 +1554,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1182,
+      "line": 1185,
       "name": "install_prop",
       "signature": "func install_prop(parent: Node3D, id: String) -> void:",
       "status": "audit_inventory",
@@ -1545,7 +1562,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1188,
+      "line": 1191,
       "name": "visible_route_name",
       "signature": "func visible_route_name(kind: String) -> String:",
       "status": "audit_inventory",
@@ -1553,7 +1570,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1193,
+      "line": 1196,
       "name": "available_route_text",
       "signature": "func available_route_text(excluded_kind: String) -> String:",
       "status": "audit_inventory",
@@ -1561,7 +1578,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1203,
+      "line": 1206,
       "name": "refresh_route_labels",
       "signature": "func refresh_route_labels() -> void:",
       "status": "audit_inventory",
@@ -1571,7 +1588,7 @@
   "control_flow_site_scope": "line-start if/elif/match sites only; site ownership is not branch-outcome enumeration or a transition denominator",
   "control_flow_site_counts": {
     "branch_inventory_ref": 487,
-    "explicit_method_exclusion": 92,
+    "explicit_method_exclusion": 95,
     "telemetry_file_io": 1,
     "action_dispatch": 1
   },
@@ -4609,6 +4626,30 @@
       "reason": "finds or creates a visual bone attachment for the purchased product; no authoritative Run/table state mutation"
     },
     {
+      "file": "Godot/three_d/scripts/collateral_display.gd",
+      "line": 10,
+      "method": "sync",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects authoritative pledged item into a static mesh and label, without changing Run state"
+    },
+    {
+      "file": "Godot/three_d/scripts/collateral_display.gd",
+      "line": 11,
+      "method": "sync",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects authoritative pledged item into a static mesh and label, without changing Run state"
+    },
+    {
+      "file": "Godot/three_d/scripts/collateral_display.gd",
+      "line": 13,
+      "method": "sync",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects authoritative pledged item into a static mesh and label, without changing Run state"
+    },
+    {
       "file": "Godot/three_d/scripts/item_preview.gd",
       "line": 9,
       "method": "_init",
@@ -4882,7 +4923,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 77,
+      "line": 78,
       "method": "_ready",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4890,15 +4931,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 106,
-      "method": "_ready",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 109,
+      "line": 108,
       "method": "_ready",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4914,7 +4947,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 112,
+      "line": 113,
       "method": "_ready",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4922,15 +4955,15 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 118,
-      "method": "configure_playtest",
+      "line": 114,
+      "method": "_ready",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 119,
+      "line": 120,
       "method": "configure_playtest",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4954,8 +4987,8 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 129,
-      "method": "trace_playtest",
+      "line": 125,
+      "method": "configure_playtest",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
@@ -4965,20 +4998,20 @@
       "line": 131,
       "method": "trace_playtest",
       "kind": "if",
-      "status": "telemetry_file_io",
-      "reason": "records fixed-seed telemetry or checks whether an event should be written; not authoritative game state"
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
       "line": 133,
       "method": "trace_playtest",
       "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
+      "status": "telemetry_file_io",
+      "reason": "records fixed-seed telemetry or checks whether an event should be written; not authoritative game state"
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 140,
+      "line": 135,
       "method": "trace_playtest",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4986,7 +5019,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 143,
+      "line": 142,
       "method": "trace_playtest",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -4994,7 +5027,15 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 150,
+      "line": 145,
+      "method": "trace_playtest",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 152,
       "method": "trace_choice_opportunity",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -5002,7 +5043,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 154,
+      "line": 156,
       "method": "trace_choice_opportunity",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -5010,7 +5051,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 171,
+      "line": 173,
       "method": "legal_service_actions",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -5018,7 +5059,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 176,
+      "line": 178,
       "method": "trace_table_opportunity",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -5026,7 +5067,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 182,
+      "line": 184,
       "method": "trace_table_opportunity",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -5034,7 +5075,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 189,
+      "line": 191,
       "method": "configure_input",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5042,7 +5083,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 201,
+      "line": 203,
       "method": "make_materials",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5050,7 +5091,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 205,
+      "line": 207,
       "method": "make_materials",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5058,7 +5099,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 227,
+      "line": 229,
       "method": "box",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5066,7 +5107,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 244,
+      "line": 246,
       "method": "room_shell",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5074,7 +5115,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 252,
+      "line": 254,
       "method": "room_shell",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5082,7 +5123,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 271,
+      "line": 273,
       "method": "build_stash",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5090,7 +5131,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 312,
+      "line": 314,
       "method": "build_tavern",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5098,7 +5139,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 334,
+      "line": 336,
       "method": "build_tavern",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5106,7 +5147,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 508,
+      "line": 510,
       "method": "make_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5114,16 +5155,8 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 518,
+      "line": 520,
       "method": "show_focus",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 522,
-      "method": "request_action",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
@@ -5138,7 +5171,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 527,
+      "line": 526,
       "method": "request_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5146,7 +5179,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 530,
+      "line": 529,
       "method": "request_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5154,7 +5187,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 533,
+      "line": 532,
       "method": "request_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5162,7 +5195,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 536,
+      "line": 535,
       "method": "request_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5170,7 +5203,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 539,
+      "line": 538,
       "method": "request_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5178,7 +5211,15 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 544,
+      "line": 541,
+      "method": "request_action",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 546,
       "method": "request_action",
       "kind": "match",
       "status": "action_dispatch",
@@ -5186,7 +5227,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 546,
+      "line": 548,
       "method": "request_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5194,7 +5235,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 565,
+      "line": 567,
       "method": "request_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5202,7 +5243,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 579,
+      "line": 581,
       "method": "request_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5210,15 +5251,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 617,
-      "method": "leave_seat",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 620,
+      "line": 619,
       "method": "leave_seat",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5234,7 +5267,15 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 639,
+      "line": 624,
+      "method": "leave_seat",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 641,
       "method": "toggle_pause",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5242,7 +5283,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 642,
+      "line": 644,
       "method": "toggle_pause",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5250,7 +5291,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 645,
+      "line": 647,
       "method": "toggle_pause",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5258,7 +5299,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 648,
+      "line": 650,
       "method": "toggle_pause",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5266,7 +5307,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 656,
+      "line": 658,
       "method": "pause_game",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5274,7 +5315,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 668,
+      "line": 670,
       "method": "resume",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5282,7 +5323,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 674,
+      "line": 676,
       "method": "_notification",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5290,7 +5331,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 675,
+      "line": 677,
       "method": "_notification",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5298,15 +5339,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 678,
-      "method": "_notification",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 679,
+      "line": 680,
       "method": "_notification",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5330,8 +5363,8 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 687,
-      "method": "start_table",
+      "line": 685,
+      "method": "_notification",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
@@ -5346,7 +5379,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 692,
+      "line": 691,
       "method": "start_table",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5354,7 +5387,15 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 701,
+      "line": 694,
+      "method": "start_table",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 703,
       "method": "play_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5362,7 +5403,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 706,
+      "line": 708,
       "method": "play_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5370,16 +5411,8 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 715,
+      "line": 717,
       "method": "continue_hand",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 721,
-      "method": "_process",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
@@ -5394,7 +5427,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 726,
+      "line": 725,
       "method": "_process",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5426,7 +5459,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 736,
+      "line": 734,
       "method": "_process",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5434,15 +5467,15 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 741,
-      "method": "advance_table_beat",
+      "line": 738,
+      "method": "_process",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 744,
+      "line": 743,
       "method": "advance_table_beat",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5452,13 +5485,21 @@
       "file": "Godot/three_d/scripts/world.gd",
       "line": 746,
       "method": "advance_table_beat",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 748,
+      "method": "advance_table_beat",
       "kind": "elif",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 794,
+      "line": 797,
       "method": "refresh_economy",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5466,7 +5507,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 796,
+      "line": 799,
       "method": "refresh_economy",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5474,25 +5515,9 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 798,
+      "line": 801,
       "method": "refresh_economy",
       "kind": "elif",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 803,
-      "method": "refresh_economy",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 804,
-      "method": "refresh_economy",
-      "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
@@ -5500,13 +5525,29 @@
       "file": "Godot/three_d/scripts/world.gd",
       "line": 806,
       "method": "refresh_economy",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 807,
+      "method": "refresh_economy",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 809,
+      "method": "refresh_economy",
       "kind": "elif",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 820,
+      "line": 823,
       "method": "show_run_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5514,7 +5555,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 822,
+      "line": 825,
       "method": "show_run_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5522,7 +5563,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 826,
+      "line": 829,
       "method": "show_run_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5530,7 +5571,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 834,
+      "line": 837,
       "method": "show_run_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5538,17 +5579,9 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 838,
+      "line": 841,
       "method": "show_run_panel",
       "kind": "elif",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 845,
-      "method": "show_run_panel",
-      "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
@@ -5556,13 +5589,21 @@
       "file": "Godot/three_d/scripts/world.gd",
       "line": 848,
       "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 851,
+      "method": "show_run_panel",
       "kind": "elif",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 853,
+      "line": 856,
       "method": "show_run_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5570,7 +5611,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 858,
+      "line": 861,
       "method": "show_run_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5578,15 +5619,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 864,
-      "method": "show_run_panel",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 870,
+      "line": 867,
       "method": "show_run_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5602,15 +5635,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 882,
-      "method": "show_run_panel",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 884,
+      "line": 876,
       "method": "show_run_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5626,25 +5651,33 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 890,
-      "method": "show_run_panel",
-      "kind": "elif",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 892,
-      "method": "show_run_panel",
-      "kind": "elif",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 894,
+      "line": 887,
       "method": "show_run_panel",
       "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 888,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 893,
+      "method": "show_run_panel",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 895,
+      "method": "show_run_panel",
+      "kind": "elif",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
@@ -5652,21 +5685,13 @@
       "file": "Godot/three_d/scripts/world.gd",
       "line": 897,
       "method": "show_run_panel",
-      "kind": "elif",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 898,
-      "method": "show_run_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 899,
+      "line": 900,
       "method": "show_run_panel",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -5674,7 +5699,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 900,
+      "line": 901,
       "method": "show_run_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5684,13 +5709,29 @@
       "file": "Godot/three_d/scripts/world.gd",
       "line": 902,
       "method": "show_run_panel",
+      "kind": "elif",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 903,
+      "method": "show_run_panel",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 915,
+      "line": 905,
+      "method": "show_run_panel",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 918,
       "method": "confirm_run_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5698,7 +5739,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 917,
+      "line": 920,
       "method": "confirm_run_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5706,7 +5747,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 919,
+      "line": 922,
       "method": "confirm_run_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5714,7 +5755,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 926,
+      "line": 929,
       "method": "confirm_run_action",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -5722,7 +5763,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 928,
+      "line": 931,
       "method": "confirm_run_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5730,7 +5771,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 934,
+      "line": 937,
       "method": "confirm_run_action",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -5738,7 +5779,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 935,
+      "line": 938,
       "method": "confirm_run_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5746,7 +5787,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 941,
+      "line": 944,
       "method": "confirm_run_action",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -5754,7 +5795,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 942,
+      "line": 945,
       "method": "confirm_run_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5762,7 +5803,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 948,
+      "line": 951,
       "method": "confirm_run_action",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -5770,7 +5811,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 949,
+      "line": 952,
       "method": "confirm_run_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5778,7 +5819,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 961,
+      "line": 964,
       "method": "select_table_room",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5786,7 +5827,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 965,
+      "line": 968,
       "method": "_unhandled_input",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5794,7 +5835,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 966,
+      "line": 969,
       "method": "_unhandled_input",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5802,7 +5843,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 973,
+      "line": 976,
       "method": "open_services",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5810,7 +5851,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 999,
+      "line": 1002,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5818,7 +5859,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1004,
+      "line": 1007,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5826,15 +5867,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1006,
-      "method": "service_action",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 1008,
+      "line": 1009,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5850,7 +5883,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1015,
+      "line": 1014,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5858,7 +5891,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1019,
+      "line": 1018,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5866,7 +5899,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1025,
+      "line": 1022,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5874,7 +5907,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1036,
+      "line": 1028,
       "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5882,8 +5915,8 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1050,
-      "method": "save_checkpoint",
+      "line": 1039,
+      "method": "service_action",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
@@ -5898,7 +5931,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1055,
+      "line": 1056,
       "method": "save_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5914,15 +5947,15 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1066,
-      "method": "load_checkpoint",
+      "line": 1061,
+      "method": "save_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1068,
+      "line": 1069,
       "method": "load_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5938,7 +5971,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1072,
+      "line": 1074,
       "method": "load_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5946,7 +5979,15 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1090,
+      "line": 1075,
+      "method": "load_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1093,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5954,15 +5995,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1092,
-      "method": "restore_checkpoint",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 1097,
+      "line": 1095,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5978,7 +6011,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1102,
+      "line": 1103,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5986,7 +6019,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1104,
+      "line": 1105,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -5994,7 +6027,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1106,
+      "line": 1107,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6018,7 +6051,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1114,
+      "line": 1115,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6026,7 +6059,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1116,
+      "line": 1117,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6034,7 +6067,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1118,
+      "line": 1119,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6042,7 +6075,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1120,
+      "line": 1121,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6058,7 +6091,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1149,
+      "line": 1126,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6066,7 +6099,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1150,
+      "line": 1152,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6074,7 +6107,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1154,
+      "line": 1153,
       "method": "restore_checkpoint",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6082,7 +6115,15 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1159,
+      "line": 1157,
+      "method": "restore_checkpoint",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1162,
       "method": "check_pressure",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6090,7 +6131,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1160,
+      "line": 1163,
       "method": "check_pressure",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6098,7 +6139,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1167,
+      "line": 1170,
       "method": "install_detail",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6106,7 +6147,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1169,
+      "line": 1172,
       "method": "install_detail",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6114,7 +6155,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1184,
+      "line": 1187,
       "method": "install_prop",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6122,16 +6163,8 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1189,
+      "line": 1192,
       "method": "visible_route_name",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/scripts/world.gd",
-      "line": 1196,
-      "method": "available_route_text",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
@@ -6146,8 +6179,8 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1208,
-      "method": "refresh_route_labels",
+      "line": 1202,
+      "method": "available_route_text",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
@@ -6178,7 +6211,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1227,
+      "line": 1220,
       "method": "refresh_route_labels",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6186,7 +6219,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1231,
+      "line": 1230,
       "method": "refresh_route_labels",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6194,7 +6227,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1233,
+      "line": 1234,
       "method": "refresh_route_labels",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6202,7 +6235,15 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1235,
+      "line": 1236,
+      "method": "refresh_route_labels",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/scripts/world.gd",
+      "line": 1238,
       "method": "refresh_route_labels",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -6210,7 +6251,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1242,
+      "line": 1245,
       "method": "refresh_route_labels",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -6218,7 +6259,7 @@
     },
     {
       "file": "Godot/three_d/scripts/world.gd",
-      "line": 1244,
+      "line": 1247,
       "method": "refresh_route_labels",
       "kind": "if",
       "status": "branch_inventory_ref",

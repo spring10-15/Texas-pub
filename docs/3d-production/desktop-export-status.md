@@ -346,3 +346,16 @@ Windows PCK 在 Mac 引擎中验证不等于 Windows EXE 实机通过。独立�
 日志 `valuables-{macos,windows}-export.log`、`valuables-{macos,windows}-{valuable_asset_test,inventory_preview_test}.log`、`valuables-native-check.log`；校验汇总 `valuables-package-verification.json`。Mac 解压副本 `macos-valuables-preview/`，旧 ZIP 保留 `before-valuables` 备份。
 
 当前 19/19 是模型与规则 ID 覆盖；金属偏暗、磨损/宝石/LOD，以及奖励和抵押场景展示仍未完成。Windows EXE 实机、干净机器、GPU 计时及本版 30 分钟性能尚未验证。包仍含外部模型未提交的角色精修，不能仅从本次 Git SHA 完整复建同一美术包；未上传 GitHub Release。
+
+## 2026-10-04：金属反射与抵押物桌面预览包
+
+本包汇入隔离预览环境反射、开桌前所选贵重物 3D 预览、牌局中实际已抵押物的静态桌面展示及读档/结算生命周期。规则、碰撞、存档格式保持不变。源码完整回归 `output/3d/regression/20261004-023514/report.json` 79 Godot / 20 Python 全过，导出前后与该报告资源指纹一致。
+
+Mac、Windows release 导出退出 0；每份实际 PCK 通过 42 项资产、9 项有窗口背包、11 项有窗口抵押选择、12 项有窗口桌面抵押物检查，合计 74 项，均使用本机 Mac Metal 引擎。Mac 原生应用从 `/tmp` headless `--test` 启动 120 帧退出 0。包内桌面图 `output/builds/collateral-macos-collateral-tabletop.png` 已核对。ZIP CRC 和内嵌文件大小/SHA256 清单验证通过：
+
+- Mac `output/builds/TexasPub.zip`：`c2d7958a526904885e66f775b01982650eebb7206a06c03e1a53816b82256fe4`。
+- Windows `output/builds/TexasPub-Windows-preview.zip`：`7a411fea4399913334cbb51356f272104e01958044f0f4369f9bb84b9ca96c21`。
+
+日志 `collateral-{macos,windows}-export.log`、`collateral-{macos,windows}-{valuable_asset_test,inventory_preview_test,collateral_preview_test,collateral_display_test}.log` 和 `collateral-native-check.log`；汇总 `collateral-package-verification.json`，解压副本 `macos-collateral-preview/`，旧 ZIP 保留 `before-collateral` 备份。
+
+Windows EXE 实机、干净机器、最终高精美术和当前包 30 分钟性能仍待验证。桌面抵押物目前静态显示/移除，没有宣称归还、没收或奖励人物动作完成。资源包含外部未提交的人物样板，仅凭本次 Git SHA 不能完全复建相同美术；未上传 GitHub Release。

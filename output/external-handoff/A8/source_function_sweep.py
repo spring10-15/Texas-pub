@@ -84,6 +84,10 @@ EXCLUDED = {
         "_ready": "constructs service UI controls",
         "refresh": "projects a read-only service view into UI controls",
     },
+    "Godot/three_d/scripts/collateral_display.gd": {
+        "_init": "stores tabletop visual owner",
+        "sync": "projects authoritative pledged item into a static mesh and label, without changing Run state",
+    },
     "Godot/three_d/scripts/venue_lighting.gd": {
         "_init": "stores the lighting presentation owner",
         "apply": "projects the selected venue palette into environment/light colors; preserves interaction energies and authoritative Run state",
