@@ -1,7 +1,7 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "c5105ecf79ddf4df6dace80adb6b389ab8a27e5b3a2801b21373621cf2943011",
+  "branch_inventory_sha256": "b62064793dea572bc5bd4cb24ff71145547a3aec3372e2c981f81b24cba7d1cc",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "7faa062633284e1605adb9d03bc2f5a92866f6a40a6149e8c628d44428385603",
@@ -17,7 +17,7 @@
     "Godot/three_d/scripts/bar_display.gd": "a32dc21ce561270e1c065d57b4b67fd9f3b49a6453038562976563d894eaf7b8",
     "Godot/three_d/scripts/characters.gd": "4cd0337092c249cc4bd05130358a161ead2f894d5a893519acbd23d3d921aabc",
     "Godot/three_d/scripts/interactable.gd": "02903564281ff42f000c224aaae9d602b5f889bc5406c772e0094eaa3e590003",
-    "Godot/three_d/scripts/item_preview.gd": "82bbb5e174f6be26b5ca886cb3a539cc0da3b7c2a8e9853c3f70b62c7490e27c",
+    "Godot/three_d/scripts/item_preview.gd": "75ebcfe861caa8a5508cbc90e65ef85a752a089610d763c40e8e74ddcc45e4eb",
     "Godot/three_d/scripts/player.gd": "54f72a44a49e787eebe20d49ad79147e3cb825c5574840a05a17775045170ef2",
     "Godot/three_d/scripts/scene_props.gd": "551956dbed1e5296dbf19f52605624a0a3cdeed510c2e69093eb52a385a8a44b",
     "Godot/three_d/scripts/services_hud.gd": "76b696424e6bf7f1d4f716ff35ec722a1b7ece57ae84ae3a77dfa5c3e3df1e18",
@@ -873,7 +873,7 @@
     },
     {
       "file": "Godot/three_d/scripts/item_preview.gd",
-      "line": 65,
+      "line": 68,
       "name": "_ready",
       "signature": "func _ready() -> void:",
       "status": "explicit_exclusion",
@@ -1563,7 +1563,7 @@
   "control_flow_site_scope": "line-start if/elif/match sites only; site ownership is not branch-outcome enumeration or a transition denominator",
   "control_flow_site_counts": {
     "branch_inventory_ref": 487,
-    "explicit_method_exclusion": 90,
+    "explicit_method_exclusion": 91,
     "telemetry_file_io": 1,
     "action_dispatch": 1
   },
@@ -4610,7 +4610,15 @@
     },
     {
       "file": "Godot/three_d/scripts/item_preview.gd",
-      "line": 66,
+      "line": 12,
+      "method": "_init",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "constructs an isolated one-shot inventory model render or missing-art symbol; no authoritative Run/table state mutation"
+    },
+    {
+      "file": "Godot/three_d/scripts/item_preview.gd",
+      "line": 69,
       "method": "_ready",
       "kind": "if",
       "status": "explicit_method_exclusion",

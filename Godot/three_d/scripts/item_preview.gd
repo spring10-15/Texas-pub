@@ -8,6 +8,9 @@ func _init(item_id: String) -> void:
 	var kit: Node3D = preload("res://three_d/assets/interactive-props.glb").instantiate()
 	if not kit.has_node(NodePath(item_id)):
 		kit.free()
+		kit = preload("res://three_d/assets/valuable-props.glb").instantiate()
+	if not kit.has_node(NodePath(item_id)):
+		kit.free()
 		var symbol := Label.new()
 		symbol.text = "◇"
 		symbol.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

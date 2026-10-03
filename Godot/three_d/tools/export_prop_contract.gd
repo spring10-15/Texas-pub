@@ -3,11 +3,12 @@ extends SceneTree
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
 	var content: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))
-	var kit: Node3D = load("res://three_d/assets/interactive-props.glb").instantiate()
-	root.add_child(kit)
+	var kits: Array[Node3D] = [load("res://three_d/assets/interactive-props.glb").instantiate(),load("res://three_d/assets/valuable-props.glb").instantiate()]
+	for asset in kits: root.add_child(asset)
 	var items: Array = []
 	var modeled := 0
 	for id in content.items:
+		var kit: Node3D=kits[0] if kits[0].has_node(NodePath(id)) else kits[1]
 		var entry := {"id":id,"modeled":kit.has_node(NodePath(id))}
 		if entry.modeled:
 			modeled += 1
@@ -38,8 +39,8 @@ func run() -> void:
 			entry["root_position_m"] = [prop.position.x,prop.position.y,prop.position.z]
 			entry["root_scale"] = [prop.scale.x,prop.scale.y,prop.scale.z]
 		items.append(entry)
-	var report := {"scope":"Current runtime geometry for all rule items. Missing meshes are production gaps, not gameplay errors. Bounds are static local AABBs in meters, not pose contact or final art acceptance.","rule_items":items.size(),"modeled_items":modeled,"missing_items":items.size()-modeled,"items":items,"props_glb_sha256":FileAccess.get_sha256("res://three_d/assets/interactive-props.glb"),"content_sha256":FileAccess.get_sha256("res://three_d/rules/content.json")}
+	var report := {"scope":"Current runtime geometry for all rule items. Missing meshes are production gaps, not gameplay errors. Bounds are static local AABBs in meters, not pose contact or final art acceptance.","rule_items":items.size(),"modeled_items":modeled,"missing_items":items.size()-modeled,"items":items,"props_glb_sha256":FileAccess.get_sha256("res://three_d/assets/interactive-props.glb"),"valuables_glb_sha256":FileAccess.get_sha256("res://three_d/assets/valuable-props.glb"),"content_sha256":FileAccess.get_sha256("res://three_d/rules/content.json")}
 	FileAccess.open("res://../output/3d/prop-contract.json",FileAccess.WRITE).store_string(JSON.stringify(report,"\t")+"\n")
-	kit.free()
+	for asset in kits: asset.free()
 	print("PROP_CONTRACT rules=",items.size()," modeled=",modeled," missing=",items.size()-modeled)
 	quit(0)

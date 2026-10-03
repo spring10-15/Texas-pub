@@ -1,0 +1,32 @@
+{
+  "antique-coin": {
+    "triangles": 11676
+  },
+  "emerald-brooch": {
+    "triangles": 6520
+  },
+  "gold-cased-watch": {
+    "triangles": 6244
+  },
+  "ivory-chip": {
+    "triangles": 4388
+  },
+  "obsidian-idol": {
+    "triangles": 1500
+  },
+  "old-silver-lighter": {
+    "triangles": 1632
+  },
+  "pearl-necklace": {
+    "triangles": 14224
+  },
+  "ruby-cufflink": {
+    "triangles": 1680
+  },
+  "sealed-bond": {
+    "triangles": 4788
+  },
+  "vault-promissory": {
+    "triangles": 7572
+  }
+}

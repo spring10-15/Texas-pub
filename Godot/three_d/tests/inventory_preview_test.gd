@@ -24,7 +24,7 @@ func run() -> void:
 	verify(previews.size()==2, "Each held item has a presentation card")
 	var viewport: SubViewport = previews[0].get_child(0)
 	verify(viewport.own_world_3d and viewport.get_children()[0].get_child_count()==1, "Existing lighter uses isolated 3D model")
-	verify(previews[1].get_child(0) is Label, "Unmodeled valuable uses a symbol without a fake model")
+	verify(previews[1].get_child(0) is SubViewport, "Owned ruby cufflink uses its actual valuable model")
 	verify(world.checkpoint_state()==before, "Opening visual inventory does not alter saved game state")
 	world.close_services()
 	world.open_services()
