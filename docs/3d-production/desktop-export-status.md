@@ -124,3 +124,11 @@ GitHub 网络恢复，`main` 的积累提交已推送至 `eb9531f`。从 Godot �
 本机可以直接打开上述 `.app` 试玩，默认运行会使用正常存档。只进行隔离启动检查时，以绝对程序路径执行 `-- --test`。资源包构建命令暂只构建 PCK；原生导出需单独执行本文前述 `--export-release` 命令。
 
 剩余交付验收：Windows 包、Mac/Windows 目标机表现、30 分钟运行、干净机器启动与通关、全部特殊路线及真实输入操作、签名/公证策略。官方模板缺失已解决，不能再作为当前阻碍。
+
+## 2026-10-03：Windows x64 首次导出
+
+从此前已匹配官方 SHA512 的模板档案安装 Windows release x64 和 console 模板，新增 `Windows Preview` 预设。同步调整资源包构建入口，自动刷新 Mac/Windows 两份资源选择。导出成功，`windows-export.log` 无 ERROR/WARNING；产物 `output/builds/windows-preview/TexasPub.exe` 为 PE32+ GUI x86-64，资源在同目录 `TexasPub.pck`。
+
+Mac 上的 Godot 读取 Windows PCK，26 项资源加载及 396 项规则循环检查通过。完整预览构建命令仍通过。Windows EXE 未在 Windows 真机运行，不能称为 Windows 启动或性能验收。
+
+交付准备包 `output/builds/TexasPub-Windows-preview.zip` 含 EXE、PCK、试玩说明和文件 SHA256/尺寸清单。说明源为 `docs/3d-production/windows-preview-readme.md`。两文件需保持同目录。本包未签名，当前建模样板未冻结，只用于内部试玩；Windows 实机、目标硬件与干净机器验收仍待执行。

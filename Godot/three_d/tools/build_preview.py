@@ -53,8 +53,8 @@ def main():
         updated, replacements = re.subn(r"^export_files=.*$",
             lambda _: "export_files=PackedStringArray(" + ", ".join(json.dumps(p) for p in paths) + ")",
             preset.read_text(), flags=re.MULTILINE)
-        if replacements != 1:
-            raise RuntimeError("Expected one resource selection in export_presets.cfg")
+        if replacements != 2:
+            raise RuntimeError("Expected Mac and Windows resource selections in export_presets.cfg")
         preset.write_text(updated)
         before = fingerprint()
         execute("preview-export", ["--headless", "--path", str(PROJECT),
