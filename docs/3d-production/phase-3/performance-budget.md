@@ -68,3 +68,7 @@ seven_card_score_test.gd 用原逐组合 evaluate_best_hand 为独立参考，�
 当前原始记录：`output/builds/active-ai-soak-30min.json`、`active-ai-soak-30min.log`、`active-ai-soak-rss.json`。`active-ai-soak-launch.json` 从实际进程命令核对 PCK/外部测试脚本路径，并记录两者 SHA256；引擎暴露的参数已过滤 main-pack，运行报告内该字段为空，因此以独立启动记录识别资源包，不以空字段冒充有效指纹。
 
 **测试尚在运行，未宣称 30 分钟通过。** 当前环境为 Apple M5 的 Godot 编辑器引擎加载实际试玩 PCK，不是原生发布模板或 Windows EXE。回调间隔不等于独立 GPU 帧时/呈现 FPS；财务重置和定位夹具不证明实体走位、四桌解锁链或真人 20–30 分钟一局。结束后需核对退出码、错误日志、完成时长、各阶段样本、内存观察与实际 AI 行动，再给出本范围结论。
+
+长时分析命令：`python3 Godot/three_d/tools/analyze_active_soak.py`，输出 `output/builds/active-ai-soak-analysis.json`。工具独立比对进程身份、资源包/外部脚本指纹和错误日志，汇总分阶段节点/静态内存范围、RSS 首末/极值与回调间隔。正在运行或不足 1800 秒时 `duration_gate_met=false`；该字段只说明自动测试报告的时长与基础证据，不推断操作系统退出码、60 fps 或无泄漏。RSS 原始曲线与分阶段变化仍需人工解释。
+
+本轮六项分析校验通过：真实运行证据有效但时长未达标；不足时长、身份不符、包指纹漂移、引擎错误或没有生产 AI 均不得提前放行。没有改正在运行的测量脚本、资源包或游戏源码，也没有重启原测试。
