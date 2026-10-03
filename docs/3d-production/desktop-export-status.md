@@ -182,3 +182,5 @@ Mac 上的 Godot 读取 Windows PCK，26 项资源加载及 396 项规则循环�
 ```sh
 /Applications/Godot.app/Contents/MacOS/Godot --path /tmp --main-pack "$PWD/output/builds/TexasPub-preview.pck" --script "$PWD/Godot/three_d/tools/soak_preview.gd" -- --test --soak-seconds=1800 "--soak-output=$PWD/output/builds/soak-30min.json"
 ```
+
+新增离线汇总工具 `Godot/three_d/tools/analyze_soak.py`，运行 `python3 Godot/three_d/tools/analyze_soak.py` 后生成 `output/builds/soak-analysis.json`。按同一家酒馆、同一空间阶段比较帧回调与内存，保存原始报告 SHA256；不会把不同场景的节点数差异直接当成泄漏。完成状态、完整时长、零失败同时满足才记录完成，且目标至少 1800 秒才算 30 分钟样本。五项完成边界检查通过；当前读取到 510 秒、仍在运行、0 失败，汇总正确标记未完成。最终仍需单独核对进程退出与日志。
