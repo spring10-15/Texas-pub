@@ -2,6 +2,8 @@
 
 更新：2026-09-08。用户已明确允许复核并接手协作 agent 的未提交代码。
 
+本文为当时双桌阶段记录。当前兼容边界见 [save-compatibility-policy.md](save-compatibility-policy.md)，包内实跑证据见 [desktop-export-status.md](desktop-export-status.md)。
+
 ## 复核与修正
 
 协作代码提供了购买、卖出、降风声、规则情报及三件道具的规则草稿，尚无场景入口或测试。实际运行发现数据导出键名与读取键名不一致，开局即报 searchActions 不存在。已统一为 items / shops / searchActions / inventorySlots，并重新从 src/data.js 导出。
