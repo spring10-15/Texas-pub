@@ -61,7 +61,7 @@ def main():
                 "--export-pack", "macOS Preview", str(PACK)], ROOT)
         with tempfile.TemporaryDirectory(prefix="texaspub-pack-build-") as temporary:
             base = ["--headless", "--path", temporary, "--main-pack", str(PACK)]
-            for name in ("pack", "loop", "routes"):
+            for name in ("pack", "loop", "routes", "exit_rays"):
                 execute("preview-" + name, base + ["--script", str(Path(__file__).with_name(
                     "verify_export_" + name + ".gd")), "--", "--test"], temporary)
             for scenario in ("stash", "table"):
