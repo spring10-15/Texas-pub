@@ -212,3 +212,13 @@ Mac 上的 Godot 读取 Windows PCK，26 项资源加载及 396 项规则循环�
 原生巡回 PID 48408 已确认运行。另启 `monitor_soak_rss.py`，每十秒用 macOS ps 采集该 PID 的进程 RSS，并核对二进制路径与报告 PID，观察结果写入 `native-soak-rss.json`。观察从报告约 50 秒开始，首个 RSS 约 215.92 MiB；缺少启动前 50 秒数据，不能作为完整启动峰值。RSS 不等于显存或引擎静态内存，最终需与同场景重复采样共同分析。
 
 原生报告独立汇总命令：`python3 Godot/three_d/tools/analyze_soak.py --source output/builds/native-soak-30min.json --output output/builds/native-soak-analysis.json`。默认命令仍汇总已完成的引擎 PCK 巡回。输出包含原始文件绝对路径和 SHA256，已核对两份报告没有混用，原生运行中报告仍标记未完成。
+
+## 2026-10-03：原生 release 模板 30 分钟巡回完成
+
+独立自动巡回测试包 PID 48408 正常退出，退出码 0；1800.002 秒、300 项检查、0 失败，完整日志无 ERROR/WARNING。报告确认 template_runtime=true，执行文件为独立测试 .app；Apple M5，窗口 1376×768。原始报告 `output/builds/native-soak-30min.json`，日志 `native-soak-30min.log`，汇总 `native-soak-analysis.json`。原始报告 SHA256：`906f8f662223193ed783dd0a6508189c133392e705e14fe844a0ea2c02616238`。
+
+28 个同酒馆同空间阶段跨巡回重复采样，节点数首末差值全部为 0。最差采样窗口 p95 帧回调间隔 5.983 ms；它不是 GPU 耗时或目标中端机帧率。release 模板的 MEMORY_STATIC 全为 0，属于本次无法取得有效读数，不能解释为零内存占用或没有增长。
+
+RSS 观察进程正常结束（process_ended、退出码 0），175 个样本，范围 198.00–225.34 MiB，首值 215.92 MiB、末值 213.23 MiB。观察从约 50 秒开始，缺少启动峰值；不同场景切换会改变占用，本次不能证明无泄漏。原始记录 `output/builds/native-soak-rss.json`。
+
+这项结果补齐本机原生 release 模板自动巡回证据。独立测试入口使用脚本推进合法牌局和固定视角，不等同正式玩家入口的 30 分钟真人行走测试；Windows 实机、干净机器、目标中端硬件及最终精细模型仍待验收。测试没有读写正式存档，也没有提交另一模型正在修改的美术资源。Phase 3/5 仍未完成。
