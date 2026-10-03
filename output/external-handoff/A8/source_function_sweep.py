@@ -102,6 +102,7 @@ EXCLUDED = {
         "pregame": "projects pregame options into UI controls",
         "refresh": "projects public table state into UI controls",
         "selected_collateral": "reads current UI selection",
+        "update_collateral_preview": "renders the selected held collateral as an isolated one-shot model; no authoritative Run/table mutation",
         "update_raise_preview": "updates a read-only action preview",
     },
     "Godot/three_d/scripts/world.gd": {

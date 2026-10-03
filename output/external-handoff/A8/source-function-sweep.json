@@ -1,7 +1,7 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "c3817d83147458f353040087d59950619d2c5eeb745b4ba6296ae8a216897dba",
+  "branch_inventory_sha256": "24631ca9f33010b2240ba6529a787125c24c7d93f62142e12c55df8e45a73c8b",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "7faa062633284e1605adb9d03bc2f5a92866f6a40a6149e8c628d44428385603",
@@ -21,14 +21,14 @@
     "Godot/three_d/scripts/player.gd": "54f72a44a49e787eebe20d49ad79147e3cb825c5574840a05a17775045170ef2",
     "Godot/three_d/scripts/scene_props.gd": "551956dbed1e5296dbf19f52605624a0a3cdeed510c2e69093eb52a385a8a44b",
     "Godot/three_d/scripts/services_hud.gd": "76b696424e6bf7f1d4f716ff35ec722a1b7ece57ae84ae3a77dfa5c3e3df1e18",
-    "Godot/three_d/scripts/table_hud.gd": "68a78c5800fdf2e167df92a4765e5b2c808db2a6446817cbebd5d6032ac9c84b",
+    "Godot/three_d/scripts/table_hud.gd": "e505290b3c2b4e1a0dbe3d7d487ee1e2a6c57b4adc378150556320e3caf977cc",
     "Godot/three_d/scripts/tavern_layout.gd": "eb34b55a7c7689eeac31895ff9394fff24bca272c38f7d1ae08666820320d4d6",
     "Godot/three_d/scripts/venue_lighting.gd": "6b75840848b428248a36d76978af0e29dfdd9659f02daf922e2c4bce73fcce6e",
     "Godot/three_d/scripts/world.gd": "67fe63508235588d03a50b0e610c1a621c0b62c48b5a1b1a6c43c15b43524a71"
   },
   "counts": {
     "audit_inventory": 120,
-    "explicit_exclusion": 71
+    "explicit_exclusion": 72
   },
   "functions": [
     {
@@ -985,7 +985,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 28,
+      "line": 29,
       "name": "_ready",
       "signature": "func _ready() -> void:",
       "status": "explicit_exclusion",
@@ -993,7 +993,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 103,
+      "line": 110,
       "name": "text",
       "signature": "func text(parent: Node, value: String, font_size: int) -> Label:",
       "status": "explicit_exclusion",
@@ -1001,7 +1001,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 115,
+      "line": 122,
       "name": "make_button",
       "signature": "func make_button(parent: Node, caption: String) -> Button:",
       "status": "explicit_exclusion",
@@ -1009,7 +1009,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 123,
+      "line": 130,
       "name": "card_text",
       "signature": "static func card_text(card: Dictionary) -> String:",
       "status": "explicit_exclusion",
@@ -1017,7 +1017,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 127,
+      "line": 134,
       "name": "cards_text",
       "signature": "static func cards_text(cards: Array) -> String:",
       "status": "explicit_exclusion",
@@ -1025,7 +1025,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 133,
+      "line": 140,
       "name": "opponent_line",
       "signature": "func opponent_line(seat: Dictionary) -> String:",
       "status": "explicit_exclusion",
@@ -1033,7 +1033,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 139,
+      "line": 146,
       "name": "pregame",
       "signature": "func pregame(cash := 0, definition: Dictionary = {}, inventory: Array = [], run: RefCounted = null) -> void:",
       "status": "explicit_exclusion",
@@ -1041,7 +1041,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 171,
+      "line": 179,
       "name": "refresh",
       "signature": "func refresh(view: Dictionary, locked := false) -> void:",
       "status": "explicit_exclusion",
@@ -1049,7 +1049,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 236,
+      "line": 245,
       "name": "selected_collateral",
       "signature": "func selected_collateral() -> String:",
       "status": "explicit_exclusion",
@@ -1057,11 +1057,19 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 239,
+      "line": 248,
       "name": "update_raise_preview",
       "signature": "func update_raise_preview() -> void:",
       "status": "explicit_exclusion",
       "reason": "updates a read-only action preview"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 257,
+      "name": "update_collateral_preview",
+      "signature": "func update_collateral_preview() -> void:",
+      "status": "explicit_exclusion",
+      "reason": "renders the selected held collateral as an isolated one-shot model; no authoritative Run/table mutation"
     },
     {
       "file": "Godot/three_d/scripts/tavern_layout.gd",
@@ -1563,7 +1571,7 @@
   "control_flow_site_scope": "line-start if/elif/match sites only; site ownership is not branch-outcome enumeration or a transition denominator",
   "control_flow_site_counts": {
     "branch_inventory_ref": 487,
-    "explicit_method_exclusion": 91,
+    "explicit_method_exclusion": 92,
     "telemetry_file_io": 1,
     "action_dispatch": 1
   },
@@ -4730,14 +4738,6 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 140,
-      "method": "pregame",
-      "kind": "if",
-      "status": "explicit_method_exclusion",
-      "reason": "projects pregame options into UI controls"
-    },
-    {
-      "file": "Godot/three_d/scripts/table_hud.gd",
       "line": 147,
       "method": "pregame",
       "kind": "if",
@@ -4746,7 +4746,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 153,
+      "line": 154,
       "method": "pregame",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4754,7 +4754,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 155,
+      "line": 160,
       "method": "pregame",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4762,7 +4762,15 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 186,
+      "line": 162,
+      "method": "pregame",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects pregame options into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 195,
       "method": "refresh",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4770,7 +4778,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 189,
+      "line": 198,
       "method": "refresh",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4778,7 +4786,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 190,
+      "line": 199,
       "method": "refresh",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4786,17 +4794,9 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 191,
+      "line": 200,
       "method": "refresh",
       "kind": "if",
-      "status": "explicit_method_exclusion",
-      "reason": "projects public table state into UI controls"
-    },
-    {
-      "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 193,
-      "method": "refresh",
-      "kind": "elif",
       "status": "explicit_method_exclusion",
       "reason": "projects public table state into UI controls"
     },
@@ -4804,15 +4804,7 @@
       "file": "Godot/three_d/scripts/table_hud.gd",
       "line": 202,
       "method": "refresh",
-      "kind": "if",
-      "status": "explicit_method_exclusion",
-      "reason": "projects public table state into UI controls"
-    },
-    {
-      "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 208,
-      "method": "refresh",
-      "kind": "if",
+      "kind": "elif",
       "status": "explicit_method_exclusion",
       "reason": "projects public table state into UI controls"
     },
@@ -4826,7 +4818,7 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 232,
+      "line": 217,
       "method": "refresh",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4834,7 +4826,23 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 240,
+      "line": 220,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 241,
+      "method": "refresh",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "projects public table state into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 249,
       "method": "update_raise_preview",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4842,11 +4850,19 @@
     },
     {
       "file": "Godot/three_d/scripts/table_hud.gd",
-      "line": 243,
+      "line": 252,
       "method": "update_raise_preview",
       "kind": "if",
       "status": "explicit_method_exclusion",
       "reason": "updates a read-only action preview"
+    },
+    {
+      "file": "Godot/three_d/scripts/table_hud.gd",
+      "line": 263,
+      "method": "update_collateral_preview",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "renders the selected held collateral as an isolated one-shot model; no authoritative Run/table mutation"
     },
     {
       "file": "Godot/three_d/scripts/tavern_layout.gd",

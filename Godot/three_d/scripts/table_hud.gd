@@ -23,6 +23,7 @@ var action_buttons := {}
 var displayed_revision := -1
 var result_banner: Label
 var collateral_choice: OptionButton
+var collateral_preview: PanelContainer
 var opponent_definitions: Dictionary = {}
 
 func _ready() -> void:
@@ -69,6 +70,12 @@ func _ready() -> void:
 	collateral_choice = OptionButton.new()
 	rows.add_child(collateral_choice)
 	collateral_choice.hide()
+	collateral_preview = PanelContainer.new()
+	collateral_preview.position = Vector2(32,350)
+	collateral_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(collateral_preview)
+	collateral_preview.hide()
+	collateral_choice.item_selected.connect(func(_index): update_collateral_preview())
 	var buttons := HBoxContainer.new()
 	buttons.add_theme_constant_override("separation", 9)
 	rows.add_child(buttons)
@@ -156,6 +163,7 @@ func pregame(cash := 0, definition: Dictionary = {}, inventory: Array = [], run:
 				collateral_choice.add_item("抵押 " + run.item_name(id) + " · 最后一手未获胜则失去")
 				collateral_choice.set_item_metadata(collateral_choice.item_count - 1, id)
 	collateral_choice.select(0)
+	update_collateral_preview()
 	hand.text = "随身现金 %d · 开始时扣除买入 %d，离桌返还剩余筹码" % [cash, definition.buyIn]
 	history.text = ""
 	opponent_left.text = NAMES[definition.opponentIds[0]]
@@ -170,6 +178,7 @@ func pregame(cash := 0, definition: Dictionary = {}, inventory: Array = [], run:
 
 func refresh(view: Dictionary, locked := false) -> void:
 	collateral_choice.hide()
+	collateral_preview.hide()
 	displayed_revision = view.revision
 	var playing: bool = view.status == "playing"
 	result_banner.visible = not playing
@@ -244,3 +253,16 @@ func update_raise_preview() -> void:
 		raise_preview.text = "转为全押 · 实付 %d · 下注到 %d" % [raise_context.stack,int(raise_context.paid)+int(raise_context.stack)]
 	else:
 		raise_preview.text = "加注到 %d · 实付 %d%s" % [target,cost," · 本手首次进攻少付 %d" % int(raise_context.discount) if raise_context.discount > 0 else ""]
+
+func update_collateral_preview() -> void:
+	for child in collateral_preview.get_children():
+		collateral_preview.remove_child(child)
+		child.queue_free()
+	var id := selected_collateral()
+	collateral_preview.visible = not id.is_empty()
+	if id.is_empty(): return
+	var card := VBoxContainer.new()
+	card.set_meta("collateral_item",id)
+	collateral_preview.add_child(card)
+	card.add_child(preload("res://three_d/scripts/item_preview.gd").new(id))
+	text(card,"拟抵押贵重物",16)
