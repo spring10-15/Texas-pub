@@ -20,6 +20,7 @@ var seat_panel: Control
 var table_game: RefCounted
 var table_content: Dictionary
 var run_game: RefCounted
+var settlement_receipt: PanelContainer
 var economy_label: Label
 var run_panel: PanelContainer
 var run_heading: Label
@@ -412,6 +413,13 @@ func build_ui() -> void:
 	explore_instructions.position = Vector2(32, 67)
 	economy_label = label(ui, "", 17)
 	economy_label.position = Vector2(32, 100)
+	settlement_receipt = preload("res://three_d/scripts/settlement_receipt.gd").new()
+	ui.add_child(settlement_receipt)
+	settlement_receipt.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	settlement_receipt.offset_left = -370
+	settlement_receipt.offset_top = -310
+	settlement_receipt.offset_right = -20
+	settlement_receipt.offset_bottom = -100
 	crosshair = label(ui, "+", 22)
 	crosshair.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	crosshair.position -= Vector2(7, 15)
@@ -793,6 +801,7 @@ func draw_card(card: Dictionary, pos: Vector3) -> void:
 	node.add_child(text)
 
 func refresh_economy() -> void:
+	settlement_receipt.sync(run_game)
 	collateral_display.sync()
 	if run_game.active:
 		economy_label.text = "金库 %d  ·  随身 %d  ·  风声 %d / 6  ·  出口%s" % [run_game.vault, run_game.cash, run_game.heat, "已知" if run_game.public_exit else "未知：查看门旁告示"]

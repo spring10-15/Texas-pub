@@ -62,6 +62,11 @@ func run() -> void:
 	verify(expected!=null and expected.settle_table(expected.revision),"Control run settles without visuals")
 	world.leave_seat()
 	verify(world.RunCheckpoint.capture(world.run_game)==world.RunCheckpoint.capture(expected),"Visual cleanup preserves exact settlement state")
+	var settled=load("res://three_d/scenes/main.tscn").instantiate()
+	root.add_child(settled)
+	settled.set_process(false)
+	verify(settled.restore_checkpoint(world.checkpoint_state()) and settled.settlement_receipt.visible and settled.RunCheckpoint.capture(settled.run_game)==world.RunCheckpoint.capture(world.run_game),"Real settlement save rebuilds receipt without changing state")
+	settled.queue_free()
 	verify(world.table_game==null and world.run_game.collateral.is_empty() and not is_instance_valid(world.collateral_display.prop),"Settlement clears derived tabletop mesh")
 	world.queue_free()
 	await process_frame

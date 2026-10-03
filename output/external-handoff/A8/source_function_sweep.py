@@ -22,6 +22,11 @@ REPORT = ROOT / "output/external-handoff/A8/source-function-sweep.json"
 # Each exception is an exact method reviewed outside the transition inventory.
 # Reasons describe why it does not own a separate player-visible state result.
 EXCLUDED = {
+    "Godot/three_d/scripts/settlement_receipt.gd": {
+        "_init": "constructs noninteractive settlement receipt UI",
+        "sync": "projects historical settlement state without inventory mutation",
+        "add_item": "constructs static item preview and outcome label",
+    },
     "Godot/three_d/rules/run.gd": {
         "_init": "constructs the initial in-memory Run object; new-run effects are owned by start",
         "transfer_quote": "read-only preview; transfer_venue owns accepted/rejected results",
