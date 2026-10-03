@@ -52,6 +52,7 @@ def analyze(report, rss, launch, log):
             'render_samples': len(samples),
             'worst_p95_callback_ms': max((r['p95_callback_ms'] for r in samples), default=None),
             'worst_callback_ms': max((r['max_callback_ms'] for r in samples), default=None),
+            'sample_windows_with_callback_over_16_67_ms': sum(r['max_callback_ms'] > 16.67 for r in samples),
             'phase_samples': phases, 'rss': rss_summary,
             'scope': 'This automatic cargo-table test only. RSS growth may include caches and allocations; phase ranges are descriptive, not matched snapshots. No GPU timing, FPS certification, leak-absence proof, native template/Windows certification, full four-table progression or human game-duration acceptance.'}
 
