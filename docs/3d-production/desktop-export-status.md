@@ -224,3 +224,7 @@ RSS 观察进程正常结束（process_ended、退出码 0），175 个样本，
 这项结果补齐本机原生 release 模板自动巡回证据。独立测试入口使用脚本推进合法牌局和固定视角，不等同正式玩家入口的 30 分钟真人行走测试；Windows 实机、干净机器、目标中端硬件及最终精细模型仍待验收。测试没有读写正式存档，也没有提交另一模型正在修改的美术资源。Phase 3/5 仍未完成。
 
 汇总工具已修正静态内存可用性：同场景样本含零读数时，标记 static_memory_available=false，首末值与差值输出 null，避免误读为内存没有增长。用两份真实报告及混入零读数的边界检查通过；重新生成汇总，原始测试记录保持不变。
+
+## 2026-10-03：Mac 试玩包补齐独立说明
+
+发现 TexasPub.zip 原先只有应用文件，没有试玩说明。新增 package_macos_preview.py，将 macos-preview-readme.md 作为包根目录 README.md，并生成 build-manifest.json，记录应用各文件与说明的字节数和 SHA256。包内明确 test_harness=false、clean_machine_verified=false，不把独立测试包验收转移到玩家包。工具支持重复执行替换说明和清单，不累加同名条目。实际打包通过，逐个核对应用字节与 ZIP 执行权限完全一致，ZIP CRC 校验通过；未重新导出或替换正在精修的美术资源。
