@@ -33,8 +33,11 @@ def passed(code, log):
 
 
 def fingerprint():
+    resource_extensions = {'.gd', '.py', '.json', '.tscn', '.tres', '.res', '.glb',
+                           '.png', '.jpg', '.jpeg', '.webp', '.svg', '.ogg', '.wav',
+                           '.mp3', '.ogv', '.ttf', '.otf'}
     paths = [p for p in (ROOT / 'Godot/three_d').rglob('*')
-             if p.suffix in {'.gd', '.py', '.json', '.tscn'} and 'assets' not in p.parts]
+             if p.is_file() and p.suffix in resource_extensions]
     paths.append(ROOT / 'docs/3d-production/phase-1/coverage/transitions.json')
     return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(paths)}
 
