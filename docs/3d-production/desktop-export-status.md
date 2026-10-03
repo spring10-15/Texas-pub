@@ -372,3 +372,13 @@ Windows EXE 实机、干净机器、最终高精美术和当前包 30 分钟性�
 日志 `search-reward-{macos,windows}-export.log`、`search-reward-{macos,windows}-{search_reward_preview_test,inventory_preview_test,collateral_display_test}.log`、`search-reward-native-check.log`；汇总 `search-reward-package-verification.json`，Mac 解压副本 `macos-search-reward-preview/`，旧 ZIP 保留 `before-search-reward` 备份。
 
 Windows EXE、干净机器与本版长时性能仍未实机验证；当前 GPU 计时缺口与最终高精美术门槛未关闭。外部角色精修仍未纳入此 Git 提交，仅凭提交 SHA 不能复建同一美术包，未上传 GitHub Release。
+
+## 2026-10-04：结算回执与金属材质预览包
+
+当前 Mac / Windows ZIP 已重导出，包含最近牌桌结算的模型与明确结果文字，以及贵重物金/银法线和粗糙度纹理。两个实际 PCK 各通过 69 项资产、12 项结算回执、13 项真实抵押结算读档、9 项背包窗口检查，共 103 项；Mac 独立应用从 /tmp 启动 120 帧退出 0。两 ZIP 的 CRC 与清单内所有字节数/SHA 校验通过，源资源与 032841 全量回归指纹相同。验证记录 output/builds/metal-package-verification.json。
+
+`TexasPub.zip` SHA256：`bcf12a5fedb08bec621dfa909541f2626f2f60fad93b5e6d61d71812d4fe95c3`。
+
+`TexasPub-Windows-preview.zip` SHA256：`75eb3728110f2c2cf0a50ac8c30b6b31653ec26bc6a3bc1c2e485802e59f37df`。
+
+Windows PCK 在 Mac Godot 下的窗口检查不等于 Windows EXE 原生/干净机验证；新包尚未完成 30 分钟及中端机 60 fps 验收。包含另一模型尚未提交的角色样板，本地包完整，单一 Git 提交不能独立复现这部分资产。二进制仅在 output/builds，本轮未发布 GitHub Release。
