@@ -3,6 +3,7 @@ var world: Node3D
 var entries := {}
 var states := {}
 var rain: CPUParticles3D
+var active_tween: Tween
 func _init(owner: Node3D) -> void:
 	world = owner
 func register(id: String, node: Node3D, anchor: Area3D, property: String, closed: Variant, opened: Variant) -> void:
@@ -12,10 +13,16 @@ func interact(id: String) -> void:
 	var entry: Dictionary = entries[id]
 	states[id] = not states[id]
 	world.action_busy = true
-	var tween := world.create_tween()
-	tween.tween_property(entry.node, entry.property, entry.opened if states[id] else entry.closed, 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_callback(func(): world.action_busy = false)
+	active_tween = world.create_tween()
+	active_tween.tween_property(entry.node, entry.property, entry.opened if states[id] else entry.closed, 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	active_tween.tween_callback(func():
+		world.action_busy = false
+		active_tween = null)
 func restore(values: Dictionary) -> void:
+	if active_tween != null:
+		active_tween.kill()
+		active_tween = null
+		world.action_busy = false
 	for id in entries:
 		states[id] = bool(values.get(id, false))
 		var entry: Dictionary = entries[id]

@@ -39,6 +39,7 @@ var table_target: Area3D
 var lid: Node3D
 var lid_open_rotation: Vector3
 var case_open := true
+var case_tween: Tween
 var action_busy := false
 var seated := false
 var paused := false
@@ -543,9 +544,11 @@ func request_action(anchor: Area3D) -> bool:
 			action_busy = true
 			case_open = not case_open
 			var goal := lid_open_rotation if case_open else lid_open_rotation + Vector3(deg_to_rad(102), 0, 0)
-			var tween := create_tween()
-			tween.tween_property(lid, "rotation", goal, 0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-			tween.tween_callback(func(): action_busy = false)
+			case_tween = create_tween()
+			case_tween.tween_property(lid, "rotation", goal, 0.65).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			case_tween.tween_callback(func():
+				action_busy = false
+				case_tween = null)
 			anchor.title = "合上皮箱" if case_open else "打开皮箱"
 			show_focus(anchor)
 		"services":
@@ -1112,6 +1115,10 @@ func restore_checkpoint(state: Dictionary) -> bool:
 	if restored.table != null and restored.table.state.tableDef.id != ROOMS.get(state.room, ROOMS.tavern).table:
 		return false
 	run_game = restored
+	if case_tween != null:
+		case_tween.kill()
+		case_tween = null
+		action_busy = false
 	props.restore(state.get("props", {}))
 	case_open = state.caseOpen
 	lid.rotation = lid_open_rotation if case_open else lid_open_rotation + Vector3(deg_to_rad(102), 0, 0)
