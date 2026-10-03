@@ -9,7 +9,7 @@ func _initialize() -> void:
 		failures += 1
 		push_error("Player pack has an unexpected main scene")
 	checked += 1
-	if FileAccess.file_exists("res://soak_main.gd") or FileAccess.file_exists("res://soak_main.tscn"):
+	if ResourceLoader.exists("res://soak_main.gd") or ResourceLoader.exists("res://soak_main.tscn"):
 		failures += 1
 		push_error("Automated soak entry included in player pack")
 	var content = JSON.parse_string(FileAccess.get_file_as_string("res://three_d/rules/content.json"))

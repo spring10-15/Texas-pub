@@ -228,3 +228,5 @@ RSS 观察进程正常结束（process_ended、退出码 0），175 个样本，
 ## 2026-10-03：Mac 试玩包补齐独立说明
 
 发现 TexasPub.zip 原先只有应用文件，没有试玩说明。新增 package_macos_preview.py，将 macos-preview-readme.md 作为包根目录 README.md，并生成 build-manifest.json，记录应用各文件与说明的字节数和 SHA256。包内明确 test_harness=false、clean_machine_verified=false，不把独立测试包验收转移到玩家包。工具支持重复执行替换说明和清单，不累加同名条目。实际打包通过，逐个核对应用字节与 ZIP 执行权限完全一致，ZIP CRC 校验通过；未重新导出或替换正在精修的美术资源。
+
+正式资源包检查新增主场景与自动巡回入口隔离断言。从实际 Mac 玩家 ZIP 提取内嵌 PCK，28 项检查、0 失败、退出码 0。独立巡回包反例被两项断言正确拒绝、退出码 1；初次 FileAccess 未识别导出资源重映射，改为 ResourceLoader.exists 后反例通过。ZIP 二进制权限为 0755。上述检查不替代干净机器运行。
