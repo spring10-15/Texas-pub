@@ -1,7 +1,7 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "cee71608eda261205d6d6fd5ae078ab83fbaa489be56cd8e739aad4efbd2cdf7",
+  "branch_inventory_sha256": "610243c05c0197856f290a6cf269015ddecdd58b89815b38fda802bc8e0bb869",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "7faa062633284e1605adb9d03bc2f5a92866f6a40a6149e8c628d44428385603",
@@ -17,16 +17,17 @@
     "Godot/three_d/scripts/bar_display.gd": "a32dc21ce561270e1c065d57b4b67fd9f3b49a6453038562976563d894eaf7b8",
     "Godot/three_d/scripts/characters.gd": "a37cbbece24a2a14af6081d147ed4b2992552dcf23b9164ef46d4921abbddd84",
     "Godot/three_d/scripts/interactable.gd": "02903564281ff42f000c224aaae9d602b5f889bc5406c772e0094eaa3e590003",
+    "Godot/three_d/scripts/item_preview.gd": "82bbb5e174f6be26b5ca886cb3a539cc0da3b7c2a8e9853c3f70b62c7490e27c",
     "Godot/three_d/scripts/player.gd": "54f72a44a49e787eebe20d49ad79147e3cb825c5574840a05a17775045170ef2",
     "Godot/three_d/scripts/scene_props.gd": "551956dbed1e5296dbf19f52605624a0a3cdeed510c2e69093eb52a385a8a44b",
-    "Godot/three_d/scripts/services_hud.gd": "b0468c79b57fd9b309354b65c1cfdc1b9a55d3ffc8d9834d3eb907fef40ff14c",
+    "Godot/three_d/scripts/services_hud.gd": "76b696424e6bf7f1d4f716ff35ec722a1b7ece57ae84ae3a77dfa5c3e3df1e18",
     "Godot/three_d/scripts/table_hud.gd": "68a78c5800fdf2e167df92a4765e5b2c808db2a6446817cbebd5d6032ac9c84b",
     "Godot/three_d/scripts/tavern_layout.gd": "eb34b55a7c7689eeac31895ff9394fff24bca272c38f7d1ae08666820320d4d6",
-    "Godot/three_d/scripts/world.gd": "619f949456e0b5c2e45de2e1fe9545e20d5bc7ed22ac07f2e209daf836c69ff3"
+    "Godot/three_d/scripts/world.gd": "0c79bb972f6229c0688d671c16764f3d3428f01e3fdb4d72323d525060ed53b4"
   },
   "counts": {
     "audit_inventory": 120,
-    "explicit_exclusion": 67
+    "explicit_exclusion": 69
   },
   "functions": [
     {
@@ -862,6 +863,22 @@
       "reason": "represented by the A8 current-tree branch inventory; branch closure remains a separate check"
     },
     {
+      "file": "Godot/three_d/scripts/item_preview.gd",
+      "line": 3,
+      "name": "_init",
+      "signature": "func _init(item_id: String) -> void:",
+      "status": "explicit_exclusion",
+      "reason": "constructs an isolated one-shot inventory model render or missing-art symbol; no authoritative Run/table state mutation"
+    },
+    {
+      "file": "Godot/three_d/scripts/item_preview.gd",
+      "line": 65,
+      "name": "_ready",
+      "signature": "func _ready() -> void:",
+      "status": "explicit_exclusion",
+      "reason": "stops the isolated preview viewport after its first render; no authoritative Run/table state mutation"
+    },
+    {
       "file": "Godot/three_d/scripts/player.gd",
       "line": 15,
       "name": "_ready",
@@ -961,7 +978,7 @@
       "file": "Godot/three_d/scripts/services_hud.gd",
       "line": 21,
       "name": "refresh",
-      "signature": "func refresh(view: Dictionary) -> void:",
+      "signature": "func refresh(view: Dictionary, held_items: Array = []) -> void:",
       "status": "explicit_exclusion",
       "reason": "projects a read-only service view into UI controls"
     },
@@ -1529,7 +1546,7 @@
   "control_flow_site_scope": "line-start if/elif/match sites only; site ownership is not branch-outcome enumeration or a transition denominator",
   "control_flow_site_counts": {
     "branch_inventory_ref": 487,
-    "explicit_method_exclusion": 85,
+    "explicit_method_exclusion": 88,
     "telemetry_file_io": 1,
     "action_dispatch": 1
   },
@@ -4559,6 +4576,22 @@
       "reason": "finds or creates a visual bone attachment for the purchased product; no authoritative Run/table state mutation"
     },
     {
+      "file": "Godot/three_d/scripts/item_preview.gd",
+      "line": 9,
+      "method": "_init",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "constructs an isolated one-shot inventory model render or missing-art symbol; no authoritative Run/table state mutation"
+    },
+    {
+      "file": "Godot/three_d/scripts/item_preview.gd",
+      "line": 66,
+      "method": "_ready",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "stops the isolated preview viewport after its first render; no authoritative Run/table state mutation"
+    },
+    {
       "file": "Godot/three_d/scripts/player.gd",
       "line": 39,
       "method": "_unhandled_input",
@@ -4651,6 +4684,14 @@
       "line": 42,
       "method": "refresh",
       "kind": "elif",
+      "status": "explicit_method_exclusion",
+      "reason": "projects a read-only service view into UI controls"
+    },
+    {
+      "file": "Godot/three_d/scripts/services_hud.gd",
+      "line": 49,
+      "method": "refresh",
+      "kind": "if",
       "status": "explicit_method_exclusion",
       "reason": "projects a read-only service view into UI controls"
     },

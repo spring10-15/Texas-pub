@@ -970,7 +970,7 @@ func open_services(mode := "bag", item := "") -> void:
 	service_mode = mode
 	product_id = item
 	var service_view: Dictionary = run_game.service_view(service_mode, product_id)
-	services_panel.refresh(service_view)
+	services_panel.refresh(service_view, run_game.inventory.map(func(id): return {"id":id,"name":run_game.item_name(id)}))
 	services_panel.show()
 	var service_options := legal_service_actions(service_view)
 	service_options.append({"kind":"close"})
@@ -1014,7 +1014,7 @@ func service_action(kind: String, item_id: String, revision: int, target_id := "
 		if table_game != null:
 			refresh_table()
 		var updated_view: Dictionary = run_game.service_view(service_mode, product_id)
-		services_panel.refresh(updated_view)
+		services_panel.refresh(updated_view, run_game.inventory.map(func(id): return {"id":id,"name":run_game.item_name(id)}))
 		bar_display.refresh()
 		refresh_route_labels()
 		if kind == "buy":

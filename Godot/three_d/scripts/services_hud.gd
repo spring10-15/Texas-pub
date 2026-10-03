@@ -18,7 +18,7 @@ func _ready() -> void:
 	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	rows.add_theme_constant_override("separation", 8)
 	scroll.add_child(rows)
-func refresh(view: Dictionary) -> void:
+func refresh(view: Dictionary, held_items: Array = []) -> void:
 	if view.mode == "product":
 		set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
 		offset_left = 32
@@ -46,6 +46,20 @@ func refresh(view: Dictionary) -> void:
 	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	heading.custom_minimum_size.x = 500 if view.mode == "product" else 760
 	rows.add_child(heading)
+	if view.mode == "bag" and not held_items.is_empty():
+		var grid := GridContainer.new()
+		grid.columns = 4
+		grid.add_theme_constant_override("h_separation", 12)
+		rows.add_child(grid)
+		for held in held_items:
+			var card := VBoxContainer.new()
+			card.set_meta("owned_item", held.id)
+			grid.add_child(card)
+			card.add_child(preload("res://three_d/scripts/item_preview.gd").new(held.id))
+			var name_label := Label.new()
+			name_label.text = held.name
+			name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			card.add_child(name_label)
 	for action in view.actions:
 		var button := Button.new()
 		button.text = action.label + (" · " + action.reason if not action.reason.is_empty() else "")

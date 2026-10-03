@@ -84,6 +84,10 @@ EXCLUDED = {
         "_ready": "constructs service UI controls",
         "refresh": "projects a read-only service view into UI controls",
     },
+    "Godot/three_d/scripts/item_preview.gd": {
+        "_init": "constructs an isolated one-shot inventory model render or missing-art symbol; no authoritative Run/table state mutation",
+        "_ready": "stops the isolated preview viewport after its first render; no authoritative Run/table state mutation",
+    },
     "Godot/three_d/scripts/table_hud.gd": {
         "_ready": "constructs table UI controls",
         "text": "constructs a label",

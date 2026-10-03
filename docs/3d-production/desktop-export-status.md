@@ -305,3 +305,16 @@ Mac 原生应用从 `/tmp` 以 `--headless --quit-after 120 -- --test` 启动，
 - 本轮日志：`animation-restore-macos-export.log`、`animation-restore-windows-export.log`、`animation-restore-macos-test.log`、`animation-restore-windows-test.log`、`animation-restore-native-check.log`。包内专项原始 JSON 为 `animation-restore-macos-test.json` 与 `animation-restore-windows-test.json`。
 
 本地包包含当前工作区三个人物精修样板及其游戏接入；这些美术改动仍未纳入场景开发的 Git 提交，不能仅按 Git SHA 复建完全相同美术包。没有上传 GitHub Release。Windows 实机、干净机器、目标中端性能、当前版 30 分钟和最终高保真美术仍未完成，旧版长时报告不重标为本版通过。
+
+## 2026-10-03：背包 3D 实物预览包
+
+背包只展示当前持有物品，有现有模型的道具显示一次性 3D 近景，无模型贵重物保留符号与名称。没有新增规则或物品。导出选择加入 `item_preview.gd`；源码完整回归 `output/3d/regression/20261003-212924/report.json` 75/75 Godot 套件与 20/20 Python 测试通过、运行期间源码/资产未变。
+
+两平台 release 导出退出码 0，无 ERROR。两份实际 PCK 在本机有窗口 Metal 引擎中各通过 9 项专项，包括持有列表、快照不变、重复打开、旧实例释放、预览首帧后停止刷新。Mac 包内截图 `output/builds/inventory-preview-macos.png` 已检查，实物打火机与未建模袖扣的名称/符号正常显示。Mac 原生应用从 `/tmp` 以隔离测试模式 headless 运行 120 帧退出 0；Windows EXE 仍未在 Windows 上执行。
+
+当前 ZIP CRC 与内嵌大小/SHA256 清单验证通过：
+
+- Mac `output/builds/TexasPub.zip`：`9ef0179b56d1168dae64d4db887286512dfc061c98ff1a172e3d98292dcd7dff`。
+- Windows `output/builds/TexasPub-Windows-preview.zip`：`46a1246b6faf1ff9e91e29700612cfe5f354cda9950d293eaae58062d6676939`。
+
+日志为 `inventory-preview-{macos,windows}-export.log`、`inventory-preview-{macos,windows}-test.log`、`inventory-preview-native-check.log`。Mac 解压核验副本在 `macos-inventory-preview/`；旧 ZIP 保留 `before-inventory-preview` 备份。资源仍包含另一模型未提交的当前人物样板；源 Git SHA 不代表美术包可仅从已提交文件完整复建。未上传 GitHub Release，未重复旧版 30 分钟记录或声称目标平台性能通过。
