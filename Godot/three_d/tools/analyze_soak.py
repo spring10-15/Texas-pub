@@ -1,4 +1,5 @@
 """Summarize raw soak samples without turning partial evidence into a pass."""
+import argparse
 import hashlib
 import json
 import statistics
@@ -45,10 +46,15 @@ def summarize(report):
 
 
 def main():
-    raw = SOURCE.read_bytes()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--source", type=Path, default=SOURCE)
+    parser.add_argument("--output", type=Path, default=DESTINATION)
+    args = parser.parse_args()
+    raw = args.source.read_bytes()
     analysis = summarize(json.loads(raw))
     analysis["source_sha256"] = hashlib.sha256(raw).hexdigest()
-    DESTINATION.write_text(json.dumps(analysis, indent=2) + "\n")
+    analysis["source_path"] = str(args.source.resolve())
+    args.output.write_text(json.dumps(analysis, indent=2) + "\n")
     print(json.dumps({k: analysis[k] for k in (
         "raw_status", "elapsed_seconds", "complete_duration_and_checks", "qualifies_as_30min_sample")}))
 

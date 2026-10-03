@@ -210,3 +210,5 @@ Mac 上的 Godot 读取 Windows PCK，26 项资源加载及 396 项规则循环�
 该测试包是 release 模板内置自动化入口，不能代替正式试玩入口、真人行走或干净机器验收。接着启动目标 1800 秒巡回，报告 `native-soak-30min.json`，日志 `native-soak-30min.log`；启动不代表完成。
 
 原生巡回 PID 48408 已确认运行。另启 `monitor_soak_rss.py`，每十秒用 macOS ps 采集该 PID 的进程 RSS，并核对二进制路径与报告 PID，观察结果写入 `native-soak-rss.json`。观察从报告约 50 秒开始，首个 RSS 约 215.92 MiB；缺少启动前 50 秒数据，不能作为完整启动峰值。RSS 不等于显存或引擎静态内存，最终需与同场景重复采样共同分析。
+
+原生报告独立汇总命令：`python3 Godot/three_d/tools/analyze_soak.py --source output/builds/native-soak-30min.json --output output/builds/native-soak-analysis.json`。默认命令仍汇总已完成的引擎 PCK 巡回。输出包含原始文件绝对路径和 SHA256，已核对两份报告没有混用，原生运行中报告仍标记未完成。
