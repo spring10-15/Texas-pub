@@ -41,7 +41,8 @@ func run() -> void:
 	var report := {"status":"running", "duration_target_seconds":duration, "process_id":OS.get_process_id(),
 		"engine":Engine.get_version_info().string, "cpu":OS.get_processor_name(),
 		"gpu":RenderingServer.get_video_adapter_name(), "window_pixels":DisplayServer.window_get_size(),
-		"scope":"Windowed packed resources on this Mac; scripted legal tables and camera tours, not physical walking, native release or target-machine certification."}
+		"executable_path":OS.get_executable_path(), "template_runtime":OS.has_feature("template"),
+		"scope":"Windowed packed resources on this Mac; scripted legal tables and camera tours, not physical walking or target-machine certification. Executable path and template feature identify the runtime."}
 	while Time.get_ticks_msec() - started < duration * 1000:
 		var elapsed := float(Time.get_ticks_msec() - started) / 1000.0
 		var step := int(elapsed / segment)
