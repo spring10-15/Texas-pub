@@ -47,7 +47,9 @@ func run() -> void:
 		var elapsed := float(Time.get_ticks_msec() - started) / 1000.0
 		var step := int(elapsed / segment)
 		if step != last_step:
-			advance(step)
+			for pending_step in range(last_step + 1, step + 1):
+				advance(pending_step)
+				if failures > 0: break
 			last_step = step
 		await RenderingServer.frame_post_draw
 		var now := Time.get_ticks_usec()
