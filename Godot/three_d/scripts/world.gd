@@ -1083,6 +1083,10 @@ func restore_checkpoint(state: Dictionary) -> bool:
 		return false
 	if not state.player.is_finite() or not state.look.is_finite() or not state["return"].is_finite():
 		return false
+	# The controller saves rigid rotations, never scaled or sheared capsules.
+	for basis in [state.player.basis, state["return"].basis]:
+		if not is_equal_approx(basis.determinant(), 1.0) or not basis.is_equal_approx(basis.orthonormalized()):
+			return false
 	if absf(state.look.x) > PlayerController.LOOK_PITCH_LIMIT:
 		return false
 	if not checkpoint_position_valid(state.player.origin, state.room):

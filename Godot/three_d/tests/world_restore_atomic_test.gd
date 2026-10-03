@@ -23,7 +23,7 @@ func run_tests() -> void:
 	world.travel("tavern")
 	var baseline: Dictionary = world.checkpoint_state()
 	var invalid_groups := {"invalid_props":true,"invalid_transform":true,"outside_room":true,"active_in_stash":true,"locked_room":true}
-	for key in ["props_type","prop_value","player_nan","look_inf","look_remote","return_nan","basis_nan","player_remote","wrong_room","return_remote","active_in_stash","locked_room"]:
+	for key in ["props_type","prop_value","player_nan","look_inf","look_remote","return_nan","basis_nan","basis_zero","basis_scaled","basis_sheared","return_basis_zero","player_remote","wrong_room","return_remote","active_in_stash","locked_room"]:
 		var bad: Dictionary = baseline.duplicate(true)
 		bad.run.cash += 100
 		match key:
@@ -34,6 +34,10 @@ func run_tests() -> void:
 			"look_remote": bad.look.x = PlayerController.LOOK_PITCH_LIMIT + 0.1
 			"return_nan": bad["return"].origin.z = NAN
 			"basis_nan": bad.player.basis.x.x = NAN
+			"basis_zero": bad.player.basis = Basis(Vector3.ZERO, Vector3.ZERO, Vector3.ZERO)
+			"basis_scaled": bad.player.basis = Basis.IDENTITY.scaled(Vector3(2, 1, 1))
+			"basis_sheared": bad.player.basis = Basis(Vector3(1, 0, 0), Vector3(0.5, 1, 0), Vector3(0, 0, 1))
+			"return_basis_zero": bad["return"].basis = Basis(Vector3.ZERO, Vector3.ZERO, Vector3.ZERO)
 			"player_remote": bad.player.origin.x = 1e9
 			"wrong_room": bad.player.origin.x += 10
 			"return_remote":
