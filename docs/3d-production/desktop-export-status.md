@@ -261,3 +261,18 @@ Mac 新应用从 /tmp 以 --test 启动，原生 headless 120 帧退出 0，无 
 - 日志：rotation-macos-resources.log、rotation-macos-mouse.log、rotation-windows-resources.log、rotation-windows-mouse.log、rotation-native-check.log。
 
 新版玩家包未重新跑 30 分钟巡回；已有长时报告仍属于旧版本测试包，不能沿用为本次新版完成证明。
+
+
+## 2026-10-03：最佳牌型展示复制优化包
+
+在保留策略、试验数、牌型比较与 RNG 的条件下，evaluate_best_hand 仅为最终最佳组合创建展示牌副本。71 个 Godot 套件、20 个 Python 测试通过，完整报告为 output/3d/regression/20261003-201735/report.json；该轮源码/资产指纹不变。CPU 样本及未达整帧预算的限制见 phase-3/performance-budget.md，不能据本更新宣称 60 fps 或美术性能封版。
+
+Mac/Windows 官方 release 导出退出 0，无 ERROR。两份实际 PCK 各自通过 28 项资源检查及 1414 个输入、4242 项完整牌型结果/输入不变/返回牌不共享字典检查。外部校验脚本使用开发目录的测试牌型 fixture，但 Poker 类实际从导出 PCK 加载。Mac 新原生应用从 /tmp 以 --test 运行 headless 120 帧，退出 0，无 ERROR；Windows 原生执行仍未验证，清单继续为 false。ZIP 清单和 CRC 已更新，旧包保留为 before-hand-eval-optimization 备份。
+
+- Mac ZIP SHA-256：`2a2a9cbf515427456149f357af0c9ca7a5da9f6ad2644cf448ad6a31552d1235`。
+- Windows ZIP SHA-256：`706701cefcb79c7dcce54bf8bee1e163af710d40b3852087c244acfb5e0e2529`。
+- 日志：hand-eval-macos-resources.log、hand-eval-macos-hands.log、hand-eval-windows-resources.log、hand-eval-windows-hands.log、hand-eval-native-check.log。
+
+旧版本 30 分钟记录没有重记为当前版本长时通过，本轮尚未重新做该项验收。
+
+优化包另通过旧包创建、新包加载的七类存档样本，14 个独立进程全部通过且原夹具字节不变：output/builds/upgrade-checks/20261003-202505/report.json。范围仍为既有七类代表样本，不证明任意历史存档。

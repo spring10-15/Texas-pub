@@ -60,6 +60,7 @@ EXCLUDED = {
     "Godot/three_d/rules/poker.gd": {
         "_init": "initializes the deterministic RNG state; state consumption is represented by next",
         "multiply32": "pure 32-bit arithmetic helper used by the deterministic RNG",
+        "evaluate_five_score": "pure five-card rank/tiebreak calculation; evaluate_five and evaluate_best_hand own returned presentation copies, with no authoritative state mutation",
     },
     "Godot/three_d/scripts/bar_display.gd": {
         "_init": "scene presentation helper setup",

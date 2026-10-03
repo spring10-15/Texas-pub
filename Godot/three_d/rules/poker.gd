@@ -45,18 +45,25 @@ static func evaluate_best_hand(cards: Array) -> Dictionary:
 	if cards.size() < 5:
 		return {"rank": -1, "values": [], "name": "Incomplete", "cards": cards.duplicate(true)}
 	var best: Dictionary = {}
+	var best_cards: Array = []
 	# Hold'em supplies at most seven cards; explicit 5-card combinations avoid mutation.
 	for a in range(cards.size() - 4):
 		for b in range(a + 1, cards.size() - 3):
 			for c in range(b + 1, cards.size() - 2):
 				for d in range(c + 1, cards.size() - 1):
 					for e in range(d + 1, cards.size()):
-						var hand := evaluate_five([cards[a], cards[b], cards[c], cards[d], cards[e]])
+						var candidate := [cards[a], cards[b], cards[c], cards[d], cards[e]]
+						var hand := evaluate_five_score(candidate)
 						if best.is_empty() or compare_hands(hand, best) > 0:
 							best = hand
-	return best
+							best_cards = candidate
+	return make_hand(best.rank, best.values, best_cards)
 
 static func evaluate_five(cards: Array) -> Dictionary:
+	var score := evaluate_five_score(cards)
+	return make_hand(score.rank, score.values, cards)
+
+static func evaluate_five_score(cards: Array) -> Dictionary:
 	var ranks: Array = []
 	var counts := {}
 	var flush := true
@@ -85,22 +92,22 @@ static func evaluate_five(cards: Array) -> Dictionary:
 	var groups: Array = counts.keys()
 	groups.sort_custom(func(a, b): return counts[a] > counts[b] if counts[a] != counts[b] else a > b)
 	if flush and straight:
-		return make_hand(8, [straight], cards)
+		return {"rank": 8, "values": [straight]}
 	if counts[groups[0]] == 4:
-		return make_hand(7, [groups[0], groups[1]], cards)
+		return {"rank": 7, "values": [groups[0], groups[1]]}
 	if counts[groups[0]] == 3 and counts[groups[1]] == 2:
-		return make_hand(6, groups, cards)
+		return {"rank": 6, "values": groups}
 	if flush:
-		return make_hand(5, ranks, cards)
+		return {"rank": 5, "values": ranks}
 	if straight:
-		return make_hand(4, [straight], cards)
+		return {"rank": 4, "values": [straight]}
 	if counts[groups[0]] == 3:
-		return make_hand(3, groups, cards)
+		return {"rank": 3, "values": groups}
 	if counts[groups[0]] == 2 and counts[groups[1]] == 2:
-		return make_hand(2, groups, cards)
+		return {"rank": 2, "values": groups}
 	if counts[groups[0]] == 2:
-		return make_hand(1, groups, cards)
-	return make_hand(0, ranks, cards)
+		return {"rank": 1, "values": groups}
+	return {"rank": 0, "values": ranks}
 
 static func make_hand(rank: int, values: Array, cards: Array) -> Dictionary:
 	var ordered := cards.duplicate(true)

@@ -1,11 +1,11 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "b5ac026caadf201bd490c5c8677f94d8552ababac3dab59839146f5948e1afc3",
+  "branch_inventory_sha256": "044f6ea50e0bb183a2918fee0cc2f68eda2874ac40a02cff5464ed9e57b0ac80",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "d7009c834d0337d90602b1149c96573c4da567f5030b2f4615b9ce750ca05867",
-    "Godot/three_d/rules/poker.gd": "81c89274bf62e2e8cda03f4b2daddf3e187ff7af75e6b094660c890a6d441c38",
+    "Godot/three_d/rules/poker.gd": "c79fa2dbabf6bdf05f3397abcb9488f62eb8fde1edb8e9b38d85494f55580e94",
     "Godot/three_d/rules/routes.gd": "29c015a2fe729d224653061a1f12cf49ad7c2db486b821d30d44bdc997b5ef76",
     "Godot/three_d/rules/run.gd": "2cd7ca0596ae84e32f83a707cf509361c002862b69e45f2fc96dfcc1d9d2c4ca",
     "Godot/three_d/rules/run_checkpoint.gd": "61ab3cf01a0254166d50526ecd1ac166e3716c1a1d2f3ab028ded074b2906810",
@@ -26,7 +26,7 @@
   },
   "counts": {
     "audit_inventory": 120,
-    "explicit_exclusion": 64
+    "explicit_exclusion": 65
   },
   "functions": [
     {
@@ -127,7 +127,7 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 59,
+      "line": 62,
       "name": "evaluate_five",
       "signature": "static func evaluate_five(cards: Array) -> Dictionary:",
       "status": "audit_inventory",
@@ -135,7 +135,15 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 105,
+      "line": 66,
+      "name": "evaluate_five_score",
+      "signature": "static func evaluate_five_score(cards: Array) -> Dictionary:",
+      "status": "explicit_exclusion",
+      "reason": "pure five-card rank/tiebreak calculation; evaluate_five and evaluate_best_hand own returned presentation copies, with no authoritative state mutation"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 112,
       "name": "make_hand",
       "signature": "static func make_hand(rank: int, values: Array, cards: Array) -> Dictionary:",
       "status": "audit_inventory",
@@ -143,7 +151,7 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 110,
+      "line": 117,
       "name": "build_pots",
       "signature": "static func build_pots(players: Array) -> Array:",
       "status": "audit_inventory",
@@ -151,7 +159,7 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 131,
+      "line": 138,
       "name": "settle_pots",
       "signature": "static func settle_pots(players: Array, board: Array) -> Dictionary:",
       "status": "audit_inventory",
@@ -1856,7 +1864,7 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 55,
+      "line": 57,
       "method": "evaluate_best_hand",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -1864,24 +1872,16 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 73,
-      "method": "evaluate_five",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/rules/poker.gd",
-      "line": 78,
-      "method": "evaluate_five",
-      "kind": "if",
-      "status": "branch_inventory_ref",
-      "reason": "source line is represented in the A8 current-tree branch inventory"
-    },
-    {
-      "file": "Godot/three_d/rules/poker.gd",
       "line": 80,
-      "method": "evaluate_five",
+      "method": "evaluate_five_score",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 85,
+      "method": "evaluate_five_score",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
@@ -1889,70 +1889,78 @@
     {
       "file": "Godot/three_d/rules/poker.gd",
       "line": 87,
-      "method": "evaluate_five",
+      "method": "evaluate_five_score",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 89,
-      "method": "evaluate_five",
+      "line": 94,
+      "method": "evaluate_five_score",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 91,
-      "method": "evaluate_five",
+      "line": 96,
+      "method": "evaluate_five_score",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 93,
-      "method": "evaluate_five",
+      "line": 98,
+      "method": "evaluate_five_score",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 95,
-      "method": "evaluate_five",
+      "line": 100,
+      "method": "evaluate_five_score",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 97,
-      "method": "evaluate_five",
+      "line": 102,
+      "method": "evaluate_five_score",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 99,
-      "method": "evaluate_five",
+      "line": 104,
+      "method": "evaluate_five_score",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 101,
-      "method": "evaluate_five",
+      "line": 106,
+      "method": "evaluate_five_score",
       "kind": "if",
       "status": "branch_inventory_ref",
       "reason": "source line is represented in the A8 current-tree branch inventory"
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 114,
+      "line": 108,
+      "method": "evaluate_five_score",
+      "kind": "if",
+      "status": "branch_inventory_ref",
+      "reason": "source line is represented in the A8 current-tree branch inventory"
+    },
+    {
+      "file": "Godot/three_d/rules/poker.gd",
+      "line": 121,
       "method": "build_pots",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -1960,7 +1968,7 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 123,
+      "line": 130,
       "method": "build_pots",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -1968,7 +1976,7 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 125,
+      "line": 132,
       "method": "build_pots",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -1976,7 +1984,7 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 138,
+      "line": 145,
       "method": "settle_pots",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -1984,7 +1992,7 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 144,
+      "line": 151,
       "method": "settle_pots",
       "kind": "if",
       "status": "branch_inventory_ref",
@@ -1992,7 +2000,7 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 146,
+      "line": 153,
       "method": "settle_pots",
       "kind": "elif",
       "status": "branch_inventory_ref",
@@ -2000,7 +2008,7 @@
     },
     {
       "file": "Godot/three_d/rules/poker.gd",
-      "line": 149,
+      "line": 156,
       "method": "settle_pots",
       "kind": "if",
       "status": "branch_inventory_ref",
