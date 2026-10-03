@@ -38,6 +38,7 @@ func run() -> void:
 		check(table.state.status == "finished", "table completes")
 		var heat: int = world.run_game.heat
 		var cash_after: int = world.run_game.cash + table.state.players[0].stack
+		var goods_before: int = world.run_game.valuable_total()
 		world.leave_seat()
 		check(not world.seated and world.table_game == null, "leave clears seat")
 		if room != "mirror":
@@ -47,8 +48,19 @@ func run() -> void:
 			check(not world.run_game.active and world.current_room == "stash", "forced extraction returns home")
 			var result: Dictionary = world.run_game.last_result
 			check(result.get("forced", false), "forced result visible")
+			var goods_after := goods_before
+			var settled: Dictionary = world.run_game.last_table_result
+			if settled.get("reward_added", false):
+				goods_after += world.run_game.sale_value(settled.reward)
+			check(result.cash == cash_after, "extraction uses actual settled cash")
+			check(cash_after + goods_after == result.net + result.fee + result.lostCash + result.lostGoods, "cash and goods conserved across extraction")
+			check(world.run_game.inventory.is_empty(), "extraction clears carried rewards")
 			check(world.run_game.cash == 0 and world.run_game.vault == initial_vault + int(result.get("net", -1)), "banked result matches vault")
 			check(cash_after > 0 and not result.get("abandoned", false), "earned cash extracted rather than abandoned")
+			var banked: Dictionary = world.checkpoint_state()
+			world.check_pressure()
+			world.leave_seat()
+			check(world.checkpoint_state() == banked, "repeated pressure and leave cannot bank twice")
 	world.queue_free()
 	await process_frame
 	print("NATURAL_PRESSURE_EXIT checks=", checks, " failed=", failures.size())
