@@ -1085,7 +1085,11 @@ func restore_checkpoint(state: Dictionary) -> bool:
 		return false
 	# The controller saves rigid rotations, never scaled or sheared capsules.
 	for basis in [state.player.basis, state["return"].basis]:
-		if not is_equal_approx(basis.determinant(), 1.0) or not basis.is_equal_approx(basis.orthonormalized()):
+		# Allow float32 rotation drift in older saves, but reject non-rigid transforms.
+		if absf(basis.determinant() - 1.0) > 0.001:
+			return false
+		var rigid: Basis = basis.orthonormalized()
+		if basis.x.distance_to(rigid.x) > 0.001 or basis.y.distance_to(rigid.y) > 0.001 or basis.z.distance_to(rigid.z) > 0.001:
 			return false
 	if absf(state.look.x) > PlayerController.LOOK_PITCH_LIMIT:
 		return false

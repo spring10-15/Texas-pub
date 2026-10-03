@@ -1020,7 +1020,7 @@ def main() -> int:
     world_source = "Godot/three_d/scripts/world.gd"
     world_lines = (ROOT / world_source).read_text(encoding="utf-8").splitlines()
     rigid_line = next(i for i, text in enumerate(world_lines, 1)
-                      if "if not is_equal_approx(basis.determinant(), 1.0)" in text)
+                      if "if absf(basis.determinant() - 1.0)" in text)
     restore_line = next(i for i, text in enumerate(world_lines, 1)
                         if text.startswith("func restore_checkpoint("))
     row = {field: "" for field in branch_fields}
@@ -1028,13 +1028,13 @@ def main() -> int:
         "module": "world", "source_file": world_source,
         "entry": "restore_checkpoint", "function_line": str(restore_line),
         "branch_or_guard": "拒绝：玩家或返回位置的旋转基底为零、缩放、剪切或非正常旋转",
-        "source_line": f"{world_source}:{rigid_line}-{rigid_line + 1}",
+        "source_line": f"{world_source}:{rigid_line}-{rigid_line + 4}",
         "outcome": "rejected", "player_reachable": "no",
         "catalog_id": "persistence_restore.invalid_transform",
         "test": "Godot/three_d/tests/world_restore_atomic_test.gd::basis_zero/basis_scaled/basis_sheared/return_basis_zero",
         "evidence_report": LATEST_REPORT, "evidence_strength": "strong",
         "disposition": "catalogued_strong",
-        "notes": "损坏存档防御：正常控制器只保存刚体旋转。四个矩阵夹具逐例断言拒绝且活体世界快照不变；复用既有非法变换 ID，不新增覆盖分母。",
+        "notes": "损坏存档防御：正常控制器只保存刚体旋转，允许旧档 float32 累积误差不超过 0.001。四个矩阵夹具逐例断言拒绝且活体世界快照不变；复用既有非法变换 ID，不新增覆盖分母。",
     })
     branches.append(row)
 

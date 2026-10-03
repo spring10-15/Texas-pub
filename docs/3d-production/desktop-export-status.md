@@ -246,3 +246,18 @@ Windows release 导出正常退出、日志无 ERROR；EXE 的 PE x64 头检查�
 新增 capture_preview_media.gd，以 --test 和绝对输出目录在窗口加载实际 Mac 玩家 PCK，截取藏匿点、出发面板和通过真实准星入座买入后的牌桌，共三张 1376×768 PNG。已逐张视觉检查，牌桌等待正常输入延迟结束后再截取，行动和费用提示可见。图片、来源 PCK SHA256、尺寸及说明打包为 output/builds/TexasPub-preview-media.zip。这是编辑器加载实际包资源的窗口截图，不是原生应用截图或最终高精美术宣传材料。现有基础人物与三人精修样板仍混用，风格统一尚未完成。未生图、未修改玩法或另一模型美术。
 
 截图集扩展为六张：新增桌终输赢强调、普通出口费用/到账报价和返回藏匿点金库。通过合法玩家弃牌和生产对手 AI 完成牌桌、离座结算，再调用现有撤离面板确认；没有伪造金额。三张结果画面已逐张检查，牌桌亏损 -20、出口费 57、到账 223 与金库 1123 一致。此样本未步行到实体出口，不作为物理路线验收。截图清单哈希与 ZIP 已同步更新。
+
+
+## 2026-10-03：连续转向存档误拒绝修复包
+
+Mac 与 Windows 官方 release 导出均退出 0，日志无 ERROR；原包分别保留为 TexasPub-before-rotation-fix.zip 与 TexasPub-windows-before-rotation-fix.zip。新版玩家入口不变，指南和清单已更新。两份实际 PCK 的 28 项资源检查、窗口下 9 项真实鼠标转向/旧微小误差/明显缩放拒绝检查均通过。这由本机 Godot 引擎加载导出 PCK 执行，不是 Windows 原生输入证明。
+
+Mac 新应用从 /tmp 以 --test 启动，原生 headless 120 帧退出 0，无 ERROR；Windows EXE 的 PE/x64 头、ZIP CRC 和清单校验通过，windows_runtime_verified 继续为 false。release 的 GDScript 是编译资源，不能用原 .gd 路径的 FileAccess 文本 hash 证明源码一致；该尝试不成立，改用实际包运行修复专项，未把失败的文本校验记为通过。
+
+旧包创建、新包读取的七类存档全部通过，14 个独立进程退出 0，旧夹具字节未变。证据：output/builds/upgrade-checks/20261003-133555/report.json。覆盖 stash/table/search/shopping/reservation/extracted/collateral 样本，不证明所有历史矩阵或真人重启。
+
+- Mac ZIP SHA-256：`ce07bdf49f6d331844dec30870aad43208d9dc8984988ff16a6c71de34fb4bd7`。
+- Windows ZIP SHA-256：`b6911c4cfc7eade90d41ed7a70f9a7fc4668896d08219bb00687a182678dde34`。
+- 日志：rotation-macos-resources.log、rotation-macos-mouse.log、rotation-windows-resources.log、rotation-windows-mouse.log、rotation-native-check.log。
+
+新版玩家包未重新跑 30 分钟巡回；已有长时报告仍属于旧版本测试包，不能沿用为本次新版完成证明。
