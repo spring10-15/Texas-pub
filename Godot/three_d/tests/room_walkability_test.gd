@@ -85,6 +85,11 @@ func run() -> void:
 			await walk(Vector2(0, -7), offset, "storeroom junction")
 			await walk(Vector2(0, -11.6), offset, "loading lift")
 			await focus(node.get_node("FixedExit"), "loading lift")
+			if venue_id == "rooftop-club":
+				var before_lift: Dictionary = world.RunCheckpoint.capture(world.run_game)
+				verify(world.request_action(node.get_node("FixedExit")) and world.run_panel.visible and world.selected_route == "fixed", "New freight gate opens the real booked-exit panel")
+				world.close_run_panel()
+				verify(world.RunCheckpoint.capture(world.run_game) == before_lift, "Inspecting and closing freight gate preserves full Run state")
 			await walk(Vector2(0, -7), offset, "loading corridor junction")
 			await walk(Vector2(2.75, -7), offset, "loading ramp entrance")
 			await walk(Vector2(2.75, -13), offset, "river quay", -1.2)

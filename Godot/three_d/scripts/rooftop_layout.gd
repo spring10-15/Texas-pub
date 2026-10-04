@@ -1,7 +1,7 @@
 extends RefCounted
 ## Visual terrace overlay; existing room collisions and interaction anchors stay in place.
 const SERVICE = preload("res://three_d/assets/rooftop-service.glb")
-const SERVICE_ROLES = ["ServiceHall", "CrossHall", "KitchenFloor", "UpperLanding", "HallWall", "CrossWall", "HallEnd", "KitchenWall", "UpperExitWall", "StairTread", "UpperCeiling"]
+const SERVICE_ROLES = ["ServiceHall", "CrossHall", "KitchenFloor", "UpperLanding", "HallWall", "CrossWall", "HallEnd", "KitchenWall", "UpperExitWall", "StairTread", "UpperCeiling", "StoreFloor", "LiftWall", "WingDivider", "Crate", "LiftGate", "GateBar"]
 const BAR = preload("res://three_d/assets/rooftop-bar.glb")
 const CHAIRS = preload("res://three_d/assets/rooftop-chairs.glb")
 const TABLE = preload("res://three_d/assets/rooftop-table.glb")
@@ -49,12 +49,15 @@ func apply(profile_id: String) -> void:
 			architecture.add_child(bar)
 			var service := SERVICE.instantiate()
 			service.name = "RooftopService"
+			service.visible = room.name == "Tavern"
 			architecture.add_child(service)
 		if architecture != null: architecture.visible = rooftop
 		room.get_node("BlenderDetail").find_child("TavernFloor", true, false).visible = not rooftop
 		room.get_node("BlenderDetail").find_child("TavernTable", true, false).visible = not rooftop
 		room.get_node("BlenderDetail").find_child("TavernChairs", true, false).visible = not rooftop
 		room.get_node("BlenderDetail").find_child("TavernBar", true, false).visible = not rooftop
+		if room.name == "Tavern":
+			room.get_node("RouteDetail").find_child("StoreDetails", true, false).visible = not rooftop
 		for body in room.get_children():
 			var role: String = body.get_meta("visual_role", "")
 			if not (role in SERVICE_ROLES or role.begins_with("Ceiling") or role == "FrontWall" or (role == "SideWall" and body.position.x < 0)): continue

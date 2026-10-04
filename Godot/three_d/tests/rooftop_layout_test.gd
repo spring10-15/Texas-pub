@@ -29,7 +29,8 @@ func run() -> void:
 		verify(abs((deck.global_transform * deck.get_aabb()).end.y - 0.014) < 0.00001, "Deck visible top matches existing floor height")
 		verify(abs((original_floor.global_transform * original_floor.get_aabb()).end.y - 0.014) < 0.00001, "Indoor floor geometry preserves height")
 		var service = architecture.get_node("RooftopService")
-		verify(service.visible and service.find_children("*","MeshInstance3D",true,false).size()==4,"Independent service tower materials loaded")
+		if room.name == "Tavern": verify(not room.get_node("RouteDetail").find_child("StoreDetails",true,false).visible,"Legacy storeroom details hidden on rooftop")
+		verify(service.visible == (room.name == "Tavern") and service.find_children("*","MeshInstance3D",true,false).size()==5,"Independent service tower materials loaded")
 		verify(service.find_children("*","CollisionShape3D",true,false).is_empty(),"Service visual model adds no collision")
 		var bar = architecture.get_node("RooftopBar")
 		verify(bar.visible and not room.get_node("BlenderDetail").find_child("TavernBar",true,false).visible,"Independent terrace bar replaces legacy bar")
@@ -83,6 +84,7 @@ func run() -> void:
 		verify(world.scene_environment.background_mode == Environment.BG_COLOR and world.scene_environment.sky == null, "Indoor sky restored: " + venue)
 		for setup in world.ROOMS.values():
 			var room = world.get_node(setup.node)
+			if room.name == "Tavern": verify(room.get_node("RouteDetail").find_child("StoreDetails",true,false).visible,"Indoor storeroom details restored")
 			verify(room.get_node("BlenderDetail").find_child("TavernBar",true,false).visible,"Indoor bar restored")
 			verify(room.get_node("BlenderDetail").find_child("TavernChairs",true,false).visible,"Indoor chairs restored")
 			verify(room.get_node("BlenderDetail").find_child("TavernTable",true,false).visible, "Indoor table restored")
@@ -99,7 +101,7 @@ func run() -> void:
 		world.player.camera.rotation.x = -0.05
 		for i in range(12): await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../output/3d/rooftop-in-game.png"))
-		for view in [{"name":"service","position":Vector3(10,.05,-4.1),"yaw":0.0},{"name":"stairs","position":Vector3(7.25,.05,-8.6),"yaw":0.0},{"name":"upper","position":Vector3(7.25,1.25,-12.1),"yaw":0.0},{"name":"entry","position":Vector3(8,0.05,1.7),"yaw":0.0},{"name":"table","position":Vector3(9.55,0.05,0.04),"yaw":PI},{"name":"exit","position":Vector3(7.6,0.05,1.65),"yaw":PI/2}]:
+		for view in [{"name":"store","position":Vector3(10,.05,-10.6),"yaw":-PI/2},{"name":"service","position":Vector3(10,.05,-4.1),"yaw":0.0},{"name":"stairs","position":Vector3(7.25,.05,-8.6),"yaw":0.0},{"name":"upper","position":Vector3(7.25,1.25,-12.1),"yaw":0.0},{"name":"entry","position":Vector3(8,0.05,1.7),"yaw":0.0},{"name":"table","position":Vector3(9.55,0.05,0.04),"yaw":PI},{"name":"exit","position":Vector3(7.6,0.05,1.65),"yaw":PI/2}]:
 			world.player.position = view.position
 			world.player.rotation.y = view.yaw
 			for i in range(8): await RenderingServer.frame_post_draw

@@ -24,5 +24,7 @@
     "Quay weathered timber",
     "River water"
   ],
-  "bytes": 789848
+  "meshes": 14,
+  "triangles": 16160,
+  "bytes": 836204
 }

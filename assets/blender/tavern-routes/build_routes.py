@@ -192,31 +192,7 @@ for z in [-15.2, -15.7, -16.2, -16.7]:
 
 # Export an editable source before optimizing a transient export selection.
 bpy.ops.wm.save_as_mainfile(filepath=str(HERE / "tavern-routes.blend"))
-for obj in objects:
-    obj.select_set(True)
-bpy.context.view_layer.objects.active = objects[0]
-bpy.ops.object.convert(target="MESH")
-by_material = {}
-for obj in objects:
-    by_material.setdefault(obj.data.materials[0].name, []).append(obj)
-for parts in by_material.values():
-    bpy.ops.object.select_all(action="DESELECT")
-    for obj in parts:
-        obj.select_set(True)
-    bpy.context.view_layer.objects.active = parts[0]
-    bpy.ops.object.join()
-bpy.ops.object.select_all(action="DESELECT")
-for obj in collection.objects:
-    obj.select_set(True)
-bpy.context.view_layer.objects.active = next(iter(collection.objects))
-bpy.ops.export_scene.gltf(filepath=str(DEST), export_format="GLB", use_selection=True,
-                          export_cameras=False, export_lights=False, export_animations=False)
-DEST.with_suffix(".json").write_text(json.dumps({
-    "asset": str(DEST.name),
-    "source": "assets/blender/tavern-routes/tavern-routes.blend",
-    "decorative_only": True,
-    "godot_local_meters": {"hall": [-4, 4, -3.4, -14], "upper_kitchen_y": 1.2, "quay_y": -1.3},
-    "materials": sorted(by_material),
-    "bytes": DEST.stat().st_size,
-}, ensure_ascii=False, indent=2) + "\n")
-print(f"TAVERN_ROUTES_EXPORTED {DEST} ({DEST.stat().st_size} bytes)")
+import sys
+sys.path.insert(0, str(HERE))
+from export_routes import export_routes
+export_routes()

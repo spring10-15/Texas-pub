@@ -8,16 +8,17 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.context.scene.unit_settings.system='METRIC'
 root=bpy.data.objects.new('RooftopService',None);bpy.context.collection.objects.link(root)
 mats={}
-for name,color,metal,rough in [('plaster',(.14,.15,.16),0,.85),('steel',(.032,.043,.052),.75,.42),('stone',(.065,.08,.09),0,.72),('brass',(.36,.22,.08),.8,.35)]:
+for name,color,metal,rough in [('plaster',(.14,.15,.16),0,.85),('steel',(.032,.043,.052),.75,.42),('stone',(.065,.08,.09),0,.72),('brass',(.36,.22,.08),.8,.35),('walnut',(.12,.05,.025),0,.6)]:
  m=bpy.data.materials.new(name);m.use_nodes=True;p=m.node_tree.nodes.get('Principled BSDF');p.inputs['Base Color'].default_value=(*color,1);p.inputs['Metallic'].default_value=metal;p.inputs['Roughness'].default_value=rough;mats[name]=m
-m=mats['plaster'];n=m.node_tree.nodes;l=m.node_tree.links;p=n.get('Principled BSDF')
-for channel,socket in [('color','Base Color'),('normal','Normal'),('roughness','Roughness')]:
- im=bpy.data.images.load(str(DEST.parent/'materials'/f'plaster-{channel}.png'));im.pack()
- if channel!='color':im.colorspace_settings.name='Non-Color'
- tex=n.new('ShaderNodeTexImage');tex.image=im
- if channel=='normal':
-  normal=n.new('ShaderNodeNormalMap');normal.inputs['Strength'].default_value=.25;l.new(tex.outputs['Color'],normal.inputs['Color']);l.new(normal.outputs['Normal'],p.inputs[socket])
- else:l.new(tex.outputs['Color'],p.inputs[socket])
+for mat_name in ['plaster','walnut']:
+ m=mats[mat_name];n=m.node_tree.nodes;l=m.node_tree.links;p=n.get('Principled BSDF')
+ for channel,socket in [('color','Base Color'),('normal','Normal'),('roughness','Roughness')]:
+  im=bpy.data.images.load(str(DEST.parent/'materials'/f'{mat_name}-{channel}.png'));im.pack()
+  if channel!='color':im.colorspace_settings.name='Non-Color'
+  tex=n.new('ShaderNodeTexImage');tex.image=im
+  if channel=='normal':
+   normal=n.new('ShaderNodeNormalMap');normal.inputs['Strength'].default_value=.25;l.new(tex.outputs['Color'],normal.inputs['Color']);l.new(normal.outputs['Normal'],p.inputs[socket])
+  else:l.new(tex.outputs['Color'],p.inputs[socket])
 def point(p):return Vector((p[0],-p[2],p[1]))
 def put(o,name,mat):o.name=name;o.parent=root;o.data.materials.append(mats[mat]);return o
 def box(name,p,size,mat,bevel=.003):
@@ -66,6 +67,41 @@ for i in range(9):box('Vent blade',(.865,1.85+i*.038,-5.25),(.035,.015,.56),'bra
 # Roof tower cap provides a silhouette above the terrace, with panel seams and flashings.
 box('Tower roof',(-2.75,4.32,-12.5),(2.6,.10,1.15),'steel',.005)
 for x in [-4.03,-1.47]:box('Roof flashing',(x,4.38,-12.5),(.045,.06,1.17),'steel')
+# Independent central storeroom: keep the existing clear lane and colliders.
+box('Store stone floor',(0,-.006,-10.5),(2.98,.04,5),'stone')
+box('Store rear wall',(0,1.5,-13),(3,3,.12),'plaster',.004)
+for x in [-1.5,1.5]:box('Store divider wall',(x,1.5,-10.5),(.12,3,5),'plaster',.004)
+for x in [-1.42,1.42]:box('Store skirting',(x,.10,-10.5),(.035,.17,5),'steel')
+# Two boarded crates occupy exactly the original solid crate locations.
+for z in [-9,-10.5]:
+ box('Crate core',(-.95,.45,z),(.68,.88,.78),'walnut',.008)
+ for y in [.08,.25,.42,.59,.76]:
+  for x in [-1.30,-.60]:box('Crate side board',(x,y,z),(.035,.14,.80),'walnut',.004)
+  for dz in [-.40,.40]:box('Crate front board',(-.95,y,z+dz),(.70,.14,.035),'walnut',.004)
+ for y in [.025,.88]:
+  for x in [-1.30,-.60]:box('Crate band',(x,y,z),(.045,.04,.82),'steel')
+  for dz in [-.40,.40]:box('Crate band',(-.95,y,z+dz),(.73,.04,.045),'steel')
+ for x in [-1.24,-.66]:
+  for dz in [-.40,.40]:
+   for y in [.10,.76]:rod('Crate nail',(x,y,z+dz),(x,y,z+dz+.012),.005,'brass',12)
+# Empty metal rack at the back left, outside the route to the booking lift.
+for z in [-11.5,-12.5]:
+ for x in [-1.37,-1.02]:box('Rack upright',(x,1.20,z),(.035,2.4,.035),'steel')
+for y in [.18,.85,1.52,2.19]:box('Rack shelf',(-1.195,y,-12),(.39,.035,1.08),'steel')
+# The freight gate faces the actual side-wall exit target instead of the old rear-facing prop.
+for z in [-11.81,-10.19]:box('Lift jamb',(1.28,1.16,z),(.11,2.32,.09),'steel')
+box('Lift lintel',(1.28,2.33,-11),(.11,.10,1.72),'steel')
+box('Lift recessed door',(1.33,1.12,-11),(.045,2.20,1.55),'stone')
+for z in [-11.72,-11.48,-11.24,-11.0,-10.76,-10.52,-10.28]:rod('Lift gate vertical',(1.26,.065,z),(1.26,2.15,z),.015)
+for y in [.10,1.1,2.12]:rod('Lift cross rail',(1.255,y,-11.73),(1.255,y,-10.27),.018)
+for i in range(6):
+ z=-11.72+i*.24
+ rod('Gate diagonal',(1.24,.12,z),(1.24,2.1,z+.24),.008)
+ rod('Gate diagonal',(1.24,2.1,z),(1.24,.12,z+.24),.008)
+box('Lift handle',(1.20,1.12,-10.39),(.04,.25,.045),'brass',.005)
+box('Lift call plate',(1.245,1.34,-10.08),(.05,.38,.19),'steel',.008)
+for y in [1.24,1.43]:rod('Lift call button',(1.215,y,-10.08),(1.195,y,-10.08),.027,'brass',24)
+box('Lift threshold',(1.22,.025,-11),(.18,.025,1.55),'brass',.002)
 bpy.context.preferences.filepaths.save_version=0
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'rooftop-service.blend'))
 bpy.ops.object.select_all(action='SELECT');bpy.context.view_layer.objects.active=next(o for o in bpy.data.objects if o.type=='MESH');bpy.ops.object.convert(target='MESH')
@@ -75,4 +111,4 @@ for name in mats:
  for o in parts:o.select_set(True)
  bpy.context.view_layer.objects.active=parts[0];bpy.ops.object.join();bpy.context.object.name='Service_'+name;bpy.ops.object.transform_apply(location=True,rotation=True,scale=True)
 bpy.ops.export_scene.gltf(filepath=str(DEST),export_format='GLB',export_animations=False,export_cameras=False,export_lights=False)
-(OUT/'export-report.json').write_text(json.dumps({'triangles':triangles,'materials':4,'stair_steps':12,'floor_top':.014,'landing_top':1.214,'scope':'Corridor and upper stair tower only; storeroom, loading wing and rooftop river relationship remain unfinished.'},indent=2)+'\n');print('SERVICE_EXPORTED',triangles)
+(OUT/'export-report.json').write_text(json.dumps({'triangles':triangles,'materials':5,'stair_steps':12,'floor_top':.014,'landing_top':1.214,'scope':'Corridor, upper stair tower and central storeroom/lift; loading wing and rooftop river relationship remain unfinished.'},indent=2)+'\n');print('SERVICE_EXPORTED',triangles)
