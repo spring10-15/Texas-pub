@@ -1,0 +1,8 @@
+{
+  "buildings": 52,
+  "windows": 462,
+  "triangles": 7644,
+  "materials": 6,
+  "seed": 4104,
+  "scope": "Background skyline only; no collision, independent traversable city or final facade textures."
+}

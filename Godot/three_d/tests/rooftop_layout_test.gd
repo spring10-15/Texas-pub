@@ -24,6 +24,9 @@ func run() -> void:
 		world.travel(room_id)
 		var room = world.get_node(world.ROOMS[room_id].node)
 		var architecture = room.get_node("RooftopArchitecture")
+		var city = architecture.get_node("CityBackdrop")
+		verify(city.find_children("*", "CollisionShape3D", true, false).is_empty(), "City backdrop has no gameplay collision")
+		verify(city.find_children("*", "MeshInstance3D", true, false).size() == 6, "Six merged city material meshes loaded")
 		instances.append(architecture.get_instance_id())
 		for setup in world.ROOMS.values(): verify(world.get_node(setup.node).visible == (setup.node == room.name), "Only current terrace is rendered")
 		verify(architecture.visible and not architecture.find_child("RooftopDeck",true,false).visible, "Terrace visible without duplicate floor: " + room_id)
@@ -64,6 +67,11 @@ func run() -> void:
 		world.player.camera.rotation.x = -0.05
 		for i in range(12): await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../output/3d/rooftop-in-game.png"))
+		for view in [{"name":"entry","position":Vector3(8,0.05,1.7),"yaw":0.0},{"name":"table","position":Vector3(9.55,0.05,0.04),"yaw":PI},{"name":"exit","position":Vector3(7.6,0.05,1.65),"yaw":PI/2}]:
+			world.player.position = view.position
+			world.player.rotation.y = view.yaw
+			for i in range(8): await RenderingServer.frame_post_draw
+			root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://../output/3d/rooftop-city-"+view.name+".png"))
 	print("ROOFTOP_LAYOUT ", JSON.stringify({"checks":checks,"failed":failures.size(),"failures":failures}))
 	world.queue_free()
 	await process_frame

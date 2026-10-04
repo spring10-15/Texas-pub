@@ -1,5 +1,6 @@
 extends RefCounted
 ## Visual terrace overlay; existing room collisions and interaction anchors stay in place.
+const CITY = preload("res://three_d/assets/rooftop-city.glb")
 const TERRACE = preload("res://three_d/assets/rooftop-terrace.glb")
 var world: Node3D
 var original_sky: Sky
@@ -29,6 +30,9 @@ func apply(profile_id: String) -> void:
 			architecture = TERRACE.instantiate()
 			architecture.name = "RooftopArchitecture"
 			room.add_child(architecture)
+			var city := CITY.instantiate()
+			city.name = "CityBackdrop"
+			architecture.add_child(city)
 			# The shared legacy floor is merged with furniture; avoid overlapping floors.
 			architecture.find_child("RooftopDeck", true, false).hide()
 		if architecture != null: architecture.visible = rooftop

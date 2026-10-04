@@ -1,7 +1,7 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "9efa0be8b0b879af59af473c773c87312e1fe44e115e345644d95ed4fbe996e1",
+  "branch_inventory_sha256": "7f06df256f91b9e6f41364ae705a19ca9bdd48796f755df2a3ac96d3ae38ed63",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "7faa062633284e1605adb9d03bc2f5a92866f6a40a6149e8c628d44428385603",
@@ -20,7 +20,7 @@
     "Godot/three_d/scripts/interactable.gd": "02903564281ff42f000c224aaae9d602b5f889bc5406c772e0094eaa3e590003",
     "Godot/three_d/scripts/item_preview.gd": "3c468fe1d4b3eb6f05064905da55dd7928233126507861f3d73966b0881fceca",
     "Godot/three_d/scripts/player.gd": "54f72a44a49e787eebe20d49ad79147e3cb825c5574840a05a17775045170ef2",
-    "Godot/three_d/scripts/rooftop_layout.gd": "345cfe1477c48cba0dad4257958e146622aab4e985d2b1036399f9692441cf6e",
+    "Godot/three_d/scripts/rooftop_layout.gd": "52a1baf5692c1a6119a55f907909971cd7583403ce7f081753150a5f5a8de6c5",
     "Godot/three_d/scripts/scene_props.gd": "551956dbed1e5296dbf19f52605624a0a3cdeed510c2e69093eb52a385a8a44b",
     "Godot/three_d/scripts/services_hud.gd": "d330790c6971f4b4375e6ecb8240d71fde435af98182927bf62060b96f4bf3f9",
     "Godot/three_d/scripts/settlement_receipt.gd": "01ee467c66ae0d1353ff5d4b67d8cf5b5edceae43f2ee002adb41a1ed85be61b",
@@ -940,7 +940,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 9,
+      "line": 10,
       "name": "_init",
       "signature": "func _init(owner: Node3D) -> void:",
       "status": "explicit_exclusion",
@@ -948,7 +948,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 20,
+      "line": 21,
       "name": "apply",
       "signature": "func apply(profile_id: String) -> void:",
       "status": "explicit_exclusion",
@@ -4781,7 +4781,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 28,
+      "line": 29,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4789,7 +4789,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 34,
+      "line": 38,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4797,7 +4797,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 37,
+      "line": 41,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4805,7 +4805,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 39,
+      "line": 43,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4813,7 +4813,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 40,
+      "line": 44,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",
