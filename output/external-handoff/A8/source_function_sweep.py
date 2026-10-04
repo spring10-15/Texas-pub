@@ -22,6 +22,10 @@ REPORT = ROOT / "output/external-handoff/A8/source-function-sweep.json"
 # Each exception is an exact method reviewed outside the transition inventory.
 # Reasons describe why it does not own a separate player-visible state result.
 EXCLUDED = {
+    "Godot/three_d/scripts/rooftop_layout.gd": {
+        "_init": "stores visual environment and terrace sky",
+        "apply": "switches architecture visibility and sky without changing collisions or authoritative Run state",
+    },
     "Godot/three_d/scripts/settlement_receipt.gd": {
         "_init": "constructs noninteractive settlement receipt UI",
         "sync": "projects historical settlement state without inventory mutation",

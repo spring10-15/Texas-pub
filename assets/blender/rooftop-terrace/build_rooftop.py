@@ -39,6 +39,7 @@ for start,end in [(-3.45,1.05),(2.25,3.45)]:
  for y in [.42,.76,1.12]:box('Left rail',(-2.96,y,(start+end)/2),(.035,.035,end-start),'steel',.004)
  steps=math.ceil((end-start)/.75)
  for i in range(steps+1):box('Left baluster',(-2.96,.61,start+(end-start)*i/steps),(.045,1.02,.045),'steel',.004)
+for z in [-1.3,2.55]:box('Fixture support',(-2.95,.95,z),(.07,1.9,.07),'steel',.008)
 for x in [-2.85,2.85]:
  for z in [-3.25,3.25]:
   box('Lighting mast',(x,1.45,z),(.085,2.9,.085),'steel',.012)
@@ -55,11 +56,11 @@ bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'rooftop-terrace.blend'))
 bpy.ops.object.select_all(action='SELECT');bpy.context.view_layer.objects.active=next(o for o in bpy.data.objects if o.type=='MESH')
 bpy.ops.object.convert(target='MESH')
 triangles=sum((o.data.calc_loop_triangles() or len(o.data.loop_triangles)) for o in bpy.data.objects if o.type=='MESH')
-bpy.ops.object.select_all(action='DESELECT')
-for o in bpy.data.objects:
- if o.type=='MESH':o.select_set(True)
-bpy.context.view_layer.objects.active=next(o for o in bpy.data.objects if o.type=='MESH')
-bpy.ops.object.join();bpy.context.object.name='TerraceArchitecture'
+for deck in [True,False]:
+ bpy.ops.object.select_all(action='DESELECT')
+ meshes=[o for o in bpy.data.objects if o.type=='MESH' and (o.data.materials[0].name=='deck')==deck]
+ for o in meshes:o.select_set(True)
+ bpy.context.view_layer.objects.active=meshes[0];bpy.ops.object.join();bpy.context.object.name='RooftopDeck' if deck else 'TerraceArchitecture'
 bpy.ops.export_scene.gltf(filepath=str(DEST),export_format='GLB',export_animations=False,export_cameras=False,export_lights=False)
 (OUT/'export-report.json').write_text(json.dumps({'triangles':triangles,'scope':'Architectural sample only. Existing rear/service walls and collisions retained at integration. No independent city backdrop yet.'},indent=2)+'\n')
 print('ROOFTOP_EXPORTED',triangles)

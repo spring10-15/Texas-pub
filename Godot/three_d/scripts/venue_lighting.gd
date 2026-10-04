@@ -10,6 +10,7 @@ const PROFILES := {
 var world: Node3D
 func _init(owner: Node3D) -> void: world = owner
 func apply(room: Node3D, profile_id: String) -> void:
+	world.rooftop_layout.apply(profile_id)
 	var profile: Dictionary = PROFILES[profile_id]
 	world.scene_environment.ambient_light_color = profile.ambient
 	world.scene_environment.background_color = profile.background

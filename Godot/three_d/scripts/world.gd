@@ -50,6 +50,7 @@ var seat_camera: Camera3D
 var readiness := false
 var materials := {}
 var scene_environment: Environment
+var rooftop_layout: RefCounted
 var venue_lighting: RefCounted
 var collateral_display: RefCounted
 var table_rooms := {}
@@ -85,6 +86,7 @@ func _ready() -> void:
 	configure_input()
 	make_materials()
 	build_lighting()
+	rooftop_layout = preload("res://three_d/scripts/rooftop_layout.gd").new(self)
 	venue_lighting = preload("res://three_d/scripts/venue_lighting.gd").new(self)
 	collateral_display = preload("res://three_d/scripts/collateral_display.gd").new(self)
 	props = preload("res://three_d/scripts/scene_props.gd").new(self)
