@@ -12,6 +12,12 @@ for name,color,metal,rough in [('silver',(.55,.59,.62),1,.28),('gold',(.72,.46,.
  m=bpy.data.materials.new(name);m.use_nodes=True
  p=m.node_tree.nodes.get('Principled BSDF');p.inputs['Base Color'].default_value=(*color,1);p.inputs['Metallic'].default_value=metal;p.inputs['Roughness'].default_value=rough
  materials[name]=m
+for name in ["ruby","emerald"]:
+ p=materials[name].node_tree.nodes.get("Principled BSDF")
+ p.inputs["Metallic"].default_value=0
+ p.inputs["Roughness"].default_value=.08
+ p.inputs["IOR"].default_value=1.77 if name=="ruby" else 1.58
+ p.inputs["Transmission Weight"].default_value=.6
 sys.path.insert(0,str(OUT))
 from metal_surfaces import apply_metal_surfaces
 apply_metal_surfaces(materials,OUT/"textures")

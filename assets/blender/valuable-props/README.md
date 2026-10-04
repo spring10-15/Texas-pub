@@ -31,3 +31,11 @@
 原锥台改为闭合的台面、八面冠部、薄腰围与亭部，平面法线保留切面。红宝石/翡翠各增加 18 个三角形，雕像两只金镶眼同一切面构造共增加 36 个；全包增加 72 个三角形，规则 ID 与十件米制尺寸保持不变。原始 GLB、Blender 和 Godot 面数对齐，记录 `output/3d/valuable-gem-integrity.json`；源四个切面零件均闭合、各边两面、无零面积面、正体积，见 `output/3d/gem-topology.json`。近景 `valuable-gem-closeup.png` 已检查。本轮只完成结构，仍是有色不透明材质，透光/折射/内部吸收与最终宝石外观未完成。安装包仍为上一金属版本；该切面版本不在 metal-active-soak 的 30 分钟结果范围内。
 
 切面版本全量回归：`output/3d/regression/20261004-125916/report.json`，81 个 Godot 套件、20 个 Python 测试通过，运行期间资源指纹不变。
+
+## Godot 原生宝石折射首版
+
+独立导入探针证明本机 4.7.2 保留 Blender 粗糙度，但未映射透射效果。样板为 `output/3d/probe-transmission.glb`，导入结果为折射关闭、透明模式 0。因此 Blender 源保留非金属、IOR 和透射参数，`valuable_materials.gd` 导入脚本为 ruby/emerald 写入 Godot 原生折射材质。GLB 导入配置与脚本需一并保存；运行时直接加载已导入场景。
+
+近景已有透光/折射，材质导入专项 72 项通过。当前使用屏幕空间折射、单面剔除和浅透明着色，不是体积吸收或真实内部光线追踪；金属镶座仍不透明。实际抵押视角、透明排序、GPU 与长时性能仍须校准，不视为最终高保真放行。新版不在此前金属包的 30 分钟记录范围内。
+
+本版全量回归 `output/3d/regression/20261004-130542/report.json`：81 个 Godot 套件与 20 个 Python 测试通过，资源指纹稳定。实际导出验证 PCK 的资产/背包/抵押读档/结算 106 项通过，记录 `output/builds/gem-optics-package-verification.json`。该 PCK 仅供集成验证，两个可分发 ZIP 尚未重新导出。
