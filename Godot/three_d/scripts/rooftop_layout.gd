@@ -1,5 +1,6 @@
 extends RefCounted
 ## Visual terrace overlay; existing room collisions and interaction anchors stay in place.
+const CHAIRS = preload("res://three_d/assets/rooftop-chairs.glb")
 const TABLE = preload("res://three_d/assets/rooftop-table.glb")
 const CITY = preload("res://three_d/assets/rooftop-city.glb")
 const TERRACE = preload("res://three_d/assets/rooftop-terrace.glb")
@@ -37,9 +38,13 @@ func apply(profile_id: String) -> void:
 			var table := TABLE.instantiate()
 			table.name = "RooftopTable"
 			architecture.add_child(table)
+			var chairs := CHAIRS.instantiate()
+			chairs.name = "RooftopChairs"
+			architecture.add_child(chairs)
 		if architecture != null: architecture.visible = rooftop
 		room.get_node("BlenderDetail").find_child("TavernFloor", true, false).visible = not rooftop
 		room.get_node("BlenderDetail").find_child("TavernTable", true, false).visible = not rooftop
+		room.get_node("BlenderDetail").find_child("TavernChairs", true, false).visible = not rooftop
 		for body in room.get_children():
 			var role: String = body.get_meta("visual_role", "")
 			if not (role.begins_with("Ceiling") or role == "FrontWall" or (role == "SideWall" and body.position.x < 0)): continue

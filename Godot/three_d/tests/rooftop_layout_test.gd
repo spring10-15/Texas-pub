@@ -28,6 +28,16 @@ func run() -> void:
 		var original_floor: MeshInstance3D = room.get_node("BlenderDetail").find_child("TavernFloor",true,false)
 		verify(abs((deck.global_transform * deck.get_aabb()).end.y - 0.014) < 0.00001, "Deck visible top matches existing floor height")
 		verify(abs((original_floor.global_transform * original_floor.get_aabb()).end.y - 0.014) < 0.00001, "Indoor floor geometry preserves height")
+		var chairs = architecture.get_node("RooftopChairs")
+		verify(chairs.visible and not room.get_node("BlenderDetail").find_child("TavernChairs",true,false).visible,"Independent terrace chairs replace legacy chairs")
+		verify(chairs.find_children("*","MeshInstance3D",true,false).size()==4,"Chair materials loaded")
+		var chair_bounds := AABB()
+		var first_chair := true
+		for mesh: MeshInstance3D in chairs.find_children("*","MeshInstance3D",true,false):
+			var bounds: AABB = mesh.global_transform * mesh.get_aabb()
+			chair_bounds = bounds if first_chair else chair_bounds.merge(bounds)
+			first_chair = false
+		verify(chair_bounds.position.x >= room.global_position.x - 1.36 and chair_bounds.end.x <= room.global_position.x + .51 and chair_bounds.position.z >= -2.16 and chair_bounds.end.z <= -1.64 and abs(chair_bounds.position.y - .014) < .00001,"Chairs fit original footprints and deck surface")
 		var table = architecture.get_node("RooftopTable")
 		verify(table.visible and not room.get_node("BlenderDetail").find_child("TavernTable",true,false).visible, "Independent rooftop table replaces legacy table")
 		verify(table.find_children("*","MeshInstance3D",true,false).size() == 6, "Table materials imported")
@@ -65,6 +75,7 @@ func run() -> void:
 		verify(world.scene_environment.background_mode == Environment.BG_COLOR and world.scene_environment.sky == null, "Indoor sky restored: " + venue)
 		for setup in world.ROOMS.values():
 			var room = world.get_node(setup.node)
+			verify(room.get_node("BlenderDetail").find_child("TavernChairs",true,false).visible,"Indoor chairs restored")
 			verify(room.get_node("BlenderDetail").find_child("TavernTable",true,false).visible, "Indoor table restored")
 			verify(room.get_node("BlenderDetail").find_child("TavernFloor",true,false).visible, "Indoor floor restored")
 			verify(not room.get_node("RooftopArchitecture").visible, "Terrace hidden: " + venue + "/" + setup.node)

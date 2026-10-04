@@ -1,0 +1,17 @@
+{
+  "triangles": 5776,
+  "materials": 4,
+  "seat_top_y": 0.43,
+  "back_top_y": 1.057,
+  "seat_centers": [
+    [
+      -1.1,
+      -1.9
+    ],
+    [
+      0.25,
+      -1.9
+    ]
+  ],
+  "scope": "Static paired chairs; collision and character roots unchanged. Final wear and character-motion fit remain separate gates."
+}
