@@ -386,3 +386,17 @@ Windows PCK 在 Mac Godot 下的窗口检查不等于 Windows EXE 原生/干净�
 ### 本包后续 30 分钟稳定性证据
 
 同一 Mac PCK 完成 1800.000967 秒、133 循环、1339 次生产 AI 转移，Godot 和采样监督器正常终止，日志无错误。详见 phase-3/performance-budget.md 本日记录及 output/builds/metal-active-soak-analysis.json。这证明本次自动循环无崩溃；最大回调 29.385 ms、39 个窗口含 >16.67 ms 尖峰，尚不能给“无掉帧/无泄漏”或中端 60 fps 放行。Windows 原生运行仍未验证。
+
+## 2026-10-04：露台、城市外景与玻璃/宝石组合试玩包
+
+当前 Mac / Windows ZIP 已更新到 5e6b965 的本地工作树，包含屋顶会所露台、三层城市背景、贵重物宝石切面及 Godot 原生透光材质、怀表独立玻璃。不新增玩法、存档格式或探索范围。
+
+每份实际 PCK 在本机 Metal 窗口下通过 74 项贵重物、155 项露台/城市、9 项背包、13 项真实抵押结算读档、12 项结算回执检查，共 263 项；另通过四酒馆最短循环和真实临时磁盘存读档，以及藏匿点/牌桌两种状态的独立写读进程重启恢复。未读写玩家正式存档。Mac 原生应用从 /tmp 无编辑器项目路径启动 120 帧退出 0。
+
+两 ZIP 的 CRC 及内嵌文件大小/SHA256 清单通过；导出与验证前后全部源资源指纹保持与 output/3d/regression/20261004-134239/report.json 的完整回归一致（82 Godot / 20 Python）。汇总：output/builds/rooftop-city-package-verification.json；日志：rooftop-city-{macos,windows}-*.log；Mac 解压副本：macos-rooftop-city-preview/。
+
+本次包没有完成 30 分钟或中端机 60 fps 验收。旧金属材质包的 30 分钟证据不用于给当前城市/玻璃版本放行。Windows PCK 在 Mac 上检查不等于 Windows EXE 原生或干净机器运行。仍包含外部未提交的人物精修，单个 Git SHA 不能复建相同美术包。二进制仅在本地 output/builds，未上传 GitHub Release。美术阶段和全项目目标保持未完成。
+
+- TexasPub.zip: 121586076 bytes; SHA256 `1de6e67486803e35ac95a6e32587fcc8201a9a9c1c1ff7facdc7de618b72e66f`.
+
+- TexasPub-Windows-preview.zip: 99659432 bytes; SHA256 `5822f22c070775651f0c9eb3603b3438c5d01185f180ce032a3c009503aa71fb`.
