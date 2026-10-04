@@ -33,9 +33,8 @@ func apply(profile_id: String) -> void:
 			var city := CITY.instantiate()
 			city.name = "CityBackdrop"
 			architecture.add_child(city)
-			# The shared legacy floor is merged with furniture; avoid overlapping floors.
-			architecture.find_child("RooftopDeck", true, false).hide()
 		if architecture != null: architecture.visible = rooftop
+		room.get_node("BlenderDetail").find_child("TavernFloor", true, false).visible = not rooftop
 		for body in room.get_children():
 			var role: String = body.get_meta("visual_role", "")
 			if not (role.begins_with("Ceiling") or role == "FrontWall" or (role == "SideWall" and body.position.x < 0)): continue

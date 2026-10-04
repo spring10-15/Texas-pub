@@ -24,17 +24,22 @@ func run() -> void:
 		world.travel(room_id)
 		var room = world.get_node(world.ROOMS[room_id].node)
 		var architecture = room.get_node("RooftopArchitecture")
+		var deck: MeshInstance3D = architecture.find_child("RooftopDeck",true,false)
+		var original_floor: MeshInstance3D = room.get_node("BlenderDetail").find_child("TavernFloor",true,false)
+		verify(abs((deck.global_transform * deck.get_aabb()).end.y - 0.014) < 0.00001, "Deck visible top matches existing floor height")
+		verify(abs((original_floor.global_transform * original_floor.get_aabb()).end.y - 0.014) < 0.00001, "Indoor floor geometry preserves height")
 		var city = architecture.get_node("CityBackdrop")
 		verify(city.find_children("*", "CollisionShape3D", true, false).is_empty(), "City backdrop has no gameplay collision")
 		verify(city.find_children("*", "MeshInstance3D", true, false).size() == 6, "Six merged city material meshes loaded")
 		instances.append(architecture.get_instance_id())
 		for setup in world.ROOMS.values(): verify(world.get_node(setup.node).visible == (setup.node == room.name), "Only current terrace is rendered")
-		verify(architecture.visible and not architecture.find_child("RooftopDeck",true,false).visible, "Terrace visible without duplicate floor: " + room_id)
+		verify(architecture.visible and architecture.find_child("RooftopDeck",true,false).visible and not room.get_node("BlenderDetail").find_child("TavernFloor",true,false).visible, "Independent deck visible without legacy floor: " + room_id)
 		for body in room.get_children():
 			var role: String = body.get_meta("visual_role", "")
 			if role.begins_with("Ceiling") or role == "FrontWall" or (role == "SideWall" and body.position.x < 0):
 				for mesh in body.get_children():
 					if mesh is MeshInstance3D: verify(not mesh.visible, "Indoor enclosure hidden: " + room_id + "/" + role)
+		verify(room.get_node("BlenderDetail").find_child("TavernDetail_walnut",true,false).visible, "Wood furniture retained: " + room_id)
 		verify(room.get_node("BlenderDetail").visible, "Furniture retained: " + room_id)
 	verify(world.scene_environment.background_mode == Environment.BG_SKY, "Outdoor sky applied")
 	verify(collision_snapshot(world) == before, "All collision transforms, shapes and masks unchanged")
@@ -55,6 +60,7 @@ func run() -> void:
 		verify(world.scene_environment.background_mode == Environment.BG_COLOR and world.scene_environment.sky == null, "Indoor sky restored: " + venue)
 		for setup in world.ROOMS.values():
 			var room = world.get_node(setup.node)
+			verify(room.get_node("BlenderDetail").find_child("TavernFloor",true,false).visible, "Indoor floor restored")
 			verify(not room.get_node("RooftopArchitecture").visible, "Terrace hidden: " + venue + "/" + setup.node)
 			for body in room.get_children():
 				for mesh in body.get_children():

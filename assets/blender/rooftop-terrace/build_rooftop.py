@@ -26,10 +26,11 @@ def box(name,pos,size,material,bevel=.005):
  bpy.ops.mesh.primitive_cube_add(size=1,location=(x,-z,y));o=bpy.context.object;o.name=name;o.parent=root;o.dimensions=(dx,dz,dy);bpy.ops.object.transform_apply(location=False,rotation=False,scale=True);o.data.materials.append(materials[material])
  if bevel:b=o.modifiers.new('Rounded joinery','BEVEL');b.width=bevel;b.segments=2;o.modifiers.new('Weighted normals','WEIGHTED_NORMAL')
  return o
-# Top of deck is exactly the existing y=0 walk plane, not a new collision floor.
+# Deck top matches the legacy visible floor at y=.014; collision remains y=0.
 for row in range(35):
  for segment in range(3):
-  box('Deck plank',(-2+segment*2,-.009,-3.4+row*.2),(1.985,.018,.19),'deck',.002)
+  box('Deck plank',(-2+segment*2,.005,-3.4+row*.2),(1.985,.018,.19),'deck',.002)
+box('Deck substrate',(0,-.028,0),(6,.05,7),'stone',0)
 box('Front parapet footing',(0,.10,3.46),(6,.2,.16),'stone')
 for x in [-2.95,-1.95,-.95,.05,1.05,2.05,2.95]:
  box('Front baluster',(x,.61,3.46),(.045,1.02,.045),'steel',.004)
@@ -62,5 +63,5 @@ for deck in [True,False]:
  for o in meshes:o.select_set(True)
  bpy.context.view_layer.objects.active=meshes[0];bpy.ops.object.join();bpy.context.object.name='RooftopDeck' if deck else 'TerraceArchitecture'
 bpy.ops.export_scene.gltf(filepath=str(DEST),export_format='GLB',export_animations=False,export_cameras=False,export_lights=False)
-(OUT/'export-report.json').write_text(json.dumps({'triangles':triangles,'scope':'Architectural sample only. Existing rear/service walls and collisions retained at integration. No independent city backdrop yet.'},indent=2)+'\n')
+(OUT/'export-report.json').write_text(json.dumps({'triangles':triangles,'scope':'Architectural sample only. Existing rear/service walls and collisions retained at integration. City backdrop is exported separately from rooftop-city.'},indent=2)+'\n')
 print('ROOFTOP_EXPORTED',triangles)

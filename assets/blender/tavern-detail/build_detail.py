@@ -1,7 +1,7 @@
 """Self-authored Blender detail kit and baked PBR tiles; no generated reference images.
 Run Blender --background --python this_file. Godot units remain metres.
 """
-import bpy, math, json, random, shutil
+import bpy, math, random, shutil
 from pathlib import Path
 from mathutils import Vector
 OUT=Path(__file__).resolve().parent
@@ -158,24 +158,7 @@ bpy.ops.file.pack_all()
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'tavern-detail.blend'))
 (DEST/'materials').mkdir(exist_ok=True)
 for path in TEX.glob('*.png'):shutil.copy2(path,DEST/'materials'/path.name)
-reports={}
-for name in ['TavernDetail','StashDetail']:
- bpy.ops.object.select_all(action='DESELECT')
- objects=list(bpy.data.collections[name].objects)
- for o in objects:o.select_set(True)
- bpy.context.view_layer.objects.active=objects[0];bpy.ops.object.convert(target='MESH')
- bymat={}
- for o in bpy.data.collections[name].objects:bymat.setdefault(o.data.materials[0].name,[]).append(o)
- meshes=[]
- for material,parts in bymat.items():
-  bpy.ops.object.select_all(action='DESELECT')
-  for o in parts:o.select_set(True)
-  bpy.context.view_layer.objects.active=parts[0];bpy.ops.object.join();o=bpy.context.object;o.name=name+'_'+material;meshes.append(o)
- bpy.ops.object.select_all(action='DESELECT')
- triangles=0
- for o in meshes:o.select_set(True);o.data.calc_loop_triangles();triangles+=len(o.data.loop_triangles)
- dest=DEST/('tavern-detail.glb' if name=='TavernDetail' else 'stash-room-detail.glb')
- bpy.ops.export_scene.gltf(filepath=str(dest),export_format='GLB',use_selection=True,export_cameras=False,export_lights=False,export_animations=False)
- reports[name]={'meshes':len(meshes),'triangles':triangles,'bytes':dest.stat().st_size}
-(DEST/'detail-export.json').write_text(json.dumps(reports,indent=2))
-print('DETAIL_EXPORT_OK',reports,flush=True)
+import sys
+sys.path.insert(0,str(OUT))
+from export_details import export_details
+export_details()

@@ -13,10 +13,14 @@ func run() -> void:
 	root.add_child(world)
 	await physics_frame
 	world.set_process(false)
-	for room_name in ["Stash", "Tavern", "LedgerCellar"]:
+	for room_name in ["Stash", "Tavern", "LedgerCellar", "MirrorHall", "EmbersRoom"]:
 		var room: Node3D = world.get_node(room_name)
 		var meshes := room.get_node("BlenderDetail").find_children("*", "MeshInstance3D", true, false)
-		verify(meshes.size() == (1 if room_name == "Stash" else 8), "Material-grouped Blender kit imported in " + room_name)
+		verify(meshes.size() == (1 if room_name == "Stash" else 9), "Material-grouped Blender kit imported in " + room_name)
+		if room_name != "Stash":
+			var floor: MeshInstance3D = room.get_node("BlenderDetail").find_child("TavernFloor",true,false)
+			verify(floor != null and floor.visible, "Independent indoor floor loaded " + room_name)
+			verify(abs((floor.global_transform * floor.get_aabb()).end.y - 0.014) < 0.00001, "Indoor floor retains visible height " + room_name)
 		for node in room.get_children():
 			if node.get_meta("visual_role", "") in ["Floor", "PokerTable", "Felt", "TableLeg", "OpponentChair", "BarCounter", "BarTop", "BarStool", "BottleShelf", "Bottle"]:
 				verify(node.get_child(0) is MeshInstance3D and not node.get_child(0).visible, "Original placeholder hidden " + str(node.get_meta("visual_role")))
