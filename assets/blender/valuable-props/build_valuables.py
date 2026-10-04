@@ -8,7 +8,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 scene=bpy.context.scene
 scene.unit_settings.system='METRIC'; scene.unit_settings.scale_length=1
 materials={}
-for name,color,metal,rough in [('silver',(.55,.59,.62),1,.28),('gold',(.72,.46,.13),1,.25),('ivory',(.84,.78,.60),0,.34),('paper',(.70,.64,.48),0,.75),('ink',(.035,.025,.016),0,.7),('ruby',(.34,.012,.027),.15,.13),('emerald',(.018,.24,.12),.15,.15),('pearl',(.82,.79,.70),.12,.2),('obsidian',(.016,.022,.028),.25,.18),('wax',(.28,.024,.028),0,.36)]:
+for name,color,metal,rough in [('silver',(.55,.59,.62),1,.28),('gold',(.72,.46,.13),1,.25),('ivory',(.84,.78,.60),0,.34),('paper',(.70,.64,.48),0,.75),('ink',(.035,.025,.016),0,.7),('ruby',(.34,.012,.027),.15,.13),('emerald',(.018,.24,.12),.15,.15),('pearl',(.82,.79,.70),.12,.2),('obsidian',(.016,.022,.028),.25,.18),('wax',(.28,.024,.028),0,.36),('watch-glass',(.92,.98,1),0,.04)]:
  m=bpy.data.materials.new(name);m.use_nodes=True
  p=m.node_tree.nodes.get('Principled BSDF');p.inputs['Base Color'].default_value=(*color,1);p.inputs['Metallic'].default_value=metal;p.inputs['Roughness'].default_value=rough
  materials[name]=m
@@ -18,6 +18,9 @@ for name in ["ruby","emerald"]:
  p.inputs["Roughness"].default_value=.08
  p.inputs["IOR"].default_value=1.77 if name=="ruby" else 1.58
  p.inputs["Transmission Weight"].default_value=.6
+p=materials["watch-glass"].node_tree.nodes.get("Principled BSDF")
+p.inputs["IOR"].default_value=1.5
+p.inputs["Transmission Weight"].default_value=1
 sys.path.insert(0,str(OUT))
 from metal_surfaces import apply_metal_surfaces
 apply_metal_surfaces(materials,OUT/"textures")
@@ -82,11 +85,25 @@ disk('Gold setting',(0,0,.004),.009,.003,'gold');gem('Ruby crown',(0,0,.007),.00
 box('Stem',(0,0,-.004),(.002,.002,.013),'gold',.0006);box('Toggle',(0,0,-.011),(.018,.004,.003),'gold',.001)
 
 group('gold-cased-watch')
-disk('Case',(0,0,.004),.024,.008,'gold');disk('Dial',(0,0,.0082),.021,.0005,'ivory');ring('Bezel',(0,0,.0085),.022,.001,'gold')
+disk('Case',(0,0,.004),.024,.008,'gold');disk('Dial',(0,0,.0082),.021,.0005,'ivory');ring('Bezel',(0,0,.0107),.0215,.0012,'gold')
 for i in range(12):
  a=i*math.tau/12;o=box('Hour marker',(.018*math.sin(a),.018*math.cos(a),.0087),(.0006,.0025,.0004),'ink',.0001);o.rotation_euler.z=-a
 box('Minute hand',(0,.007,.009),(.0007,.016,.0005),'ink',.0001);o=box('Hour hand',(.004,.001,.0095),(.010,.0009,.0005),'ink',.0001);o.rotation_euler.z=.25
 disk('Center pivot',(0,0,.010),.001,.001,'gold');ring('Bow',(0,.030,.004),.006,.0012,'gold');text('NOIR',(0,-.008,.0088),.003)
+
+# Closed domed watch crystal with a flat underside above the pivot.
+vertices=[(0,0,.0107)]
+for radius,z in [(.0205,.0107),(.0205,.0110),(.0165,.0123),(.008,.0133)]:
+ vertices.extend((radius*math.cos(i*math.tau/64),radius*math.sin(i*math.tau/64),z) for i in range(64))
+vertices.append((0,0,.0136));faces=[]
+for i in range(64):
+ j=(i+1)%64;faces.append((0,1+j,1+i))
+ for lower,upper in [(1,65),(65,129),(129,193)]:faces.append((lower+i,lower+j,upper+j,upper+i))
+ faces.append((193+i,193+j,257))
+mesh=bpy.data.meshes.new('WatchCrystal');mesh.from_pydata(vertices,[],faces);mesh.update()
+o=bpy.data.objects.new('Domed crystal',mesh);scene.collection.objects.link(o);put(o,'Domed crystal','watch-glass')
+for face in mesh.polygons:face.use_smooth=True
+
 
 group('antique-coin')
 disk('Coin',(0,0,.0014),.019,.0028,'gold');ring('Raised rim',(0,0,.0029),.0177,.0006,'gold')

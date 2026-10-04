@@ -39,3 +39,11 @@
 近景已有透光/折射，材质导入专项 72 项通过。当前使用屏幕空间折射、单面剔除和浅透明着色，不是体积吸收或真实内部光线追踪；金属镶座仍不透明。实际抵押视角、透明排序、GPU 与长时性能仍须校准，不视为最终高保真放行。新版不在此前金属包的 30 分钟记录范围内。
 
 本版全量回归 `output/3d/regression/20261004-130542/report.json`：81 个 Godot 套件与 20 个 Python 测试通过，资源指纹稳定。实际导出验证 PCK 的资产/背包/抵押读档/结算 106 项通过，记录 `output/builds/gem-optics-package-verification.json`。该 PCK 仅供集成验证，两个可分发 ZIP 尚未重新导出。
+
+## 怀表弧面表镜首版
+
+怀表加入闭合弧面玻璃与对应镶圈座，玻璃底面在中心轴上方 0.2mm，顶部距底面 2.9mm，512 个三角形，玻璃外径 41mm。Blender 保留独立 `Domed crystal` 零件与透射/IOR 源材质；Godot 导入脚本为 `watch-glass` 写入低染色、浅屏幕空间折射，金属和表盘保持原材质。原始玻璃网格所有边均有两邻面、无零面积面、正体积；`output/3d/watch-crystal-topology.json`。
+
+近景 `valuable-metal-closeup.png` 已检查，表盘指针/刻度仍清楚。当前是表镜结构与材质首版，仍需暗部、斜角、不同背景与透明排序校准；不等于真实光学、磨损、完整高保真或性能放行。本轮未更新两个桌面 ZIP。
+
+本版全量回归 `output/3d/regression/20261004-131251/report.json`：81 个 Godot 套件、20 个 Python 测试通过，运行期间资源指纹不变。实际 PCK 窗口集成 108 项通过，记录 `output/builds/watch-crystal-package-verification.json`，PCK 近景为 `output/builds/watch-crystal-closeup.png`。原始 GLB/Blender/Godot 面数对齐见 `output/3d/watch-crystal-integrity.json`，含表镜怀表厚 13.6mm、6756 三角形。
