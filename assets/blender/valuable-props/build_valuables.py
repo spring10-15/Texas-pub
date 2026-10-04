@@ -43,7 +43,19 @@ def text(body,p,size,material='ink'):
  curve=bpy.data.curves.new(body,'FONT');curve.body=body;curve.size=size;curve.align_x='CENTER';curve.align_y='CENTER';curve.extrude=.00008
  o=bpy.data.objects.new(body,curve);COL.objects.link(o);o.parent=ROOT;o.location=p;curve.materials.append(materials[material]);return o
 def gem(name,p,r,depth,material):
- bpy.ops.mesh.primitive_cone_add(vertices=8,radius1=r,radius2=r*.55,depth=depth,location=p);return put(bpy.context.object,name,material)
+ # Flat crown/table/girdle/pavilion faces retain crisp gemstone reflections.
+ vertices=[(0,0,-depth/2)]
+ for radius,z in [(r,-depth*.12),(r,depth*.06),(r*.55,depth/2)]:
+  vertices.extend((radius*math.cos(i*math.tau/8),radius*math.sin(i*math.tau/8),z) for i in range(8))
+ faces=[]
+ for i in range(8):
+  j=(i+1)%8
+  faces.append((0,1+j,1+i))
+  for lower,upper in [(1,9),(9,17)]:faces.append((lower+i,lower+j,upper+j,upper+i))
+ faces.append(tuple(range(17,25)))
+ mesh=bpy.data.meshes.new(name+'Cut');mesh.from_pydata(vertices,[],faces);mesh.update()
+ o=bpy.data.objects.new(name,mesh);scene.collection.objects.link(o);o.location=p
+ return put(o,name,material)
 # Blender Z-up exports to Godot Y-up; all movable object roots are at origin.
 group('old-silver-lighter')
 box('Silver body',(0,0,.018),(.038,.013,.036),'silver',.002)

@@ -25,3 +25,9 @@
 十件物品面数和尺寸保持不变，GLB 由 2,698,688 增至 2,907,648 字节。Godot 专项检查现为 69 项，验证导入后的贴图、法线开关和 UV；原始 glTF 与 Blender/Godot 面数独立对齐记录在 `output/3d/valuable-metal-integrity.json`。近景实机样板 `output/3d/valuable-metal-closeup.png` 能观察旧银打火机侧面的细拉丝，怀表保留表盘可读性。联系图仍使用背包预览组件，不是实际抵押视角或最终美术验收。该版本尚未重新导出安装包或完成 GPU/目标机型性能验证。
 
 全量回归：`output/3d/regression/20261004-032841/report.json`，81 个 Godot 套件、20 个 Python 测试通过，运行期间资源指纹不变。
+
+## 宝石切面结构（2026-10-04 后续）
+
+原锥台改为闭合的台面、八面冠部、薄腰围与亭部，平面法线保留切面。红宝石/翡翠各增加 18 个三角形，雕像两只金镶眼同一切面构造共增加 36 个；全包增加 72 个三角形，规则 ID 与十件米制尺寸保持不变。原始 GLB、Blender 和 Godot 面数对齐，记录 `output/3d/valuable-gem-integrity.json`；源四个切面零件均闭合、各边两面、无零面积面、正体积，见 `output/3d/gem-topology.json`。近景 `valuable-gem-closeup.png` 已检查。本轮只完成结构，仍是有色不透明材质，透光/折射/内部吸收与最终宝石外观未完成。安装包仍为上一金属版本；该切面版本不在 metal-active-soak 的 30 分钟结果范围内。
+
+切面版本全量回归：`output/3d/regression/20261004-125916/report.json`，81 个 Godot 套件、20 个 Python 测试通过，运行期间资源指纹不变。
