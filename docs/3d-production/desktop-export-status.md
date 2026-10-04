@@ -382,3 +382,7 @@ Windows EXE、干净机器与本版长时性能仍未实机验证；当前 GPU �
 `TexasPub-Windows-preview.zip` SHA256：`75eb3728110f2c2cf0a50ac8c30b6b31653ec26bc6a3bc1c2e485802e59f37df`。
 
 Windows PCK 在 Mac Godot 下的窗口检查不等于 Windows EXE 原生/干净机验证；新包尚未完成 30 分钟及中端机 60 fps 验收。包含另一模型尚未提交的角色样板，本地包完整，单一 Git 提交不能独立复现这部分资产。二进制仅在 output/builds，本轮未发布 GitHub Release。
+
+### 本包后续 30 分钟稳定性证据
+
+同一 Mac PCK 完成 1800.000967 秒、133 循环、1339 次生产 AI 转移，Godot 和采样监督器正常终止，日志无错误。详见 phase-3/performance-budget.md 本日记录及 output/builds/metal-active-soak-analysis.json。这证明本次自动循环无崩溃；最大回调 29.385 ms、39 个窗口含 >16.67 ms 尖峰，尚不能给“无掉帧/无泄漏”或中端 60 fps 放行。Windows 原生运行仍未验证。

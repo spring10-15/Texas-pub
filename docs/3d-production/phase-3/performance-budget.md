@@ -132,3 +132,13 @@ seven_card_score_test.gd 用原逐组合 evaluate_best_hand 为独立参考，�
 可在 `--path` 前加入 `--gpu-profile` 作第二种诊断。报告及包/脚本 SHA256 与退出状态记录在 `viewport-profile-evidence.json` 和 `viewport-profile-enabled-evidence.json`；PCK SHA256 为 `4c3eba9dbbe4e9f73b486627fb7531b7b90baec9eb4de17d725810446fa3f4cf`。这两个记录是本轮实际命令与文件指纹的证据，不是自动识别引擎加载包路径的通用验证器。
 
 结论：已补根视口渲染 CPU 基线并确认 GPU 测量当前不可用，不能给 60 fps 目标放行。五视角仍为共同室内建筑及初始灯光，静止短测不代替精模后的行走、背包、牌桌、楼梯、完整 30 分钟或中端 Mac/Windows 实机门槛。后续需用实际支持的 GPU 时间来源或外部图形分析器补证，而不是继续用回调间隔冒充 GPU。
+
+## 2026-10-04：结算回执与金属贴图包的实际 30 分钟循环
+
+本机窗口 Godot 加载 `macos-metal-preview/Godot德扑酒馆.app/Contents/Resources/Godot德扑酒馆.pck`，原生产 AI、正常 UI 和合法自动行动循环 1800.000967 秒，133 次循环、1339 次 AI 转移，覆盖四酒馆，进程退出 0，错误日志/失败项均为零。外部脚本与包 SHA 均和启动时一致。原始证据为 `output/builds/metal-active-soak-{30min.json,30min.log,rss.json,launch.json,analysis.json}`；分析器判定证据有效且达到时长要求。
+
+179 个约 10 秒窗口中，最坏窗口回调 p95 为 5.797 ms，最大单次回调 29.385 ms；39 个窗口含超过 16.67 ms 的回调。这里统计的是窗口数量，不是掉帧数，也不是 GPU 时间或实际显示 FPS。尖峰仍需事件归因，不能标为“无明显掉帧”已经证明。
+
+RSS 180 次采样，首值 462.12 MiB、最高 478.61 MiB、末值 319.19 MiB、最低 317.70 MiB。牌桌静态内存范围 207.29–209.81 MiB，背包 208.32–209.29 MiB；取样状态并未逐一匹配，不能从区间或 RSS 下降推出无泄漏。此次进程无崩溃、循环持续完成已得到证据，最终无泄漏/中端 60 fps/GPU/Windows 原生/完整四桌链与真人游戏时长仍未验收。
+
+该结果只属于已发布到本地的金属贴图包。下一版宝石切面尚未导出到此包，不包含在本次性能证明内。
