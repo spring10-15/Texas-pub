@@ -6,7 +6,7 @@
 - tavern-detail.blend：703 个可编辑网格，保留倒角等修改器，12 张贴图已内嵌。
 - interactive-props.blend / build_props.py：九种商店道具、抽屉、桌面筹码和扑克牌的独立可编辑模型；每种运行物件保留独立根节点。
 - textures/：四组 1024×1024 PBR 色彩、法线、粗糙度贴图；由 Blender Cycles 程序材质烘焙，不是从参考图提取的贴图。
-- Godot/three_d/assets/tavern-detail.glb：按材质合并并拆出独立 TavernFloor，并拆出独立 TavernTable，并拆出 TavernChairs，共 14 个网格，72,716 三角形，11,606,468 字节。
+- Godot/three_d/assets/tavern-detail.glb：按材质合并并拆出独立 TavernFloor，并拆出独立 TavernTable，并拆出 TavernChairs、TavernBar，共 17 个网格，72,716 三角形，11,604,564 字节。
 - Godot/three_d/assets/stash-room-detail.glb：1 个网格，54,896 三角形，5,214,960 字节。
 
 几何包括错缝木地板、护墙板与饰条、皮革包边牌桌、车木桌脚、椅背、吧台饰面和脚踏杆、皮革圆凳、酒架、瓶子和绿罩吊灯。资产单位是米，脚本将 Godot 的 Y 向上坐标转换到 Blender，glTF 导出后恢复 Godot 坐标。

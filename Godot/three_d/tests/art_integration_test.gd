@@ -16,9 +16,10 @@ func run() -> void:
 	for room_name in ["Stash", "Tavern", "LedgerCellar", "MirrorHall", "EmbersRoom"]:
 		var room: Node3D = world.get_node(room_name)
 		var meshes := room.get_node("BlenderDetail").find_children("*", "MeshInstance3D", true, false)
-		verify(meshes.size() == (1 if room_name == "Stash" else 14), "Material-grouped Blender kit imported in " + room_name)
+		verify(meshes.size() == (1 if room_name == "Stash" else 17), "Material-grouped Blender kit imported in " + room_name)
 		if room_name != "Stash":
 			var floor: MeshInstance3D = room.get_node("BlenderDetail").find_child("TavernFloor",true,false)
+			verify(room.get_node("BlenderDetail").find_child("TavernBar",true,false).visible,"Independent indoor bar loaded " + room_name)
 			verify(room.get_node("BlenderDetail").find_child("TavernChairs",true,false).visible,"Independent indoor chairs loaded " + room_name)
 			verify(room.get_node("BlenderDetail").find_child("TavernTable",true,false).visible, "Independent indoor table loaded " + room_name)
 			verify(floor != null and floor.visible, "Independent indoor floor loaded " + room_name)

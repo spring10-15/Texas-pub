@@ -14,13 +14,13 @@
     "Godot/three_d/rules/search_events.gd": "cd183477b4de961161153cc7742f9b8ef83ebcb1c6700f93b35e537beab079e3",
     "Godot/three_d/rules/table.gd": "d248b457389321750dab5366c13da7b6ce346f933516ea2fd0dd6b3aed56217e",
     "Godot/three_d/rules/table_checkpoint.gd": "fde5ac9154f13da4cf5cd55acd4b01e9d7f8d5f24e300be162447857e146da53",
-    "Godot/three_d/scripts/bar_display.gd": "a32dc21ce561270e1c065d57b4b67fd9f3b49a6453038562976563d894eaf7b8",
+    "Godot/three_d/scripts/bar_display.gd": "ad0343a1e8eb603235e12fbb2b3fa3d90dc90b4a9815a330afaed2364868d903",
     "Godot/three_d/scripts/characters.gd": "4cd0337092c249cc4bd05130358a161ead2f894d5a893519acbd23d3d921aabc",
     "Godot/three_d/scripts/collateral_display.gd": "0486350c24d551ad64c76cd7b5dc0340492847225abfff01ce922424b3dbb15a",
     "Godot/three_d/scripts/interactable.gd": "02903564281ff42f000c224aaae9d602b5f889bc5406c772e0094eaa3e590003",
     "Godot/three_d/scripts/item_preview.gd": "3c468fe1d4b3eb6f05064905da55dd7928233126507861f3d73966b0881fceca",
     "Godot/three_d/scripts/player.gd": "54f72a44a49e787eebe20d49ad79147e3cb825c5574840a05a17775045170ef2",
-    "Godot/three_d/scripts/rooftop_layout.gd": "3af9798337ea3c1db51ba0f5f2f015aa871fd7a2535496bda39d265bd91ec19c",
+    "Godot/three_d/scripts/rooftop_layout.gd": "0e418c802cecc1539e68f1d5e0abb7cf37a06a19e53602d622f9a13db250da9f",
     "Godot/three_d/scripts/scene_props.gd": "551956dbed1e5296dbf19f52605624a0a3cdeed510c2e69093eb52a385a8a44b",
     "Godot/three_d/scripts/services_hud.gd": "d330790c6971f4b4375e6ecb8240d71fde435af98182927bf62060b96f4bf3f9",
     "Godot/three_d/scripts/settlement_receipt.gd": "01ee467c66ae0d1353ff5d4b67d8cf5b5edceae43f2ee002adb41a1ed85be61b",
@@ -788,7 +788,7 @@
     },
     {
       "file": "Godot/three_d/scripts/bar_display.gd",
-      "line": 35,
+      "line": 39,
       "name": "deliver",
       "signature": "func deliver(id: String) -> void:",
       "status": "explicit_exclusion",
@@ -796,7 +796,7 @@
     },
     {
       "file": "Godot/three_d/scripts/bar_display.gd",
-      "line": 53,
+      "line": 57,
       "name": "make_item",
       "signature": "func make_item(parent: Node3D, id: String, pos: Vector3) -> Node3D:",
       "status": "explicit_exclusion",
@@ -940,7 +940,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 12,
+      "line": 13,
       "name": "_init",
       "signature": "func _init(owner: Node3D) -> void:",
       "status": "explicit_exclusion",
@@ -948,7 +948,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 23,
+      "line": 24,
       "name": "apply",
       "signature": "func apply(profile_id: String) -> void:",
       "status": "explicit_exclusion",
@@ -4781,7 +4781,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 31,
+      "line": 32,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4789,7 +4789,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 44,
+      "line": 48,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4797,7 +4797,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 50,
+      "line": 55,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4805,7 +4805,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 52,
+      "line": 57,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4813,7 +4813,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 53,
+      "line": 58,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",

@@ -24,9 +24,13 @@ func refresh() -> void:
 		var stock: Array = world.run_game.shop_stock()
 		for i in range(stock.size()):
 			var id: String = stock[i]
-			var bottom: float = {"marked-lens":-0.129, "steadying-drink":-0.10, "player-notes":-0.095, "disposable-phone":-0.103, "kitchen-pass":-0.08, "dock-passkey":-0.08, "signal-lighter":-0.075, "sleeve-clip":-0.066, "false-bottom-wallet":-0.056}[id]
+			var prop := make_item(display, id, Vector3.ZERO)
+			var bottom := INF
+			var relative := prop.global_transform.affine_inverse()
+			for mesh: MeshInstance3D in prop.find_children("*", "MeshInstance3D", true, false):
+				bottom = minf(bottom, (relative * mesh.global_transform * mesh.get_aabb()).position.y)
 			var pos := Vector3(2.55, 1.70 - bottom, -2.3 + i * 0.38)
-			var prop := make_item(display, id, pos)
+			prop.position = pos
 			var label := Label3D.new()
 			label.text = "%s\n%d" % [world.run_game.item_name(id), world.table_content.items[id].buy]
 			label.font_size = 32

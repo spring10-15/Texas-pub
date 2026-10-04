@@ -1,0 +1,11 @@
+{
+  "triangles": 9924,
+  "materials": 5,
+  "counter_top_y": 1.21,
+  "stock_shelf_top_y": 1.7,
+  "shelf_x_range": [
+    2.46,
+    2.88
+  ],
+  "scope": "Static independent bar; stock, interaction, delivery animation and collisions remain owned by existing Godot systems. Final wear not finished."
+}
