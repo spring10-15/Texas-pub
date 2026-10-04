@@ -1,7 +1,7 @@
 {
   "scope": "all runtime GDScript functions under Godot/three_d/rules and scripts",
   "claim": "function-level ownership only; not transition-branch or global-denominator completeness",
-  "branch_inventory_sha256": "e065e1d418140f7232b9c650e230819d0b7ec507e927d403f5dd17a0e51b516f",
+  "branch_inventory_sha256": "f706fbb8a390b4713c9207a1a7a220343ee529e8b2d42e982b4a249b611341ad",
   "source_sha256": {
     "Godot/three_d/rules/advanced_services.gd": "744c5ae66627ed303671111601f48982c1b3ce328f02ed3b0438e4a511f3a2b8",
     "Godot/three_d/rules/opponent.gd": "7faa062633284e1605adb9d03bc2f5a92866f6a40a6149e8c628d44428385603",
@@ -16,18 +16,18 @@
     "Godot/three_d/rules/table_checkpoint.gd": "fde5ac9154f13da4cf5cd55acd4b01e9d7f8d5f24e300be162447857e146da53",
     "Godot/three_d/scripts/bar_display.gd": "a32dc21ce561270e1c065d57b4b67fd9f3b49a6453038562976563d894eaf7b8",
     "Godot/three_d/scripts/characters.gd": "4cd0337092c249cc4bd05130358a161ead2f894d5a893519acbd23d3d921aabc",
-    "Godot/three_d/scripts/collateral_display.gd": "cdbd672cc3ac3f0187db48e6e7f46320f04c5d0131072cfff4345e79fcb94783",
+    "Godot/three_d/scripts/collateral_display.gd": "0486350c24d551ad64c76cd7b5dc0340492847225abfff01ce922424b3dbb15a",
     "Godot/three_d/scripts/interactable.gd": "02903564281ff42f000c224aaae9d602b5f889bc5406c772e0094eaa3e590003",
     "Godot/three_d/scripts/item_preview.gd": "3c468fe1d4b3eb6f05064905da55dd7928233126507861f3d73966b0881fceca",
     "Godot/three_d/scripts/player.gd": "54f72a44a49e787eebe20d49ad79147e3cb825c5574840a05a17775045170ef2",
-    "Godot/three_d/scripts/rooftop_layout.gd": "c9a918d7f4336078aa69ce05fd7feef6dab2d6030b8ed10f3fead48c657b5421",
+    "Godot/three_d/scripts/rooftop_layout.gd": "e1a3ef0642c8ba0284538037bb147f79439295ba06ae77c0cb26beeb1e986421",
     "Godot/three_d/scripts/scene_props.gd": "551956dbed1e5296dbf19f52605624a0a3cdeed510c2e69093eb52a385a8a44b",
     "Godot/three_d/scripts/services_hud.gd": "d330790c6971f4b4375e6ecb8240d71fde435af98182927bf62060b96f4bf3f9",
     "Godot/three_d/scripts/settlement_receipt.gd": "01ee467c66ae0d1353ff5d4b67d8cf5b5edceae43f2ee002adb41a1ed85be61b",
     "Godot/three_d/scripts/table_hud.gd": "e505290b3c2b4e1a0dbe3d7d487ee1e2a6c57b4adc378150556320e3caf977cc",
     "Godot/three_d/scripts/tavern_layout.gd": "eb34b55a7c7689eeac31895ff9394fff24bca272c38f7d1ae08666820320d4d6",
     "Godot/three_d/scripts/venue_lighting.gd": "ffcbed1dc9600ad2f0abf4e3d375bf12ce849acf3a113d51b6525cce06fde9cb",
-    "Godot/three_d/scripts/world.gd": "19dfa985596eefad20ea17c81c8af1e78369885774458254632e33a157d409be"
+    "Godot/three_d/scripts/world.gd": "bb4ec816b5cbb95530247c13faef8f751c1b76d30e36bb9cbf9861b699581263"
   },
   "counts": {
     "audit_inventory": 120,
@@ -940,7 +940,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 10,
+      "line": 11,
       "name": "_init",
       "signature": "func _init(owner: Node3D) -> void:",
       "status": "explicit_exclusion",
@@ -948,7 +948,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 21,
+      "line": 22,
       "name": "apply",
       "signature": "func apply(profile_id: String) -> void:",
       "status": "explicit_exclusion",
@@ -4781,15 +4781,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 29,
-      "method": "apply",
-      "kind": "if",
-      "status": "explicit_method_exclusion",
-      "reason": "switches architecture visibility and sky without changing collisions or authoritative Run state"
-    },
-    {
-      "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 36,
+      "line": 30,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4805,7 +4797,7 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 42,
+      "line": 45,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",
@@ -4813,7 +4805,15 @@
     },
     {
       "file": "Godot/three_d/scripts/rooftop_layout.gd",
-      "line": 43,
+      "line": 47,
+      "method": "apply",
+      "kind": "if",
+      "status": "explicit_method_exclusion",
+      "reason": "switches architecture visibility and sky without changing collisions or authoritative Run state"
+    },
+    {
+      "file": "Godot/three_d/scripts/rooftop_layout.gd",
+      "line": 48,
       "method": "apply",
       "kind": "if",
       "status": "explicit_method_exclusion",

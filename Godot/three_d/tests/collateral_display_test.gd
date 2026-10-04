@@ -1,6 +1,7 @@
 extends SceneTree
 var failures: Array[String] = []
 var checks := 0
+var venue_id := "smoky-den"
 func verify(ok: bool,message: String) -> void:
 	checks+=1
 	if not ok:
@@ -12,7 +13,7 @@ func run() -> void:
 	root.add_child(world)
 	await physics_frame
 	world.set_process(false)
-	verify(world.run_game.start(world.run_game.revision,"smoky-den",41),"Start isolated run")
+	verify(world.run_game.start(world.run_game.revision,venue_id,41),"Start isolated run")
 	# Prior room completion is a fixture; this probe tests visual projection, not unlock balance.
 	world.run_game.completed.append_array(["cargo-table","ledger-cellar"])
 	world.run_game.inventory.append("ruby-cufflink")
@@ -28,8 +29,22 @@ func run() -> void:
 		world.queue_free()
 		quit(1)
 		return
+	if venue_id == "rooftop-club":
+		verify(world.get_node("MirrorHall/RooftopArchitecture/RooftopTable").is_visible_in_tree(),"Independent terrace table remains visible while seated")
+		verify(not world.get_node("MirrorHall/BlenderDetail").find_child("TavernTable",true,false).visible,"Legacy table remains hidden while seated")
+		verify(world.cards_root.get_child_count() > 0,"Live cards rendered on terrace table")
+		var felt: MeshInstance3D = world.get_node("MirrorHall/RooftopArchitecture/RooftopTable").find_child("TerraceTable_fabric",true,false)
+		var surface: AABB = felt.global_transform * felt.get_aabb()
+		for card in world.cards_root.get_children():
+			if card.get_meta("visual_role", "") != "Card": continue
+			var mesh: MeshInstance3D = card.get_child(0)
+			var bounds: AABB = mesh.global_transform * mesh.get_aabb()
+			verify(bounds.position.x > surface.position.x and bounds.end.x < surface.end.x and bounds.position.z > surface.position.z and bounds.end.z < surface.end.z and bounds.position.y > surface.end.y, "Live card footprint rests entirely above felt")
 	var prop: Node3D=world.collateral_display.prop
 	verify(is_instance_valid(prop) and prop.get_parent()==world.get_node("MirrorHall") and prop.scale==Vector3.ONE,"Physical-scale model belongs to active room")
+	var bottom := INF
+	for mesh: MeshInstance3D in prop.find_children("*","MeshInstance3D",true,false): bottom = minf(bottom,(mesh.global_transform * mesh.get_aabb()).position.y)
+	verify(abs(bottom - .857) < .00001,"Pledged model bottom rests on visible felt surface")
 	verify(prop.get_meta("pledged_item")=="ruby-cufflink" and prop.position.y>0.85,"Cufflink bottom rests on felt")
 	var before: Dictionary=world.RunCheckpoint.capture(world.run_game)
 	world.refresh_economy()

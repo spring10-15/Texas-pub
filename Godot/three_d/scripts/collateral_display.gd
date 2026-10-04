@@ -21,7 +21,7 @@ func sync() -> void:
 		var box: AABB=mesh.transform*mesh.get_aabb()
 		bounds=box if first else bounds.merge(box)
 		first=false
-	prop.position=Vector3(0.28,0.85-bounds.position.y,-0.42)
+	prop.position=Vector3(0.28,0.857-bounds.position.y,-0.42)
 	prop.set_meta("pledged_item",desired)
 	room.add_child(prop)
 	var label := Label3D.new()

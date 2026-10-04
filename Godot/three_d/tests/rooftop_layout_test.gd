@@ -28,6 +28,11 @@ func run() -> void:
 		var original_floor: MeshInstance3D = room.get_node("BlenderDetail").find_child("TavernFloor",true,false)
 		verify(abs((deck.global_transform * deck.get_aabb()).end.y - 0.014) < 0.00001, "Deck visible top matches existing floor height")
 		verify(abs((original_floor.global_transform * original_floor.get_aabb()).end.y - 0.014) < 0.00001, "Indoor floor geometry preserves height")
+		var table = architecture.get_node("RooftopTable")
+		verify(table.visible and not room.get_node("BlenderDetail").find_child("TavernTable",true,false).visible, "Independent rooftop table replaces legacy table")
+		verify(table.find_children("*","MeshInstance3D",true,false).size() == 6, "Table materials imported")
+		var felt: MeshInstance3D = table.find_child("TerraceTable_fabric",true,false)
+		verify(abs((felt.global_transform * felt.get_aabb()).end.y - .857) < .00001, "Felt height retains card and collateral clearance")
 		var city = architecture.get_node("CityBackdrop")
 		verify(city.find_children("*", "CollisionShape3D", true, false).is_empty(), "City backdrop has no gameplay collision")
 		verify(city.find_children("*", "MeshInstance3D", true, false).size() == 6, "Six merged city material meshes loaded")
@@ -60,6 +65,7 @@ func run() -> void:
 		verify(world.scene_environment.background_mode == Environment.BG_COLOR and world.scene_environment.sky == null, "Indoor sky restored: " + venue)
 		for setup in world.ROOMS.values():
 			var room = world.get_node(setup.node)
+			verify(room.get_node("BlenderDetail").find_child("TavernTable",true,false).visible, "Indoor table restored")
 			verify(room.get_node("BlenderDetail").find_child("TavernFloor",true,false).visible, "Indoor floor restored")
 			verify(not room.get_node("RooftopArchitecture").visible, "Terrace hidden: " + venue + "/" + setup.node)
 			for body in room.get_children():

@@ -772,7 +772,7 @@ func refresh_table() -> void:
 	for i in range(view.community.size()):
 		draw_card(view.community[i], Vector3(-0.89 + i * 0.22, 0.866, -0.80))
 	for i in range(view.players[0].holeCards.size()):
-		draw_card(view.players[0].holeCards[i], Vector3(-0.60 + i * 0.22, 0.866, -0.17))
+		draw_card(view.players[0].holeCards[i], Vector3(-0.60 + i * 0.22, 0.866, -0.39))
 	# Bounded visual stacks; exact chip amounts always remain in the HUD.
 	for i in range(mini(12, int(view.pot) / 10)):
 		var chip := MeshInstance3D.new()

@@ -1,5 +1,6 @@
 extends RefCounted
 ## Visual terrace overlay; existing room collisions and interaction anchors stay in place.
+const TABLE = preload("res://three_d/assets/rooftop-table.glb")
 const CITY = preload("res://three_d/assets/rooftop-city.glb")
 const TERRACE = preload("res://three_d/assets/rooftop-terrace.glb")
 var world: Node3D
@@ -33,8 +34,12 @@ func apply(profile_id: String) -> void:
 			var city := CITY.instantiate()
 			city.name = "CityBackdrop"
 			architecture.add_child(city)
+			var table := TABLE.instantiate()
+			table.name = "RooftopTable"
+			architecture.add_child(table)
 		if architecture != null: architecture.visible = rooftop
 		room.get_node("BlenderDetail").find_child("TavernFloor", true, false).visible = not rooftop
+		room.get_node("BlenderDetail").find_child("TavernTable", true, false).visible = not rooftop
 		for body in room.get_children():
 			var role: String = body.get_meta("visual_role", "")
 			if not (role.begins_with("Ceiling") or role == "FrontWall" or (role == "SideWall" and body.position.x < 0)): continue
