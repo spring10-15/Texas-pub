@@ -1,0 +1,8 @@
+{
+  "triangles": 10980,
+  "materials": 4,
+  "stair_steps": 12,
+  "floor_top": 0.014,
+  "landing_top": 1.214,
+  "scope": "Corridor and upper stair tower only; storeroom, loading wing and rooftop river relationship remain unfinished."
+}

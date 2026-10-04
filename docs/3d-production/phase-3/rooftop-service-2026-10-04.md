@@ -1,0 +1,17 @@
+# 屋顶服务走廊与上行楼梯间
+
+独立 Blender 源 assets/blender/rooftop-service/rooftop-service.blend 和构建入口 build_service.py。运行资产 10,980 三角形、4 材质/合并网格、3 张既有灰泥纹理，无新增 AI 图片。原始 GLB 指纹与计数见 output/3d/rooftop-service-integrity.json。
+
+覆盖服务入口、连接走廊、准备区地坪、十二级钢楼梯、上层平台和楼梯塔顶部。附属钢扶手、防滑条、墙侧管线及管箍、百叶风口、门框与屋顶泛水。保留原有黄铜踏步收边、木饰面、厨房设备和交互门扇等共用细节。
+
+屋顶隐藏对应灰盒可见网格；碰撞形状、碰撞变换和遮罩全部保留，其他酒馆恢复旧网格。新模型无碰撞、额外光源或交互。入口地坪顶面 0.014m、上层平台顶面 1.214m；踏步比原碰撞高 14mm，沿用露台地坪的视觉偏移。没有新增玩法、调整路线收益或改动存档格式。
+
+实际 WASD 行走测试在屋顶通过 129 项检查，覆盖后勤通道、紧急出口对焦、后厨楼梯中段/上层平台和低层码头，以及高差位置写盘/读档/恢复控制。原行走测试增加默认烟雾酒馆参数，屋顶子测试复用同一路径，覆盖该空间真实运行而非手工传送冒充行走。
+
+实际导出 PCK 在 Mac Metal 下通过 359 项布局/恢复、183 项美术接入、19 项屋顶牌桌抵押/读档/结算、34 项吧台交易和 129 项完整行走检查，共 724 项。证据 output/builds/rooftop-service-pack-verification.json；验证包 output/builds/rooftop-service-validation.pck。Windows EXE 原生运行、明确中端设备 60fps 和本包长时运行尚未验收。
+
+游戏内截图 output/3d/rooftop-city-service.png、rooftop-city-stairs.png、rooftop-city-upper.png 已检查。仅固定三个视角，不能代替完整三距离美术验收。
+
+本次只完成走廊与上行楼梯间首版；独立库房、装卸侧翼、屋顶与河岸的建筑关系、独立磨损/LOD/最终灯光仍未完成。其他侧翼当前仍共用原模型。桌面 ZIP 未同步本轮资产，不将这批窄范围测试计为高保真五空间或全目标完成。
+
+全量 85 个 Godot 测试套件、20 个 Python 测试通过，源码指纹不变：output/3d/regression/20261004-151545/report.json。

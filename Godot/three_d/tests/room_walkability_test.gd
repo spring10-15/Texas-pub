@@ -1,5 +1,6 @@
 extends SceneTree
 const Store = preload("res://three_d/rules/save_store.gd")
+var venue_id := "smoky-den"
 var world: Node3D
 var checks := 0
 var failures: Array[String] = []
@@ -55,7 +56,7 @@ func run() -> void:
 	await walk(Vector2(1.95, 1.7), 0, "stash door")
 	await focus(world.door_target, "stash door")
 	for room in ["tavern", "ledger", "mirror", "embers"]:
-		if room == "tavern": verify(world.run_game.start(world.run_game.revision), "Start legal run before elevated saves")
+		if room == "tavern": verify(world.run_game.start(world.run_game.revision, venue_id), "Start legal run before elevated saves")
 		world.travel(room)
 		var offset: float = world.ROOMS[room].x
 		var node: Node3D = world.get_node(world.ROOMS[room].node)
